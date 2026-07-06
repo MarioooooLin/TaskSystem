@@ -1,10 +1,49 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-06 15:00
+> 最後整理時間：2026-07-06 19:09
 
 ---
 
 ## 2026-07-06
+
+### [19:09] Admin Views 切版整合完成 — 全部 20 個 View 建立完畢
+
+**變更內容**
+
+- 建立本機 git repo（`git init`），初始 commit `ce50fde`，第二次 commit `766b6f7`
+- `Admin/Controllers/MerchantManagementController.cs`：補 GET `Update(long id)` Action
+- 修正 `KolManagement/ReviewList.cshtml`：CSS `kol-new.css` → `kol-review.css`
+- 新建 **13 個** .cshtml（含今日完成全部）：
+
+| View | CSS |
+|---|---|
+| `MerchantManagement/Detail.cshtml` | business-detail.css |
+| `MerchantManagement/Update.cshtml` | business-detail.css + business-edit.css |
+| `Account/ForgotPassword.cshtml` | login.css（_LayoutLogin） |
+| `Dashboard/Index.cshtml` | index.css |
+| `CaseMonitor/Index.cshtml` | 無 |
+| `CaseMonitor/Detail.cshtml` | cases-detail.css |
+| `Finance/Index.cshtml` | wallet.css |
+| `Finance/Transactions.cshtml` | transaction-history.css |
+| `SystemSetting/Index.cshtml` | settings.css |
+| `AdminAccount/Index.cshtml` | permission.css（額外新增） |
+| `AdminAccount/Create.cshtml` | add-user.css |
+| `RolePermission/Index.cshtml` | permission-management.css |
+| `RolePermission/Detail.cshtml` | permission.css |
+
+- 靜態佔位 View 資料欄位均顯示「— 待資料庫連線 —」
+- 所有 `.cshtml` 靜態資源路徑確認使用 `~/` 前綴
+
+**決策原因**
+
+- 業者/KOL 端 Template（accepting/add-cases/company-info/publish/register/referral/kol-new 等）不屬於 Admin，跳過
+- `AdminAccount/Index.cshtml` 為額外新增（原計畫只有 Create），使用 permission.html 的成員列表內容
+
+**目前 Admin Views 完成狀態**
+
+全部 20 個 View 均已完成，無待建項目。
+
+---
 
 ### [15:00] 補齊 CONTRIBUTING §7 定案規則缺漏：KOL/業者停權同步 + Entity 欄位 + SocialPlatform Enum
 
