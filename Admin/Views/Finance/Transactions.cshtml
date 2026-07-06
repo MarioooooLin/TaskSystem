@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "交易紀錄明細";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/transaction-history.css" asp-append-version="true" />
+}
+
+<main class="main-content th-main">
+
+    <!-- ===== 頁面標題 ===== -->
+    <div class="th-page-header">
+        <h1 class="th-page-title">交易紀錄明細</h1>
+        <p class="th-page-desc">檢視帳戶所有歷史交易與資金變動狀態</p>
+    </div>
+
+    <!-- ===== 搜尋篩選區 ===== -->
+    <div class="content-card th-filter-card">
+        <div class="th-filter-grid">
+            <div class="th-filter-item th-filter-item--date">
+                <label class="th-filter-label">日期範圍</label>
+                <div class="th-date-range">
+                    <input type="date" class="th-form-input" id="dateFrom">
+                    <span class="th-date-sep">至</span>
+                    <input type="date" class="th-form-input" id="dateTo">
+                </div>
+            </div>
+            <div class="th-filter-item">
+                <label class="th-filter-label">交易類型</label>
+                <div class="th-select-wrap">
+                    <select class="th-form-select" id="filterType">
+                        <option value="">全部類型</option>
+                        <option value="1">線下儲值</option>
+                        <option value="2">案件凍結</option>
+                        <option value="3">凍結釋放</option>
+                        <option value="4">案件結算</option>
+                        <option value="5">爭議扣留</option>
+                        <option value="6">人工調整</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down th-select-arrow"></i>
+                </div>
+            </div>
+            <div class="th-filter-item">
+                <label class="th-filter-label">關鍵字搜尋</label>
+                <div class="th-search-wrap">
+                    <input type="text" class="th-form-input th-search-input"
+                           id="filterKeyword" placeholder="業者名稱或案件名稱">
+                    <i class="fa-solid fa-magnifying-glass th-search-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="th-filter-actions">
+            <button class="th-search-btn" id="searchBtn">執行搜尋</button>
+        </div>
+    </div>
+
+    <!-- ===== 交易明細表格 ===== -->
+    <div class="content-card th-table-card">
+        <div class="th-table-wrap">
+            <table class="th-table" id="txnTable">
+                <thead>
+                    <tr>
+                        <th>交易時間</th>
+                        <th>業者</th>
+                        <th>交易類型</th>
+                        <th>金額 (TWD)</th>
+                        <th>狀態</th>
+                        <th>關聯案件</th>
+                    </tr>
+                </thead>
+                <tbody id="txnBody">
+                    <tr>
+                        <td colspan="6" class="bd-empty-hint">— 待資料庫連線 —</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="th-table-footer" id="txnFooter">
+            <span>─ 已顯示所有符合條件的紀錄 ─</span>
+            <i class="fa-regular fa-circle-check"></i>
+        </div>
+    </div>
+
+</main>

@@ -1,0 +1,91 @@
+@{
+    ViewData["Title"] = "新增後台帳號";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/add-user.css" asp-append-version="true" />
+}
+
+<main class="main-content au-main">
+    <div class="content-card">
+
+        <nav class="au-breadcrumb">
+            <a asp-action="Index" asp-controller="SystemSetting">設定中心</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a asp-action="Index">後台帳號管理</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span class="au-breadcrumb__current">新增帳號</span>
+        </nav>
+
+        <div class="au-top-bar">
+            <h1 class="au-page-title">新增後台帳號</h1>
+            <a asp-action="Index" class="au-back-btn">
+                <i class="fa-solid fa-arrow-left"></i> 返回列表
+            </a>
+        </div>
+
+        <!-- ===== 主內容雙欄佈局 ===== -->
+        <div class="au-layout">
+
+            <!-- 左欄：表單 -->
+            <div class="au-form-panel">
+                <div class="au-form-body">
+                    <div class="au-form-row">
+                        <div class="au-form-group">
+                            <label class="au-label" for="auName">姓名</label>
+                            <input type="text" class="au-input" id="auName" placeholder="例如：王小明">
+                        </div>
+                        <div class="au-form-group">
+                            <label class="au-label" for="auEmail">電子郵件</label>
+                            <input type="email" class="au-input" id="auEmail" placeholder="admin@example.com">
+                        </div>
+                    </div>
+
+                    <div class="au-form-group">
+                        <label class="au-label" for="auRole">角色設定</label>
+                        <div class="au-select-wrap">
+                            <select class="au-select" id="auRole">
+                                <option value="member">一般管理員（Admin）</option>
+                                <option value="owner">超級管理員（Super Admin）</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                    </div>
+
+                    <div class="au-form-footer">
+                        <button class="au-submit-btn" id="auSubmitBtn">
+                            <i class="fa-solid fa-paper-plane"></i> 發送邀請
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右欄：說明 -->
+            <div class="au-side-panels">
+                <div class="au-info-panel">
+                    <div class="au-info-panel__header">
+                        <h2 class="au-info-panel__title">邀請說明</h2>
+                        <div class="au-info-panel__icon">
+                            <i class="fa-regular fa-envelope"></i>
+                        </div>
+                    </div>
+                    <ol class="au-steps">
+                        <li class="au-step">
+                            <span class="au-step__num">01</span>
+                            <p class="au-step__desc">受邀帳號將透過電子郵件收到<strong>帳號開通邀請函</strong>。</p>
+                        </li>
+                        <li class="au-step">
+                            <span class="au-step__num">02</span>
+                            <p class="au-step__desc">須在 <strong>48 小時內</strong>點擊連結完成<strong>密碼設定</strong>。</p>
+                        </li>
+                        <li class="au-step">
+                            <span class="au-step__num">03</span>
+                            <p class="au-step__desc">設定完成後即可依角色權限使用後台功能。</p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+        </div><!-- /.au-layout -->
+    </div><!-- /.content-card -->
+</main>

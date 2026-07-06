@@ -1,0 +1,152 @@
+@{
+    ViewData["Title"] = "營運總覽";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+}
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header">
+    <div class="page-header__left">
+        <nav class="adm-breadcrumb">首頁 &rsaquo; 營運總覽</nav>
+        <h1 class="page-title">營運總覽</h1>
+        <p class="page-subtitle">查看今日待辦、異常事件與平台營運狀態 <span id="todayDate"></span></p>
+    </div>
+    <button class="btn-primary" onclick="location.reload()">
+        <i class="fa-solid fa-rotate-right"></i> 重新整理
+    </button>
+</div>
+
+<!-- ===== KPI STATS ===== -->
+<div class="content-card adm-kpi-row">
+    <div class="adm-kpi-item">
+        <span class="adm-kpi-label">啟用業者數</span>
+        <strong class="adm-kpi-value">—</strong>
+    </div>
+    <div class="adm-kpi-item">
+        <span class="adm-kpi-label">啟用KOL數</span>
+        <strong class="adm-kpi-value">—</strong>
+    </div>
+    <div class="adm-kpi-item">
+        <span class="adm-kpi-label">進行中案件</span>
+        <strong class="adm-kpi-value">—</strong>
+    </div>
+    <div class="adm-kpi-item">
+        <span class="adm-kpi-label">異議處理中</span>
+        <strong class="adm-kpi-value adm-kpi-value--alert">—</strong>
+    </div>
+    <div class="adm-kpi-item adm-kpi-item--last">
+        <span class="adm-kpi-label">待匯款金額</span>
+        <strong class="adm-kpi-value">—</strong>
+    </div>
+</div>
+
+<!-- ===== DASHBOARD LAYOUT ===== -->
+<div class="adm-layout">
+
+    <!-- LEFT: 主欄 -->
+    <div class="adm-col-main">
+
+        <!-- KOL 審核待辦 -->
+        <div class="content-card">
+            <div class="adm-section-hd">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-user-check"></i> KOL 審核待辦
+                </h2>
+                <a asp-action="ReviewList" asp-controller="KolManagement" class="adm-section-link">
+                    查看全部KOL待審 <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+            <div class="table-section">
+                <table class="data-table adm-kol-table">
+                    <thead>
+                        <tr>
+                            <th>KOL名稱</th>
+                            <th>KOL類型</th>
+                            <th>主要平台</th>
+                            <th>送審時間</th>
+                            <th>狀態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" class="bd-empty-hint">— 待資料庫連線 —</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 異常與異議處理 -->
+        <div class="content-card">
+            <div class="adm-section-hd">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 異常與異議處理
+                </h2>
+                <a href="#" class="adm-section-link">查看全部異常 <i class="fa-solid fa-chevron-right"></i></a>
+            </div>
+            <div class="table-section">
+                <table class="data-table adm-dispute-table">
+                    <thead>
+                        <tr>
+                            <th>異議編號</th>
+                            <th>案件名稱</th>
+                            <th>業者</th>
+                            <th>異議類型</th>
+                            <th>狀態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" class="bd-empty-hint">— 待資料庫連線 —</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div><!-- /.adm-col-main -->
+
+    <!-- RIGHT: 側欄 -->
+    <aside class="adm-col-side">
+        <div class="content-card">
+            <h2 class="section-title">時效異常監控</h2>
+            <div class="adm-alert-list">
+                <div class="adm-alert-item adm-alert-item--danger">
+                    <i class="fa-solid fa-triangle-exclamation adm-alert-icon"></i>
+                    <div class="adm-alert-body">
+                        <span class="adm-alert-name">已逾期案件</span>
+                        <strong class="adm-alert-count">—</strong>
+                    </div>
+                </div>
+                <div class="adm-alert-item">
+                    <i class="fa-regular fa-clock adm-alert-icon"></i>
+                    <div class="adm-alert-body">
+                        <span class="adm-alert-name">驗收逾期</span>
+                        <strong class="adm-alert-count">—</strong>
+                    </div>
+                </div>
+                <div class="adm-alert-item">
+                    <i class="fa-solid fa-rotate adm-alert-icon"></i>
+                    <div class="adm-alert-body">
+                        <span class="adm-alert-name">導購同步異常</span>
+                        <strong class="adm-alert-count">—</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+</div><!-- /.adm-layout -->
+
+@section Scripts {
+    <script>
+        const d = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        document.getElementById('todayDate').textContent =
+            d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    </script>
+}

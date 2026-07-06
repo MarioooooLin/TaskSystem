@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "後台帳號管理";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/permission.css" asp-append-version="true" />
+}
+
+<main class="main-content pm-main">
+    <div class="content-card">
+
+        <div class="pm-top-bar">
+            <div class="pm-top-bar__left">
+                <h1 class="pm-page-title">後台帳號管理</h1>
+                <p class="pm-page-desc">管理後台成員帳號與角色權限。</p>
+            </div>
+            <a asp-action="Create" class="pm-btn pm-btn--primary">
+                <i class="fa-solid fa-user-plus"></i> 新增帳號
+            </a>
+        </div>
+
+        <!-- ===== 搜尋篩選列 ===== -->
+        <div class="pm-filter-bar">
+            <div class="pm-search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="pm-search-input" placeholder="搜尋姓名或電子郵件...">
+            </div>
+            <div class="pm-select-wrap">
+                <select class="pm-select">
+                    <option value="">篩選角色</option>
+                    <option value="SUPER_ADMIN">Super Admin</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
+
+        <!-- ===== 成員列表 ===== -->
+        <div class="pm-panel">
+            <table class="pm-table">
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>電子郵件</th>
+                        <th>角色</th>
+                        <th>狀態</th>
+                        <th>建立時間</th>
+                        <th style="text-align:right;">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="bd-empty-hint">— 待資料庫連線 —</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pm-security-card">
+            <div class="pm-security-card__icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="pm-security-card__body">
+                <h3 class="pm-security-card__title">帳號安全提醒</h3>
+                <p class="pm-security-card__desc">
+                    請定期審查後台帳號清單，移除不再需要存取權限的帳號。Super Admin 具有最高權限，請謹慎指派。
+                </p>
+            </div>
+        </div>
+
+    </div><!-- /.content-card -->
+</main>

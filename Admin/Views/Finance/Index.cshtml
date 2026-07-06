@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "帳務管理";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/wallet.css" asp-append-version="true" />
+}
+
+<main class="main-content wl-main">
+
+    <h1 class="wl-page-title">帳務管理</h1>
+
+    <!-- ===== 餘額統計三欄 ===== -->
+    <div class="wl-balance-cards">
+        <div class="wl-balance-card">
+            <div class="wl-balance-card__header">
+                <span class="wl-balance-card__label">平台待撥款</span>
+                <i class="fa-regular fa-credit-card wl-balance-card__icon"></i>
+            </div>
+            <p class="wl-balance-card__amount">—</p>
+            <p class="wl-balance-card__desc">KOL 已完成任務待結算</p>
+        </div>
+        <div class="wl-balance-card">
+            <div class="wl-balance-card__header">
+                <span class="wl-balance-card__label">業者錢包總額</span>
+                <i class="fa-solid fa-coins wl-balance-card__icon"></i>
+            </div>
+            <p class="wl-balance-card__amount">—</p>
+            <p class="wl-balance-card__desc">全平台業者帳戶資產合計</p>
+        </div>
+        <div class="wl-balance-card wl-balance-card--dark">
+            <div class="wl-balance-card__header">
+                <span class="wl-balance-card__label">已鎖定金額</span>
+                <i class="fa-solid fa-lock wl-balance-card__icon"></i>
+            </div>
+            <p class="wl-balance-card__amount">—</p>
+            <p class="wl-balance-card__desc">執行中案件預算預扣</p>
+        </div>
+    </div>
+
+    <!-- ===== 近期交易記錄 ===== -->
+    <div class="content-card wl-txn-card">
+        <div class="wl-txn-header">
+            <h2 class="wl-section-title">近期交易記錄</h2>
+            <a asp-action="Transactions" class="btn-primary">查看完整紀錄</a>
+        </div>
+        <div class="wl-table-wrap">
+            <table class="wl-table">
+                <thead>
+                    <tr>
+                        <th>交易時間</th>
+                        <th>業者</th>
+                        <th>交易類型</th>
+                        <th>金額</th>
+                        <th>狀態</th>
+                        <th>關聯案件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="bd-empty-hint">— 待資料庫連線 —</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>

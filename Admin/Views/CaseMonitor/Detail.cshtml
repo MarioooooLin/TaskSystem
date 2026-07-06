@@ -1,0 +1,83 @@
+@{
+    ViewData["Title"] = "案件詳情";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/cases-detail.css" asp-append-version="true" />
+}
+
+<div class="content-card cd-card">
+
+    <!-- ===== 案件標題列 ===== -->
+    <div class="cd-title-row">
+        <div class="cd-title-row__left">
+            <h1 class="cd-title">— 待資料庫連線 —</h1>
+            <span class="case-status recruit">招募</span>
+        </div>
+        <div class="cd-title-row__actions">
+            <a asp-action="Index" class="cd-action-btn cd-action-btn--ghost">
+                <i class="fa-solid fa-arrow-left"></i> 返回案件監控
+            </a>
+            <button class="cd-action-btn cd-action-btn--danger">取消案件</button>
+        </div>
+    </div>
+    <p class="cd-meta">案件編號 — ｜ —</p>
+
+    <!-- ===== 統計數字列 ===== -->
+    <div class="cd-stats">
+        <div class="cd-stat">
+            <span class="cd-stat__label">報名人數</span>
+            <span class="cd-stat__value">—</span>
+        </div>
+        <div class="cd-stat cd-stat--progress">
+            <span class="cd-stat__label">已接受KOL</span>
+            <div class="cd-stat__progress-wrap">
+                <span class="cd-stat__value">— <span class="cd-stat__sub">/ —</span></span>
+            </div>
+        </div>
+        <div class="cd-stat">
+            <span class="cd-stat__label">待驗收</span>
+            <span class="cd-stat__value">—</span>
+        </div>
+        <div class="cd-stat">
+            <span class="cd-stat__label">審核處理中</span>
+            <span class="cd-stat__value cd-stat__value--red">—</span>
+        </div>
+        <div class="cd-stat">
+            <span class="cd-stat__label">已完成</span>
+            <span class="cd-stat__value">—</span>
+        </div>
+        <div class="cd-stat cd-stat--budget">
+            <span class="cd-stat__label">案件預算餘額</span>
+            <span class="cd-stat__value cd-stat__value--budget">—</span>
+        </div>
+    </div>
+
+    <!-- ===== 主要佈局 ===== -->
+    <div class="cd-layout">
+        <div class="cd-main">
+            <div class="cd-kol-header">
+                <h2 class="cd-kol-title">KOL 清單與任務狀態</h2>
+            </div>
+            <div class="cd-table-wrap">
+                <table class="cd-table">
+                    <thead>
+                        <tr>
+                            <th>KOL 名稱</th>
+                            <th>主要平台</th>
+                            <th>任務狀態</th>
+                            <th>報名時間</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="bd-empty-hint">— 待資料庫連線 —</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /.content-card -->

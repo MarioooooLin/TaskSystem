@@ -1,0 +1,195 @@
+@{
+    ViewData["Title"] = "角色權限管理";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/permission-management.css" asp-append-version="true" />
+}
+
+<main class="main-content prm-main">
+    <div class="content-card">
+
+        <nav class="prm-breadcrumb">
+            <a asp-action="Index" asp-controller="SystemSetting">設定中心</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a asp-action="Detail">後台帳號</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span class="prm-breadcrumb__current">角色權限管理</span>
+        </nav>
+
+        <h1 class="prm-page-title">角色權限管理</h1>
+        <p class="prm-page-desc">定義系統內各角色的權限範圍，確保帳號僅能存取其職務所需之功能。</p>
+
+        <!-- ===== 角色切換 Tab 列 ===== -->
+        <div class="prm-role-tabs">
+            <button class="prm-role-tab active" data-role="owner">Super Admin</button>
+            <button class="prm-role-tab" data-role="admin">Admin</button>
+            <button class="prm-add-role-btn" id="prmAddRoleBtn">
+                <i class="fa-solid fa-plus"></i> 新增角色
+            </button>
+        </div>
+
+        <!-- ===== 主要雙欄佈局 ===== -->
+        <div class="prm-layout">
+
+            <!-- 左欄：權限矩陣 -->
+            <div class="prm-perm-panels" id="prmPermPanels">
+
+                <!-- 業者管理 -->
+                <div class="prm-perm-panel">
+                    <div class="prm-perm-panel__header">
+                        <label class="prm-select-all-wrap">
+                            <input type="checkbox" class="prm-select-all" data-group="merchant" checked>
+                            <span class="prm-checkmark"></span>
+                            <span class="prm-select-all-label">全選</span>
+                        </label>
+                        <span class="prm-perm-panel__category">業者管理</span>
+                        <span class="prm-perm-panel__en">Merchant Management</span>
+                    </div>
+                    <ul class="prm-perm-list">
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">查看業者列表</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="merchant" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">停用 / 解除停用業者</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="merchant" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">編輯業者資料</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="merchant" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- KOL 管理 -->
+                <div class="prm-perm-panel">
+                    <div class="prm-perm-panel__header">
+                        <label class="prm-select-all-wrap">
+                            <input type="checkbox" class="prm-select-all" data-group="kol" checked>
+                            <span class="prm-checkmark"></span>
+                            <span class="prm-select-all-label">全選</span>
+                        </label>
+                        <span class="prm-perm-panel__category">KOL 管理</span>
+                        <span class="prm-perm-panel__en">KOL Management</span>
+                    </div>
+                    <ul class="prm-perm-list">
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">審核 KOL</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="kol" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">停用 / 解除停用 KOL</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="kol" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 帳務管理 -->
+                <div class="prm-perm-panel">
+                    <div class="prm-perm-panel__header">
+                        <label class="prm-select-all-wrap">
+                            <input type="checkbox" class="prm-select-all" data-group="finance" checked>
+                            <span class="prm-checkmark"></span>
+                            <span class="prm-select-all-label">全選</span>
+                        </label>
+                        <span class="prm-perm-panel__category">帳務管理</span>
+                        <span class="prm-perm-panel__en">Finance</span>
+                    </div>
+                    <ul class="prm-perm-list">
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">查看交易紀錄</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="finance" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">執行撥款</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="finance" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 系統設定 -->
+                <div class="prm-perm-panel">
+                    <div class="prm-perm-panel__header">
+                        <label class="prm-select-all-wrap">
+                            <input type="checkbox" class="prm-select-all" data-group="settings" checked>
+                            <span class="prm-checkmark"></span>
+                            <span class="prm-select-all-label">全選</span>
+                        </label>
+                        <span class="prm-perm-panel__category">系統設定</span>
+                        <span class="prm-perm-panel__en">Settings</span>
+                    </div>
+                    <ul class="prm-perm-list">
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">新增 / 移除後台帳號</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="settings" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                        <li class="prm-perm-item">
+                            <div class="prm-perm-item__info">
+                                <span class="prm-perm-item__name">修改角色權限</span>
+                            </div>
+                            <div class="prm-perm-item__check">
+                                <label><input type="checkbox" data-group="settings" checked><span class="prm-checkmark"></span></label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div><!-- /.prm-perm-panels -->
+
+            <!-- 右欄：角色資訊卡 -->
+            <div class="prm-role-card">
+                <div class="prm-role-card__header">
+                    <span class="prm-role-card__name" id="prmRoleName">Super Admin</span>
+                </div>
+                <p class="prm-role-card__desc">系統最高權限，擁有所有管理功能的完整控制權。</p>
+                <div class="prm-role-card__core-title">核心職責</div>
+                <ul class="prm-core-list">
+                    <li class="prm-core-item"><i class="fa-regular fa-circle-check"></i> 全站功能完全存取</li>
+                    <li class="prm-core-item"><i class="fa-regular fa-circle-check"></i> 管理財務與帳務</li>
+                    <li class="prm-core-item"><i class="fa-regular fa-circle-check"></i> 管理後台帳號與角色</li>
+                </ul>
+            </div>
+
+        </div><!-- /.prm-layout -->
+
+    </div><!-- /.content-card -->
+</main>
+
+<!-- Sticky Action Bar -->
+<div class="prm-action-bar" id="prmActionBar">
+    <button class="prm-btn prm-btn--outline" id="prmCancelBtn">取消</button>
+    <button class="prm-btn prm-btn--primary" id="prmSaveBtn">儲存變更</button>
+</div>

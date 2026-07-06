@@ -1,0 +1,120 @@
+@{
+    ViewData["Title"] = "案件監控";
+}
+
+<!-- PAGE TITLE -->
+<div class="content-card">
+    <div class="page-header">
+        <div class="page-header__left">
+            <nav class="adm-breadcrumb">首頁 &rsaquo; 案件監控</nav>
+            <h1 class="page-title">案件監控</h1>
+            <p class="page-subtitle">監控與追蹤平台所有合作案件狀態</p>
+        </div>
+    </div>
+
+    <!-- STATUS CARDS -->
+    <section class="status-cards">
+        <a href="#" class="status-card">
+            <img src="~/images/icon-draft.svg" alt="草稿" />
+            <span class="status-label">草稿</span>
+            <span class="status-count">—</span>
+        </a>
+        <a href="#" class="status-card">
+            <img src="~/images/icon-review.svg" alt="待審核" />
+            <span class="status-label">待審核</span>
+            <span class="status-count">—</span>
+        </a>
+        <a href="#" class="status-card">
+            <img src="~/images/icon-recruit.svg" alt="招募中" />
+            <span class="status-label">招募中</span>
+            <span class="status-count">—</span>
+        </a>
+        <a href="#" class="status-card">
+            <img src="~/images/icon-progress.svg" alt="執行中" />
+            <span class="status-label">執行中</span>
+            <span class="status-count">—</span>
+        </a>
+        <a href="#" class="status-card">
+            <img src="~/images/icon-accepting.svg" alt="待驗收" />
+            <span class="status-label">待驗收</span>
+            <span class="status-count">—</span>
+        </a>
+        <a href="#" class="status-card">
+            <img src="~/images/icon-closed.svg" alt="已結案" />
+            <span class="status-label">已結案</span>
+            <span class="status-count">—</span>
+        </a>
+    </section>
+
+    <!-- FILTER BAR -->
+    <section class="filter-bar">
+        <div class="filter-bar__row">
+            <div class="filter-search">
+                <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                <input type="text" class="filter-search__input" placeholder="關鍵字搜尋">
+            </div>
+            <div class="filter-select-wrap">
+                <select class="filter-select">
+                    <option>全部狀態</option>
+                    <option>草稿</option>
+                    <option>待審核</option>
+                    <option>招募中</option>
+                    <option>執行中</option>
+                    <option>待驗收</option>
+                    <option>已結案</option>
+                </select>
+                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+            </div>
+            <div class="filter-select-wrap">
+                <select class="filter-select">
+                    <option>全部合作條件</option>
+                    <option>現金報酬</option>
+                    <option>贈品項目</option>
+                    <option>現金報酬、贈品項目</option>
+                </select>
+                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+            </div>
+        </div>
+        <div class="filter-bar__row">
+            <div class="filter-group">
+                <span class="filter-group__label">日期區間</span>
+                <div class="filter-date-range">
+                    <div class="filter-date-input">
+                        <input type="date" id="startDate" class="date-input" aria-label="開始日期">
+                        <span class="filter-date-sep">～</span>
+                        <input type="date" id="endDate" class="date-input" aria-label="結束日期">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CASES TABLE -->
+    <section class="table-section">
+        <table class="data-table cases-table">
+            <thead>
+                <tr>
+                    <th>案件名稱</th>
+                    <th>業者</th>
+                    <th>狀態</th>
+                    <th>合作條件</th>
+                    <th>招募報名</th>
+                    <th>任務待處</th>
+                    <th>總預算</th>
+                    <th>截止日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="9" class="bd-empty-hint">— 待資料庫連線 —</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <span class="pagination__info">— 待資料庫連線 —</span>
+        </div>
+    </section>
+
+</div><!-- /.content-card -->

@@ -1,0 +1,79 @@
+@{
+    ViewData["Title"] = "成員管理";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/permission.css" asp-append-version="true" />
+}
+
+<main class="main-content pm-main">
+    <div class="content-card">
+
+        <div class="pm-top-bar">
+            <div class="pm-top-bar__left">
+                <h1 class="pm-page-title">使用者與權限管理</h1>
+                <p class="pm-page-desc">管理系統成員帳號與角色，至少需保留一位最高管理者。</p>
+            </div>
+            <a asp-action="Create" asp-controller="AdminAccount" class="pm-btn pm-btn--primary">
+                <i class="fa-solid fa-user-plus"></i> 新增成員
+            </a>
+        </div>
+
+        <!-- ===== 搜尋篩選列 ===== -->
+        <div class="pm-filter-bar">
+            <div class="pm-search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="pm-search-input" id="pmSearchInput"
+                       placeholder="搜尋姓名、電子郵件或角色...">
+            </div>
+            <div class="pm-select-wrap">
+                <select class="pm-select" id="pmRoleFilter">
+                    <option value="">篩選角色</option>
+                    <option value="OWNER">Super Admin</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
+
+        <!-- ===== 成員列表 ===== -->
+        <div class="pm-panel">
+            <table class="pm-table" id="pmTable">
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>電子郵件</th>
+                        <th>角色</th>
+                        <th>狀態</th>
+                        <th>加入時間</th>
+                        <th style="text-align:right;">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="pmTableBody">
+                    <tr>
+                        <td colspan="6" class="bd-empty-hint">— 待資料庫連線 —</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <span class="pagination__info" id="pmPageInfo">— 待資料庫連線 —</span>
+        </div>
+
+        <!-- 帳號安全提醒 -->
+        <div class="pm-security-card">
+            <div class="pm-security-card__icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="pm-security-card__body">
+                <h3 class="pm-security-card__title">帳號安全提醒</h3>
+                <p class="pm-security-card__desc">
+                    請定期審查成員清單並清楚移除不再需要存取權限的離職員工。
+                    Super Admin 具有轉移所有權的唯一權利，請謹慎指派。
+                </p>
+            </div>
+        </div>
+
+    </div><!-- /.content-card -->
+</main>

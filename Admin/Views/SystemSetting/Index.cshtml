@@ -1,0 +1,74 @@
+@{
+    ViewData["Title"] = "系統設定";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/settings.css" asp-append-version="true" />
+}
+
+<main class="main-content st-main">
+    <div class="content-card">
+
+        <nav class="st-breadcrumb">
+            <a asp-action="Index" asp-controller="Dashboard">首頁</a>
+            <span class="st-breadcrumb__sep">/</span>
+            <span class="st-breadcrumb__current">設定中心</span>
+        </nav>
+
+        <div class="st-page-header">
+            <div class="page-header__left">
+                <h1 class="st-page-title">設定中心</h1>
+                <p class="st-page-desc">管理後台帳號、角色權限及系統預設規則。</p>
+            </div>
+        </div>
+
+        <!-- ===== 設定卡片 ===== -->
+        <div class="st-cards-grid">
+
+            <a asp-action="Index" asp-controller="AdminAccount" class="st-card">
+                <div class="st-card__icon">
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+                <h2 class="st-card__title">後台帳號管理</h2>
+                <span class="st-card__arrow"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+
+            <a asp-action="Index" asp-controller="RolePermission" class="st-card">
+                <div class="st-card__icon">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+                <h2 class="st-card__title">角色與權限設定</h2>
+                <span class="st-card__arrow"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="st-card">
+                <div class="st-card__icon">
+                    <i class="fa-solid fa-sliders"></i>
+                </div>
+                <h2 class="st-card__title">平台參數設定</h2>
+                <span class="st-card__arrow"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="st-card">
+                <div class="st-card__icon">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <h2 class="st-card__title">通知偏好設定</h2>
+                <span class="st-card__arrow"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+
+        </div>
+
+        <!-- ===== 系統維護資訊 ===== -->
+        <div class="st-info-card">
+            <p class="st-info-card__tag">系統維護資訊</p>
+            <p class="st-info-card__text">
+                若有任何操作疑問，請參考線上操作手冊或聯繫客服支援。
+            </p>
+            <div class="st-info-card__actions">
+                <a href="#" class="st-btn st-btn--outline">聯繫支援</a>
+            </div>
+        </div>
+
+    </div><!-- /.content-card -->
+</main>
