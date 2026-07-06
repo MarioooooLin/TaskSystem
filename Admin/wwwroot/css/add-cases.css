@@ -1,0 +1,884 @@
+@charset "utf-8";
+/* ============================================================
+   ADD-CASES.CSS  ─  新增案件頁面專用樣式
+   依設計圖 add-case-mer003.jpg 製作
+   ============================================================ */
+
+/* ============================
+   LAYOUT: 左表單 + 右預算欄
+============================== */
+.ac-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.4rem;
+}
+
+.ac-form {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ============================
+   STEP TABS WRAPPER (含箭頭)
+============================== */
+.ac-tabs-wrap {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    margin-bottom: 2.8rem;
+    margin-top: -1.2rem;
+    position: sticky;
+    top: var(--topnav-h);
+    z-index: 100;
+    background: var(--white);
+    padding: 1.2rem 0;
+    box-shadow: 0 4px 10px -4px rgba(0,0,0,.08);
+}
+
+/* 箭頭按鈕：桌機隱藏 */
+.ac-tabs-arrow {
+    display: none;
+}
+
+/* ============================
+   STEP TABS
+============================== */
+.ac-tabs {
+    display: flex;
+    gap: .6rem;
+    flex: 1;
+    min-width: 0;
+    flex-wrap: nowrap; /* 桌機一行顯示，配合 flex:1 五等分 */
+}
+
+.ac-tab {
+    flex: 1;           /* ★ 五等分 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    padding: 1.4rem .8rem;
+    border: 1px solid #4b8ab7;
+    border-radius: 6px;
+    background: #4b8ab7;
+    font-size: 1.4rem;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+}
+
+.ac-tab:hover {
+    background: #3a7aaa;
+    border-color: #3a7aaa;
+    color: #ffffff;
+}
+
+.ac-tab.active {
+    background: #ffffff;
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    font-weight: 600;
+}
+
+.ac-tab__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    /* 預設：按鈕底色 #4b8ab7，數字圓型底用相反色（白底藍字） */
+    background: #ffffff;
+    color: #4b8ab7;
+}
+
+.ac-tab.active .ac-tab__num {
+    /* active：按鈕底色白色，數字圓型底用相反色（藍底白字） */
+    background: #4b8ab7;
+    color: #ffffff;
+}
+
+/* ============================
+   FORM SECTION
+============================== */
+.ac-section {
+    margin-bottom: 2.4rem;
+}
+
+.ac-section__title {
+    position: relative;
+    padding-left: 1.2rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1.6rem;
+    padding-bottom: .6rem;
+}
+
+.ac-section__title::before {
+    position: absolute;
+    top: 0.2em;
+    left: 0;
+    content: '';
+    width: 4px;
+    height: 1.2em;
+    background-color: var(--primary);
+    border-radius: 2px;
+}
+
+/* ============================
+   FORM FIELD
+============================== */
+.ac-field {
+    margin-bottom: 1.6rem;
+}
+
+.ac-field:last-child {
+    margin-bottom: 0;
+}
+
+.ac-label {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: .6rem;
+}
+
+.ac-label--toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: default;
+}
+
+.ac-required {
+    color: var(--accent-red);
+    margin-left: .2rem;
+}
+
+.ac-input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 1.2rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    font-family: inherit;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.ac-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(58,175,169,.12);
+}
+
+.ac-textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 90px;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.ac-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(58,175,169,.12);
+}
+
+/* ============================
+   ROW (水平排列欄位)
+============================== */
+.ac-row {
+    display: flex;
+    gap: 1.6rem;
+}
+
+.ac-row .ac-field {
+    flex: 1;
+    min-width: 0;
+}
+
+.ac-row--3 .ac-field {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ============================
+   SELECT
+============================== */
+.ac-select-wrap {
+    position: relative;
+}
+
+.ac-select {
+    width: 100%;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 3.2rem 0 1.2rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    background: var(--white);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color .2s;
+}
+
+.ac-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(58,175,169,.12);
+}
+
+.ac-select__arrow {
+    position: absolute;
+    right: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+/* ============================
+   DATE INPUT
+============================== */
+.ac-date-input {
+    position: relative;
+}
+
+.ac-date-icon {
+    position: absolute;
+    right: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.4rem;
+    pointer-events: none;
+}
+
+/* ============================
+   HINT TEXT
+============================== */
+.ac-hint {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: .6rem;
+    line-height: 1.5;
+}
+
+.ac-hint--warn {
+    color: var(--accent-red);
+}
+
+.ac-hint--primary {
+    color: var(--accent-red);
+}
+
+/* ============================
+   TAG INPUT (贈品項目)
+============================== */
+.ac-tag-input-wrap {
+    display: flex;
+    gap: .8rem;
+    margin-bottom: .8rem;
+}
+
+.ac-tag-input-wrap .ac-input {
+    flex: 1;
+}
+
+.ac-tag-add-btn {
+    flex-shrink: 0;
+    height: 40px;
+    padding: 0 1.6rem;
+    background: #4b8ab7;
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+    font-family: inherit;
+}
+
+.ac-tag-add-btn:hover {
+    background: #3a7aaa;
+}
+
+.ac-tags {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-top: .6rem;
+}
+
+.ac-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+    height: 32px;
+    padding: 0 1.4rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.ac-tag__del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 2.8rem;
+    color: var(--primary-dark);
+    line-height: 1;
+    padding: 0 .1rem;
+    opacity: .7;
+    transition: opacity .15s;
+}
+
+.ac-tag__del:hover {
+    opacity: 1;
+}
+
+/* ============================
+   TOGGLE SWITCH
+============================== */
+.ac-toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.ac-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.ac-toggle__slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.ac-toggle__slider::before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 18px;
+    height: 18px;
+    background: var(--white);
+    border-radius: 50%;
+    transition: transform .2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+
+.ac-toggle input:checked + .ac-toggle__slider {
+    background: #4b8ab7;
+}
+
+.ac-toggle input:checked + .ac-toggle__slider::before {
+    transform: translateX(20px);
+}
+
+/* ============================
+   REVSHARE PANEL
+============================== */
+.ac-revshare {
+    margin-top: 1.2rem;
+    padding: 1.6rem;
+    background: #f8fbfb;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+/* ============================
+   CHECKBOX TAGS (複選標籤)
+============================== */
+.ac-check-tags {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-top: .4rem;
+}
+
+.ac-check-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    height: 32px;
+    padding: 0 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--white);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+    user-select: none;
+}
+
+.ac-check-tag input[type="checkbox"] {
+    display: none;
+}
+
+.ac-check-tag:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.ac-check-tag.active,
+.ac-check-tag:has(input:checked) {
+    border-color: var(--primary);
+    color: var(--primary-dark);
+    background: var(--primary-light);
+    font-weight: 600;
+}
+
+/* ============================
+   UPLOAD ZONE
+============================== */
+.ac-upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 2.4rem 1.6rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    background: #f8fbfb;
+}
+
+.ac-upload-zone:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.ac-upload-icon {
+    font-size: 2.8rem;
+    color: var(--primary);
+    margin-bottom: .8rem;
+}
+
+.ac-upload-zone p {
+    font-size: 1.4rem;
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+.ac-upload-zone--contract {
+    border-color: #ddd;
+    background: #fafafa;
+    cursor: default;
+}
+
+.ac-upload-zone--contract .ac-upload-icon {
+    color: var(--text-muted);
+}
+
+.ac-upload-zone--contract p {
+    color: var(--text-muted);
+}
+
+/* ============================
+   FILE LIST
+============================== */
+.ac-file-list {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-top: .8rem;
+}
+
+.ac-file-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: #f0f0f0;
+    color: var(--text-main);
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: .3rem .9rem;
+    font-size: 1.3rem;
+}
+
+/* ============================
+   FORM ACTION BUTTONS
+============================== */
+.ac-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2.8rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 1.2rem;
+}
+
+.ac-form-actions__left {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.ac-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    height: 40px;
+    padding: 0 2rem;
+    border-radius: 8px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    border: none;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.ac-btn--primary {
+    background: #4b8ab7;
+    color: var(--white);
+    border: none;
+}
+
+.ac-btn--primary:hover {
+    background: #3a7aaa;
+}
+
+.ac-btn--outline {
+    background: var(--white);
+    color: #4b8ab7;
+    border: 1.5px solid #4b8ab7;
+}
+
+.ac-btn--outline:hover {
+    background: #d1eafc;
+}
+
+.ac-btn--ghost {
+    background: var(--white);
+    color: var(--text-main);
+    border: 1.5px solid var(--border);
+}
+
+.ac-btn--ghost:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: #d1eafc;
+}
+
+/* ============================
+   BUDGET SIDEBAR (預算預估)
+============================== */
+.ac-budget {
+    width: 300px;
+    flex-shrink: 0;
+    align-self: flex-start; /* ★ sticky 在 flex 容器內必須有此屬性才會生效 */
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.8rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    position: sticky;
+    top: calc(var(--topnav-h) + 2.4rem);
+}
+
+.ac-budget__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.6rem;
+}
+
+.ac-budget__rows {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    margin-bottom: 1.2rem;
+}
+
+.ac-budget__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+    color: var(--text-main);
+}
+
+.ac-budget__row--muted span {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
+.ac-budget__row--sub {
+    color: var(--text-muted);
+}
+
+.ac-budget__row--sub span {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.ac-budget__row--red span {
+    color: var(--accent-red);
+    font-weight: 600;
+}
+
+.ac-budget__divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.2rem 0;
+}
+
+.ac-budget__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.ac-budget__balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3rem;
+    margin-bottom: .8rem;
+    color: var(--text-main);
+}
+
+.ac-budget__balance-amount {
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.4rem;
+}
+
+.ac-budget__progress-wrap {
+    margin-bottom: 1.2rem;
+}
+
+.ac-budget__progress {
+    width: 100%;
+    height: 8px;
+    background: #e8e8e8;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.ac-budget__progress-bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 4px;
+    transition: width .4s ease;
+}
+
+.ac-budget__warn {
+    font-size: 1.3rem;
+    color: var(--accent-red);
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: .4rem;
+}
+
+.ac-budget__warn i {
+    margin-top: .2rem;
+    flex-shrink: 0;
+}
+
+/* ============================
+   RWD — Tablet ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+    .ac-budget {
+        width: 190px;
+        padding: 1.6rem 1.4rem;
+    }
+
+    .ac-tabs {
+        gap: .4rem;
+    }
+
+    .ac-tab {
+        /* flex: 1 保留，只調整字級與內距 */
+        padding: .6rem .6rem;
+        font-size: 1.3rem;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 768px
+============================== */
+@media (max-width: 768px) {
+    /* 改為垂直排列，預算欄移到下方 */
+    .ac-layout {
+        flex-direction: column;
+    }
+
+    .ac-budget {
+        width: 100%;
+        position: static;
+        order: 2;
+    }
+
+    .ac-form {
+        order: 1;
+        width: 100%;
+    }
+
+    /* Step tabs 橫向捲動（手機版 tab 不五等分，改為內容寬） */
+    .ac-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: .4rem;
+        gap: .4rem;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+    }
+
+    .ac-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ac-tab {
+        flex: 0 0 auto;  /* 手機版取消五等分，依內容撐開 */
+        flex-shrink: 0;
+        padding: .6rem 1.2rem;
+        font-size: 1.3rem;
+    }
+
+    /* 箭頭按鈕：手機版顯示 */
+    .ac-tabs-arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1px solid #4b8ab7;
+        background: #4b8ab7;
+        color: #ffffff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background .2s;
+        padding: 0;
+    }
+
+    .ac-tabs-arrow:hover {
+        background: #3a7aaa;
+    }
+
+    .ac-tabs-arrow:disabled {
+        opacity: .3;
+        cursor: not-allowed;
+    }
+
+    /* Row 欄位：手機版改為單欄 */
+    .ac-row,
+    .ac-row--3 {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    /* Form actions */
+    .ac-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ac-form-actions__left {
+        width: 100%;
+    }
+
+    .ac-btn--primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Budget rows */
+    .ac-budget__row,
+    .ac-budget__total,
+    .ac-budget__balance-row {
+        font-size: 1.3rem;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 480px
+============================== */
+@media (max-width: 480px) {
+    .ac-section__title {
+        font-size: 1.4rem;
+    }
+
+    .ac-label {
+        font-size: 1.3rem;
+    }
+
+    .ac-input,
+    .ac-select,
+    .ac-textarea {
+        font-size: 1.3rem;
+    }
+
+    .ac-tab {
+        font-size: 1.2rem;
+        padding: .5rem 1rem;
+    }
+
+    .ac-tab__num {
+        font-size: 1.1rem;
+    }
+
+    .ac-check-tag {
+        font-size: 1.2rem;
+        padding: .3rem .9rem;
+    }
+
+    .ac-btn {
+        font-size: 1.3rem;
+        padding: 0 1.4rem;
+    }
+
+    .ac-budget {
+        padding: 1.4rem 1.2rem;
+    }
+
+    .ac-budget__title {
+        font-size: 1.4rem;
+    }
+}

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統-導購明細頁</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/referral-detail.css" />
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content rd-main">
+
+            <!-- ===== 頁面標題 + 右側工具 ===== -->
+            <div class="rd-page-header">
+                <h1 class="rd-page-title">導購明細頁</h1>
+                <div class="rd-page-header__right">
+                    <!-- 匯出報表按鈕 -->
+                    <button class="rd-export-btn" id="exportBtn">
+                        <i class="fa-solid fa-download"></i> 匯出報表
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== 統計摘要卡片 ===== -->
+            <div class="rd-summary-cards">
+                <div class="rd-summary-card">
+                    <div class="rd-summary-card__label">導購總交易數</div>
+                    <div class="rd-summary-card__value">36</div>
+                </div>
+                <div class="rd-summary-card">
+                    <div class="rd-summary-card__label">訂單總金額</div>
+                    <div class="rd-summary-card__value">NT$628,000</div>
+                </div>
+                <div class="rd-summary-card">
+                    <div class="rd-summary-card__label">可結算收益</div>
+                    <div class="rd-summary-card__value">NT$75,360</div>
+                </div>
+                <div class="rd-summary-card">
+                    <div class="rd-summary-card__label">異常交易數</div>
+                    <div class="rd-summary-card__value rd-summary-card__value--red" id="abnormalCount">1</div>
+                </div>
+            </div>
+
+            <!-- ===== 篩選區 ===== -->
+            <div class="content-card rd-filter-card">
+                <div class="rd-filter-grid">
+
+                    <!-- Case 案件名稱 -->
+                    <div class="rd-filter-item">
+                        <label class="rd-filter-label">Case 案件名稱</label>
+                        <div class="rd-select-wrap">
+                            <select class="rd-form-select" id="filterCase">
+                                <option value="">全部案件</option>
+                                <option value="beitou">北投溫泉夏季專案</option>
+                                <option value="taidong">台東衝浪嘉年華</option>
+                                <option value="taipei">台北都市輕旅行</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down rd-select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- KOL 合作對象 -->
+                    <div class="rd-filter-item">
+                        <label class="rd-filter-label">KOL 合作對象</label>
+                        <input type="text" class="rd-form-input" id="filterKol" placeholder="搜尋 KOL...">
+                    </div>
+
+                    <!-- Source 來源渠道 -->
+                    <div class="rd-filter-item">
+                        <label class="rd-filter-label">Source 來源渠道</label>
+                        <div class="rd-select-wrap">
+                            <select class="rd-form-select" id="filterSource">
+                                <option value="">全部來源</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="blog">Blog</option>
+                                <option value="facebook">Facebook</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down rd-select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- Status 交易狀態 -->
+                    <div class="rd-filter-item">
+                        <label class="rd-filter-label">Status 交易狀態</label>
+                        <div class="rd-select-wrap">
+                            <select class="rd-form-select" id="filterStatus">
+                                <option value="">所有狀態</option>
+                                <option value="settleable">可結算</option>
+                                <option value="processing">處理中</option>
+                                <option value="abnormal">異常交易</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down rd-select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- Checkout 退房時間範圍 -->
+                    <div class="rd-filter-item">
+                        <label class="rd-filter-label">Checkout 退房時間範圍</label>
+                        <div class="rd-date-range">
+                            <input type="date" class="rd-form-input rd-date-input" id="filterDateFrom" aria-label="開始日期">
+                            <span class="rd-date-sep">~</span>
+                            <input type="date" class="rd-form-input rd-date-input" id="filterDateTo" aria-label="結束日期">
+                        </div>
+                    </div>
+
+                </div>
+                <!-- 篩選操作 -->
+                <div class="rd-filter-actions">
+                    <button class="rd-clear-btn" id="clearBtn">清除條件</button>
+                    <button class="rd-apply-btn" id="applyBtn">套用篩選</button>
+                </div>
+            </div>
+
+            <!-- ===== 訂單明細表格 ===== -->
+            <div class="content-card rd-table-card">
+                <div class="rd-table-wrap">
+                    <table class="rd-table" id="orderTable">
+                        <thead>
+                            <tr>
+                                <th>訂房訂單編號</th>
+                                <th>案件</th>
+                                <th>KOL</th>
+                                <th>使用折扣碼</th>
+                                <th>使用CID</th>
+                                <th>訂單總金額</th>
+                                <th>退房完成時間</th>
+                                <th>可結算時間</th>
+                                <th>交易狀態</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderBody">
+                            <!-- 第 1 筆：可結算 -->
+                            <tr data-case="beitou" data-status="settleable" data-kol="內內 Nene">
+                                <td><span class="rd-order-id">BK20260501001</span></td>
+                                <td><span class="rd-case-name">北投溫泉夏季專案</span></td>
+                                <td>
+                                    <div class="rd-kol-cell">
+                                        <div class="rd-kol-avatar">
+                                            <i class="fa-regular fa-user"></i>
+                                        </div>
+                                        <span class="rd-kol-name">內內 Nene</span>
+                                    </div>
+                                </td>
+                                <td><span class="rd-coupon--none">-</span></td>
+                                <td>CID_8892</td>
+                                <td><span class="rd-amount">NT$18,600</span></td>
+                                <td><span class="rd-date">2026-05-12</span></td>
+                                <td><span class="rd-date">2026-06-12</span></td>
+                                <td><span class="rd-status rd-status--settleable">可結算</span></td>
+                                <td>
+                                    <a href="#" class="rd-action-link">查看明細/訂單</a>
+                                </td>
+                            </tr>
+                            <!-- 第 2 筆：處理中 -->
+                            <tr data-case="beitou" data-status="processing" data-kol="阿瑞 A-Rui">
+                                <td><span class="rd-order-id">BK20260501042</span></td>
+                                <td><span class="rd-case-name">北投溫泉夏季專案</span></td>
+                                <td>
+                                    <div class="rd-kol-cell">
+                                        <div class="rd-kol-avatar">
+                                            <i class="fa-regular fa-user"></i>
+                                        </div>
+                                        <span class="rd-kol-name">阿瑞 A-Rui</span>
+                                    </div>
+                                </td>
+                                <td><span class="rd-coupon--none">-</span></td>
+                                <td>CID_7721</td>
+                                <td><span class="rd-amount">NT$12,400</span></td>
+                                <td><span class="rd-date">2026-05-13</span></td>
+                                <td><span class="rd-date--none">-</span></td>
+                                <td><span class="rd-status rd-status--processing">處理中</span></td>
+                                <td>
+                                    <a href="#" class="rd-action-link">查看明細/訂單</a>
+                                </td>
+                            </tr>
+                            <!-- 第 3 筆：異常交易 -->
+                            <tr data-case="taidong" data-status="abnormal" data-kol="晴天 Sunny">
+                                <td><span class="rd-order-id">BK20260501099</span></td>
+                                <td><span class="rd-case-name">台東衝浪嘉年華</span></td>
+                                <td>
+                                    <div class="rd-kol-cell">
+                                        <div class="rd-kol-avatar">
+                                            <i class="fa-regular fa-user"></i>
+                                        </div>
+                                        <span class="rd-kol-name">晴天 Sunny</span>
+                                    </div>
+                                </td>
+                                <td><span class="rd-coupon">SUNNY20</span></td>
+                                <td><span class="rd-date--none">-</span></td>
+                                <td><span class="rd-amount">NT$24,000</span></td>
+                                <td><span class="rd-date--none">-</span></td>
+                                <td><span class="rd-date--none">-</span></td>
+                                <td><span class="rd-status rd-status--abnormal">異常交易</span></td>
+                                <td>
+                                    <a href="#" class="rd-action-link rd-action-link--red">查看異常原因</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 分頁列 -->
+                <div class="pagination" style="padding: 0 1.6rem 1.2rem;">
+                    <span class="pagination__info" id="pageInfo">顯示 1 至 36 筆，共 36 筆</span>
+                    <div class="pagination__nav" id="pagination">
+                        <button class="page-btn" disabled>
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button class="page-btn active" data-page="1">1</button>
+                        <button class="page-btn" data-page="2">2</button>
+                        <button class="page-btn">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 頁面底部說明 ===== -->
+            <p class="rd-footnote">
+                * 數據來源：訂房系統串接資料。本系統僅呈現透過推廣渠道完成之訂單成效，不涉及外部廣告平台之歸因權重處理。
+            </p>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

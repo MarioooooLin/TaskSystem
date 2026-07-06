@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統-新增案件</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/add-cases.css" />
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="content-card">
+
+                <!-- PAGE HEADER -->
+                <div class="page-header">
+                    <div class="page-header__left">
+                        <h1 class="page-title">新增案件</h1>
+                        <p class="page-subtitle">請填寫完整的案件資訊，並確認預算分配。</p>
+                    </div>
+                </div>
+
+                <!-- FORM + SIDEBAR LAYOUT -->
+                <div class="ac-layout">
+
+                    <!-- ===== LEFT: FORM ===== -->
+                    <div class="ac-form">
+
+                        <!-- STEP TABS -->
+                        <div class="ac-tabs-wrap">
+                            <button class="ac-tabs-arrow ac-tabs-arrow--left" id="tabsArrowLeft">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <div class="ac-tabs">
+                                <button class="ac-tab active" data-step="1" data-target="step1">
+                                    <span class="ac-tab__num">01</span> 基本資料
+                                </button>
+                                <button class="ac-tab" data-step="2" data-target="step3">
+                                    <span class="ac-tab__num">02</span> 合作條件
+                                </button>
+                                <button class="ac-tab" data-step="3" data-target="step4">
+                                    <span class="ac-tab__num">03</span> KOL條件
+                                </button>
+                                <button class="ac-tab" data-step="4" data-target="step5">
+                                    <span class="ac-tab__num">04</span> 平台與交付
+                                </button>
+                                <button class="ac-tab" data-step="5" data-target="step6">
+                                    <span class="ac-tab__num">05</span> 上傳附件
+                                </button>
+                            </div>
+                            <button class="ac-tabs-arrow ac-tabs-arrow--right" id="tabsArrowRight">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- ===== STEP 1: 基本資料 ===== -->
+                        <section class="ac-section" id="step1">
+                            <h2 class="ac-section__title">基本資料</h2>
+
+                            <div class="ac-field">
+                                <label class="ac-label">案件名稱 <span class="ac-required">*</span></label>
+                                <input type="text" class="ac-input" placeholder="">
+                            </div>
+
+                            <div class="ac-field">
+                                <label class="ac-label">案件簡介 <span class="ac-required">*</span></label>
+                                <textarea class="ac-textarea" rows="4" placeholder=""></textarea>
+                            </div>
+
+                            <div class="ac-row">
+                                <div class="ac-field">
+                                    <label class="ac-label">官方網站/參考連結</label>
+                                    <input type="text" class="ac-input" placeholder="http://">
+                                </div>
+                                <div class="ac-field">
+                                    <label class="ac-label">執行縣市 <span class="ac-required">*</span></label>
+                                    <div class="ac-select-wrap">
+                                        <select class="ac-select">
+                                            <option>台文市</option>
+                                            <option>台北市</option>
+                                            <option>新北市</option>
+                                            <option>桃園市</option>
+                                            <option>台中市</option>
+                                            <option>台南市</option>
+                                            <option>高雄市</option>
+                                        </select>
+                                        <i class="fa-solid fa-chevron-down ac-select__arrow"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ac-field">
+                                <label class="ac-label">詳細地址 <span class="ac-required">*</span></label>
+                                <input type="text" class="ac-input" placeholder="">
+                            </div>
+                        </section>
+
+                        <!-- ===== STEP 2: 時間與招募 ===== -->
+                        <section class="ac-section" id="step2-recruit">
+                            <h2 class="ac-section__title">時間與招募</h2>
+
+                            <div class="ac-row ac-row--3">
+                                <div class="ac-field">
+                                    <label class="ac-label">求求人數 <span class="ac-required">*</span></label>
+                                    <input type="number" class="ac-input" value="5" min="1">
+                                </div>
+                                <div class="ac-field">
+                                    <label class="ac-label">報名截止日期 <span class="ac-required">*</span></label>
+                                    <input type="date" id="recruitDeadline" class="ac-input">
+                                </div>
+                                <div class="ac-field">
+                                    <label class="ac-label">交付截止日期 <span class="ac-required">*</span></label>
+                                    <input type="date" id="deliverDeadline" class="ac-input">
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== STEP 3: 合作條件 ===== -->
+                        <section class="ac-section" id="step3">
+                            <h2 class="ac-section__title">合作條件</h2>
+
+                            <div class="ac-field">
+                                <label class="ac-label">現金報酬（單人/NT$）<span class="ac-required">*</span></label>
+                                <input type="number" class="ac-input" placeholder="">
+                            </div>
+
+                            <div class="ac-field">
+                                <label class="ac-label">贈品項目</label>
+                                <p class="ac-hint ac-hint--warn">請至少填寫一筆(若沒有贈品請填寫一）</p>
+                                <div class="ac-tag-input-wrap">
+                                    <input type="text" class="ac-input ac-tag-input" placeholder="" id="giftInput">
+                                    <button class="ac-tag-add-btn" id="giftAddBtn">新增</button>
+                                </div>
+                                <div class="ac-tags" id="giftTags">
+                                    <span class="ac-tag">省樣整人省位置一塊 <button class="ac-tag__del">×</button></span>
+                                    <span class="ac-tag">机酒套餐房型 <button class="ac-tag__del">×</button></span>
+                                </div>
+                            </div>
+
+                            <div class="ac-field">
+                                <label class="ac-label ac-label--toggle">
+                                    鈕碼填分成設定
+                                    <label class="ac-toggle">
+                                        <input type="checkbox" id="revShareToggle">
+                                        <span class="ac-toggle__slider"></span>
+                                    </label>
+                                </label>
+                                <div class="ac-revshare" id="revSharePanel" style="display:none">
+                                    <div class="ac-row">
+                                        <div class="ac-field">
+                                            <label class="ac-label">佣金比例(%)</label>
+                                            <input type="number" class="ac-input" placeholder="">
+                                        </div>
+                                        <div class="ac-field">
+                                            <label class="ac-label">追蹤實鈕</label>
+                                            <input type="text" class="ac-input" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== STEP 4: KOL條件 ===== -->
+                        <section class="ac-section" id="step4">
+                            <h2 class="ac-section__title">KOL條件</h2>
+
+                            <div class="ac-field">
+                                <label class="ac-label">粉絲門檻</label>
+                                <p class="ac-hint ac-hint--primary">最低訂閱人數數量</p>
+                                <input type="text" class="ac-input" placeholder="">
+                            </div>
+
+                            <div class="ac-field">
+                                <label class="ac-label">KOL類型（複選）<span class="ac-required">*</span></label>
+                                <div class="ac-check-tags">
+                                    <label class="ac-check-tag"><input type="checkbox"> 美食</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 旅宿</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 時尚</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 親子</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 寵物</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 攝影</label>
+                                    <label class="ac-check-tag active"><input type="checkbox" checked> + 自定義類型</label>
+                                </div>
+                            </div>
+
+                            <div class="ac-field">
+                                <label class="ac-label">語言（複選）<span class="ac-required">*</span></label>
+                                <div class="ac-check-tags">
+                                    <label class="ac-check-tag active"><input type="checkbox" checked> 中文</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 台語</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 英文</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 日文</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 韓文</label>
+                                </div>
+                                <p class="ac-hint ac-hint--warn">AI提醒：目前揀選選擇特殊語言，有符合人數低於20個，直意視諸語情況等先優先優先找此類KOL</p>
+                            </div>
+                        </section>
+
+                        <!-- ===== STEP 5: 平台與交付 ===== -->
+                        <section class="ac-section" id="step5">
+                            <h2 class="ac-section__title">平台與交付</h2>
+
+                            <div class="ac-field">
+                                <label class="ac-label">發佈平台（複選）<span class="ac-required">*</span></label>
+                                <div class="ac-check-tags">
+                                    <label class="ac-check-tag active"><input type="checkbox" checked> FACEBOOK</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> YOUTUBE</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> INSTAGRAM</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> THREADS</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> TIKTOK</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> 小紅書</label>
+                                    <label class="ac-check-tag"><input type="checkbox"> LINE</label>
+                                </div>
+                            </div>
+
+                            <div class="ac-field">
+                                <label class="ac-label">交付需求清單 <span class="ac-required">*</span></label>
+                                <textarea class="ac-textarea" rows="4" placeholder=""></textarea>
+                            </div>
+                        </section>
+
+                        <!-- ===== STEP 6: 附件欄案 ===== -->
+                        <section class="ac-section" id="step6">
+                            <h2 class="ac-section__title">上傳附件</h2>
+
+                            <div class="ac-field">
+                                <div class="ac-upload-zone" id="uploadZone">
+                                    <i class="fa-solid fa-cloud-arrow-up ac-upload-icon"></i>
+                                    <p>點擊或拖拽上傳參考素材</p>
+                                    <p class="ac-hint">支援 JPG, PNG, PDF, MP4（最大 20MB）</p>
+                                    <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4" style="display:none">
+                                </div>
+                                <div class="ac-file-list" id="fileList">
+                                    <span class="ac-file-tag">file1.jpg <button class="ac-tag__del">×</button></span>
+                                    <span class="ac-file-tag">reference_video.mp4 <button class="ac-tag__del">×</button></span>
+                                </div>
+                            </div>
+
+                            <div class="ac-field">
+                                <div class="ac-upload-zone ac-upload-zone--contract">
+                                    <i class="fa-solid fa-file-arrow-up ac-upload-icon"></i>
+                                    <p>訂立合約的草本</p>
+                                    <p class="ac-hint ac-hint--warn">等候 KOL 認傳確定合約後上傳</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- FORM ACTIONS -->
+                        <div class="ac-form-actions">
+                            <div class="ac-form-actions__left">
+                                <button class="ac-btn ac-btn--outline">儲存草稿</button>
+                                <button class="ac-btn ac-btn--ghost">預覽案件</button>
+                            </div>
+                            <a href="publish.html" class="ac-btn ac-btn--primary">
+                                下一步送審 <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                    </div><!-- /.ac-form -->
+
+                    <!-- ===== RIGHT: 預算預估 SIDEBAR ===== -->
+                    <aside class="ac-budget">
+                        <h3 class="ac-budget__title">預算預估</h3>
+                        <div class="ac-budget__rows">
+                            <div class="ac-budget__row">
+                                <span>單人報酬</span>
+                                <span>NT$3,000</span>
+                            </div>
+                            <div class="ac-budget__row">
+                                <span>徵求人數</span>
+                                <span>× 5</span>
+                            </div>
+                            <div class="ac-budget__divider"></div>
+                            <div class="ac-budget__row">
+                                <span>小計</span>
+                                <span>NT$15,000</span>
+                            </div>
+                            <div class="ac-budget__row">
+                                <span>開案費</span>
+                                <span>NT$1,000</span>
+                            </div>
+                            <div class="ac-budget__row ac-budget__row--red">
+                                <span>折扣</span>
+                                <span>-NT$1,000</span>
+                            </div>
+                            <div class="ac-budget__row">
+                                <span>平台服務費(10%)</span>
+                                <span>NT$1,000</span>
+                            </div>
+                        </div>
+                        <div class="ac-budget__divider"></div>
+                        <div class="ac-budget__total">
+                            <span>總計</span>
+                            <span>NT$16,500</span>
+                        </div>
+                        <div class="ac-budget__divider"></div>
+                        <div class="ac-budget__balance-row">
+                            <span>當前可用餘額</span>
+                            <span class="ac-budget__balance-amount">NT$50,000</span>
+                        </div>
+                        <div class="ac-budget__progress-wrap">
+                            <div class="ac-budget__progress">
+                                <div class="ac-budget__progress-bar" style="width: 33%"></div>
+                            </div>
+                        </div>
+                        <p class="ac-budget__warn">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            案件新試請確保金額符合已確定活預算限額
+                        </p>
+                    </aside>
+
+                </div><!-- /.ac-layout -->
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

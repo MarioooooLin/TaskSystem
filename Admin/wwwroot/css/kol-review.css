@@ -1,0 +1,481 @@
+@charset "utf-8";
+/* ============================================================
+   KOL-REVIEW.CSS  ─  KOL 審核詳情頁面專用樣式
+   ============================================================ */
+
+.adm-breadcrumb {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: .4rem;
+}
+
+.kr-page-header {
+    align-items: flex-start;
+}
+
+.kr-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 1.4rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-size: 1.3rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+}
+
+.kr-btn--ghost {
+    background: #fff;
+    color: var(--text-main);
+    border-color: var(--border);
+}
+
+.kr-btn--ghost:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.kr-summary-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 3.2rem;
+    margin-bottom: 2.4rem;
+    flex-wrap: wrap;
+}
+
+.kr-summary-left {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    flex-shrink: 0;
+}
+
+.kr-summary-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: #f3f5f8;
+    border: 1px solid #d8e2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.kr-summary-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.kr-summary-meta {
+    min-width: 0;
+}
+
+.kr-kol-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: .5rem;
+}
+
+.kr-status-list {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.kr-summary-grid {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem 3rem;
+}
+
+.kr-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.kr-summary-label {
+    font-size: 1.2rem;
+    color: #6f7783;
+}
+
+.kr-summary-value {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.kr-summary-value--ok {
+    color: #218a55;
+}
+
+.kr-summary-value--danger {
+    color: #b93a45;
+}
+
+.kr-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    gap: .4rem;
+    border-radius: 999px;
+    padding: .2rem .8rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.kr-badge i {
+    font-size: .7rem;
+}
+
+.kr-badge--active {
+    color: #1f8d54;
+    background: #e9f7ef;
+}
+
+.kr-badge--pending {
+    color: #9a7a15;
+    background: #fff7dc;
+}
+
+.kr-section {
+    /* padding-top: 2rem;
+    border-top: 1px solid var(--border); */
+    margin-bottom: 2.4rem;
+}
+
+.kr-section-title {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin-bottom: 1.4rem;
+}
+
+.kr-section-title i {
+    color: #334155;
+    font-size: 1.5rem;
+}
+
+.kr-card-grid {
+    display: grid;
+    gap: 1.6rem;
+}
+
+.kr-card-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kr-card-grid--payment {
+    grid-template-columns: 2fr 1fr;
+}
+
+.kr-card-grid--review {
+    grid-template-columns: 1fr 2fr;
+}
+
+.kr-info-card,
+.kr-section-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    padding: 1.4rem;
+}
+
+.kr-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    padding-bottom: .8rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.kr-kv-list {
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+}
+
+.kr-kv-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: .9rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.kr-kv-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.kr-kv-row span,
+.kr-kv-stack span,
+.kr-kv-block span,
+.kr-review-row span {
+    color: #6f7783;
+    font-size: 1.3rem;
+}
+
+.kr-kv-row strong,
+.kr-kv-block strong,
+.kr-review-row strong {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.kr-kv-list--stack {
+    gap: 1.2rem;
+}
+
+.kr-kv-stack {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.kr-kv-stack p {
+    font-size: 1.4rem;
+    line-height: 1.7;
+    color: var(--text-main);
+}
+
+.kr-text-success {
+    color: #1f8d54;
+}
+
+.kr-table thead tr {
+    background: var(--thead-tr);
+}
+
+.kr-table th {
+    color: #fff;
+    border-color: var(--white);;
+}
+
+.kr-table td {
+    border-bottom: 1px solid #e7ebef;
+}
+
+.kr-platform-icon {
+    color: #475569;
+    margin-right: .5rem;
+}
+
+.kr-notice-box {
+    margin-top: 1.2rem;
+    border: 1px solid #f1d4d7;
+    background: #fff4f5;
+    border-radius: 6px;
+    padding: .9rem 1rem;
+}
+
+.kr-notice-title {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: 1.2rem;
+    color: #a03039;
+    font-weight: 700;
+}
+
+.kr-notice-box ul {
+    margin-top: .5rem;
+    margin-left: 1.5rem;
+    list-style: disc;
+}
+
+.kr-notice-box li {
+    font-size: 1.3rem;
+    color: #a03039;
+    line-height: 1.5;
+}
+
+.kr-kv-pair-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.2rem 2rem;
+}
+
+.kr-kv-block {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.kr-payment-hint {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #f9fafb;
+    padding: 1.2rem;
+}
+
+.kr-payment-hint h3 {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .7rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+}
+
+.kr-payment-hint p {
+    font-size: 1.3rem;
+    color: #6f7783;
+    line-height: 1.6;
+}
+
+.kr-review-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.kr-review-row {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.kr-reject-box {
+    margin-top: 1.2rem;
+    border: 1px solid #f1d4d7;
+    background: #fff4f5;
+    border-radius: 6px;
+    padding: .9rem 1rem;
+}
+
+.kr-reject-box span {
+    display: block;
+    color: #a03039;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: .4rem;
+}
+
+.kr-reject-box p {
+    color: #a03039;
+    font-size: 1.3rem;
+    line-height: 1.5;
+}
+
+.kr-review-textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    min-height: 96px;
+    resize: vertical;
+    font-size: 1.4rem;
+    font-family: inherit;
+    padding: 1rem;
+    outline: none;
+}
+
+.kr-review-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, .1);
+}
+
+.kr-review-actions {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .8rem;
+}
+
+.kr-review-btn {
+    height: 36px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    font-size: 1.4rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.kr-review-btn--approve {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    background: var(--primary);
+    color: #fff;
+    border: 1px solid var(--primary);
+    border-radius: 6px;
+    transition: background .2s, color .2s;
+    white-space: nowrap;
+}
+
+.kr-review-btn--approve:hover {
+    background: var(--primary-dark);
+    color: #fff;
+}
+
+.kr-review-btn--reject {
+    background: #fff;
+    border-color: var(--border);
+    color: var(--text-main);
+}
+
+.kr-review-btn--reject:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+@media (max-width: 1200px) {
+    .kr-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .kr-card-grid--2,
+    .kr-card-grid--payment,
+    .kr-card-grid--review,
+    .kr-kv-pair-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kr-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kr-summary-card {
+        align-items: flex-start;
+        gap: 1.6rem;
+    }
+
+    .kr-kv-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .kr-kv-row strong {
+        text-align: left;
+    }
+}
+
+@media (max-width: 768px) {
+    .kr-page-header {
+        gap: 1.2rem;
+    }
+
+    .kr-review-actions {
+        grid-template-columns: 1fr;
+    }
+}

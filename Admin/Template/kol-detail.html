@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-KOL詳細檔案</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/kol-detail.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header kd-page-header">
+                <div class="page-header__left">
+                    <nav class="adm-breadcrumb">首頁 &rsaquo; KOL管理 &rsaquo; 詳細檔案</nav>
+                    <h1 class="page-title">KOL詳細檔案</h1>
+                    <p class="page-subtitle">查看KOL資料、社群頻道、審核狀態、任務紀錄、收款與異常紀錄</p>
+                </div>
+                <div class="kd-header-actions">
+                    <button class="kd-btn kd-btn--outline">代理登入</button>
+                    <a href="kol-management.html" class="kd-btn kd-btn--ghost">返回KOL管理</a>
+                </div>
+            </div>
+
+            <!-- ===== SUMMARY ===== -->
+            <div class="content-card kd-summary-card">
+                <div class="kd-summary-left">
+                    <div class="kd-summary-icon">
+                        <img src="images/Designer.jpg" alt="內內 Nene 頭貼" class="kd-summary-avatar">
+                    </div>
+                    <div class="kd-summary-meta">
+                        <h2 class="kd-kol-name">內內 Nene</h2>
+                        <span class="kd-badge kd-badge--active"><i class="fa-solid fa-circle"></i> 啟用中</span>
+                    </div>
+                </div>
+                <div class="kd-summary-info-grid">
+                    <div class="kd-summary-info-item">
+                        <span class="kd-summary-label">KOL類型</span>
+                        <div class="kd-chip-group">
+                            <span class="kd-chip">旅遊</span>
+                            <span class="kd-chip">美食</span>
+                            <span class="kd-chip">生活風格</span>
+                        </div>
+                    </div>
+                    <div class="kd-summary-info-item">
+                        <span class="kd-summary-label">主要平台</span>
+                        <span class="kd-summary-value">IG / TikTok / YT</span>
+                    </div>
+                    <div class="kd-summary-info-item">
+                        <span class="kd-summary-label">粉絲總數</span>
+                        <span class="kd-summary-value kd-summary-value--strong">120,000</span>
+                    </div>
+                    <div class="kd-summary-info-item">
+                        <span class="kd-summary-label">收款資料狀態</span>
+                        <span class="kd-badge kd-badge--bound">已綁定</span>
+                    </div>
+                    <div class="kd-summary-info-item">
+                        <span class="kd-summary-label">任務數</span>
+                        <span class="kd-summary-value">8</span>
+                    </div>
+                    <div class="kd-summary-info-item">
+                        <span class="kd-summary-label">驗收通過數</span>
+                        <span class="kd-summary-value">7</span>
+                    </div>
+                    <div class="kd-summary-info-item">
+                        <span class="kd-summary-label">未結案異議數</span>
+                        <span class="kd-summary-value kd-summary-value--danger">1</span>
+                    </div>
+                    <div class="kd-summary-info-item">
+                        <span class="kd-summary-label">放棄任務次數</span>
+                        <span class="kd-summary-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 基本資料 ===== -->
+            <div class="content-card">
+                <h2 class="section-title kd-section-title"><i class="fa-regular fa-user"></i> 基本資料</h2>
+                <div class="kd-card-grid kd-card-grid--2">
+
+                    <section class="kd-info-card">
+                        <h3 class="kd-card-title">KOL個人資料</h3>
+                        <div class="kd-kv-list">
+                            <div class="kd-kv-row"><span>KOL名稱</span><strong>內內 Nene</strong></div>
+                            <div class="kd-kv-row"><span>暱稱窗口</span><strong>內內</strong></div>
+                            <div class="kd-kv-row"><span>手機</span><strong>0912 777 888</strong></div>
+                            <div class="kd-kv-row"><span>Email</span><strong>nene@example.com</strong></div>
+                            <div class="kd-kv-row"><span>LINE綁定狀態</span><strong class="kd-kv-success"><i class="fa-solid fa-circle-check"></i> 已綁定</strong></div>
+                            <div class="kd-kv-row"><span>建立日期</span><strong>2026-05-10</strong></div>
+                        </div>
+                    </section>
+
+                    <section class="kd-info-card">
+                        <h3 class="kd-card-title">KOL定位</h3>
+                        <div class="kd-kv-list">
+                            <div class="kd-kv-row kd-kv-row--stack">
+                                <span>KOL類型</span>
+                                <div class="kd-chip-group">
+                                    <span class="kd-chip">旅遊</span>
+                                    <span class="kd-chip">美食</span>
+                                    <span class="kd-chip">生活風格</span>
+                                </div>
+                            </div>
+                            <div class="kd-kv-row kd-kv-row--stack">
+                                <span>自我介紹</span>
+                                <p class="kd-intro">我主要分享台灣旅宿、溫泉、美食與生活風格內容，擁有高品質的影像產出與穩定的粉絲黏著度。</p>
+                            </div>
+                            <div class="kd-kv-row kd-kv-row--stack">
+                                <span>可合作條件</span>
+                                <p class="kd-conditions">✓ 現金酬勞　✓ 贈品項目</p>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <!-- ===== 社群頻道 ===== -->
+            <div class="content-card">
+                <h2 class="section-title kd-section-title"><i class="fa-solid fa-share-nodes"></i> 社群頻道</h2>
+                <div class="table-section">
+                    <table class="data-table kd-table">
+                        <thead>
+                            <tr>
+                                <th>平台</th>
+                                <th>帳號名稱</th>
+                                <th>粉絲數</th>
+                                <th>資料來源</th>
+                                <th>最後更新</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fa-brands fa-instagram kd-platform-icon"></i> Instagram</td>
+                                <td>@nene_travel_tw</td>
+                                <td>85,400</td>
+                                <td>API（同步）</td>
+                                <td>2026-06-15</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa-brands fa-tiktok kd-platform-icon"></i> TikTok</td>
+                                <td>nene_daily</td>
+                                <td>32,100</td>
+                                <td>手動輸入</td>
+                                <td>2026-06-10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="kd-notice-box">
+                    <span class="kd-notice-title"><i class="fa-regular fa-circle-info"></i> 社群審核提醒</span>
+                    <p>請核對 TikTok 帳號連結是否與實際帳號相符。</p>
+                </div>
+            </div>
+
+            <!-- ===== 收款資料 ===== -->
+            <div class="content-card">
+                <h2 class="section-title kd-section-title"><i class="fa-solid fa-building-columns"></i> 收款資料</h2>
+                <div class="kd-card-grid kd-card-grid--payment">
+                    <section class="kd-info-card">
+                        <div class="kd-kv-list kd-kv-list--payment">
+                            <div class="kd-kv-row"><span>收款身份</span><strong>個人</strong></div>
+                            <div class="kd-kv-row"><span>收款戶名</span><strong>內內</strong></div>
+                            <div class="kd-kv-row"><span>銀行</span><strong>822 富邦銀行</strong></div>
+                            <div class="kd-kv-row"><span>銀行帳號</span><strong>8220 0123 4567 4519</strong></div>
+                            <div class="kd-kv-row"><span>收款資料狀態</span><strong class="kd-kv-success">已審核</strong></div>
+                            <div class="kd-kv-row"><span>最近更新</span><strong>2026-06-20 14:30</strong></div>
+                        </div>
+                    </section>
+
+                    <aside class="kd-payment-hint">
+                        <h3><i class="fa-regular fa-shield-check"></i> 隱私與安全</h3>
+                        <p>收款資料僅供查核，不顯示完整敏感資訊。</p>
+                    </aside>
+                </div>
+            </div>
+
+            <!-- ===== KOL管理 ===== -->
+            <div class="content-card">
+                <h2 class="section-title kd-section-title"><i class="fa-solid fa-screwdriver-wrench"></i> KOL管理</h2>
+                <div class="kd-management-box">
+                    <label class="kd-management-label">KOL管理操作</label>
+                    <textarea class="kd-management-textarea" rows="3" placeholder="請輸入沿用原因（必填）..." aria-label="操作原因"></textarea>
+                    <div class="kd-management-actions">
+                        <button class="kd-btn kd-btn--danger">停權</button>
+                        <button class="kd-btn kd-btn--danger-outline">解除停權</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 任務與異議追蹤 ===== -->
+            <div class="content-card">
+                <h2 class="section-title kd-section-title"><i class="fa-solid fa-list-check"></i> 任務與異議追蹤</h2>
+                <div class="table-section">
+                    <table class="data-table kd-table">
+                        <thead>
+                            <tr>
+                                <th>狀態</th>
+                                <th>案件名稱</th>
+                                <th>合作條件</th>
+                                <th>備註</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="kd-badge kd-badge--running">執行中</span></td>
+                                <td>2026 夏日溫泉祭開箱</td>
+                                <td>NT$12,000 + 住宿</td>
+                                <td>正常進行</td>
+                                <td><a href="#" class="action-link">查看案件</a></td>
+                            </tr>
+                            <tr>
+                                <td><span class="kd-badge kd-badge--dispute">異議中</span></td>
+                                <td>#DISP-8921</td>
+                                <td>-</td>
+                                <td class="kd-text-danger">內容未達標準</td>
+                                <td><a href="#" class="action-link">查看異議</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="kd-table-footer pagination">
+                    <span class="pagination__info">共 2 筆紀錄</span>
+                    <div class="pagination__nav">
+                        <button type="button" class="page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                        <button type="button" class="page-btn active">1</button>
+                        <button type="button" class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 收益摘要 ===== -->
+            <div class="content-card">
+                <h2 class="section-title kd-section-title"><i class="fa-solid fa-wallet"></i> 收益摘要</h2>
+
+                <div class="kd-income-grid">
+                    <div class="kd-income-item"><span>待月結</span><strong>NT$18,000</strong></div>
+                    <div class="kd-income-item"><span>待匯款</span><strong>NT$12,000</strong></div>
+                    <div class="kd-income-item"><span>已匯款</span><strong>NT$42,000</strong></div>
+                    <div class="kd-income-item"><span>導購分潤累計</span><strong>NT$8,320</strong></div>
+                </div>
+
+                <div class="table-section">
+                    <table class="data-table kd-table">
+                        <thead>
+                            <tr>
+                                <th>來源項目</th>
+                                <th>金額</th>
+                                <th>狀態</th>
+                                <th>日期</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>固定稿酬</td>
+                                <td>NT$25,000</td>
+                                <td><span class="kd-badge kd-badge--paid">已匯款</span></td>
+                                <td>2026-06-05</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== 操作紀錄 ===== -->
+            <div class="content-card">
+                <h2 class="section-title kd-section-title"><i class="fa-solid fa-clock"></i> 操作紀錄</h2>
+                <div class="kd-log-item">
+                    <strong>2026-06-20 15:45</strong>
+                    <span><mark>審核</mark> 執行「退回修改」，原因：社群頻道網址缺少一筆。</span>
+                    <span class="kd-log-user">Admin 王（管理員）</span>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

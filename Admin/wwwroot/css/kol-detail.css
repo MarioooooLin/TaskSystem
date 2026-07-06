@@ -1,0 +1,554 @@
+@charset "utf-8";
+/* ============================================================
+   KOL-DETAIL.CSS  ─  KOL 詳細檔案頁面專用樣式
+   ============================================================ */
+
+/* ============================
+   BREADCRUMB / HEADER
+============================== */
+.adm-breadcrumb {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: .4rem;
+}
+
+.kd-page-header {
+    align-items: flex-start;
+}
+
+.kd-header-actions {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* ============================
+   BUTTONS
+============================== */
+.kd-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 1.4rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+}
+
+.kd-btn--ghost {
+    background: #fff;
+    color: var(--text-main);
+    border-color: var(--border);
+}
+
+.kd-btn--ghost:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.kd-btn--outline {
+    background: #fff;
+    color: var(--text-main);
+    border-color: var(--border);
+}
+
+.kd-btn--outline:hover {
+    border-color: var(--text-main);
+}
+
+.kd-btn--danger {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.kd-btn--danger:hover {
+    background: var(--primary-dark);
+}
+
+.kd-btn--danger-outline {
+    background: #fff;
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.kd-btn--danger-outline:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* ============================
+   SECTION TITLE
+============================== */
+.kd-section-title {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin-bottom: 1.6rem;
+}
+
+.kd-section-title i {
+    color: #3aafa9;
+    font-size: 1.6rem;
+}
+
+/* ============================
+   SUMMARY CARD
+============================== */
+.kd-summary-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 3.2rem;
+    margin-bottom: 2.4rem;
+    flex-wrap: wrap;
+}
+
+.kd-summary-left {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    flex-shrink: 0;
+}
+
+.kd-summary-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: #f3f5f8;
+    border: 1px solid #d8e2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.kd-summary-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.kd-summary-meta {
+    min-width: 0;
+}
+
+.kd-summary-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem 3rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.kd-summary-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.kd-kol-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.kd-summary-label {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.kd-summary-value {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.kd-summary-value--strong {
+    font-size: 1.8rem;
+}
+
+.kd-summary-value--danger {
+    color: var(--primary);
+}
+
+.kd-chip-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.kd-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 .9rem;
+    border-radius: 14px;
+    background: #edf5fa;
+    color: #3d5f7a;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* ============================
+   BADGES
+============================== */
+.kd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    width: fit-content;
+    border-radius: 16px;
+    padding: .2rem .8rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.kd-badge i {
+    font-size: .8rem;
+}
+
+.kd-badge--active {
+    color: #218a55;
+    background: #e8f7ef;
+}
+
+.kd-badge--bound {
+    color: #218a55;
+    background: #edf9f1;
+}
+
+.kd-badge--running {
+    color: #2a8fc0;
+    background: #e5f4fb;
+}
+
+.kd-badge--dispute {
+    color: #be2f3e;
+    background: #ffebee;
+}
+
+.kd-badge--paid {
+    color: #218a55;
+    background: #e8f7ef;
+}
+
+/* ============================
+   INFO CARDS
+============================== */
+.kd-card-grid {
+    display: grid;
+    gap: 1.6rem;
+}
+
+.kd-card-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kd-card-grid--payment {
+    grid-template-columns: 2fr 1fr;
+}
+
+.kd-info-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.4rem;
+    background: #fff;
+}
+
+.kd-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.2rem;
+    padding-bottom: .9rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.kd-kv-list {
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+}
+
+.kd-kv-list--payment {
+    gap: 1.2rem;
+}
+
+.kd-kv-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+}
+
+.kd-kv-row span {
+    color: var(--text-muted);
+    font-size: 1.3rem;
+}
+
+.kd-kv-row strong {
+    color: var(--text-main);
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: right;
+}
+
+.kd-kv-row--stack {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.kd-kv-row--stack strong,
+.kd-kv-row--stack p {
+    text-align: left;
+}
+
+.kd-kv-success {
+    color: #218a55;
+}
+
+.kd-intro,
+.kd-conditions {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: var(--text-main);
+}
+
+/* ============================
+   TABLE / NOTICE
+============================== */
+.kd-table th,
+.kd-table td {
+    font-size: 1.35rem;
+}
+
+.kd-platform-icon {
+    color: #3f5f80;
+    margin-right: .5rem;
+}
+
+.kd-notice-box {
+    margin-top: 1.2rem;
+    border: 1px solid #c7dbf0;
+    background: #f4f9ff;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+}
+
+.kd-notice-title {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: 1.3rem;
+    color: #4b6f93;
+    font-weight: 700;
+}
+
+.kd-notice-box p {
+    margin-top: .4rem;
+    font-size: 1.3rem;
+    color: #4b6f93;
+}
+
+/* ============================
+   PAYMENT HINT
+============================== */
+.kd-payment-hint {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    background: #fafcfc;
+}
+
+.kd-payment-hint h3 {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .7rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+}
+
+.kd-payment-hint p {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* ============================
+   MANAGEMENT
+============================== */
+.kd-management-box {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.4rem;
+}
+
+.kd-management-label {
+    display: block;
+    font-size: 1.3rem;
+    color: var(--text-main);
+    margin-bottom: .8rem;
+    font-weight: 700;
+}
+
+.kd-management-textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    font-size: 1.4rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 78px;
+    outline: none;
+}
+
+.kd-management-textarea:focus {
+    border-color: var(--primary);
+}
+
+.kd-management-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: .8rem;
+}
+
+.kd-text-danger {
+    color: var(--primary);
+}
+
+/* ============================
+   INCOME
+============================== */
+.kd-income-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.kd-income-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.kd-income-item span {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.kd-income-item strong {
+    font-size: 2rem;
+    color: var(--text-main);
+}
+
+/* ============================
+   LOG
+============================== */
+.kd-log-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+}
+
+.kd-log-item mark {
+    background: #f1f5f9;
+    color: #1f3d60;
+    padding: .1rem .6rem;
+    border-radius: 10px;
+}
+
+.kd-log-user {
+    color: var(--text-muted);
+    margin-left: auto;
+}
+
+/* ============================
+   RESPONSIVE
+============================== */
+@media (max-width: 1200px) {
+    .kd-summary-info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kd-income-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .kd-summary-card {
+        align-items: flex-start;
+        gap: 1.6rem;
+    }
+
+    .kd-summary-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kd-card-grid--2,
+    .kd-card-grid--payment {
+        grid-template-columns: 1fr;
+    }
+
+    .kd-log-user {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .kd-header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .kd-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kd-income-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kd-kv-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .kd-kv-row strong {
+        text-align: left;
+    }
+}
+
+@media (max-width: 520px) {
+    .kd-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kd-management-actions {
+        flex-direction: column;
+    }
+}

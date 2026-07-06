@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 任務系統管理後台</title>
+    <link rel="shortcut icon" href="~/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/reset.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/w3.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/all-style.css" asp-append-version="true" />
+    @await RenderSectionAsync("PageCss", required: false)
+</head>
+
+<body>
+    <div class="md_transition"></div>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav">
+        <div class="top-nav__left">
+            <button class="hamburger-btn" aria-label="開關選單">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a asp-controller="Dashboard" asp-action="Index" class="logo-link">
+                <img src="~/images/logo.svg" alt="旅圖" class="logo-img" />
+                <span class="logo-text">任務系統<br class="br-break" />管理者後台</span>
+            </a>
+        </div>
+        <div class="top-nav__right">
+            <button class="nav-icon-btn" aria-label="通知">
+                <img src="~/images/bell.svg" alt="通知" />
+                <span class="notif-dot"></span>
+            </button>
+            <button class="nav-icon-btn user" aria-label="使用者">
+                <img src="~/images/user.svg" alt="使用者" />
+            </button>
+            <span class="nav-divider"></span>
+            <form method="post" asp-controller="Account" asp-action="Logout" style="display:inline">
+                <button type="submit" class="logout-btn">登出</button>
+            </form>
+        </div>
+    </header>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+
+            <!-- 營運總覽 -->
+            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-item">
+                <i class="fa-solid fa-grip"></i>
+                <span>營運總覽</span>
+            </a>
+
+            <!-- 業者管理 -->
+            <div class="sidebar-group">
+                <div class="sidebar-group__header">
+                    <i class="fa-solid fa-store"></i>
+                    <span>業者管理</span>
+                    <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
+                </div>
+                <div class="sidebar-group__body">
+                    <a asp-controller="MerchantManagement" asp-action="Index" class="sidebar-subitem">業者管理</a>
+                </div>
+            </div>
+
+            <!-- KOL管理 -->
+            <div class="sidebar-group">
+                <div class="sidebar-group__header">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span>KOL管理</span>
+                    <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
+                </div>
+                <div class="sidebar-group__body">
+                    <a asp-controller="KolManagement" asp-action="Index" class="sidebar-subitem">KOL管理頁</a>
+                    <a asp-controller="KolManagement" asp-action="ReviewList" class="sidebar-subitem">審核新進KOL</a>
+                </div>
+            </div>
+
+            <!-- 案件監控 -->
+            <div class="sidebar-group">
+                <div class="sidebar-group__header">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>案件監控</span>
+                    <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
+                </div>
+                <div class="sidebar-group__body">
+                    <a asp-controller="CaseMonitor" asp-action="Index" class="sidebar-subitem">案件監控頁</a>
+                    <a asp-controller="Dispute" asp-action="Index" class="sidebar-subitem">異常處理頁</a>
+                </div>
+            </div>
+
+            <!-- 帳務管理 -->
+            <div class="sidebar-group">
+                <div class="sidebar-group__header">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>帳務管理</span>
+                    <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
+                </div>
+                <div class="sidebar-group__body">
+                    <a asp-controller="Finance" asp-action="Index" class="sidebar-subitem">帳務總覽頁</a>
+                </div>
+            </div>
+
+            <!-- 系統設定 -->
+            <div class="sidebar-group">
+                <div class="sidebar-group__header">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>系統設定</span>
+                    <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
+                </div>
+                <div class="sidebar-group__body">
+                    <a asp-controller="SystemSetting" asp-action="Index" class="sidebar-subitem">系統參數設定頁</a>
+                </div>
+            </div>
+
+            <!-- 後台帳號權限 -->
+            <div class="sidebar-group">
+                <div class="sidebar-group__header">
+                    <i class="fa-solid fa-user-lock"></i>
+                    <span>後台帳號權限</span>
+                    <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
+                </div>
+                <div class="sidebar-group__body">
+                    <a asp-controller="AdminAccount" asp-action="Index" class="sidebar-subitem">後台帳號管理頁</a>
+                    <a asp-controller="RolePermission" asp-action="Index" class="sidebar-subitem">後台角色與權限設定頁</a>
+                </div>
+            </div>
+
+        </nav>
+    </aside>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header">
+            <div class="sub-header__left">
+                <div class="sh-search-wrap">
+                    <input type="text" class="sh-search-input" id="globalSearch" placeholder="案件、業者、KOL" />
+                    <i class="fa-solid fa-magnifying-glass sh-search-icon"></i>
+                </div>
+                <button class="sh-search-btn" type="button">搜尋</button>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            @RenderBody()
+        </main>
+
+        <footer class="site-footer">
+            <p>台灣旅圖資訊 &copy; 2026 Taiwantravelmap Co Ltd. All Rights Reserved.</p>
+        </footer>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

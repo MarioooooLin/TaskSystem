@@ -1,0 +1,367 @@
+@charset "utf-8";
+/* ============================================================
+   INDEX.CSS  ─  後台營運總覽頁面專用樣式
+   ============================================================ */
+
+/* ============================
+   BREADCRUMB
+============================== */
+.adm-breadcrumb {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: .4rem;
+}
+
+/* ============================
+   KPI STATS ROW
+============================== */
+.adm-kpi-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    margin-bottom: 2.4rem;
+    overflow: hidden;
+}
+
+.adm-kpi-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    padding: 2rem 2.4rem;
+    border-right: 1px solid var(--border);
+}
+
+.adm-kpi-item--last {
+    border-right: none;
+}
+
+.adm-kpi-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.adm-kpi-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.adm-kpi-value--alert {
+    color: var(--primary);
+}
+
+/* ============================
+   DASHBOARD LAYOUT (左右分欄)
+   參照 add-cases.html 的 ac-layout
+============================== */
+.adm-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.4rem;
+}
+
+.adm-col-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+}
+
+.adm-col-side {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+/* ============================
+   SECTION HEADER (標題 + 右側連結)
+============================== */
+.adm-section-hd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.6rem;
+}
+
+.adm-section-hd .section-title {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.adm-section-hd .section-title i {
+    color: var(--primary);
+    font-size: 1.6rem;
+}
+
+.adm-section-hd .section-title i.fa-triangle-exclamation {
+    color: var(--accent-orange);
+}
+
+.adm-section-link {
+    font-size: 1.3rem;
+    color: #4b8ab7;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    transition: opacity .15s;
+    white-space: nowrap;
+}
+
+.adm-section-link:hover {
+    opacity: .7;
+    text-decoration: underline;
+}
+
+/* ============================
+   TABLE SECTION (取消底部間距)
+============================== */
+.adm-col-main .table-section {
+    margin-bottom: 0;
+}
+
+/* ============================
+   KOL NAME WITH AVATAR
+============================== */
+.adm-kol-name {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.adm-kol-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    letter-spacing: .02em;
+}
+
+/* ============================
+   STATUS BADGES
+============================== */
+.adm-badge {
+    display: inline-block;
+    padding: .3rem 1rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* 待審核 */
+.adm-badge--review {
+    background: #e0f4ff;
+    color: #2a8fc0;
+}
+
+/* 處理中 */
+.adm-badge--processing {
+    background: #fff0e0;
+    color: var(--accent-orange);
+}
+
+/* ============================
+   ALERT LIST (右側異常監控)
+============================== */
+.adm-alert-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.adm-alert-item {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    padding: 1.6rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border: 1px solid var(--border);
+}
+
+.adm-alert-item--danger {
+    background: #fff5f5;
+    border-color: #f9c0c0;
+}
+
+.adm-alert-item--danger .adm-alert-icon {
+    color: var(--primary);
+}
+
+.adm-alert-item--danger .adm-alert-count {
+    color: var(--primary);
+}
+
+.adm-alert-icon {
+    font-size: 2rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.adm-alert-body {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.adm-alert-name {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.adm-alert-count {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+/* ============================
+   RWD ≤ 1180px
+============================== */
+@media (max-width: 1180px) {
+
+    /* Layout: 垂直堆疊，側欄移至主欄下方 */
+    .adm-layout {
+        flex-direction: column;
+        gap: 1.6rem;
+    }
+
+    .adm-col-main {
+        width: 100%;
+    }
+
+    .adm-col-side {
+        width: 100%;
+    }
+
+    /* 側欄改為水平排列的監控卡片 */
+    .adm-alert-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+    }
+
+    .adm-alert-item {
+        flex: 1;
+        min-width: 180px;
+    }
+}
+
+/* ============================
+   RWD ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+    .adm-layout {
+        gap: 1.6rem;
+    }
+
+    .adm-kpi-item {
+        padding: 1.6rem 1.8rem;
+    }
+
+    .adm-kpi-value {
+        font-size: 2.4rem;
+    }
+}
+
+/* ============================
+   RWD ≤ 768px
+============================== */
+@media (max-width: 768px) {
+
+    /* KPI: 每行 2 欄 */
+    .adm-kpi-row {
+        flex-wrap: wrap;
+    }
+
+    .adm-kpi-item {
+        flex: 0 0 50%;
+        min-width: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* 奇數欄（左欄）補上右分隔線 */
+    .adm-kpi-item:nth-child(odd) {
+        border-right: 1px solid var(--border);
+    }
+
+    /* 最後一項：無邊框 */
+    .adm-kpi-item--last {
+        border-right: none;
+        border-bottom: none;
+    }
+
+    /* Layout: 垂直堆疊（已於 1180px 處理） */
+    .adm-col-main {
+        gap: 1.6rem;
+    }
+
+    /* 側欄監控卡片在 768px 以下一律改回垂直排列 */
+    .adm-alert-list {
+        flex-direction: column;
+    }
+
+    .adm-alert-item {
+        min-width: unset;
+    }
+
+    /* 表格橫向捲動（搭配 all-style.css 的 .table-section overflow-x: auto） */
+    .adm-kol-table,
+    .adm-dispute-table {
+        min-width: 620px;
+    }
+
+    /* Section header: 允許換行 */
+    .adm-section-hd {
+        flex-wrap: wrap;
+        gap: .8rem;
+    }
+}
+
+/* ============================
+   RWD ≤ 480px
+============================== */
+@media (max-width: 480px) {
+
+    /* KPI: 每行 1 欄 */
+    .adm-kpi-item {
+        flex: 0 0 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* 覆蓋 768px 的奇數右邊框 */
+    .adm-kpi-item:nth-child(odd) {
+        border-right: none;
+    }
+
+    .adm-kpi-item--last {
+        border-right: none;
+        border-bottom: none;
+    }
+
+    .adm-kpi-value {
+        font-size: 2.2rem;
+    }
+
+    .adm-section-hd {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .6rem;
+    }
+}

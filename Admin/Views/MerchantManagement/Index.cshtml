@@ -1,0 +1,99 @@
+@* 待 Infrastructure MerchantRepository SQL 完成後加上 @model
+   @model Common.Pagination.PagedResult<Application.Merchants.DTOs.MerchantListItemDto> *@
+@{
+    ViewData["Title"] = "業者管理";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/business-management.css" asp-append-version="true" />
+}
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header">
+    <div class="page-header__left">
+        <nav class="adm-breadcrumb">首頁 &rsaquo; 業者管理</nav>
+        <h1 class="page-title">業者管理</h1>
+        <p class="page-subtitle">搜尋與查看業者資料、狀態、案件數、錢包與折扣金摘要</p>
+    </div>
+</div>
+
+<!-- ===== KPI STATS ===== -->
+<div class="content-card bm-kpi-row">
+    <div class="bm-kpi-item">
+        <span class="bm-kpi-label">全部業者</span>
+        <strong class="bm-kpi-value">—</strong>
+    </div>
+    <div class="bm-kpi-item">
+        <span class="bm-kpi-label">啟用中</span>
+        <strong class="bm-kpi-value bm-kpi-value--green">—</strong>
+    </div>
+    <div class="bm-kpi-item bm-kpi-item--last">
+        <span class="bm-kpi-label">停用中</span>
+        <strong class="bm-kpi-value bm-kpi-value--red">—</strong>
+    </div>
+</div>
+
+<!-- ===== FILTER BAR ===== -->
+<form method="get" asp-action="Index">
+    <div class="content-card bm-filter">
+        <div class="bm-filter-row">
+            <div class="bm-filter-item bm-filter-item--grow">
+                <label class="bm-filter-label">關鍵字搜尋</label>
+                <div class="filter-search">
+                    <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                    <input type="text" name="keyword" class="filter-search__input" placeholder="業者名稱、統編、聯絡人" />
+                </div>
+            </div>
+            <div class="bm-filter-item">
+                <label class="bm-filter-label">業者狀態</label>
+                <div class="filter-select-wrap">
+                    <select name="verificationStatus" class="filter-select">
+                        <option value="">全部</option>
+                        <option value="2">啟用中</option>
+                        <option value="4">停用中</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="bm-filter-actions">
+                <a asp-action="Index" class="bm-btn-clear">清除篩選</a>
+                <button type="submit" class="btn-primary">執行篩選</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- ===== DATA TABLE ===== -->
+<div class="content-card">
+    <div class="table-section">
+        <table class="data-table bm-table">
+            <thead>
+                <tr>
+                    <th>公司名稱</th>
+                    <th>統一編號</th>
+                    <th>聯絡人</th>
+                    <th>狀態</th>
+                    <th>可用餘額</th>
+                    <th>案件數</th>
+                    <th>建立日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* 待 MerchantRepository SQL 完成後替換
+                @foreach (var m in Model.Items)
+                {
+                    <tr>
+                        <td>@m.CompanyName</td>
+                        ...
+                        <td><a asp-action="Detail" asp-route-id="@m.MerchantId" class="action-link">詳情</a></td>
+                    </tr>
+                }
+                *@
+                <tr>
+                    <td colspan="8" class="empty-state">資料庫連線尚未完成，待 Repository 實作後顯示資料。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

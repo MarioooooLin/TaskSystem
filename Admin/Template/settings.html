@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <title>任務系統-設定</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/settings.css" />
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content st-main">
+            <div class="content-card">
+
+            <!-- ===== 麵包屑 ===== -->
+            <nav class="st-breadcrumb">
+                <a href="index.html">系統</a>
+                <span class="st-breadcrumb__sep">/</span>
+                <span class="st-breadcrumb__current">設定首頁</span>
+            </nav>
+
+            <!-- ===== 頁面標題 ===== -->
+            <div class="st-page-header">
+                <div class="page-header__left">
+                <h1 class="st-page-title">設定中心</h1>
+                <p class="st-page-desc">
+                    在此管理您的帳戶權限、通訊偏好以及發案相關的預設規則，以確保系統運行符合您的業務需求。
+                </p>
+                </div>
+            </div>
+
+            <!-- ===== 設定卡片四欄 ===== -->
+            <div class="st-cards-grid">
+
+                <!-- 使用者與角色設定 -->
+                <a href="#" class="st-card">
+                    <div class="st-card__icon">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <h2 class="st-card__title">使用者與角色設定</h2>
+                    <span class="st-card__arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <!-- 使用者角度與權限設定 -->
+                <a href="#" class="st-card">
+                    <div class="st-card__icon">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <h2 class="st-card__title">使用者角度與權限設定</h2>
+                    <span class="st-card__arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <!-- 企業資料維護 -->
+                <a href="#" class="st-card">
+                    <div class="st-card__icon">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+                    <h2 class="st-card__title">企業資料維護</h2>
+                    <span class="st-card__arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <!-- 通知偏好設定 -->
+                <a href="#" class="st-card">
+                    <div class="st-card__icon">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <h2 class="st-card__title">通知偏好設定</h2>
+                    <span class="st-card__arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+            </div>
+
+            <!-- ===== 系統維護資訊 ===== -->
+            <div class="st-info-card">
+                <p class="st-info-card__tag">系統維護資訊</p>
+                <p class="st-info-card__text">
+                    上次設定更新：2023年10月24日 14:30。若有任何操作疑問，請參考線上操作手冊或聯繫客服支援。
+                </p>
+                <div class="st-info-card__actions">
+                    <a href="#" class="st-btn st-btn--primary">閱讀文件</a>
+                    <a href="#" class="st-btn st-btn--outline">聯繫支援</a>
+                </div>
+            </div><!-- /.st-info-card -->
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

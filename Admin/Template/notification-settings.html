@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <title>任務系統-通知偏好設定</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/notification-settings.css" />
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content ns-main">
+            <div class="content-card">
+
+                <!-- ===== 頁面標題 ===== -->
+                <h1 class="ns-page-title">通知偏好設定</h1>
+                <p class="ns-page-desc">管理系統如何與您聯繫，確保重要資訊不漏接。</p>
+
+                <!-- ===== 全域通知管道 ===== -->
+                <div class="ns-panel">
+                    <div class="ns-panel__header">
+                        <div class="ns-panel__title">
+                            <i class="fa-solid fa-envelope-circle-check"></i>
+                            主要通知方式
+                        </div>
+                    </div>
+                    <div class="ns-panel__body">
+                        <div class="ns-channels">
+
+                            <!-- Email 通知 -->
+                            <label class="ns-channel-item">
+                                <input type="checkbox" checked>
+                                <span class="ns-checkmark"></span>
+                                <div class="ns-channel-info">
+                                    <span class="ns-channel-name">Email通知</span>
+                                    <span class="ns-channel-desc">將彙整報告發送至常用信箱</span>
+                                </div>
+                            </label>
+
+                            <!-- 站內訊息 -->
+                            <label class="ns-channel-item">
+                                <input type="checkbox" checked>
+                                <span class="ns-checkmark"></span>
+                                <div class="ns-channel-info">
+                                    <span class="ns-channel-name">站內訊息</span>
+                                    <span class="ns-channel-desc">系統選單右上角的小紅點提醒</span>
+                                </div>
+                            </label>
+
+                            <!-- 簡訊通知 -->
+                            <label class="ns-channel-item">
+                                <input type="checkbox">
+                                <span class="ns-checkmark"></span>
+                                <div class="ns-channel-info">
+                                    <span class="ns-channel-name">簡訊通知</span>
+                                    <span class="ns-channel-desc">緊急案件發送 SMS（可能產生費用）</span>
+                                </div>
+                            </label>
+
+                        </div>
+                    </div>
+                </div><!-- /.ns-panel -->
+
+                <!-- ===== 事件觸發矩陣 ===== -->
+                <div class="ns-panel">
+                    <div class="ns-panel__header">
+                        <div class="ns-panel__title">
+                            <i class="fa-solid fa-table-cells"></i>
+                            自訂通知方式
+                        </div>
+                        <span class="ns-panel__hint">依據事件類型細化通知方式</span>
+                    </div>
+                    <div class="ns-panel__body" style="padding:0;">
+                        <table class="ns-matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>事件類型 \ 管道</th>
+                                    <th class="ns-col-channel">Email</th>
+                                    <th class="ns-col-channel">站內訊息</th>
+                                    <th class="ns-col-channel">簡訊通知</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 待驗收 -->
+                                <tr>
+                                    <td>
+                                        <div class="ns-event-name">待驗收</div>
+                                        <div class="ns-event-desc">合作 KOL 已提交成果，等待確認</div>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox"><span class="ns-checkmark"></span></label>
+                                    </td>
+                                </tr>
+                                <!-- 名額未滿 -->
+                                <tr>
+                                    <td>
+                                        <div class="ns-event-name">名額未滿</div>
+                                        <div class="ns-event-desc">任務截止前 24 小時投標人數不足</div>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                </tr>
+                                <!-- 案件審核 -->
+                                <tr>
+                                    <td>
+                                        <div class="ns-event-name">案件審核</div>
+                                        <div class="ns-event-desc">提交的新任務草稿已通過審查</div>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox"><span class="ns-checkmark"></span></label>
+                                    </td>
+                                </tr>
+                                <!-- 系統維護公告 -->
+                                <tr>
+                                    <td>
+                                        <div class="ns-event-name">系統維護公告</div>
+                                        <div class="ns-event-desc">即將進行的停機或更新說明</div>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox"><span class="ns-checkmark"></span></label>
+                                    </td>
+                                </tr>
+                                <!-- 錢包餘額變動 -->
+                                <tr>
+                                    <td>
+                                        <div class="ns-event-name">錢包餘額變動</div>
+                                        <div class="ns-event-desc">儲值成功、扣款或撥款通知</div>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox" checked><span class="ns-checkmark"></span></label>
+                                    </td>
+                                    <td class="ns-col-channel">
+                                        <label><input type="checkbox"><span class="ns-checkmark"></span></label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- /.ns-panel -->
+
+                <!-- ===== 底部操作列 ===== -->
+                <div class="ns-footer-bar">
+                    <div class="ns-footer-bar__hint">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>設定將在儲存後立即生效。部分緊急通知無法被完全關閉。</span>
+                    </div>
+                    <div class="ns-footer-bar__actions">
+                        <button class="ns-btn ns-btn--outline" id="nsResetBtn">還原預設</button>
+                        <button class="ns-btn ns-btn--primary" id="nsSaveBtn">
+                            <i class="fa-solid fa-floppy-disk"></i> 儲存設定
+                        </button>
+                    </div>
+                </div>
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

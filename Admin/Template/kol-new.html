@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-審核新進KOL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/kol-new.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header kn-page-header">
+                <div class="page-header__left">
+                    <h1 class="page-title">審核新進KOL</h1>
+                    <p class="page-subtitle">查看待審核、重送審核與退回待補的KOL，並進入審核詳情頁完成審核判斷</p>
+                </div>
+                <div class="kn-header-actions">
+                    <button class="kn-btn kn-btn--ghost"><i class="fa-solid fa-download"></i> 匯出待審清單</button>
+                    <button class="kn-btn kn-btn--ghost"><i class="fa-solid fa-rotate-right"></i> 重新整理</button>
+                </div>
+            </div>
+
+            <!-- ===== KPI STATS ===== -->
+            <div class="content-card kn-kpi-row">
+                <div class="kn-kpi-item">
+                    <span class="kn-kpi-label"><i class="fa-regular fa-clock"></i> 待審核</span>
+                    <strong class="kn-kpi-value">32</strong>
+                </div>
+                <div class="kn-kpi-item">
+                    <span class="kn-kpi-label"><i class="fa-solid fa-rotate"></i> 重送審核</span>
+                    <strong class="kn-kpi-value">8</strong>
+                </div>
+                <div class="kn-kpi-item">
+                    <span class="kn-kpi-label"><i class="fa-regular fa-rectangle-list"></i> 已退回待補</span>
+                    <strong class="kn-kpi-value kn-kpi-value--danger">18</strong>
+                </div>
+                <div class="kn-kpi-item">
+                    <span class="kn-kpi-label"><i class="fa-regular fa-user"></i> 今日新增</span>
+                    <strong class="kn-kpi-value">6</strong>
+                </div>
+                <div class="kn-kpi-item kn-kpi-item--last">
+                    <span class="kn-kpi-label kn-kpi-label--danger"><i class="fa-solid fa-triangle-exclamation"></i> 超過3日未審</span>
+                    <strong class="kn-kpi-value kn-kpi-value--danger">5</strong>
+                </div>
+            </div>
+
+            <!-- ===== FILTER BAR ===== -->
+            <div class="content-card kn-filter">
+                <div class="kn-filter-row kn-filter-row--top">
+                    <div class="kn-filter-item kn-filter-item--grow">
+                        <div class="filter-search">
+                            <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                            <input type="text" class="filter-search__input" placeholder="搜尋 KOL名稱、Email、手機、社群帳號...">
+                        </div>
+                    </div>
+                    <div class="kn-status-wrap">
+                        <span class="kn-status-label">狀態篩選：</span>
+                        <div class="kn-status-chips">
+                            <button type="button" class="kn-chip kn-chip--active"><i class="fa-solid fa-check"></i> 待審核</button>
+                            <button type="button" class="kn-chip"><i class="fa-solid fa-rotate"></i> 重送審核</button>
+                            <button type="button" class="kn-chip">已退回待補</button>
+                            <button type="button" class="kn-chip">已通過</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kn-filter-row">
+                    <div class="kn-filter-item">
+                        <label class="kn-filter-label">KOL 類型</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部</option>
+                                <option>旅遊</option>
+                                <option>美食</option>
+                                <option>生活風格</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="kn-filter-item">
+                        <label class="kn-filter-label">主要平台</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部</option>
+                                <option>IG</option>
+                                <option>TikTok</option>
+                                <option>YT</option>
+                                <option>Blog</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="kn-filter-item">
+                        <label class="kn-filter-label">資料完整度</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部</option>
+                                <option>90%以上</option>
+                                <option>70%~89%</option>
+                                <option>70%以下</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="kn-filter-item">
+                        <label class="kn-filter-label">社群資料</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部</option>
+                                <option>完整</option>
+                                <option>待補件</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="kn-filter-item">
+                        <label class="kn-filter-label">送審日期</label>
+                        <div class="filter-date-input">
+                            <input type="date" class="date-input" aria-label="送審日期">
+                        </div>
+                    </div>
+                    <div class="kn-filter-actions">
+                        <button class="kn-clear-btn">清除篩選</button>
+                        <button class="btn-primary">執行</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== DATA TABLE ===== -->
+            <div class="content-card">
+                <div class="table-section">
+                    <table class="data-table kn-table">
+                        <thead>
+                            <tr>
+                                <th>KOL / 類型</th>
+                                <th>主要平台</th>
+                                <th>追蹤總數</th>
+                                <th>資料完整度</th>
+                                <th>審核狀態</th>
+                                <th>送審時間</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="kn-kol-cell">
+                                        <span class="kn-avatar">內</span>
+                                        <div class="kn-kol-meta">
+                                            <strong>內內 Nene</strong>
+                                            <span>旅遊 / 美食 / 生活風格</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="kn-platform-list">
+                                        <span class="kn-platform-tag">IG</span>
+                                        <span class="kn-platform-tag">TikTok</span>
+                                        <span class="kn-platform-tag">YT</span>
+                                    </div>
+                                </td>
+                                <td>120,000</td>
+                                <td>
+                                    <div class="kn-progress-cell">
+                                        <div class="kn-progress"><span style="width: 92%"></span></div>
+                                        <span class="kn-progress-value">92%</span>
+                                    </div>
+                                </td>
+                                <td><span class="kn-status-pill kn-status-pill--pending"><i class="fa-solid fa-circle"></i> 待審核</span></td>
+                                <td class="kn-time-cell">2026-05-22<br>09:30</td>
+                                <td><a href="#" class="kn-enter-link">進入審核</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="kn-kol-cell">
+                                        <span class="kn-avatar kn-avatar--light">小</span>
+                                        <div class="kn-kol-meta">
+                                            <strong>小島旅行日記</strong>
+                                            <span>旅遊</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="kn-platform-list">
+                                        <span class="kn-platform-tag">Blog</span>
+                                        <span class="kn-platform-tag">FB</span>
+                                    </div>
+                                </td>
+                                <td>42,000</td>
+                                <td>
+                                    <div class="kn-progress-cell">
+                                        <div class="kn-progress"><span style="width: 100%"></span></div>
+                                        <span class="kn-progress-value">100%</span>
+                                    </div>
+                                </td>
+                                <td><span class="kn-status-pill kn-status-pill--resubmit"><i class="fa-solid fa-circle"></i> 重送審核</span></td>
+                                <td class="kn-time-cell">2026-05-22<br>10:15</td>
+                                <td><a href="#" class="kn-enter-link">進入審核</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="kn-kol-cell">
+                                        <span class="kn-avatar kn-avatar--dark">小</span>
+                                        <div class="kn-kol-meta">
+                                            <strong>小白開箱日常</strong>
+                                            <span>生活風格</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="kn-platform-list">
+                                        <span class="kn-platform-tag">IG</span>
+                                        <span class="kn-platform-tag">TikTok</span>
+                                    </div>
+                                </td>
+                                <td>52,000</td>
+                                <td>
+                                    <div class="kn-progress-cell">
+                                        <div class="kn-progress kn-progress--danger"><span style="width: 68%"></span></div>
+                                        <span class="kn-progress-value kn-progress-value--danger">68%</span>
+                                    </div>
+                                </td>
+                                <td><span class="kn-status-pill kn-status-pill--pending"><i class="fa-solid fa-circle"></i> 待審核</span></td>
+                                <td class="kn-time-cell">2026-05-21<br>16:00</td>
+                                <td><a href="#" class="kn-enter-link">進入審核</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="kn-kol-cell">
+                                        <span class="kn-avatar kn-avatar--gray">阿</span>
+                                        <div class="kn-kol-meta">
+                                            <strong>阿森旅遊筆記</strong>
+                                            <span>旅遊 / 生活風格</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="kn-platform-list">
+                                        <span class="kn-platform-tag">IG</span>
+                                        <span class="kn-platform-tag">YT</span>
+                                    </div>
+                                </td>
+                                <td>96,000</td>
+                                <td>
+                                    <div class="kn-progress-cell">
+                                        <div class="kn-progress"><span style="width: 86%"></span></div>
+                                        <span class="kn-progress-value">86%</span>
+                                    </div>
+                                </td>
+                                <td><span class="kn-status-pill kn-status-pill--pending"><i class="fa-solid fa-circle"></i> 待審核</span></td>
+                                <td class="kn-time-cell">2026-05-20<br>18:20</td>
+                                <td><a href="#" class="kn-enter-link">進入審核</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="kn-kol-cell">
+                                        <span class="kn-avatar kn-avatar--pink">山</span>
+                                        <div class="kn-kol-meta">
+                                            <strong>山城慢旅</strong>
+                                            <span>旅遊</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="kn-platform-list">
+                                        <span class="kn-platform-tag">Blog</span>
+                                    </div>
+                                </td>
+                                <td>38,000</td>
+                                <td>
+                                    <div class="kn-progress-cell">
+                                        <div class="kn-progress kn-progress--danger"><span style="width: 76%"></span></div>
+                                        <span class="kn-progress-value kn-progress-value--danger">76%</span>
+                                    </div>
+                                </td>
+                                <td><span class="kn-status-pill kn-status-pill--returned"><i class="fa-solid fa-circle"></i> 已退回待補</span></td>
+                                <td class="kn-time-cell">2026-05-19<br>11:00</td>
+                                <td><a href="#" class="kn-enter-link">進入審核</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="kn-table-footer pagination">
+                    <span class="pagination__info">顯示 1 - 5 筆，共 58 筆</span>
+                    <div class="pagination__nav">
+                        <button type="button" class="page-btn" aria-label="上一頁"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button type="button" class="page-btn active">1</button>
+                        <button type="button" class="page-btn">2</button>
+                        <button type="button" class="page-btn">3</button>
+                        <span class="page-ellipsis">...</span>
+                        <button type="button" class="page-btn">12</button>
+                        <button type="button" class="page-btn" aria-label="下一頁"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

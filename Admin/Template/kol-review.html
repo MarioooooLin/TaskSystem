@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-KOL審核詳情</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/kol-review.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header kr-page-header">
+                <div class="page-header__left">
+                    <nav class="adm-breadcrumb">KOL管理 &rsaquo; 詳細檔案</nav>
+                    <h1 class="page-title">KOL詳細檔案</h1>
+                    <p class="page-subtitle">查看KOL資料、社群頻道、審核狀態、任務紀錄、收益與異常紀錄</p>
+                </div>
+                <a href="kol-new.html" class="kr-btn kr-btn--ghost">返回KOL管理</a>
+            </div>
+
+            <!-- ===== SUMMARY ===== -->
+            <div class="content-card kr-summary-card">
+                <div class="kr-summary-left">
+                    <div class="kr-summary-icon">
+                        <img src="images/Designer.jpg" alt="內內 Nene 頭貼" class="kr-summary-avatar">
+                    </div>
+                    <div class="kr-summary-meta">
+                        <h2 class="kr-kol-name">內內 Nene</h2>
+                        <div class="kr-status-list">
+                            <span class="kr-badge kr-badge--active"><i class="fa-solid fa-circle"></i> 啟用中</span>
+                            <span class="kr-badge kr-badge--pending"><i class="fa-solid fa-circle"></i> 待審核</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kr-summary-grid">
+                    <div class="kr-summary-item">
+                        <span class="kr-summary-label">KOL類型</span>
+                        <strong class="kr-summary-value">旅遊、美食、生活風格</strong>
+                    </div>
+                    <div class="kr-summary-item">
+                        <span class="kr-summary-label">主要平台</span>
+                        <strong class="kr-summary-value">IG / TikTok / YT</strong>
+                    </div>
+                    <div class="kr-summary-item">
+                        <span class="kr-summary-label">粉絲總數</span>
+                        <strong class="kr-summary-value">120,000</strong>
+                    </div>
+                    <div class="kr-summary-item">
+                        <span class="kr-summary-label">收款資料狀態</span>
+                        <strong class="kr-summary-value kr-summary-value--ok">已綁定</strong>
+                    </div>
+                    <div class="kr-summary-item">
+                        <span class="kr-summary-label">任務數</span>
+                        <strong class="kr-summary-value">8</strong>
+                    </div>
+                    <div class="kr-summary-item">
+                        <span class="kr-summary-label">驗收通過數</span>
+                        <strong class="kr-summary-value">7</strong>
+                    </div>
+                    <div class="kr-summary-item">
+                        <span class="kr-summary-label">未結案異議數</span>
+                        <strong class="kr-summary-value kr-summary-value--danger">1</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 基本資料 ===== -->
+            <section class="kr-section">
+                <h2 class="section-title kr-section-title"><i class="fa-regular fa-user"></i> 基本資料</h2>
+                <div class="kr-card-grid kr-card-grid--2">
+                    <article class="kr-info-card">
+                        <h3 class="kr-card-title">KOL個人資料</h3>
+                        <div class="kr-kv-list">
+                            <div class="kr-kv-row"><span>KOL名稱</span><strong>內內 Nene</strong></div>
+                            <div class="kr-kv-row"><span>聯絡窗口</span><strong>內內</strong></div>
+                            <div class="kr-kv-row"><span>手機</span><strong>09** *** 888</strong></div>
+                            <div class="kr-kv-row"><span>Email</span><strong>nene@example.com</strong></div>
+                            <div class="kr-kv-row"><span>LINE綁定狀態</span><strong class="kr-text-success"><i class="fa-solid fa-circle-check"></i> 已綁定</strong></div>
+                            <div class="kr-kv-row"><span>建立日期</span><strong>2026-05-10</strong></div>
+                        </div>
+                    </article>
+
+                    <article class="kr-info-card">
+                        <h3 class="kr-card-title">KOL定位</h3>
+                        <div class="kr-kv-list kr-kv-list--stack">
+                            <div class="kr-kv-stack">
+                                <span>KOL類型</span>
+                                <p>旅遊　美食　生活風格</p>
+                            </div>
+                            <div class="kr-kv-stack">
+                                <span>自我介紹</span>
+                                <p>我主要分享台灣旅宿、溫泉、美食與生活風格內容，擁有高品質的影像產出與穩定的粉絲黏著度。</p>
+                            </div>
+                            <div class="kr-kv-stack">
+                                <span>可合作條件</span>
+                                <p>✓ 現金酬勞　✓ 體驗項目</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ===== 社群頻道 ===== -->
+            <section class="kr-section">
+                <h2 class="section-title kr-section-title"><i class="fa-solid fa-share-nodes"></i> 社群頻道</h2>
+                <div class="content-card kr-section-card">
+                    <div class="table-section">
+                        <table class="data-table kr-table">
+                            <thead>
+                                <tr>
+                                    <th>平台</th>
+                                    <th>帳號名稱</th>
+                                    <th>粉絲數</th>
+                                    <th>資料來源</th>
+                                    <th>最後更新</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fa-brands fa-instagram kr-platform-icon"></i> Instagram</td>
+                                    <td>@nene_travel_tw</td>
+                                    <td>85,400</td>
+                                    <td>API（同步）</td>
+                                    <td>2026-06-15</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fa-brands fa-tiktok kr-platform-icon"></i> TikTok</td>
+                                    <td>nene_daily</td>
+                                    <td>32,100</td>
+                                    <td>手動輸入</td>
+                                    <td>2026-06-10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="kr-notice-box">
+                        <span class="kr-notice-title"><i class="fa-solid fa-triangle-exclamation"></i> 社群審核提醒</span>
+                        <ul>
+                            <li>確認 TikTok 頻道連結是否與實際帳號相符</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== 收款資料 ===== -->
+            <section class="kr-section">
+                <h2 class="section-title kr-section-title"><i class="fa-solid fa-building-columns"></i> 收款資料</h2>
+                <div class="kr-card-grid kr-card-grid--payment">
+                    <article class="kr-info-card">
+                        <div class="kr-kv-pair-grid">
+                            <div class="kr-kv-block">
+                                <span>收款身份</span>
+                                <strong>個人</strong>
+                            </div>
+                            <div class="kr-kv-block">
+                                <span>收款戶名</span>
+                                <strong>內內</strong>
+                            </div>
+                            <div class="kr-kv-block">
+                                <span>銀行</span>
+                                <strong>822 富邦銀行</strong>
+                            </div>
+                            <div class="kr-kv-block">
+                                <span>銀行帳號</span>
+                                <strong>8220 0123 4567 4519</strong>
+                            </div>
+                            <div class="kr-kv-block">
+                                <span>收款資料狀態</span>
+                                <strong class="kr-text-success">已審核</strong>
+                            </div>
+                            <div class="kr-kv-block">
+                                <span>最近更新</span>
+                                <strong>2026-06-20 14:30</strong>
+                            </div>
+                        </div>
+                    </article>
+
+                    <aside class="kr-payment-hint">
+                        <h3><i class="fa-solid fa-shield-halved"></i> 隱私與安全</h3>
+                        <p>收款資料僅供查核，不顯示完整敏感資訊。</p>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ===== KOL審核 ===== -->
+            <section class="kr-section">
+                <h2 class="section-title kr-section-title"><i class="fa-solid fa-gavel"></i> KOL審核</h2>
+                <div class="kr-card-grid kr-card-grid--review">
+                    <article class="kr-info-card">
+                        <h3 class="kr-card-title">審核狀態</h3>
+                        <div class="kr-review-meta">
+                            <div class="kr-review-row">
+                                <span>當前狀態</span>
+                                <strong><span class="kr-badge kr-badge--pending">待審核</span></strong>
+                            </div>
+                            <div class="kr-review-row">
+                                <span>送審時間</span>
+                                <strong>2026-06-20 14:30</strong>
+                            </div>
+                        </div>
+
+                        <div class="kr-reject-box">
+                            <span>退回原因/審核意見：</span>
+                            <p>社群頻道網址缺少一筆（IG連結失效）。</p>
+                        </div>
+                    </article>
+
+                    <article class="kr-info-card">
+                        <h3 class="kr-card-title">資料審核</h3>
+                        <textarea class="kr-review-textarea" rows="4" placeholder="請輸入審核意見（退回修改時必填）..." aria-label="審核意見"></textarea>
+                        <div class="kr-review-actions">
+                            <button type="button" class="kr-review-btn kr-review-btn--reject">退回修改</button>
+                            <button type="button" class="kr-review-btn kr-review-btn--approve">審核通過</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

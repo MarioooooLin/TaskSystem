@@ -1,0 +1,103 @@
+@* 待 Infrastructure KolRepository SQL 完成後加上 @model
+   @model Common.Pagination.PagedResult<Application.Kols.DTOs.KolReviewListItemDto> *@
+@{
+    ViewData["Title"] = "審核新進KOL";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/kol-new.css" asp-append-version="true" />
+}
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header kn-page-header">
+    <div class="page-header__left">
+        <nav class="adm-breadcrumb">首頁 &rsaquo; KOL管理 &rsaquo; 審核新進KOL</nav>
+        <h1 class="page-title">審核新進KOL</h1>
+        <p class="page-subtitle">查看待審核、重送審核與退回待補的KOL，並進入審核詳情頁完成審核判斷</p>
+    </div>
+    <div class="kn-header-actions">
+        <a asp-action="Index" class="kn-btn kn-btn--ghost">返回KOL管理</a>
+    </div>
+</div>
+
+<!-- ===== KPI STATS ===== -->
+<div class="content-card kn-kpi-row">
+    <div class="kn-kpi-item">
+        <span class="kn-kpi-label"><i class="fa-regular fa-clock"></i> 待審核</span>
+        <strong class="kn-kpi-value">—</strong>
+    </div>
+    <div class="kn-kpi-item">
+        <span class="kn-kpi-label"><i class="fa-solid fa-rotate"></i> 重送審核</span>
+        <strong class="kn-kpi-value">—</strong>
+    </div>
+    <div class="kn-kpi-item">
+        <span class="kn-kpi-label"><i class="fa-solid fa-rotate-left"></i> 已退回待補</span>
+        <strong class="kn-kpi-value">—</strong>
+    </div>
+</div>
+
+<!-- ===== FILTER BAR ===== -->
+<form method="get" asp-action="ReviewList">
+    <div class="content-card kn-filter">
+        <div class="kn-filter-row">
+            <div class="kn-filter-item kn-filter-item--grow">
+                <label class="bm-filter-label">關鍵字搜尋</label>
+                <div class="filter-search">
+                    <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                    <input type="text" name="keyword" class="filter-search__input" placeholder="搜尋KOL名稱、Email" />
+                </div>
+            </div>
+            <div class="kn-filter-item">
+                <label class="bm-filter-label">審核狀態</label>
+                <div class="filter-select-wrap">
+                    <select name="verificationStatus" class="filter-select">
+                        <option value="">全部</option>
+                        <option value="1">待審核</option>
+                        <option value="3">已退回</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="kn-filter-actions">
+                <a asp-action="ReviewList" class="bm-btn-clear">清除篩選</a>
+                <button type="submit" class="btn-primary">執行篩選</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- ===== DATA TABLE ===== -->
+<div class="content-card">
+    <div class="table-section">
+        <table class="data-table kn-table">
+            <thead>
+                <tr>
+                    <th>KOL名稱</th>
+                    <th>類型 / 平台</th>
+                    <th>粉絲總數</th>
+                    <th>審核狀態</th>
+                    <th>資料完整度</th>
+                    <th>送審日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* 待 KolRepository SQL 完成後替換
+                @foreach (var kol in Model.Items)
+                {
+                    <tr>
+                        <td>@kol.DisplayName</td>
+                        ...
+                        <td>
+                            <a asp-action="Detail" asp-route-id="@kol.KolId" class="action-link">查看詳情</a>
+                        </td>
+                    </tr>
+                }
+                *@
+                <tr>
+                    <td colspan="7" class="empty-state">資料庫連線尚未完成，待 Repository 實作後顯示資料。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

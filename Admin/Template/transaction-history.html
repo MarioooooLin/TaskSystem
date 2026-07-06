@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統-交易紀錄明細</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/transaction-history.css" />
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content th-main">
+
+            <!-- ===== 頁面標題 ===== -->
+            <div class="th-page-header">
+                <h1 class="th-page-title">交易紀錄明細</h1>
+                <p class="th-page-desc">檢視帳戶所有歷史交易與資金變動狀態</p>
+            </div>
+
+            <!-- ===== 搜尋篩選區 ===== -->
+            <div class="content-card th-filter-card">
+                <div class="th-filter-grid">
+
+                    <!-- 日期範圍 -->
+                    <div class="th-filter-item th-filter-item--date">
+                        <label class="th-filter-label">日期範圍</label>
+                        <div class="th-date-range">
+                            <input type="date" class="th-form-input" id="dateFrom">
+                            <span class="th-date-sep">至</span>
+                            <input type="date" class="th-form-input" id="dateTo">
+                        </div>
+                    </div>
+
+                    <!-- 交易類型 -->
+                    <div class="th-filter-item">
+                        <label class="th-filter-label">交易類型</label>
+                        <div class="th-select-wrap">
+                            <select class="th-form-select" id="filterType">
+                                <option value="">全部類型 (All)</option>
+                                <option value="settlement">專案結算 (Settlement)</option>
+                                <option value="recharge">帳戶充值 (Recharge)</option>
+                                <option value="lock">專案預算凍結 (Lock)</option>
+                                <option value="refund">退款 (Refund)</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down th-select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- 交易狀態 -->
+                    <div class="th-filter-item">
+                        <label class="th-filter-label">交易狀態</label>
+                        <div class="th-select-wrap">
+                            <select class="th-form-select" id="filterStatus">
+                                <option value="">全部狀態 (All)</option>
+                                <option value="done">已完成</option>
+                                <option value="processing">處理中</option>
+                                <option value="cancelled">已取消</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down th-select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- 關鍵字搜尋 -->
+                    <div class="th-filter-item">
+                        <label class="th-filter-label">關鍵字搜尋</label>
+                        <div class="th-search-wrap">
+                            <input type="text" class="th-form-input th-search-input"
+                                id="filterKeyword" placeholder="案件名稱或交易 ID">
+                            <i class="fa-solid fa-magnifying-glass th-search-icon"></i>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="th-filter-actions">
+                    <button class="th-search-btn" id="searchBtn">執行搜尋</button>
+                </div>
+            </div>
+
+            <!-- ===== 交易明細表格 ===== -->
+            <div class="content-card th-table-card">
+                <div class="th-table-wrap">
+                    <table class="th-table" id="txnTable">
+                        <thead>
+                            <tr>
+                                <th>交易時間</th>
+                                <th>交易類型</th>
+                                <th>金額 (TWD)</th>
+                                <th>狀態</th>
+                                <th>關聯案件</th>
+                                <th class="th-col-balance">餘額</th>
+                            </tr>
+                        </thead>
+                        <tbody id="txnBody">
+                            <tr data-type="settlement" data-status="done" data-keyword="冬日荒顏護膚推廣">
+                                <td class="th-txn-date">2023-11-20 14:30</td>
+                                <td>專案結算 (Settlement)</td>
+                                <td class="th-amount th-amount--red">- $45,000</td>
+                                <td><span class="th-status th-status--done">已完成</span></td>
+                                <td><a href="cases-detail.html" class="th-case-link">冬日荒顏護膚推廣</a></td>
+                                <td class="th-balance">$155,200</td>
+                            </tr>
+                            <tr data-type="recharge" data-status="done" data-keyword="">
+                                <td class="th-txn-date">2023-11-18 09:15</td>
+                                <td>帳戶充值 (Recharge)</td>
+                                <td class="th-amount th-amount--green">+ $200,000</td>
+                                <td><span class="th-status th-status--done">已完成</span></td>
+                                <td class="th-case-none">--</td>
+                                <td class="th-balance">$200,200</td>
+                            </tr>
+                            <tr data-type="lock" data-status="processing" data-keyword="都市咖啡微型活動">
+                                <td class="th-txn-date">2023-11-15 16:45</td>
+                                <td>專案預算凍結 (Lock)</td>
+                                <td class="th-amount th-amount--red">- $12,000</td>
+                                <td><span class="th-status th-status--processing">處理中</span></td>
+                                <td><a href="cases-detail.html" class="th-case-link">都市咖啡微型活動</a></td>
+                                <td class="th-balance">$200</td>
+                            </tr>
+                            <tr data-type="refund" data-status="done" data-keyword="環保系列活動">
+                                <td class="th-txn-date">2023-11-12 11:00</td>
+                                <td>退款 (Refund)</td>
+                                <td class="th-amount th-amount--green">+ $5,500</td>
+                                <td><span class="th-status th-status--done">已完成</span></td>
+                                <td><a href="cases-detail.html" class="th-case-link">環保系列活動</a></td>
+                                <td class="th-balance">$12,200</td>
+                            </tr>
+                            <tr data-type="settlement" data-status="done" data-keyword="Q4科技小物評測">
+                                <td class="th-txn-date">2023-11-10 18:20</td>
+                                <td>專案結算 (Settlement)</td>
+                                <td class="th-amount th-amount--red">- $88,000</td>
+                                <td><span class="th-status th-status--done">已完成</span></td>
+                                <td><a href="cases-detail.html" class="th-case-link">Q4 科技小物評測</a></td>
+                                <td class="th-balance">$6,700</td>
+                            </tr>
+                            <tr data-type="recharge" data-status="cancelled" data-keyword="">
+                                <td class="th-txn-date">2023-11-05 10:45</td>
+                                <td>帳戶充值 (Recharge)</td>
+                                <td class="th-amount th-amount--green">+ $50,000</td>
+                                <td><span class="th-status th-status--cancelled">已取消</span></td>
+                                <td class="th-case-none">--</td>
+                                <td class="th-balance">$94,700</td>
+                            </tr>
+                            <tr data-type="lock" data-status="done" data-keyword="秋季時尚發佈">
+                                <td class="th-txn-date">2023-11-01 14:00</td>
+                                <td>專案預算凍結 (Lock)</td>
+                                <td class="th-amount th-amount--red">- $25,000</td>
+                                <td><span class="th-status th-status--done">已完成</span></td>
+                                <td><a href="cases-detail.html" class="th-case-link">秋季時尚發佈</a></td>
+                                <td class="th-balance">$44,700</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 底部結尾提示 -->
+                <div class="th-table-footer" id="txnFooter">
+                    <span>─ 已顯示所有符合條件的紀錄 ─</span>
+                    <i class="fa-regular fa-circle-check"></i>
+                </div>
+
+                <!-- 無資料提示 -->
+                <div class="th-empty" id="txnEmpty" style="display:none;">
+                    <i class="fa-regular fa-folder-open th-empty__icon"></i>
+                    <p>查無符合條件的交易紀錄</p>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

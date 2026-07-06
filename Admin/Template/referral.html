@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統-導購成效總覽</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/referral.css" />
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content rf-main">
+
+            <!-- ===== 頁面標題 + 操作按鈕 ===== -->
+            <div class="rf-page-header">
+                <div class="rf-page-header__left">
+                    <h1 class="rf-page-title">導購成效總覽</h1>
+                    <p class="rf-page-desc">快速查看本期導購表現、熱門案件、高效 KOL 與待注意交易</p>
+                </div>
+                <div class="rf-page-header__actions">
+                    <a href="transaction-history.html" class="rf-btn rf-btn--outline">
+                        <i class="fa-regular fa-file-lines"></i> 查看交易明細
+                    </a>
+                    <button class="rf-btn rf-btn--outline" id="exportCsvBtn">
+                        <i class="fa-solid fa-download"></i> 匯出統計 CSV
+                    </button>
+                    <button class="rf-btn rf-btn--dark" id="syncBtn">
+                        <i class="fa-solid fa-arrows-rotate"></i> 重新同步資料
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== 時間範圍切換 ===== -->
+            <div class="rf-time-tabs">
+                <button class="rf-time-tab rf-time-tab--active" data-range="month">本月</button>
+                <button class="rf-time-tab" data-range="last-month">上月</button>
+                <button class="rf-time-tab" data-range="3months">近 3 個月</button>
+                <button class="rf-time-tab" data-range="year">今年</button>
+                <button class="rf-time-tab rf-time-tab--custom" data-range="custom">
+                    <i class="fa-regular fa-calendar"></i> 自訂區間
+                </button>
+            </div>
+
+            <!-- ===== 統計卡片 ===== -->
+            <div class="rf-stat-cards">
+                <!-- 導購交易數 -->
+                <div class="rf-stat-card">
+                    <div class="rf-stat-card__label">導購交易數</div>
+                    <div class="rf-stat-card__value">128</div>
+                    <div class="rf-stat-card__change rf-stat-card__change--up">
+                        <i class="fa-solid fa-arrow-up"></i> +12%
+                    </div>
+                </div>
+                <!-- 訂單總金額 -->
+                <div class="rf-stat-card">
+                    <div class="rf-stat-card__label">訂單總金額</div>
+                    <div class="rf-stat-card__value">NT$1.28M</div>
+                    <div class="rf-stat-card__change rf-stat-card__change--up">
+                        <i class="fa-solid fa-arrow-up"></i> +8.4%
+                    </div>
+                </div>
+                <!-- 可結算分潤（選取） -->
+                <div class="rf-stat-card rf-stat-card--selected">
+                    <div class="rf-stat-card__label">可結算分潤</div>
+                    <div class="rf-stat-card__value">NT$154,320</div>
+                    <div class="rf-stat-card__change rf-stat-card__change--up">
+                        <i class="fa-solid fa-arrow-up"></i> +15%
+                    </div>
+                </div>
+                <!-- 退款／取消金額 -->
+                <div class="rf-stat-card">
+                    <div class="rf-stat-card__label">退款／取消金額</div>
+                    <div class="rf-stat-card__value rf-stat-card__value--red">NT$42,000</div>
+                    <div class="rf-stat-card__change rf-stat-card__change--down">
+                        <i class="fa-solid fa-arrow-down"></i> -2.1%
+                    </div>
+                </div>
+                <!-- 平均訂單金額 -->
+                <div class="rf-stat-card">
+                    <div class="rf-stat-card__label">平均訂單金額</div>
+                    <div class="rf-stat-card__value">NT$10,047</div>
+                    <div class="rf-stat-card__change rf-stat-card__change--up">
+                        <i class="fa-solid fa-arrow-up"></i> +3.2%
+                    </div>
+                </div>
+                <!-- 有效 KOL 數 -->
+                <div class="rf-stat-card">
+                    <div class="rf-stat-card__label">有效 KOL 數</div>
+                    <div class="rf-stat-card__value">18</div>
+                    <div class="rf-stat-card__change rf-stat-card__change--up">
+                        <i class="fa-solid fa-arrow-up"></i> +2 人
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 本期導購趨勢 ===== -->
+            <div class="content-card rf-trend-card">
+                <div class="rf-trend-header">
+                    <h2 class="rf-trend-title">本期導購趨勢</h2>
+                    <div class="rf-trend-legend">
+                        <span class="rf-legend-item">
+                            <span class="rf-legend-line"></span>
+                            訂單總金額
+                        </span>
+                        <span class="rf-legend-item">
+                            <span class="rf-legend-line rf-legend-line--dashed"></span>
+                            可結算分潤
+                        </span>
+                    </div>
+                </div>
+                <!-- 趨勢圖（SVG 示意） -->
+                <div class="rf-trend-chart-wrap">
+                    <svg class="rf-chart-svg" viewBox="0 0 900 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 底部格線 -->
+                        <line x1="0" y1="180" x2="900" y2="180" stroke="#e0e0e0" stroke-width="1"/>
+                        <line x1="0" y1="140" x2="900" y2="140" stroke="#e0e0e0" stroke-width="1"/>
+                        <line x1="0" y1="100" x2="900" y2="100" stroke="#e0e0e0" stroke-width="1"/>
+                        <line x1="0" y1="60"  x2="900" y2="60"  stroke="#e0e0e0" stroke-width="1"/>
+                        <!-- 訂單總金額（實線） -->
+                        <polyline
+                            fill="none"
+                            stroke="#333333"
+                            stroke-width="2.5"
+                            points="50,160 130,140 210,135 290,130 370,128 450,118 530,105 610,100 690,108 770,95 850,98"
+                        />
+                        <!-- 可結算分潤（虛線） -->
+                        <polyline
+                            fill="none"
+                            stroke="#888888"
+                            stroke-width="2"
+                            stroke-dasharray="8,5"
+                            points="50,175 130,168 210,165 290,162 370,160 450,155 530,148 610,145 690,148 770,140 850,142"
+                        />
+                        <!-- 中央浮水印說明 -->
+                        <text x="450" y="116" text-anchor="middle" fill="#b0b0b0" font-size="16" font-family="sans-serif">趨勢圖表位位符 (Trend Visualization)</text>
+                    </svg>
+                </div>
+                <p class="rf-trend-note">
+                    本月訂單總金額較上月成長
+                    <a href="#" class="rf-note-link">18%</a>，
+                    可結算分潤成長
+                    <a href="#" class="rf-note-link">15%</a>。
+                </p>
+            </div>
+
+            <!-- ===== 底部兩欄：熱門案件 Top 5 + 高效 KOL Top 5 ===== -->
+            <div class="rf-bottom-grid">
+
+                <!-- 熱門案件 Top 5 -->
+                <div class="content-card rf-top-card">
+                    <div class="rf-top-card-header">
+                        <h2 class="rf-top-card-title">熱門案件 Top 5</h2>
+                        <a href="#" class="rf-view-all">查看全部</a>
+                    </div>
+                    <div class="rf-table-wrap">
+                        <table class="rf-table">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>案件名稱</th>
+                                    <th>交易數</th>
+                                    <th>訂單總金額</th>
+                                    <th>分潤額</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="rf-rank rf-rank--1">1</span></td>
+                                    <td><span class="rf-case-name">夏季涼感衣推廣計劃</span></td>
+                                    <td>42</td>
+                                    <td>NT$420,000</td>
+                                    <td>NT$50,400</td>
+                                    <td><a href="cases-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rf-rank rf-rank--2">2</span></td>
+                                    <td><span class="rf-case-name">智能掃地機器人專案</span></td>
+                                    <td>31</td>
+                                    <td>NT$385,000</td>
+                                    <td>NT$46,200</td>
+                                    <td><a href="cases-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rf-rank rf-rank--3">3</span></td>
+                                    <td><span class="rf-case-name">極致靜音藍牙耳機</span></td>
+                                    <td>25</td>
+                                    <td>NT$125,000</td>
+                                    <td>NT$15,000</td>
+                                    <td><a href="cases-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rf-rank">4</span></td>
+                                    <td><span class="rf-case-name">秋冬保濕精華液</span></td>
+                                    <td>18</td>
+                                    <td>NT$90,000</td>
+                                    <td>NT$10,800</td>
+                                    <td><a href="cases-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rf-rank">5</span></td>
+                                    <td><span class="rf-case-name">戶外機能背包首發</span></td>
+                                    <td>12</td>
+                                    <td>NT$60,000</td>
+                                    <td>NT$7,200</td>
+                                    <td><a href="cases-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 高效 KOL Top 5 -->
+                <div class="content-card rf-top-card">
+                    <div class="rf-top-card-header">
+                        <h2 class="rf-top-card-title">高效 KOL Top 5</h2>
+                        <a href="#" class="rf-view-all">查看全部</a>
+                    </div>
+                    <div class="rf-table-wrap">
+                        <table class="rf-table">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>KOL 名稱</th>
+                                    <th>主要平台</th>
+                                    <th>交易數</th>
+                                    <th>訂單總金額</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="rf-rank rf-rank--1">1</span></td>
+                                    <td><span class="rf-kol-name">時尚達人 Ariel</span></td>
+                                    <td><span class="rf-platform rf-platform--ig">Instagram</span></td>
+                                    <td>28</td>
+                                    <td>NT$320,000</td>
+                                    <td><a href="kol-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rf-rank rf-rank--2">2</span></td>
+                                    <td><span class="rf-kol-name">科技開箱 偉克</span></td>
+                                    <td><span class="rf-platform rf-platform--yt">YouTube</span></td>
+                                    <td>22</td>
+                                    <td>NT$295,000</td>
+                                    <td><a href="kol-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rf-rank rf-rank--3">3</span></td>
+                                    <td><span class="rf-kol-name">生活家居 Nana</span></td>
+                                    <td><span class="rf-platform rf-platform--blog">Blog</span></td>
+                                    <td>19</td>
+                                    <td>NT$185,000</td>
+                                    <td><a href="kol-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rf-rank">4</span></td>
+                                    <td><span class="rf-kol-name">美食達人 Mike</span></td>
+                                    <td><span class="rf-platform rf-platform--ig">Instagram</span></td>
+                                    <td>15</td>
+                                    <td>NT$132,000</td>
+                                    <td><a href="kol-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rf-rank">5</span></td>
+                                    <td><span class="rf-kol-name">旅遊達人 Wendy</span></td>
+                                    <td><span class="rf-platform rf-platform--fb">Facebook</span></td>
+                                    <td>11</td>
+                                    <td>NT$98,000</td>
+                                    <td><a href="kol-detail.html" class="rf-detail-btn">查看明細</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div><!-- /.rf-bottom-grid -->
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

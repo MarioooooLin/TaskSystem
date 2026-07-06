@@ -1,0 +1,941 @@
+@charset "utf-8";
+/* ============================================================
+   BUSINESS-DETAIL.CSS  ─  業者詳細檔案頁面專用樣式
+   ============================================================ */
+
+/* ============================
+   BREADCRUMB
+============================== */
+.adm-breadcrumb {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: .4rem;
+}
+
+/* ============================
+   PAGE HEADER
+============================== */
+.bd-page-header {
+    align-items: flex-start;
+}
+
+.bd-header-actions {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* ============================
+   BUTTON VARIANTS
+============================== */
+.bd-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    height: 36px;
+    padding: 0 1.4rem;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+    border: 1px solid transparent;
+}
+
+.bd-btn--ghost {
+    background: #fff;
+    border-color: var(--border);
+    color: var(--text-muted);
+}
+.bd-btn--ghost:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.bd-btn--edit {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+.bd-btn--edit:hover {
+    background: var(--primary-dark);
+}
+
+.bd-btn--outline {
+    background: #fff;
+    border-color: var(--border);
+    color: var(--text-main);
+}
+.bd-btn--outline:hover {
+    border-color: var(--text-main);
+}
+
+.bd-btn--danger {
+    background: #fff;
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.bd-btn--danger:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+.bd-btn--sm {
+    height: 32px;
+    padding: 0 1.2rem;
+    font-size: 1.3rem;
+}
+
+/* ============================
+   COMPANY SUMMARY CARD
+============================== */
+.bd-company-card {
+    display: flex;
+    align-items: center;
+    gap: 3.2rem;
+    margin-bottom: 2.4rem;
+    flex-wrap: wrap;
+}
+
+.bd-company-left {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    flex-shrink: 0;
+}
+
+.bd-company-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: #3aafa9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 2.4rem;
+    flex-shrink: 0;
+}
+
+.bd-company-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: .5rem;
+}
+
+.bd-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.bd-status i.fa-circle {
+    font-size: .7rem;
+}
+
+.bd-status--active {
+    color: #27ae60;
+}
+
+.bd-status--inactive {
+    color: var(--primary);
+}
+
+.bd-company-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem 3rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.bd-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.bd-info-label {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.bd-info-value {
+    font-size: 1.4rem;
+    color: var(--text-main);
+}
+
+.bd-info-value--bold {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* ============================
+   SECTION TITLE
+============================== */
+.bd-section-title {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+}
+
+.bd-section-title i {
+    color: #3aafa9;
+    font-size: 1.8rem;
+}
+
+.bd-section-hd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.6rem;
+}
+
+.bd-section-hd .bd-section-title {
+    margin-bottom: 0;
+}
+
+.bd-section-link {
+    font-size: 1.3rem;
+    color: #4b8ab7;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    transition: opacity .15s;
+}
+.bd-section-link:hover {
+    opacity: .7;
+    text-decoration: underline;
+}
+
+/* ============================
+   基本資料 INFO CARDS
+============================== */
+.bd-info-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+.bd-info-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.6rem;
+}
+
+.bd-info-card__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+    padding-bottom: .8rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.bd-info-card__rows {
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+}
+
+.bd-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    font-size: 1.4rem;
+}
+
+.bd-info-row__label {
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.bd-info-row__value {
+    color: var(--text-main);
+    text-align: right;
+    word-break: break-word;
+}
+
+.bd-link {
+    color: #4b8ab7;
+    text-decoration: underline;
+}
+
+/* ============================
+   聯絡窗口
+============================== */
+.bd-contact-list {
+    display: flex;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+}
+
+.bd-contact-card {
+    flex: 1;
+    min-width: 200px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.bd-contact-card__head {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+
+.bd-contact-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.bd-contact-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+}
+
+.bd-contact-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.bd-primary-badge {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #4b8ab7;
+    border: 1px solid #4b8ab7;
+    border-radius: 4px;
+    padding: .1rem .5rem;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.bd-contact-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.bd-contact-card__info i {
+    width: 16px;
+    text-align: center;
+    margin-right: .4rem;
+    color: var(--text-muted);
+}
+
+/* ============================
+   案件摘要 STATS
+============================== */
+.bd-case-stats {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.bd-case-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.6rem 1rem;
+    gap: .4rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+}
+
+.bd-case-stat:last-child {
+    border-right: none;
+}
+
+.bd-case-stat__label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.bd-case-stat__value {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.bd-sub-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+.bd-case-no {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.bd-case-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-top: .2rem;
+}
+
+/* ============================
+   錢包 WALLET CARDS
+============================== */
+.bd-wallet-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    margin-bottom: 2.4rem;
+}
+
+.bd-wallet-card {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    overflow: hidden;
+    background: var(--white);
+}
+
+.bd-wallet-card--dark {
+    background: #3aafa9;
+    border-color: #3aafa9;
+    color: #fff;
+}
+
+.bd-wallet-card--dark .bd-wallet-label {
+    color: rgba(255, 255, 255, .65);
+}
+
+.bd-wallet-card--dark .bd-wallet-value {
+    color: #fff;
+}
+
+.bd-wallet-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+}
+
+.bd-wallet-value {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.bd-wallet-value--accent {
+    color: #3aafa9;
+}
+
+.bd-wallet-bg-icon {
+    position: absolute;
+    right: 1.6rem;
+    bottom: 1.2rem;
+    font-size: 4rem;
+    opacity: .1;
+    z-index: 0;
+}
+
+.bd-wallet-card--dark .bd-wallet-bg-icon {
+    opacity: .15;
+    color: #fff;
+}
+
+/* ============================
+   DISCOUNT FORM
+============================== */
+.bd-discount-form {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2.4rem;
+}
+
+.bd-discount-form .bd-sub-title {
+    margin-bottom: 1.6rem;
+}
+
+.bd-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+.bd-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.bd-form-field--full {
+    grid-column: 1 / -1;
+}
+
+.bd-form-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.bd-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s;
+}
+
+.bd-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, .12);
+}
+
+.bd-input:disabled {
+    background: #f5f5f5;
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.bd-date-input {
+    width: 100%;
+}
+
+.bd-textarea {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    outline: none;
+    resize: vertical;
+    transition: border-color .2s;
+    background: var(--white);
+}
+
+.bd-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, .12);
+}
+
+.bd-radio-group {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 38px;
+}
+
+.bd-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    cursor: pointer;
+    position: relative;
+    padding-left: 28px;
+}
+
+.bd-radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    pointer-events: none;
+}
+
+.bd-radio::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--white);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    box-sizing: border-box;
+}
+
+.bd-radio::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--primary);
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform .12s ease;
+}
+
+.bd-radio:has(input[type="radio"]:checked)::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.bd-radio:has(input[type="radio"]:checked)::before {
+    border-color: var(--primary);
+}
+
+.bd-form-submit {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.bd-submit-btn {
+    height: 40px;
+    padding: 0 3rem;
+    background: var(--primary);
+    border: none;
+    border-radius: 6px;
+}
+
+.bd-submit-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* ============================
+   LOG TABLES
+============================== */
+.bd-log-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.6rem;
+}
+
+.bd-log-block {
+    min-width: 0;
+}
+
+.bd-log-block .table-section {
+    margin-bottom: 0;
+}
+
+.bd-log-hint {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.bd-log-type {
+    display: inline-block;
+    padding: .2rem .8rem;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.bd-log-type--add {
+    background: #e6fff0;
+    color: #27ae60;
+}
+
+.bd-log-type--deduct {
+    background: #fff5f5;
+    color: var(--primary);
+}
+
+.bd-amount-pos {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.bd-amount-neg {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* ============================
+   操作紀錄 OP TAGS
+============================== */
+.bd-op-tag {
+    display: inline-block;
+    padding: .2rem .8rem;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.bd-op-tag--finance {
+    background: #e8f7f6;
+    color: #2b8a85;
+}
+
+.bd-op-tag--data {
+    background: #e0f4ff;
+    color: #2a8fc0;
+}
+
+.bd-op-tag--case {
+    background: #fff4e0;
+    color: #e6a020;
+}
+
+.bd-op-tag--status {
+    background: #ece8ff;
+    color: #6b4fd8;
+}
+
+.bd-load-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.6rem;
+}
+
+/* ============================
+   RWD ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+    .bd-company-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bd-info-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bd-wallet-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bd-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================
+   RWD ≤ 820px
+============================== */
+@media (max-width: 820px) {
+    .bd-log-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================
+   RWD ≤ 768px
+============================== */
+@media (max-width: 768px) {
+    .bd-page-header {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .bd-header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .bd-company-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.6rem;
+    }
+
+    .bd-company-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+    }
+
+    .bd-info-group {
+        grid-template-columns: 1fr;
+    }
+
+    .bd-contact-list {
+        flex-direction: column;
+    }
+
+    .bd-case-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .bd-case-stat:nth-child(3n) {
+        border-right: none;
+    }
+
+    .bd-case-stat:nth-child(n+4) {
+        border-top: 1px solid var(--border);
+    }
+
+    .bd-wallet-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bd-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bd-header-actions .bd-btn {
+        font-size: 1.3rem;
+        padding: 0 1rem;
+    }
+}
+
+/* ============================
+   RWD ≤ 480px
+============================== */
+@media (max-width: 480px) {
+    .bd-company-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bd-wallet-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bd-case-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bd-case-stat:nth-child(3n) {
+        border-right: 1px solid var(--border);
+    }
+
+    .bd-case-stat:nth-child(2n) {
+        border-right: none;
+    }
+
+    .bd-case-stat:nth-child(n+4) {
+        border-top: none;
+    }
+
+    .bd-case-stat:nth-child(n+3) {
+        border-top: 1px solid var(--border);
+    }
+
+    .bd-case-stat:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .bd-header-actions {
+        gap: .6rem;
+    }
+}
+
+/* ============================
+   新增聯絡窗口 MODAL FORM
+============================== */
+.bd-modal-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 80px;
+    gap: 1.2rem 1.6rem;
+}
+
+.bd-mf-field {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.bd-mf-field--full {
+    grid-column: 1 / -1;
+}
+
+.bd-mf-field--span2 {
+    grid-column: span 2;
+}
+
+.bd-mf-label {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.bd-mf-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s;
+    box-sizing: border-box;
+}
+
+.bd-mf-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, .1);
+}
+
+.bd-mf-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: .9rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    resize: vertical;
+    transition: border-color .2s;
+    box-sizing: border-box;
+    line-height: 1.6;
+}
+
+.bd-mf-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, .1);
+}
+
+@media (max-width: 480px) {
+    .bd-modal-form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bd-mf-field--span2 {
+        grid-column: span 1;
+    }
+}

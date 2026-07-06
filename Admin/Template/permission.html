@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <title>任務系統-使用者與權限管理</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/permission.css" />
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content pm-main">
+            <div class="content-card">
+
+                <!-- ===== 頂部標題列 ===== -->
+                <div class="pm-top-bar">
+                    <div class="pm-top-bar__left">
+                        <h1 class="pm-page-title">使用者與權限管理</h1>
+                        <p class="pm-page-desc">管理公司成員帳號與權限，系統至少需保留一位 Owner 以確保帳號管理完整性。</p>
+                    </div>
+                    <button class="pm-btn pm-btn--primary" id="pmAddMemberBtn">
+                        <i class="fa-solid fa-user-plus"></i> 新增成員
+                    </button>
+                </div>
+
+                <!-- ===== 搜尋 + 篩選列 ===== -->
+                <div class="pm-filter-bar">
+                    <div class="pm-search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="pm-search-input" id="pmSearchInput" placeholder="搜尋姓名、電子郵件或角色...">
+                    </div>
+                    <div class="pm-select-wrap">
+                        <select class="pm-select" id="pmRoleFilter">
+                            <option value="">篩選角色</option>
+                            <option value="OWNER">Owner</option>
+                            <option value="ADMIN">Admin</option>
+                            <option value="MEMBER">Member</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <button class="pm-btn pm-btn--outline" id="pmConfirmFilterBtn">確定</button>
+                </div>
+
+                <!-- ===== 成員列表 ===== -->
+                <div class="pm-panel">
+                    <table class="pm-table" id="pmTable">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>電子郵件</th>
+                                <th>角色</th>
+                                <th>狀態</th>
+                                <th>加入時間</th>
+                                <th style="text-align:right;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pmTableBody">
+                            <!-- 陳大文 OWNER -->
+                            <tr>
+                                <td>
+                                    <div class="pm-user-cell">
+                                        <div class="pm-avatar">陳</div>
+                                        <span class="pm-user-name">陳大文</span>
+                                    </div>
+                                </td>
+                                <td><span class="pm-email">davon.chen@merchantcorp.com</span></td>
+                                <td><span class="pm-role-badge pm-role-badge--owner">OWNER</span></td>
+                                <td>
+                                    <span class="pm-status pm-status--active">
+                                        <span class="pm-status__dot"></span>已啟用
+                                    </span>
+                                </td>
+                                <td><span class="pm-date">2023-01-15</span></td>
+                                <td>
+                                    <div class="pm-actions">
+                                        <button class="pm-btn pm-btn--outline pm-btn--sm">編輯</button>
+                                        <button class="pm-btn pm-btn--outline pm-btn--sm">權限轉移</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 林鵬華 ADMIN -->
+                            <tr>
+                                <td>
+                                    <div class="pm-user-cell">
+                                        <div class="pm-avatar">林</div>
+                                        <span class="pm-user-name">林鵬華</span>
+                                    </div>
+                                </td>
+                                <td><span class="pm-email">shane.lin@merchantcorp.com</span></td>
+                                <td><span class="pm-role-badge pm-role-badge--admin">ADMIN</span></td>
+                                <td>
+                                    <span class="pm-status pm-status--active">
+                                        <span class="pm-status__dot"></span>已啟用
+                                    </span>
+                                </td>
+                                <td><span class="pm-date">2023-03-22</span></td>
+                                <td>
+                                    <div class="pm-actions">
+                                        <button class="pm-btn pm-btn--outline pm-btn--sm">編輯</button>
+                                        <button class="pm-btn pm-btn--outline pm-btn--sm">停用</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 王小明 MEMBER 待確認 -->
+                            <tr>
+                                <td>
+                                    <div class="pm-user-cell">
+                                        <div class="pm-avatar">王</div>
+                                        <span class="pm-user-name">王小明</span>
+                                    </div>
+                                </td>
+                                <td><span class="pm-email">ming.wang@merchantcorp.com</span></td>
+                                <td><span class="pm-role-badge pm-role-badge--member">MEMBER</span></td>
+                                <td>
+                                    <span class="pm-status pm-status--pending">
+                                        <span class="pm-status__dot"></span>待確認
+                                    </span>
+                                </td>
+                                <td><span class="pm-date">2023-11-05</span></td>
+                                <td>
+                                    <div class="pm-actions">
+                                        <button class="pm-btn pm-btn--outline pm-btn--sm">編輯</button>
+                                        <button class="pm-btn pm-btn--outline pm-btn--sm">邀請重發</button>
+                                        <button class="pm-btn pm-btn--danger pm-btn--sm">刪除</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 張小雲 MEMBER 已啟用 -->
+                            <tr>
+                                <td>
+                                    <div class="pm-user-cell">
+                                        <div class="pm-avatar">張</div>
+                                        <span class="pm-user-name">張小雲</span>
+                                    </div>
+                                </td>
+                                <td><span class="pm-email">cloud.chang@merchantcorp.com</span></td>
+                                <td><span class="pm-role-badge pm-role-badge--member">MEMBER</span></td>
+                                <td>
+                                    <span class="pm-status pm-status--active">
+                                        <span class="pm-status__dot"></span>已啟用
+                                    </span>
+                                </td>
+                                <td><span class="pm-date">2023-12-01</span></td>
+                                <td>
+                                    <div class="pm-actions">
+                                        <button class="pm-btn pm-btn--outline pm-btn--sm">編輯</button>
+                                        <button class="pm-btn pm-btn--outline pm-btn--sm">停用</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div><!-- /.pm-panel -->
+
+                <!-- 分頁列 -->
+                <div class="pagination">
+                    <span class="pagination__info" id="pmPageInfo">顯示第 1 至 4 名成員，共 4 名成員</span>
+                    <div class="pagination__nav" id="pmPagination">
+                        <button class="page-btn" id="pmPrevBtn" disabled>
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button class="page-btn active" data-page="1">1</button>
+                        <button class="page-btn" data-page="2">2</button>
+                        <button class="page-btn" id="pmNextBtn">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ===== 帳號安全提醒 ===== -->
+                <div class="pm-security-card">
+                    <div class="pm-security-card__icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="pm-security-card__body">
+                        <h3 class="pm-security-card__title">帳號安全提醒</h3>
+                        <p class="pm-security-card__desc">
+                            為了確保您的商戶帳號安全，建議定期審查成員清單並清楚移除不再需要訪問權限的離職員工。具有 Admin 權限的成員可以配置系統設定，而 Owner 具有轉移所有權的唯一權利。
+                        </p>
+                    </div>
+                </div>
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

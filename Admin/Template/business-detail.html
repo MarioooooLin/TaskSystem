@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-業者詳細檔案</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/business-detail.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header bd-page-header">
+                <div class="page-header__left">
+                    <nav class="adm-breadcrumb">首頁 &rsaquo; 業者管理 &rsaquo; 業者詳細檔案</nav>
+                    <h1 class="page-title">業者詳細檔案</h1>
+                    <p class="page-subtitle">查看業者資料、聯絡窗口、案件狀態、錢包與折扣金紀錄</p>
+                </div>
+                <div class="bd-header-actions">
+                    <a href="business-management.html" class="bd-btn bd-btn--ghost">
+                        <i class="fa-solid fa-arrow-left"></i> 返回業者管理
+                    </a>
+                    <button class="bd-btn bd-btn--edit">
+                        <i class="fa-solid fa-pen"></i> 編輯業者資料
+                    </button>
+                    <button class="bd-btn bd-btn--outline">
+                        <i class="fa-solid fa-right-to-bracket"></i> 代理登入
+                    </button>
+                    <button class="bd-btn bd-btn--danger">
+                        <i class="fa-solid fa-ban"></i> 停用業者
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== COMPANY SUMMARY CARD ===== -->
+            <div class="content-card bd-company-card">
+                <div class="bd-company-left">
+                    <div class="bd-company-icon">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <div class="bd-company-meta">
+                        <h2 class="bd-company-name">山海旅宿股份有限公司</h2>
+                        <span class="bd-status bd-status--active"><i class="fa-solid fa-circle"></i> 啟用中</span>
+                    </div>
+                </div>
+                <div class="bd-company-info-grid">
+                    <div class="bd-info-item">
+                        <span class="bd-info-label">客戶類型／合約類型</span>
+                        <span class="bd-info-value">公司／客戶</span>
+                    </div>
+                    <div class="bd-info-item">
+                        <span class="bd-info-label">行業類型</span>
+                        <span class="bd-info-value">旅宿</span>
+                    </div>
+                    <div class="bd-info-item">
+                        <span class="bd-info-label">統一編號</span>
+                        <span class="bd-info-value">87654321</span>
+                    </div>
+                    <div class="bd-info-item">
+                        <span class="bd-info-label">主要聯絡人</span>
+                        <span class="bd-info-value">王小美 service@example.com</span>
+                    </div>
+                    <div class="bd-info-item">
+                        <span class="bd-info-label">錢包餘額</span>
+                        <span class="bd-info-value bd-info-value--bold">NT$50,000</span>
+                    </div>
+                    <div class="bd-info-item">
+                        <span class="bd-info-label">折扣金餘額</span>
+                        <span class="bd-info-value bd-info-value--bold">NT$12,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 基本資料 ===== -->
+            <div class="content-card">
+                <h2 class="section-title bd-section-title">
+                    <i class="fa-regular fa-file-lines"></i> 基本資料
+                </h2>
+                <div class="bd-info-group">
+
+                    <div class="bd-info-card">
+                        <h3 class="bd-info-card__title">公司資料</h3>
+                        <div class="bd-info-card__rows">
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">中文名稱</span>
+                                <span class="bd-info-row__value">山海旅宿股份有限公司</span>
+                            </div>
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">英文名稱</span>
+                                <span class="bd-info-row__value">Mountain Sea Stay Co.</span>
+                            </div>
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">負責人</span>
+                                <span class="bd-info-row__value">林宏達</span>
+                            </div>
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">實收資本額</span>
+                                <span class="bd-info-row__value">NT$10,000,000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bd-info-card">
+                        <h3 class="bd-info-card__title">識別資料</h3>
+                        <div class="bd-info-card__rows">
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">統一編號</span>
+                                <span class="bd-info-row__value">87654321</span>
+                            </div>
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">註冊地址</span>
+                                <span class="bd-info-row__value">台北市信義區信義路五段7號</span>
+                            </div>
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">成立日期</span>
+                                <span class="bd-info-row__value">2018-05-20</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bd-info-card">
+                        <h3 class="bd-info-card__title">公司聯絡資訊</h3>
+                        <div class="bd-info-card__rows">
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">公司電話</span>
+                                <span class="bd-info-row__value">02-2720-8889</span>
+                            </div>
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">官方網站</span>
+                                <a href="#" class="bd-info-row__value bd-link">mountainsea.com</a>
+                            </div>
+                            <div class="bd-info-row">
+                                <span class="bd-info-row__label">聯絡信箱</span>
+                                <span class="bd-info-row__value">hr@mountainsea.com</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ===== 聯絡窗口 ===== -->
+            <div class="content-card">
+                <div class="bd-section-hd">
+                    <h2 class="section-title bd-section-title">
+                        <i class="fa-regular fa-address-book"></i> 聯絡窗口
+                    </h2>
+                    <button class="btn-primary" onclick="document.getElementById('id1').style.display='block'"><i class="fa-solid fa-plus"></i> 新增聯絡窗口</button>
+                </div>
+                <div class="bd-contact-list">
+
+                    <div class="bd-contact-card">
+                        <div class="bd-contact-card__head">
+                            <div class="bd-contact-avatar" style="background:#4b8ab7;">王</div>
+                            <div class="bd-contact-name-wrap">
+                                <span class="bd-contact-name">王小美</span>
+                                <span class="bd-primary-badge">PRIMARY</span>
+                            </div>
+                        </div>
+                        <div class="bd-contact-card__info">
+                            <span><i class="fa-regular fa-envelope"></i> service@example.com</span>
+                            <span><i class="fa-solid fa-mobile-screen-button"></i> 0912-345-678</span>
+                            <span><i class="fa-solid fa-phone"></i> 02-2720-8889 #101</span>
+                        </div>
+                    </div>
+
+                    <div class="bd-contact-card">
+                        <div class="bd-contact-card__head">
+                            <div class="bd-contact-avatar" style="background:#e6a020;">陳</div>
+                            <span class="bd-contact-name">陳會計</span>
+                        </div>
+                        <div class="bd-contact-card__info">
+                            <span><i class="fa-regular fa-envelope"></i> finance@example.com</span>
+                            <span><i class="fa-solid fa-phone"></i> 02-2720-8889 #202</span>
+                        </div>
+                    </div>
+
+                    <div class="bd-contact-card">
+                        <div class="bd-contact-card__head">
+                            <div class="bd-contact-avatar" style="background:#3aafa9;">林</div>
+                            <span class="bd-contact-name">林企劃</span>
+                        </div>
+                        <div class="bd-contact-card__info">
+                            <span><i class="fa-regular fa-envelope"></i> project@example.com</span>
+                            <span><i class="fa-solid fa-mobile-screen-button"></i> 0922-000-111</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ===== 案件摘要 ===== -->
+            <div class="content-card">
+                <div class="bd-section-hd">
+                    <h2 class="section-title bd-section-title">
+                        <i class="fa-regular fa-folder-open"></i> 案件摘要
+                    </h2>
+                    <a href="#" class="bd-section-link">查看全部案件 <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+
+                <!-- Stats row -->
+                <div class="bd-case-stats">
+                    <div class="bd-case-stat">
+                        <span class="bd-case-stat__label">總案件數</span>
+                        <strong class="bd-case-stat__value">124</strong>
+                    </div>
+                    <div class="bd-case-stat">
+                        <span class="bd-case-stat__label">執行中</span>
+                        <strong class="bd-case-stat__value">12</strong>
+                    </div>
+                    <div class="bd-case-stat">
+                        <span class="bd-case-stat__label">待審核</span>
+                        <strong class="bd-case-stat__value">5</strong>
+                    </div>
+                    <div class="bd-case-stat">
+                        <span class="bd-case-stat__label">已完成</span>
+                        <strong class="bd-case-stat__value">102</strong>
+                    </div>
+                    <div class="bd-case-stat">
+                        <span class="bd-case-stat__label">成交率</span>
+                        <strong class="bd-case-stat__value">92%</strong>
+                    </div>
+                </div>
+
+                <!-- Recent cases table -->
+                <h3 class="bd-sub-title">最近案件</h3>
+                <div class="table-section">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>案號／名稱</th>
+                                <th>類型</th>
+                                <th>狀態</th>
+                                <th>金額</th>
+                                <th>更新時間</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="bd-case-no">#20240501-001</div>
+                                    <div class="bd-case-name">客享行銷策案</div>
+                                </td>
+                                <td>廣告投放</td>
+                                <td><span class="case-status progress">執行中</span></td>
+                                <td>NT$45,000</td>
+                                <td>2024-05-15</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="bd-case-no">#20240428-015</div>
+                                    <div class="bd-case-name">五月勞動節促銷</div>
+                                </td>
+                                <td>內容行銷</td>
+                                <td><span class="case-status closed" style="background:#e6fff0;color:#27ae60;">已完成</span></td>
+                                <td>NT$12,000</td>
+                                <td>2024-05-10</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="bd-case-no">#20240412-009</div>
+                                    <div class="bd-case-name">品牌視覺重塑片案</div>
+                                </td>
+                                <td>設計服務</td>
+                                <td><span class="case-status review">待審核</span></td>
+                                <td>NT$88,000</td>
+                                <td>2024-05-08</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== 錢包與折扣金 ===== -->
+            <div class="content-card">
+                <h2 class="section-title bd-section-title">
+                    <i class="fa-solid fa-wallet"></i> 錢包與折扣金
+                </h2>
+
+                <!-- Wallet stat cards -->
+                <div class="bd-wallet-grid">
+                    <div class="bd-wallet-card bd-wallet-card--dark">
+                        <span class="bd-wallet-label">當前錢包總額</span>
+                        <strong class="bd-wallet-value">NT$ 70,000</strong>
+                        <i class="fa-regular fa-credit-card bd-wallet-bg-icon"></i>
+                    </div>
+                    <div class="bd-wallet-card">
+                        <span class="bd-wallet-label">已鎖定金額</span>
+                        <strong class="bd-wallet-value">NT$ 20,000</strong>
+                        <i class="fa-solid fa-lock bd-wallet-bg-icon"></i>
+                    </div>
+                    <div class="bd-wallet-card">
+                        <span class="bd-wallet-label">可動用餘額</span>
+                        <strong class="bd-wallet-value">NT$ 50,000</strong>
+                        <i class="fa-solid fa-circle-check bd-wallet-bg-icon"></i>
+                    </div>
+                    <div class="bd-wallet-card bd-wallet-card--dark">
+                        <span class="bd-wallet-label">當前折扣金餘額</span>
+                        <strong class="bd-wallet-value">NT$ 12,000</strong>
+                        <i class="fa-solid fa-tags bd-wallet-bg-icon"></i>
+                    </div>
+                    <div class="bd-wallet-card">
+                        <span class="bd-wallet-label">本月信用額</span>
+                        <strong class="bd-wallet-value">NT$ 20,000</strong>
+                    </div>
+                    <div class="bd-wallet-card">
+                        <span class="bd-wallet-label">本月已用折扣</span>
+                        <strong class="bd-wallet-value bd-wallet-value--accent">NT$ 3,500</strong>
+                    </div>
+                </div>
+
+                <!-- Discount operation form -->
+                <div class="bd-discount-form">
+                    <h3 class="bd-sub-title">折扣金加值／扣回操作</h3>
+                    <div class="bd-form-grid">
+
+                        <div class="bd-form-field">
+                            <label class="bd-form-label">操作類型</label>
+                            <div class="bd-radio-group">
+                                <label class="bd-radio"><input type="radio" name="opType" checked> 加值</label>
+                                <label class="bd-radio"><input type="radio" name="opType"> 扣回</label>
+                            </div>
+                        </div>
+
+                        <div class="bd-form-field">
+                            <label class="bd-form-label">金額</label>
+                            <input type="number" class="bd-input" placeholder="請輸入金額">
+                        </div>
+
+                        <div class="bd-form-field">
+                            <label class="bd-form-label">適用範圍（選擇）</label>
+                            <input type="text" class="bd-input" placeholder="全站案件適用" disabled>
+                        </div>
+
+                        <div class="bd-form-field">
+                            <label class="bd-form-label">有效期限</label>
+                            <div class="filter-date-input">
+                                <input type="date" class="date-input bd-date-input">
+                                <i class="fa-regular fa-calendar date-input__icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="bd-form-field">
+                            <label class="bd-form-label">異動原因</label>
+                            <div class="filter-select-wrap">
+                                <select class="filter-select">
+                                    <option>契約獎勵</option>
+                                    <option>促銷活動</option>
+                                    <option>人工調整</option>
+                                    <option>錯誤修正</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                            </div>
+                        </div>
+
+                        <div class="bd-form-field bd-form-field--full">
+                            <label class="bd-form-label">備註</label>
+                            <textarea class="bd-textarea" rows="3" placeholder="請輸入操作備註..."></textarea>
+                        </div>
+
+                    </div>
+                    <div class="bd-form-submit">
+                    <button class="btn-primary bd-submit-btn">確認提交</button>
+                </div>
+                </div>
+                
+
+                <!-- Two log tables -->
+                <div class="bd-log-grid">
+
+                    <div class="bd-log-block">
+                        <div class="bd-section-hd">
+                            <h3 class="bd-sub-title" style="margin-bottom:0">折扣金異動紀錄</h3>
+                            <span class="bd-log-hint">最近 5 筆</span>
+                        </div>
+                        <div class="table-section">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>時間</th>
+                                        <th>類型</th>
+                                        <th>金額</th>
+                                        <th>操作者</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>05-20 14:00</td>
+                                        <td><span class="bd-log-type bd-log-type--add">加值</span></td>
+                                        <td class="bd-amount-pos">+5,000</td>
+                                        <td>Admin_Leo</td>
+                                    </tr>
+                                    <tr>
+                                        <td>05-02 09:30</td>
+                                        <td><span class="bd-log-type bd-log-type--add">加值</span></td>
+                                        <td class="bd-amount-pos">+7,000</td>
+                                        <td>Admin_Sue</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bd-log-block">
+                        <div class="bd-section-hd">
+                            <h3 class="bd-sub-title" style="margin-bottom:0">折扣金使用紀錄</h3>
+                            <span class="bd-log-hint">最近 5 筆</span>
+                        </div>
+                        <div class="table-section">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>時間</th>
+                                        <th>對應案號</th>
+                                        <th>折扣金額</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>05-15 11:20</td>
+                                        <td>#20240501-001</td>
+                                        <td class="bd-amount-neg">-1,200</td>
+                                    </tr>
+                                    <tr>
+                                        <td>05-10 16:45</td>
+                                        <td>#20240428-015</td>
+                                        <td class="bd-amount-neg">-2,300</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div><!-- /.bd-log-grid -->
+
+            </div><!-- /.content-card wallet -->
+
+            <!-- ===== 操作紀錄 ===== -->
+            <div class="content-card">
+                <h2 class="section-title bd-section-title">
+                    <i class="fa-regular fa-clock"></i> 操作紀錄
+                </h2>
+                <div class="table-section">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>操作時間</th>
+                                <th>操作者</th>
+                                <th>操作類型</th>
+                                <th>異動對象</th>
+                                <th>異動內容</th>
+                                <th>備註</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-05-20 14:00:15</td>
+                                <td>Admin_Leo</td>
+                                <td><span class="bd-op-tag bd-op-tag--finance">財務異動</span></td>
+                                <td>折扣金額題</td>
+                                <td>加值 NT$ 5,000</td>
+                                <td>契約簽約獎勵發送</td>
+                            </tr>
+                            <tr>
+                                <td>2024-05-18 10:22:04</td>
+                                <td>Admin_Sue</td>
+                                <td><span class="bd-op-tag bd-op-tag--data">資料更新</span></td>
+                                <td>聯絡窗口</td>
+                                <td>新增：林企劃（文宣）</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>2024-05-15 16:45:30</td>
+                                <td>System</td>
+                                <td><span class="bd-op-tag bd-op-tag--case">案件異動</span></td>
+                                <td>#20240501-001</td>
+                                <td>狀態更新：執行中</td>
+                                <td>系統自動觸發</td>
+                            </tr>
+                            <tr>
+                                <td>2024-05-12 09:12:11</td>
+                                <td>Admin_Leo</td>
+                                <td><span class="bd-op-tag bd-op-tag--status">業者狀態</span></td>
+                                <td>業者狀態</td>
+                                <td>變更為：啟用中</td>
+                                <td>審核通過</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bd-load-more">
+                    <button class="bd-btn bd-btn--ghost">載入更多紀錄</button>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+    <!-- 新增聯絡窗口Lightbox -->
+    <div id="id1" class="w3-modal">
+        <div class="bg_close" onclick="document.getElementById('id1').style.display='none'"></div>
+        <div class="w3-modal-content w3-animate-top w3-card-4 alert-modal">
+            <!-- 關閉按鈕 -->
+            <span class="alert-close" onclick="document.getElementById('id1').style.display='none'">&times;</span>
+            <div class="modal-header"><i class="fa-solid fa-user-plus"></i> 新增聯絡窗口</div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="bd-modal-form-grid">
+
+                    <!-- Row 1: 姓名 | 公司電話 | 分機 -->
+                    <div class="bd-mf-field">
+                        <label class="bd-mf-label">姓名</label>
+                        <input type="text" class="bd-mf-input" placeholder="請輸入聯絡人姓名">
+                    </div>
+                    <div class="bd-mf-field">
+                        <label class="bd-mf-label">公司電話</label>
+                        <input type="tel" class="bd-mf-input" placeholder="02-12345678">
+                    </div>
+                    <div class="bd-mf-field">
+                        <label class="bd-mf-label">分機</label>
+                        <input type="text" class="bd-mf-input" placeholder="123">
+                    </div>
+
+                    <!-- Row 2: 行動電話 | 電子郵件（跨兩欄） -->
+                    <div class="bd-mf-field">
+                        <label class="bd-mf-label">行動電話</label>
+                        <input type="tel" class="bd-mf-input" placeholder="0912-345-678">
+                    </div>
+                    <div class="bd-mf-field bd-mf-field--span2">
+                        <label class="bd-mf-label">電子郵件</label>
+                        <input type="email" class="bd-mf-input" placeholder="example@mail.com">
+                    </div>
+
+                    <!-- Row 3: 傳真 -->
+                    <div class="bd-mf-field">
+                        <label class="bd-mf-label">傳真</label>
+                        <input type="tel" class="bd-mf-input" placeholder="02-12345678">
+                    </div>
+
+                    <!-- Row 4: 備註（全寬） -->
+                    <div class="bd-mf-field bd-mf-field--full">
+                        <label class="bd-mf-label">備註</label>
+                        <textarea class="bd-mf-textarea" rows="3" placeholder="請輸入相關備註事項..."></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-btns">
+                    <button class="modal-btn--cancel" type="button" onclick="document.getElementById('id1').style.display='none'">取消</button>
+                    <button class="modal-btn--confirm" type="button"><i class="fa-solid fa-floppy-disk"></i> 儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

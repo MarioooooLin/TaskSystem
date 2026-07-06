@@ -1,0 +1,557 @@
+@charset "utf-8";
+/* ============================================================
+   REFERRAL.CSS  ─  導購成效總覽頁面專用樣式
+   依設計圖 MER-014.jpg 製作
+   ============================================================ */
+
+/* ============================
+   MAIN
+============================== */
+.rf-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* ============================
+   頁面標題
+============================== */
+.rf-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+}
+
+.rf-page-header__left {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.rf-page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.rf-page-desc {
+    font-size: 1.6rem;
+    color: var(--text-muted);
+}
+
+.rf-page-header__actions {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+/* ============================
+   操作按鈕
+============================== */
+.rf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    height: 38px;
+    padding: 0 1.6rem;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .02em;
+    white-space: nowrap;
+    transition: background .2s, border-color .2s, color .2s;
+    text-decoration: none;
+}
+
+.rf-btn--outline {
+    background: var(--white);
+    color: var(--text-main);
+    border: 1.5px solid var(--border);
+}
+
+.rf-btn--outline:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: #f5f9fd;
+}
+
+.rf-btn--dark {
+    background: #4b8ab7;
+    color: var(--white);
+    border: none;
+}
+
+.rf-btn--dark:hover {
+    background: #3a7aaa;;
+}
+
+/* ============================
+   時間範圍切換
+============================== */
+.rf-time-tabs {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    flex-wrap: wrap;
+}
+
+.rf-time-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    height: 36px;
+    padding: 0 1.6rem;
+    border: 1.5px solid transparent;
+    border-radius: 6px;
+    background: none;
+    font-size: 1.4rem;
+    font-family: inherit;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color .15s, border-color .15s, background .15s;
+}
+
+.rf-time-tab:hover {
+    color: var(--white);
+    background: #4b8ab7;
+}
+
+.rf-time-tab--active {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    font-weight: 700;
+    background: var(--white);
+}
+
+.rf-time-tab--custom {
+    border: 1.5px solid var(--border);
+    color: var(--text-muted);
+    background-color: var(--white);
+}
+
+.rf-time-tab--custom:hover {
+    border-color: #4b8ab7;
+    color: var(--white);
+}
+
+/* ============================
+   統計卡片
+============================== */
+.rf-stat-cards {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.2rem;
+}
+
+.rf-stat-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: box-shadow .2s;
+    cursor: pointer;
+}
+
+.rf-stat-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+}
+
+.rf-stat-card--selected {
+    border: 2px solid var(--primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+}
+
+.rf-stat-card__label {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+    line-height: 1.3;
+}
+
+.rf-stat-card__value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+    white-space: nowrap;
+    letter-spacing: .01em;
+}
+
+.rf-stat-card__value--red {
+    color: var(--accent-red);
+}
+
+.rf-stat-card__change {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.rf-stat-card__change--up {
+    color: #1aaa6e;
+}
+
+.rf-stat-card__change--down {
+    color: var(--accent-red);
+}
+
+/* ============================
+   本期導購趨勢
+============================== */
+.rf-trend-card {
+    padding: 2.4rem;
+}
+
+.rf-trend-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.rf-trend-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.rf-trend-legend {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.rf-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.rf-legend-line {
+    display: inline-block;
+    width: 28px;
+    height: 2px;
+    background: var(--text-main);
+    flex-shrink: 0;
+}
+
+.rf-legend-line--dashed {
+    background: repeating-linear-gradient(
+        to right,
+        var(--text-muted) 0,
+        var(--text-muted) 6px,
+        transparent 6px,
+        transparent 10px
+    );
+}
+
+/* 趨勢圖區域 */
+.rf-trend-chart-wrap {
+    width: 100%;
+    height: 220px;
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 1.4rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.rf-chart-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.rf-trend-note {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.rf-note-link {
+    color: var(--text-main);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.rf-note-link:hover {
+    color: #4b8ab7;
+}
+
+/* ============================
+   底部兩欄
+============================== */
+.rf-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.rf-top-card {
+    padding: 2rem 2.4rem;
+    min-width: 0;
+}
+
+.rf-top-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.6rem;
+}
+
+.rf-top-card-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.rf-view-all {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #4b8ab7;
+    transition: opacity .15s;
+}
+
+.rf-view-all:hover {
+    opacity: .7;
+    text-decoration: underline;
+}
+
+/* ============================
+   表格
+============================== */
+.rf-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.rf-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.3rem;
+    min-width: 620px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.rf-table thead tr {
+    background: var(--primary);
+}
+
+.rf-table th {
+    padding: 1rem 1.2rem;
+    font-weight: 600;
+    color: var(--white);
+    text-align: left;
+    white-space: nowrap;
+    border: 1px solid var(--white);
+}
+
+.rf-table tbody tr {
+    border-bottom: 1px solid #e5e5e5;
+    transition: background .15s;
+}
+
+.rf-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.rf-table tbody tr:hover {
+    background: var(--primary-light);
+}
+
+.rf-table td {
+    padding: 1rem 1.2rem;
+    vertical-align: middle;
+    color: var(--text-main);
+}
+
+/* 排名 Badge */
+.rf-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: #f0f0f0;
+    color: var(--text-muted);
+}
+
+.rf-rank--1 {
+    background: #ffd700;
+    color: #7a5700;
+}
+
+.rf-rank--2 {
+    background: #c0c0c0;
+    color: #555;
+}
+
+.rf-rank--3 {
+    background: #cd7f32;
+    color: #fff;
+}
+
+.rf-case-name,
+.rf-kol-name {
+    font-weight: 600;
+    color: var(--text-main);
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 平台 Badge */
+.rf-platform {
+    display: inline-block;
+    padding: .2rem .8rem;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.rf-platform--ig {
+    background: #fce4ec;
+    color: #c62828;
+}
+
+.rf-platform--yt {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.rf-platform--blog {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.rf-platform--fb {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.rf-platform--tiktok {
+    background: #f3e5f5;
+    color: #6a1b9a;
+}
+
+/* 查看明細按鈕 */
+.rf-detail-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: .3rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+    transition: border-color .15s, color .15s;
+    background: var(--white);
+}
+
+.rf-detail-btn:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+}
+
+/* ============================
+   RWD — ≤ 1280px
+============================== */
+@media (max-width: 1280px) {
+    .rf-stat-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ============================
+   RWD — ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+    .rf-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================
+   RWD — ≤ 768px
+============================== */
+@media (max-width: 768px) {
+    .rf-page-header {
+        flex-direction: column;
+    }
+
+    .rf-page-header__actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .rf-stat-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rf-trend-card {
+        padding: 1.6rem;
+    }
+
+    .rf-trend-chart-wrap {
+        height: 160px;
+    }
+
+    .rf-top-card {
+        padding: 1.6rem;
+    }
+}
+
+/* ============================
+   RWD — ≤ 480px
+============================== */
+@media (max-width: 480px) {
+    .rf-stat-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rf-stat-card {
+        padding: 1.2rem;
+    }
+
+    .rf-stat-card__value {
+        font-size: 1.5rem;
+    }
+
+    .rf-page-title {
+        font-size: 2.8rem;
+    }
+
+    .rf-btn {
+        font-size: 1.3rem;
+        padding: 0 1.2rem;
+    }
+}

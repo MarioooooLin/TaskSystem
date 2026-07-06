@@ -1,0 +1,334 @@
+@charset "utf-8";
+/* ============================================================
+   KOL-MANAGEMENT.CSS  ─  KOL 管理頁面專用樣式
+   ============================================================
+*/
+
+.km-kpi-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    margin-bottom: 2.4rem;
+    overflow: hidden;
+}
+
+.km-kpi-item {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    padding: 2rem 2.4rem;
+    border-right: 1px solid var(--border);
+}
+
+.km-kpi-item--last {
+    border-right: none;
+}
+
+.km-kpi-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.km-kpi-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.km-kpi-value--green {
+    color: #27ae60;
+}
+
+.km-kpi-value--orange {
+    color: #e6a020;
+}
+
+.km-kpi-value--red {
+    color: var(--primary);
+}
+
+.km-kpi-value--muted {
+    color: #7f8c8d;
+}
+
+.km-kpi-value--danger {
+    color: #de3b3a;
+}
+
+.km-filter {
+    margin-bottom: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+.km-filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.km-filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    min-width: 160px;
+}
+
+.km-filter-item--grow {
+    flex: 1;
+    min-width: 220px;
+}
+
+.km-chip-row {
+    align-items: center;
+}
+
+.km-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem;
+}
+
+.km-chip {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: .6rem 1rem;
+    font-size: 1.3rem;
+    background: var(--white);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: border-color .2s, background .2s, color .2s;
+}
+
+.km-chip:hover,
+.km-chip--active {
+    border-color: var(--primary);
+    background: rgba(222, 59, 58, .08);
+    color: var(--primary);
+}
+
+.km-date-range {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+
+.km-date-separator {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+}
+
+.km-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+    padding-bottom: 0;
+    flex-shrink: 0;
+}
+
+.bm-btn-clear {
+    height: 38px;
+    padding: 0 1.6rem;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+    white-space: nowrap;
+}
+
+.bm-btn-clear:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.km-table {
+    width: 100%;
+    min-width: 100%;
+    table-layout: auto;
+    white-space: nowrap;
+}
+
+.km-td-name {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    min-width: 170px;
+    font-size: 1.4rem;
+}
+
+.km-name-title {
+    font-weight: 600;
+}
+
+.km-name-sub {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.km-type-line {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    min-width: 150px;
+}
+
+.km-platform {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.km-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: .3rem .75rem;
+    border-radius: 999px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+.km-tag--travel {
+    background: #e0f4ff;
+    color: #2a8fc0;
+}
+
+.km-tag--lifestyle {
+    background: #f0f6f3;
+    color: #1d7c6d;
+}
+
+.km-tag--food {
+    background: #fff4e8;
+    color: #e56b1f;
+}
+
+.km-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.km-status--active {
+    color: #27ae60;
+}
+
+.km-status--pending {
+    color: #e6a020;
+}
+
+.km-status--inactive {
+    color: var(--primary);
+}
+
+.km-status--bound {
+    color: #2a8fc0;
+}
+
+.km-status--unbound {
+    color: #7f8c8d;
+}
+
+.km-status--alert {
+    color: #de3b3a;
+}
+
+.km-status--success {
+    color: #27ae60;
+}
+
+.km-task-meta {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    min-width: 140px;
+}
+
+.km-task-sub {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.km-td-date {
+    white-space: nowrap;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.km-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .4rem;
+}
+
+.action-link--danger {
+    color: var(--primary);
+}
+
+.btn-primary.btn-primary--ghost {
+    background: #fff;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    transition: all .2s;
+}
+
+.btn-primary.btn-primary--ghost:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+@media (max-width: 1024px) {
+    .km-kpi-row {
+        flex-wrap: wrap;
+    }
+    .km-kpi-item {
+        min-width: calc(50% - 0.6rem);
+    }
+    .km-filter-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.2rem;
+    }
+    .page-header__right {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+    .km-filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .km-filter-item,
+    .km-filter-actions {
+        width: 100%;
+        margin-left: 0;
+    }
+    .km-chip-group {
+        gap: .6rem;
+    }
+    .km-table {
+        min-width: 720px;
+    }
+}

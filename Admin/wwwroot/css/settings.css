@@ -1,0 +1,266 @@
+@charset "utf-8";
+/* ============================================================
+   SETTINGS.CSS  ─  設定中心頁面專用樣式
+   依設計圖 MER-008.jpg 製作
+   ============================================================ */
+
+/* ============================
+   MAIN
+============================== */
+.st-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+}
+
+/* ============================
+   麵包屑
+============================== */
+.st-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+}
+
+.st-breadcrumb a {
+    color: var(--text-muted);
+    transition: color .15s;
+}
+
+.st-breadcrumb a:hover {
+    color: var(--primary);
+}
+
+.st-breadcrumb__sep {
+    font-size: 1.2rem;
+    color: #bbb;
+}
+
+.st-breadcrumb__current {
+    color: var(--text-main);
+}
+
+/* ============================
+   頁面標題區
+============================== */
+.st-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2.4rem;
+}
+
+
+.st-page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: .4rem;
+}
+
+.st-page-desc {
+    font-size: 1.6rem;
+    color: var(--text-muted);
+}
+
+/* ============================
+   設定卡片列表（4欄 Grid）
+============================== */
+.st-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-bottom: 2.4rem;
+}
+
+.st-card {
+    background: linear-gradient(to bottom, #d1eafc, #ffffff);
+    border: 3px solid #4b8ab7;
+    border-radius: 12px;
+    padding: 2.8rem 2.4rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    cursor: pointer;
+    transition: box-shadow .2s, transform .15s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    min-height: 200px;
+}
+
+.st-card:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .1);
+    transform: translateY(-2px);
+}
+
+/* 圖示 */
+.st-card__icon {
+    font-size: 4.4rem;
+    color: #4b8ab7;
+    line-height: 1;
+    text-align: center;
+}
+
+/* 卡片標題 */
+.st-card__title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.4;
+    text-align: center;
+}
+
+/* 卡片描述（可選，預留） */
+.st-card__desc {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    flex: 1;
+}
+
+/* 右下角箭頭 */
+.st-card__arrow {
+    position: absolute;
+    right: 2rem;
+    bottom: 2rem;
+    font-size: 1.6rem;
+    color: #4b8ab7;
+    transition: transform .2s;
+}
+
+.st-card:hover .st-card__arrow {
+    transform: translateX(4px);
+}
+
+/* ============================
+   系統維護資訊卡（底部）
+============================== */
+.st-info-card {
+    /* background: var(--white);
+    border-radius: 12px;
+    padding: 3.2rem 2.4rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.8rem 2rem;
+    background: var(--white);
+}
+
+.st-info-card__tag {
+    font-size: 1.6rem;
+    color: var(--text-main);
+    font-weight: 500;
+    letter-spacing: .04em;
+}
+
+.st-info-card__text {
+    font-size: 1.4rem;
+    color: var(--text-main);
+    line-height: 1.7;
+    max-width: 480px;
+}
+
+.st-info-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: .6rem;
+}
+
+/* 主要按鈕（深色填色） */
+.st-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 2rem;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .18s;
+    text-decoration: none;
+}
+
+.st-btn--primary {
+    background: #4b8ab7;
+    color: var(--white);
+    border: 1px solid #4b8ab7;
+}
+
+.st-btn--primary:hover {
+    background: #3a7aaa;
+    border-color: #3a7aaa;
+}
+
+/* 次要按鈕（外框） */
+.st-btn--outline {
+    background: var(--white);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.st-btn--outline:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: #d1eafc;
+}
+
+/* ============================
+   RWD — Tablet ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+    .st-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 768px
+============================== */
+@media (max-width: 768px) {
+
+    .st-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.4rem;
+    }
+
+    .st-card {
+        min-height: 160px;
+        padding: 2rem 1.6rem 1.8rem;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 480px
+============================== */
+@media (max-width: 480px) {
+    .st-cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .st-info-card__actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .st-btn {
+        width: 100%;
+    }
+}

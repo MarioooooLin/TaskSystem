@@ -1,0 +1,127 @@
+@* 待 Infrastructure KolRepository SQL 完成後，取消下一行注釋並加上 @model
+   @model Common.Pagination.PagedResult<Application.Kols.DTOs.KolListItemDto> *@
+@{
+    ViewData["Title"] = "KOL管理";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/kol-management.css" asp-append-version="true" />
+}
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header">
+    <div class="page-header__left">
+        <nav class="adm-breadcrumb">首頁 &rsaquo; KOL管理</nav>
+        <h1 class="page-title">KOL管理</h1>
+        <p class="page-subtitle">搜尋與查看KOL資料、審核狀態、社群帳號、任務績效與異常狀況</p>
+    </div>
+    <div class="page-header__right">
+        <button class="btn-primary btn-primary--ghost">
+            <i class="fa-solid fa-file-export"></i> 匯出KOL清單
+        </button>
+        <a asp-action="ReviewList" class="btn-primary">
+            <i class="fa-solid fa-user-check"></i> 查看待審KOL
+        </a>
+    </div>
+</div>
+
+<!-- ===== KPI STATS（固定統計，不跟隨篩選）===== -->
+<div class="content-card km-kpi-row">
+    <div class="km-kpi-item">
+        <span class="km-kpi-label">全部KOL</span>
+        <strong class="km-kpi-value">— 位</strong>
+    </div>
+    <div class="km-kpi-item">
+        <span class="km-kpi-label">啟用中</span>
+        <strong class="km-kpi-value km-kpi-value--green">— 位</strong>
+    </div>
+    <div class="km-kpi-item">
+        <span class="km-kpi-label">待審核</span>
+        <strong class="km-kpi-value km-kpi-value--orange">— 位</strong>
+    </div>
+    <div class="km-kpi-item">
+        <span class="km-kpi-label">已退回</span>
+        <strong class="km-kpi-value km-kpi-value--muted">— 位</strong>
+    </div>
+    <div class="km-kpi-item">
+        <span class="km-kpi-label">停權中</span>
+        <strong class="km-kpi-value km-kpi-value--red">— 位</strong>
+    </div>
+    <div class="km-kpi-item km-kpi-item--last">
+        <span class="km-kpi-label">未結案異常</span>
+        <strong class="km-kpi-value km-kpi-value--danger">— 件</strong>
+    </div>
+</div>
+
+<!-- ===== FILTER BAR ===== -->
+<form method="get" asp-action="Index">
+    <div class="content-card km-filter">
+
+        <div class="km-filter-row">
+            <div class="km-filter-item km-filter-item--grow">
+                <label class="bm-filter-label">關鍵字搜尋</label>
+                <div class="filter-search">
+                    <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                    <input type="text" name="keyword" class="filter-search__input"
+                           placeholder="搜尋KOL名稱、Email、手機、社群帳號" />
+                </div>
+            </div>
+            <div class="km-filter-item">
+                <label class="bm-filter-label">KOL狀態</label>
+                <div class="filter-select-wrap">
+                    <select name="verificationStatus" class="filter-select">
+                        <option value="">全部</option>
+                        <option value="1">待審核</option>
+                        <option value="2">啟用中</option>
+                        <option value="3">已退回</option>
+                        <option value="4">停權中</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="km-filter-row">
+            <div class="km-filter-actions">
+                <a asp-action="Index" class="bm-btn-clear">清除篩選</a>
+                <button type="submit" class="btn-primary">執行篩選</button>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<!-- ===== DATA TABLE ===== -->
+<div class="content-card">
+    <div class="table-section">
+        <table class="data-table km-table">
+            <thead>
+                <tr>
+                    <th>KOL名稱</th>
+                    <th>類型 / 平台</th>
+                    <th>粉絲總數</th>
+                    <th>KOL狀態</th>
+                    <th>收款資料</th>
+                    <th>任務績效</th>
+                    <th>異常</th>
+                    <th>建立日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* 待 KolRepository SQL 完成後，替換為：
+                @foreach (var kol in Model.Items)
+                {
+                    <tr>
+                        <td>@kol.DisplayName</td>
+                        ...
+                    </tr>
+                }
+                *@
+                <tr>
+                    <td colspan="9" class="empty-state">資料庫連線尚未完成，待 Repository 實作後顯示資料。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

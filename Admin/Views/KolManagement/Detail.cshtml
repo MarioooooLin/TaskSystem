@@ -1,0 +1,67 @@
+@* 待 Infrastructure KolRepository SQL 完成後加上 @model
+   @model Application.Kols.DTOs.KolDetailDto *@
+@{
+    ViewData["Title"] = "KOL詳細檔案";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/kol-detail.css" asp-append-version="true" />
+}
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header kd-page-header">
+    <div class="page-header__left">
+        <nav class="adm-breadcrumb">首頁 &rsaquo; KOL管理 &rsaquo; 詳細檔案</nav>
+        <h1 class="page-title">KOL詳細檔案</h1>
+        <p class="page-subtitle">查看KOL資料、社群頻道、審核狀態、任務紀錄、收款與異常紀錄</p>
+    </div>
+    <div class="kd-header-actions">
+        <a asp-action="Index" class="kd-btn kd-btn--ghost">返回KOL管理</a>
+    </div>
+</div>
+
+<!-- ===== SUMMARY ===== -->
+<div class="content-card kd-summary-card">
+    <div class="kd-summary-left">
+        <div class="kd-summary-icon">
+            <img src="~/images/user.svg" alt="KOL頭貼" class="kd-summary-avatar" />
+        </div>
+        <div class="kd-summary-meta">
+            @* <h2 class="kd-kol-name">@Model.Base.DisplayName</h2>
+               <span class="kd-badge kd-badge--active">@Model.Base.VerificationStatus</span> *@
+            <h2 class="kd-kol-name">— 待資料庫連線 —</h2>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 管理操作 ===== -->
+<div class="content-card kd-admin-actions">
+    <h2 class="section-title">KOL管理</h2>
+
+    @* 審核操作（VerificationStatus = Pending / Rejected） *@
+    <form method="post" asp-action="Approve" class="d-inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="0" />
+        <button type="submit" class="btn-primary">通過審核</button>
+    </form>
+
+    @* 停權操作 *@
+    <form method="post" asp-action="Suspend" class="d-inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="0" />
+        <input type="text" name="suspensionNote" placeholder="停權原因（必填）" />
+        <button type="submit" class="btn-danger">停權</button>
+    </form>
+
+    @* 解除停權 *@
+    <form method="post" asp-action="Unsuspend" class="d-inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="0" />
+        <button type="submit" class="btn-warning">解除停權</button>
+    </form>
+</div>
+
+@* TODO: 待 KolDetailDto 資料結構完整後，補上社群帳號、收款資料、任務紀錄、收益摘要等區塊 *@
+<div class="content-card">
+    <p class="empty-state">資料庫連線尚未完成，待 Repository 實作後顯示完整資料。</p>
+</div>

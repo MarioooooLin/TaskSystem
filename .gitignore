@@ -1,0 +1,47 @@
+## ===========================
+##  TaskSystem .gitignore
+## ===========================
+
+# ---- 外部設定檔（機密，不進版控）----
+Account/
+
+# ---- Log 檔案 ----
+**/logs/
+*.log
+
+# ---- .NET Build 產出 ----
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+.vs/
+*.DotSettings.user
+
+# ---- NuGet ----
+*.nupkg
+*.snupkg
+**/[Pp]ackages/
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ---- 發行資料夾 ----
+**/publish/
+**/PublishProfiles/
+
+# ---- 環境設定（如有） ----
+appsettings.*.json
+!appsettings.json
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 暫存 ----
+*.tmp
+*.bak
+~$*

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <title>任務系統-錢包管理</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/wallet.css" />
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content wl-main">
+
+            <!-- ===== 頁面標題 ===== -->
+            <h1 class="wl-page-title">錢包管理</h1>
+
+            <!-- ===== 餘額統計三欄 ===== -->
+            <div class="wl-balance-cards">
+                <div class="wl-balance-card">
+                    <div class="wl-balance-card__header">
+                        <span class="wl-balance-card__label">可用餘額</span>
+                        <i class="fa-regular fa-credit-card wl-balance-card__icon"></i>
+                    </div>
+                    <p class="wl-balance-card__amount">NT$50,000</p>
+                    <p class="wl-balance-card__desc">可立即用於案件發布</p>
+                </div>
+                <div class="wl-balance-card">
+                    <div class="wl-balance-card__header">
+                        <span class="wl-balance-card__label">已鎖定金額</span>
+                        <i class="fa-solid fa-lock wl-balance-card__icon"></i>
+                    </div>
+                    <p class="wl-balance-card__amount">NT$12,000</p>
+                    <p class="wl-balance-card__desc">執行中案件預算預扣</p>
+                </div>
+                <div class="wl-balance-card wl-balance-card--dark">
+                    <div class="wl-balance-card__header">
+                        <span class="wl-balance-card__label">總餘額</span>
+                        <i class="fa-solid fa-coins wl-balance-card__icon"></i>
+                    </div>
+                    <p class="wl-balance-card__amount">NT$62,000</p>
+                    <p class="wl-balance-card__desc">帳戶資產總計</p>
+                </div>
+            </div>
+
+            <!-- ===== 主佈局：左側儲值 + 右側交易記錄 ===== -->
+            <div class="wl-layout">
+
+                <!-- ===== RIGHT：最近交易記錄 ===== -->
+                <div class="content-card wl-txn-card">
+                    <div class="wl-txn-header">
+                        <h2 class="wl-section-title">最近交易記錄</h2>
+                        <button class="wl-filter-btn">
+                            <i class="fa-solid fa-sliders"></i> 篩選
+                        </button>
+                    </div>
+
+                    <div class="wl-table-wrap">
+                        <table class="wl-table">
+                            <thead>
+                                <tr>
+                                    <th>交易時間</th>
+                                    <th>交易類型</th>
+                                    <th>金額</th>
+                                    <th>狀態</th>
+                                    <th>關聯案件</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-04</td>
+                                    <td>案件預算鎖定</td>
+                                    <td class="wl-amount wl-amount--red">-NT$12,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--locked">已鎖定</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">北投冬季住宿體驗</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-01</td>
+                                    <td>儲值</td>
+                                    <td class="wl-amount wl-amount--dark">NT$50,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td class="wl-txn-none">無</td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-04-25</td>
+                                    <td>案件結案撥款</td>
+                                    <td class="wl-amount wl-amount--red">-NT$8,500</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">淡水老街美食導覽</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-04</td>
+                                    <td>案件預算鎖定</td>
+                                    <td class="wl-amount wl-amount--red">-NT$12,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--locked">已鎖定</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">北投冬季住宿體驗</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-01</td>
+                                    <td>儲值</td>
+                                    <td class="wl-amount wl-amount--dark">NT$50,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td class="wl-txn-none">無</td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-04-25</td>
+                                    <td>案件結案撥款</td>
+                                    <td class="wl-amount wl-amount--red">-NT$8,500</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">淡水老街美食導覽</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-04</td>
+                                    <td>案件預算鎖定</td>
+                                    <td class="wl-amount wl-amount--red">-NT$12,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--locked">已鎖定</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">北投冬季住宿體驗</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-01</td>
+                                    <td>儲值</td>
+                                    <td class="wl-amount wl-amount--dark">NT$50,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td class="wl-txn-none">無</td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-04-25</td>
+                                    <td>案件結案撥款</td>
+                                    <td class="wl-amount wl-amount--red">-NT$8,500</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">淡水老街美食導覽</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-04</td>
+                                    <td>案件預算鎖定</td>
+                                    <td class="wl-amount wl-amount--red">-NT$12,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--locked">已鎖定</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">北投冬季住宿體驗</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-01</td>
+                                    <td>儲值</td>
+                                    <td class="wl-amount wl-amount--dark">NT$50,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td class="wl-txn-none">無</td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-04-25</td>
+                                    <td>案件結案撥款</td>
+                                    <td class="wl-amount wl-amount--red">-NT$8,500</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">淡水老街美食導覽</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-04</td>
+                                    <td>案件預算鎖定</td>
+                                    <td class="wl-amount wl-amount--red">-NT$12,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--locked">已鎖定</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">北投冬季住宿體驗</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-01</td>
+                                    <td>儲值</td>
+                                    <td class="wl-amount wl-amount--dark">NT$50,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td class="wl-txn-none">無</td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-04-25</td>
+                                    <td>案件結案撥款</td>
+                                    <td class="wl-amount wl-amount--red">-NT$8,500</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">淡水老街美食導覽</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-04</td>
+                                    <td>案件預算鎖定</td>
+                                    <td class="wl-amount wl-amount--red">-NT$12,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--locked">已鎖定</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">北投冬季住宿體驗</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-01</td>
+                                    <td>儲值</td>
+                                    <td class="wl-amount wl-amount--dark">NT$50,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td class="wl-txn-none">無</td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-04-25</td>
+                                    <td>案件結案撥款</td>
+                                    <td class="wl-amount wl-amount--red">-NT$8,500</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">淡水老街美食導覽</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-04</td>
+                                    <td>案件預算鎖定</td>
+                                    <td class="wl-amount wl-amount--red">-NT$12,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--locked">已鎖定</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">北投冬季住宿體驗</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-01</td>
+                                    <td>儲值</td>
+                                    <td class="wl-amount wl-amount--dark">NT$50,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td class="wl-txn-none">無</td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-04-25</td>
+                                    <td>案件結案撥款</td>
+                                    <td class="wl-amount wl-amount--red">-NT$8,500</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">淡水老街美食導覽</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-04</td>
+                                    <td>案件預算鎖定</td>
+                                    <td class="wl-amount wl-amount--red">-NT$12,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--locked">已鎖定</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">北投冬季住宿體驗</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-05-01</td>
+                                    <td>儲值</td>
+                                    <td class="wl-amount wl-amount--dark">NT$50,000</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td class="wl-txn-none">無</td>
+                                </tr>
+                                <tr>
+                                    <td class="wl-txn-date">2026-04-25</td>
+                                    <td>案件結案撥款</td>
+                                    <td class="wl-amount wl-amount--red">-NT$8,500</td>
+                                    <td>
+                                        <span class="wl-txn-status wl-txn-status--done">已完成</span>
+                                    </td>
+                                    <td>
+                                        <a href="cases-detail.html" class="wl-case-link">淡水老街美食導覽</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="wl-load-more">
+                        <button class="wl-load-more-btn" id="loadMoreBtn"><i class="fa-solid fa-angle-down"></i>載入更多交易記錄</button>
+                    </div>
+                </div>
+                <!-- ===== LEFT：帳戶儲值 ===== -->
+                <div class="content-card wl-topup-card">
+                    <h2 class="wl-section-title">帳戶儲值</h2>
+
+                    <div class="wl-form-group">
+                        <label class="wl-form-label">儲值金額（NT$）</label>
+                        <input type="number" class="wl-form-input" id="topupAmount" placeholder="10000" min="1000"
+                            step="1000" value="10000">
+                    </div>
+
+                    <div class="wl-form-group">
+                        <label class="wl-form-label">支付方式</label>
+                        <div class="wl-select-wrap">
+                            <select class="wl-form-select" id="payMethod">
+                                <option>銀行轉帳 / ATM</option>
+                                <option>信用卡</option>
+                                <option>LINE Pay</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down wl-select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <div class="wl-form-group">
+                        <label class="wl-form-label">發票資訊</label>
+                        <input type="text" class="wl-form-input" id="invoiceNo" placeholder="統一編號">
+                    </div>
+
+                    <div class="wl-form-group">
+                        <label class="wl-form-label">電子信箱</label>
+                        <input type="email" class="wl-form-input" id="invoiceEmail" placeholder="example@email.com">
+                    </div>
+
+                    <button class="wl-topup-btn" id="topupSubmitBtn">送出儲值</button>
+                    <p class="wl-topup-disclaimer">
+                        送出即代表您同意旅圖任務系統之服務條款
+                    </p>
+                </div>
+            </div><!-- /.wl-layout -->
+
+            <!-- ===== 需要協助區塊 ===== -->
+            <div class="content-card wl-help-card">
+                <div class="wl-help__icon">
+                    <i class="fa-regular fa-circle-question"></i>
+                </div>
+                <div class="wl-help__body">
+                    <h3 class="wl-help__title">需要協助？</h3>
+                    <p class="wl-help__desc">
+                        如果您對儲值、撥款或鎖定餘額有任何疑問，請聯繫您的客戶經理。
+                    </p>
+                    <button class="wl-help__btn">聯繫客服</button>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

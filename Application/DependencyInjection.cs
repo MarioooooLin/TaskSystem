@@ -1,0 +1,38 @@
+using Application.Account;
+using Application.Kols.Commands;
+using Application.Kols.Queries;
+using Application.Merchants.Commands;
+using Application.Merchants.Queries;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Application;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        // ── Account ───────────────────────────────────────
+        services.AddScoped<LoginHandler>();
+
+        // ── Merchant Management ───────────────────────────
+        services.AddScoped<GetMerchantListHandler>();
+        services.AddScoped<GetMerchantDetailHandler>();
+        services.AddScoped<SuspendMerchantHandler>();
+        services.AddScoped<UnsuspendMerchantHandler>();
+        services.AddScoped<UpdateMerchantHandler>();
+        services.AddScoped<AddMerchantContactHandler>();
+        services.AddScoped<UpdateMerchantContactHandler>();
+        services.AddScoped<RemoveMerchantContactHandler>();
+
+        // ── KOL Management ────────────────────────────────
+        services.AddScoped<GetKolListHandler>();
+        services.AddScoped<GetKolReviewListHandler>();
+        services.AddScoped<GetKolDetailHandler>();
+        services.AddScoped<ApproveKolHandler>();
+        services.AddScoped<RejectKolHandler>();
+        services.AddScoped<SuspendKolHandler>();
+        services.AddScoped<UnsuspendKolHandler>();
+
+        return services;
+    }
+}

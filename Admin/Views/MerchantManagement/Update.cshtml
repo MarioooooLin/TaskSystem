@@ -1,0 +1,166 @@
+@model Admin.ViewModels.Merchant.MerchantUpdateViewModel
+@{
+    ViewData["Title"] = "編輯業者資料";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/business-detail.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/business-edit.css" asp-append-version="true" />
+}
+
+<form method="post" asp-action="Update">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="MerchantId" />
+
+    <!-- ===== PAGE HEADER ===== -->
+    <div class="page-header bd-page-header">
+        <div class="page-header__left">
+            <nav class="adm-breadcrumb">首頁 &rsaquo; 業者管理 &rsaquo; 編輯業者資料</nav>
+            <h1 class="page-title">編輯業者資料</h1>
+            <p class="page-subtitle">修改業者公司資料與聯絡資訊，儲存後立即套用。</p>
+        </div>
+        <div class="bd-header-actions">
+            <a asp-action="Detail" asp-route-id="@Model.MerchantId" class="bd-btn bd-btn--ghost">取消</a>
+            <button type="submit" class="bd-btn bd-btn--edit">
+                <i class="fa-solid fa-floppy-disk"></i> 儲存變更
+            </button>
+        </div>
+    </div>
+
+    @* 全域驗證訊息 *@
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert-error">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
+
+    <!-- ===== 公司基本資料 ===== -->
+    <div class="content-card">
+        <h2 class="section-title bd-section-title">
+            <i class="fa-regular fa-building"></i> 公司基本資料
+        </h2>
+        <div class="bd-form-grid be-edit-grid">
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="CompanyName">公司 / 個人名稱 *</label>
+                <input asp-for="CompanyName" type="text" class="bd-input" placeholder="請輸入公司名稱" />
+                <span asp-validation-for="CompanyName" class="field_error"></span>
+            </div>
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="EnglishName">英文 / 統稱名稱</label>
+                <input asp-for="EnglishName" type="text" class="bd-input" placeholder="English Name" />
+                <span asp-validation-for="EnglishName" class="field_error"></span>
+            </div>
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="IndustryType">行業類型</label>
+                <div class="filter-select-wrap">
+                    <select asp-for="IndustryType" class="filter-select">
+                        <option value="">— 請選擇 —</option>
+                        <option value="旅宿">旅宿</option>
+                        <option value="民宿">民宿</option>
+                        <option value="餐飲">餐飲</option>
+                        <option value="部落客">部落客</option>
+                        <option value="其他">其他</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+                <span asp-validation-for="IndustryType" class="field_error"></span>
+            </div>
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="ContactName">主要負責人</label>
+                <input asp-for="ContactName" type="text" class="bd-input" placeholder="負責人姓名" />
+                <span asp-validation-for="ContactName" class="field_error"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== 識別資料 ===== -->
+    <div class="content-card">
+        <h2 class="section-title bd-section-title">
+            <i class="fa-regular fa-id-card"></i> 識別資料
+        </h2>
+        <div class="bd-form-grid be-edit-grid">
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="TaxId">統一編號</label>
+                <input asp-for="TaxId" type="text" class="bd-input" placeholder="8 位數統一編號" maxlength="20" />
+                <span asp-validation-for="TaxId" class="field_error"></span>
+            </div>
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="EstablishedDate">成立日期</label>
+                <input asp-for="EstablishedDate" type="date" class="bd-input" />
+                <span asp-validation-for="EstablishedDate" class="field_error"></span>
+            </div>
+
+            <div class="bd-form-field bd-form-field--full">
+                <label class="bd-form-label" asp-for="Address">地址</label>
+                <input asp-for="Address" type="text" class="bd-input" placeholder="公司登記地址" />
+                <span asp-validation-for="Address" class="field_error"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== 公司聯絡資訊 ===== -->
+    <div class="content-card">
+        <h2 class="section-title bd-section-title">
+            <i class="fa-regular fa-address-book"></i> 公司聯絡資訊
+        </h2>
+        <div class="bd-form-grid be-edit-grid">
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="Phone">公司電話</label>
+                <input asp-for="Phone" type="text" class="bd-input" placeholder="02-12345678" />
+                <span asp-validation-for="Phone" class="field_error"></span>
+            </div>
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="Fax">傳真</label>
+                <input asp-for="Fax" type="text" class="bd-input" placeholder="02-12345679" />
+                <span asp-validation-for="Fax" class="field_error"></span>
+            </div>
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="CompanyEmail">公司信箱</label>
+                <input asp-for="CompanyEmail" type="email" class="bd-input" placeholder="service@example.com" />
+                <span asp-validation-for="CompanyEmail" class="field_error"></span>
+            </div>
+
+            <div class="bd-form-field">
+                <label class="bd-form-label" asp-for="Website">官方網站</label>
+                <input asp-for="Website" type="url" class="bd-input" placeholder="https://www.example.com" />
+                <span asp-validation-for="Website" class="field_error"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== 更新提示 ===== -->
+    <div class="be-footer-grid">
+        <div class="content-card be-note-card">
+            <div class="be-note-card__icon">
+                <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <div>
+                <h3 class="be-note-card__title">更新提示</h3>
+                <p class="be-note-card__text">
+                    請確認所有資料為最新資訊，修改後系統將同步更新業者管理與案件資料中顯示的相關欄位。
+                </p>
+            </div>
+        </div>
+        <div class="content-card be-status-card">
+            <span class="be-status-card__label">SYSTEM STATUS</span>
+            <p class="be-status-card__text">伺服器連線正常</p>
+        </div>
+    </div>
+
+</form>
