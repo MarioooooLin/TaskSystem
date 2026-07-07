@@ -1,6 +1,46 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-06 19:09
+> 最後整理時間：2026-07-07 11:50
+
+---
+
+## 2026-07-07
+
+### [11:50] Admin 登入流程測試通過
+
+**變更內容**
+
+- `Infrastructure/DependencyInjection.cs`：補全所有 Repository `AddScoped` 對應（9 個新 Repo）
+- `Account/TaskSystem.json`：修正連線字串 Server IP 尾端多餘的句點（`192.168.0.144.` → `192.168.0.144`）
+- `Admin/Controllers/HomeController.cs`：加上 `[Authorize]`，未登入自動導向 `/Account/Login`
+- `Admin/Program.cs`：Cookie `SecurePolicy` 改為開發環境用 `SameAsRequest`、正式環境用 `Always`，解決 HTTP 開發時 Cookie 不被瀏覽器傳送的問題
+- `Admin/wwwroot/css/login.css`：新增 `.alert-error` 樣式，讓登入失敗錯誤訊息可見
+- `Admin/Controllers/DashboardController.cs`：新增佔位 Controller（登入後跳轉目標）
+
+**決策原因**
+
+- 登入失敗時錯誤訊息因無 CSS 樣式而隱形，導致誤以為「閃爍後回到登入頁」
+- `CookieSecurePolicy.Always` 在 HTTP 開發環境下 Cookie 被瀏覽器拒絕傳送，造成登入成功卻持續被導回登入頁
+
+### [11:04] 修復 DI 啟動錯誤：補建全部缺少的 Repository 實作
+
+**變更內容**
+
+- 新增 `Infrastructure/Persistence/Repositories/KolRepository.cs`
+- 新增 `Infrastructure/Persistence/Repositories/KolSocialAccountRepository.cs`
+- 新增 `Infrastructure/Persistence/Repositories/KolBankAccountRepository.cs`
+- 新增 `Infrastructure/Persistence/Repositories/KolStatsRepository.cs`
+- 新增 `Infrastructure/Persistence/Repositories/KolEarningRepository.cs`
+- 新增 `Infrastructure/Persistence/Repositories/MerchantContactRepository.cs`
+- 新增 `Infrastructure/Persistence/Repositories/MerchantStatsRepository.cs`
+- 新增 `Infrastructure/Persistence/Repositories/MerchantMemberRepository.cs`
+- 新增 `Infrastructure/Persistence/Repositories/MerchantWalletRepository.cs`
+- 更新 `Infrastructure/DependencyInjection.cs`：補全所有 `AddScoped` 對應
+
+**決策原因**
+
+- 啟動 Admin 專案時 DI 容器驗證失敗，多個 Handler 注入的 Repository 介面未被實作/註冊
+- 一次補齊所有 Abstractions/Repositories 下的介面，避免反覆修復啟動錯誤
 
 ---
 

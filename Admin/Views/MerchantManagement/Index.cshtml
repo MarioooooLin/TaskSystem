@@ -2,7 +2,7 @@
 @using Domain.Enums
 @{
     ViewData["Title"] = "業者管理";
-    var keyword            = Context.Request.Query["keyword"].ToString();
+    var keyword = Context.Request.Query["keyword"].ToString();
     var verificationStatus = Context.Request.Query["verificationStatus"].ToString();
 }
 
@@ -43,7 +43,8 @@
                 <label class="bm-filter-label">關鍵字搜尋</label>
                 <div class="filter-search">
                     <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
-                    <input type="text" name="keyword" value="@keyword" class="filter-search__input" placeholder="業者名稱、統編、聯絡人" />
+                    <input type="text" name="keyword" value="@keyword" class="filter-search__input"
+                           placeholder="業者名稱、統編、聯絡人" />
                 </div>
             </div>
             <div class="bm-filter-item">
@@ -86,11 +87,11 @@
                 {
                     var (statusCss, statusText) = m.VerificationStatus switch
                     {
-                        VerificationStatus.Approved  => ("case-status recruit",  "啟用中"),
-                        VerificationStatus.Pending   => ("case-status review",   "待審核"),
-                        VerificationStatus.Rejected  => ("case-status closed",   "已拒絕"),
-                        VerificationStatus.Suspended => ("case-status cancelled","已停用"),
-                        _                            => ("", "—"),
+                        VerificationStatus.Approved => ("case-status recruit", "啟用中"),
+                        VerificationStatus.Pending => ("case-status review", "待審核"),
+                        VerificationStatus.Rejected => ("case-status closed", "已拒絕"),
+                        VerificationStatus.Suspended => ("case-status cancelled", "已停用"),
+                        _ => ("", "—"),
                     };
                     <tr>
                         <td class="bm-company-name">@m.CompanyName</td>
@@ -124,29 +125,20 @@
             <div class="pagination__nav">
                 @if (Model.HasPreviousPage)
                 {
-                    <a asp-action="Index"
-                       asp-route-keyword="@keyword"
-                       asp-route-verificationStatus="@verificationStatus"
-                       asp-route-page="@(Model.Page - 1)"
-                       class="page-btn">
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
+                       asp-route-page="@(Model.Page - 1)" class="page-btn">
                         <i class="fa-solid fa-chevron-left"></i>
                     </a>
                 }
                 @for (var p = 1; p <= Model.TotalPages; p++)
                 {
-                    <a asp-action="Index"
-                       asp-route-keyword="@keyword"
-                       asp-route-verificationStatus="@verificationStatus"
-                       asp-route-page="@p"
-                       class="page-btn @(p == Model.Page ? "active" : "")">@p</a>
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
+                       asp-route-page="@p" class="page-btn @(p == Model.Page ? "active" : "")">@p</a>
                 }
                 @if (Model.HasNextPage)
                 {
-                    <a asp-action="Index"
-                       asp-route-keyword="@keyword"
-                       asp-route-verificationStatus="@verificationStatus"
-                       asp-route-page="@(Model.Page + 1)"
-                       class="page-btn">
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
+                       asp-route-page="@(Model.Page + 1)" class="page-btn">
                         <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 }

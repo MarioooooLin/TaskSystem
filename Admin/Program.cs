@@ -47,7 +47,9 @@ builder.Services
     {
         options.Cookie.Name = ".TaskSystem.Admin";
         options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+            ? CookieSecurePolicy.SameAsRequest   // 開發時相容 HTTP
+            : CookieSecurePolicy.Always;          // 正式環境強制 HTTPS
         options.Cookie.SameSite = SameSiteMode.Strict;  // Admin 用更嚴格的 Strict
         options.LoginPath = "/Account/Login";
         options.LogoutPath = "/Account/Logout";

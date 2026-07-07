@@ -84,10 +84,10 @@ public sealed class MerchantRepository : IMerchantRepository
 
         var param = new
         {
-            Keyword    = string.IsNullOrWhiteSpace(keyword) ? null : $"%{keyword.Trim()}%",
-            Status     = verificationStatus.HasValue ? (short)verificationStatus.Value : (short?)null,
-            Offset     = page.Offset,
-            PageSize   = page.PageSize,
+            Keyword = string.IsNullOrWhiteSpace(keyword) ? null : $"%{keyword.Trim()}%",
+            Status = verificationStatus.HasValue ? (short)verificationStatus.Value : (short?)null,
+            Offset = page.Offset,
+            PageSize = page.PageSize,
         };
 
         var totalCount = await session.Connection.ExecuteScalarAsync<int>(

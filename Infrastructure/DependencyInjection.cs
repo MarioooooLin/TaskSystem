@@ -27,7 +27,17 @@ public static class DependencyInjection
 
         // ── Repositories ──────────────────────────────────
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRoleRepository, RoleRepository>();        services.AddScoped<IMerchantRepository, MerchantRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IMerchantRepository, MerchantRepository>();
+        services.AddScoped<IMerchantContactRepository, MerchantContactRepository>();
+        services.AddScoped<IMerchantStatsRepository, MerchantStatsRepository>();
+        services.AddScoped<IMerchantMemberRepository, MerchantMemberRepository>();
+        services.AddScoped<IMerchantWalletRepository, MerchantWalletRepository>();
+        services.AddScoped<IKolRepository, KolRepository>();
+        services.AddScoped<IKolSocialAccountRepository, KolSocialAccountRepository>();
+        services.AddScoped<IKolBankAccountRepository, KolBankAccountRepository>();
+        services.AddScoped<IKolStatsRepository, KolStatsRepository>();
+        services.AddScoped<IKolEarningRepository, KolEarningRepository>();
         return services;
     }
 }
