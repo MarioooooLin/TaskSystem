@@ -31,7 +31,7 @@
 - KOL 端使用 LINE Login OAuth 取得 LINE `userId`，不可和 `KolProfiles.LineContactId` 混用。
 - `KolProfiles.LineContactId` 定位為聯絡用 LINE ID；OAuth 綁定需使用 `UserExternalLogins.ProviderUserId`。
 - LINE Notify 已停止服務；主動推播需使用 LINE Messaging API。
-- 若 LINE Login 不提供 Email，`Users.Email` 是否 nullable 或首次登入後補填仍待確認。
+- 若 LINE Login 不提供 Email，首次登入需強制補填 Email 後才能建立或完成 `Users` 帳號；`Users.Email` 維持必填且全系統唯一。
 
 **權限與狀態**
 
@@ -317,10 +317,11 @@
   - 收款帳戶畫面標示選填；不阻擋送審，但提領/收益結算前需強制補齊。
   - 平台使用條款同意先於 `KolProfiles` 記錄同意時間，暫不做條款版本表。
   - 將 `KolProfiles.VerificationStatus` 更新為 `Pending`，並寫入操作紀錄。
+  - 若送審前狀態為 `Rejected`，寫入 `KolReviewEvents.ActionType = Resubmitted`；其他首次或一般送審寫入 `KolReviewEvents.ActionType = Submitted`。
 
 **資料表**
 
-- 已存在：`KolProfiles`、`KolCategories`、`KolSocialAccounts`、`KolBankAccounts`。
+- 已存在：`KolProfiles`、`KolCategories`、`KolSocialAccounts`、`KolBankAccounts`、`KolReviewEvents`。
 - 待補：`KolServiceAreas`、`KolLanguages`；平台使用條款同意時間可先補在 `KolProfiles`。
 
 **狀態規則**

@@ -37,7 +37,7 @@ WHERE Email = 'owner@tainan-old.com.tw';
 SELECT @u5 = Id
 FROM Users
 WHERE Email = 'owner@kenting-resort.com.tw';
--- VerificationStatus: 1=Pending 2=Approved 3=Rejected 4=Suspended
+-- Merchant VerificationStatus: 2=Approved 4=Suspended
 INSERT INTO Merchants (
         UserId,
         CompanyName,
@@ -115,8 +115,8 @@ VALUES (
         NULL,
         N'台南市中西區府前路一段200號',
         '2019-11-01',
-        1,
-        NULL
+        2,
+        GETUTCDATE()
     ),
     (
         @u5,

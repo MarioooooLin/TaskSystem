@@ -2,119 +2,182 @@
     ViewData["Title"] = "案件監控";
 }
 
-<!-- PAGE TITLE -->
-<div class="content-card">
-    <div class="page-header">
-        <div class="page-header__left">
-            <nav class="adm-breadcrumb">首頁 &rsaquo; 案件監控</nav>
-            <h1 class="page-title">案件監控</h1>
-            <p class="page-subtitle">監控與追蹤平台所有合作案件狀態</p>
+@section PageCss {
+    <link rel="stylesheet" href="~/css/cases-monitor.css" asp-append-version="true" />
+}
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header cm-page-header">
+    <div class="page-header__left">
+        <h1 class="page-title">案件監控</h1>
+        <p class="page-subtitle">以案件為單位監控業者自行發佈的案件，並查看與底下KOL任務的接觸、待驗收與異常狀況。</p>
+    </div>
+</div>
+
+<!-- ===== KPI STATS ===== -->
+<div class="content-card cm-kpi-row">
+    <div class="cm-kpi-item cm-kpi-item--total">
+        <span class="cm-kpi-label">全部案件</span>
+        <strong class="cm-kpi-value">—</strong>
+    </div>
+    <div class="cm-kpi-item">
+        <span class="cm-kpi-label">草稿</span>
+        <strong class="cm-kpi-value">—</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--recruit">
+        <span class="cm-kpi-label">招募中</span>
+        <strong class="cm-kpi-value">—</strong>
+    </div>
+    <div class="cm-kpi-item">
+        <span class="cm-kpi-label">招募滿額</span>
+        <strong class="cm-kpi-value">—</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--running">
+        <span class="cm-kpi-label">執行中</span>
+        <strong class="cm-kpi-value">—</strong>
+    </div>
+    <div class="cm-kpi-item">
+        <span class="cm-kpi-label">已結案</span>
+        <strong class="cm-kpi-value">—</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--last">
+        <span class="cm-kpi-label">已取消</span>
+        <strong class="cm-kpi-value">—</strong>
+    </div>
+</div>
+
+<!-- ===== ALERT CARDS ===== -->
+<div class="cm-alert-grid">
+    <article class="content-card cm-alert-card cm-alert-card--pending">
+        <span class="cm-alert-title"><i class="fa-regular fa-clock"></i> 待驗收任務</span>
+        <div class="cm-alert-count-wrap"><strong>—</strong><span>件任務</span></div>
+        <p>有新的作品已提交，請提醒業者於時限內完成驗收。</p>
+        <button type="button" class="cm-alert-btn cm-alert-btn--warn">套用篩選</button>
+    </article>
+
+    <article class="content-card cm-alert-card cm-alert-card--expired">
+        <span class="cm-alert-title"><i class="fa-regular fa-calendar-xmark"></i> 已逾期任務</span>
+        <div class="cm-alert-count-wrap"><strong>—</strong><span>件任務</span></div>
+        <p>已超過約定的交付日期，需派介入確認 KOL 執行狀況。</p>
+        <button type="button" class="cm-alert-btn cm-alert-btn--danger">即刻處理</button>
+    </article>
+
+    <article class="content-card cm-alert-card cm-alert-card--dispute">
+        <span class="cm-alert-title"><i class="fa-solid fa-gavel"></i> 爭議處理中任務</span>
+        <div class="cm-alert-count-wrap"><strong>—</strong><span>件任務</span></div>
+        <p>業者與 KOL 之間存在驗收爭議，等待平台介入。</p>
+        <button type="button" class="cm-alert-btn cm-alert-btn--light">查看先選</button>
+    </article>
+
+    <article class="content-card cm-alert-card cm-alert-card--abnormal">
+        <span class="cm-alert-title"><i class="fa-solid fa-wave-square"></i> 導購同步異常案件</span>
+        <div class="cm-alert-count-wrap"><strong>—</strong><span>個案</span></div>
+        <p>API 同步資料發生異常，導致導購分潤數據尚未更新。</p>
+        <button type="button" class="cm-alert-btn cm-alert-btn--ghost">診斷原因</button>
+    </article>
+</div>
+
+<!-- ===== FILTER ===== -->
+<div class="content-card cm-filter">
+    <div class="cm-filter-row">
+        <div class="cm-filter-item cm-filter-item--grow">
+            <label class="cm-filter-label">關鍵字搜尋</label>
+            <div class="filter-search">
+                <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                <input type="text" class="filter-search__input" placeholder="案件名稱/業者名...">
+            </div>
+        </div>
+        <div class="cm-filter-item">
+            <label class="cm-filter-label">待驗收任務</label>
+            <div class="filter-select-wrap">
+                <select class="filter-select">
+                    <option>不限</option>
+                    <option>有待驗收</option>
+                    <option>無待驗收</option>
+                </select>
+                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+            </div>
+        </div>
+        <div class="cm-filter-item">
+            <label class="cm-filter-label">導購分潤</label>
+            <div class="filter-select-wrap">
+                <select class="filter-select">
+                    <option>不限</option>
+                    <option>正常同步</option>
+                    <option>異常</option>
+                </select>
+                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+            </div>
         </div>
     </div>
 
-    <!-- STATUS CARDS -->
-    <section class="status-cards">
-        <a href="#" class="status-card">
-            <img src="~/images/icon-draft.svg" alt="草稿" />
-            <span class="status-label">草稿</span>
-            <span class="status-count">—</span>
-        </a>
-        <a href="#" class="status-card">
-            <img src="~/images/icon-review.svg" alt="待審核" />
-            <span class="status-label">待審核</span>
-            <span class="status-count">—</span>
-        </a>
-        <a href="#" class="status-card">
-            <img src="~/images/icon-recruit.svg" alt="招募中" />
-            <span class="status-label">招募中</span>
-            <span class="status-count">—</span>
-        </a>
-        <a href="#" class="status-card">
-            <img src="~/images/icon-progress.svg" alt="執行中" />
-            <span class="status-label">執行中</span>
-            <span class="status-count">—</span>
-        </a>
-        <a href="#" class="status-card">
-            <img src="~/images/icon-accepting.svg" alt="待驗收" />
-            <span class="status-label">待驗收</span>
-            <span class="status-count">—</span>
-        </a>
-        <a href="#" class="status-card">
-            <img src="~/images/icon-closed.svg" alt="已結案" />
-            <span class="status-label">已結案</span>
-            <span class="status-count">—</span>
-        </a>
-    </section>
+    <div class="cm-filter-row cm-filter-row--chips">
+        <label class="cm-filter-label">案件狀態</label>
+        <div class="cm-chip-group">
+            <button class="cm-chip cm-chip--active" type="button">全部</button>
+            <button class="cm-chip" type="button">草稿</button>
+            <button class="cm-chip" type="button">招募中</button>
+            <button class="cm-chip" type="button">執行中</button>
+            <button class="cm-chip" type="button">已結案</button>
+            <button class="cm-chip" type="button">已取消</button>
+        </div>
+        <label class="cm-filter-label cm-filter-label--inline">合作條件</label>
+        <div class="cm-chip-group">
+            <button class="cm-chip" type="button">現金酬勞</button>
+            <button class="cm-chip" type="button">體驗項目</button>
+            <button class="cm-chip" type="button">導購分潤</button>
+        </div>
+    </div>
 
-    <!-- FILTER BAR -->
-    <section class="filter-bar">
-        <div class="filter-bar__row">
-            <div class="filter-search">
-                <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
-                <input type="text" class="filter-search__input" placeholder="關鍵字搜尋">
-            </div>
-            <div class="filter-select-wrap">
-                <select class="filter-select">
-                    <option>全部狀態</option>
-                    <option>草稿</option>
-                    <option>待審核</option>
-                    <option>招募中</option>
-                    <option>執行中</option>
-                    <option>待驗收</option>
-                    <option>已結案</option>
-                </select>
-                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
-            </div>
-            <div class="filter-select-wrap">
-                <select class="filter-select">
-                    <option>全部合作條件</option>
-                    <option>現金報酬</option>
-                    <option>贈品項目</option>
-                    <option>現金報酬、贈品項目</option>
-                </select>
-                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+    <div class="cm-filter-row">
+        <div class="cm-filter-item cm-filter-item--date">
+            <label class="cm-filter-label">建立日期範圍</label>
+            <div class="cm-date-range">
+                <input type="date" class="date-input" aria-label="開始日期">
+                <span class="cm-date-sep">~</span>
+                <input type="date" class="date-input" aria-label="結束日期">
             </div>
         </div>
-        <div class="filter-bar__row">
-            <div class="filter-group">
-                <span class="filter-group__label">日期區間</span>
-                <div class="filter-date-range">
-                    <div class="filter-date-input">
-                        <input type="date" id="startDate" class="date-input" aria-label="開始日期">
-                        <span class="filter-date-sep">～</span>
-                        <input type="date" id="endDate" class="date-input" aria-label="結束日期">
-                    </div>
-                </div>
-            </div>
+        <div class="cm-filter-actions">
+            <button class="cm-clear-btn" type="button">重設篩選</button>
+            <button class="btn-primary" type="button">搜尋</button>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- CASES TABLE -->
-    <section class="table-section">
-        <table class="data-table cases-table">
+<!-- ===== TABLE ===== -->
+<div class="content-card">
+    <div class="table-section">
+        <table class="data-table cm-table">
             <thead>
                 <tr>
-                    <th>案件名稱</th>
-                    <th>業者</th>
-                    <th>狀態</th>
+                    <th>案件名稱 / 業者名</th>
+                    <th>案件狀態</th>
                     <th>合作條件</th>
-                    <th>招募報名</th>
-                    <th>任務待處</th>
-                    <th>總預算</th>
-                    <th>截止日期</th>
+                    <th>招募 / 成立</th>
+                    <th>任務狀態摘要</th>
+                    <th>導購狀態</th>
+                    <th>建立日期</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="9" class="bd-empty-hint">— 待資料庫連線 —</td>
+                    <td colspan="8" class="table-empty">— 待資料庫連線 —</td>
                 </tr>
             </tbody>
         </table>
+    </div>
 
-        <div class="pagination">
-            <span class="pagination__info">— 待資料庫連線 —</span>
+    <div class="pagination cm-pagination">
+        <span class="pagination__info">—</span>
+        <div class="pagination__nav">
+            <button class="page-btn" aria-label="第一頁"><i class="fa-solid fa-angles-left"></i></button>
+            <button class="page-btn" aria-label="上一頁"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn" aria-label="下一頁"><i class="fa-solid fa-chevron-right"></i></button>
+            <button class="page-btn" aria-label="最末頁"><i class="fa-solid fa-angles-right"></i></button>
         </div>
-    </section>
+    </div>
+</div>
 
-</div><!-- /.content-card -->

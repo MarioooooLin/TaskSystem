@@ -87,12 +87,30 @@ public sealed class UserRepository : IUserRepository
     {
         const string sql = """
             UPDATE u
-            SET    u.Status    = 3,          -- Suspended
+            SET    u.Status    = 2,          -- Suspended
                    u.UpdatedAt = GETUTCDATE()
             FROM   Users u
             INNER JOIN MerchantMembers mm ON mm.UserId = u.Id
             WHERE  mm.MerchantId = @MerchantId
               AND  u.Status      = 1          -- Active only
+            """;
+
+        await session.Connection.ExecuteAsync(
+            sql, new { MerchantId = merchantId }, session.Transaction);
+    }
+
+    public async Task ReactivateUsersByMerchantAsync(
+        long merchantId, IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            UPDATE u
+            SET    u.Status    = 1,          -- Active
+                   u.UpdatedAt = GETUTCDATE()
+            FROM   Users u
+            INNER JOIN MerchantMembers mm ON mm.UserId = u.Id
+            WHERE  mm.MerchantId = @MerchantId
+              AND  mm.Status     = 1          -- Active member relation only
+              AND  u.Status      = 2          -- Suspended only
             """;
 
         await session.Connection.ExecuteAsync(

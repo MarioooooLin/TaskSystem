@@ -19,7 +19,7 @@ public class Merchant
     public string? Address { get; set; }
     public DateOnly? EstablishedDate { get; set; }
 
-    public VerificationStatus VerificationStatus { get; set; } = VerificationStatus.Pending;
+    public VerificationStatus VerificationStatus { get; set; } = VerificationStatus.Approved;
     public DateTime? VerifiedAt { get; set; }
     public long? UpdatedByAdminId { get; set; }
 

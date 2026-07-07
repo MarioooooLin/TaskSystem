@@ -1,83 +1,217 @@
 @{
-    ViewData["Title"] = "案件詳情";
+    ViewData["Title"] = "案件詳情與進度";
 }
 
 @section PageCss {
-    <link rel="stylesheet" href="~/css/cases-detail.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/case-detail.css" asp-append-version="true" />
 }
 
-<div class="content-card cd-card">
-
-    <!-- ===== 案件標題列 ===== -->
-    <div class="cd-title-row">
-        <div class="cd-title-row__left">
-            <h1 class="cd-title">— 待資料庫連線 —</h1>
-            <span class="case-status recruit">招募</span>
-        </div>
-        <div class="cd-title-row__actions">
-            <a asp-action="Index" class="cd-action-btn cd-action-btn--ghost">
-                <i class="fa-solid fa-arrow-left"></i> 返回案件監控
-            </a>
-            <button class="cd-action-btn cd-action-btn--danger">取消案件</button>
-        </div>
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header cd-page-header">
+    <div class="page-header__left">
+        <h1 class="page-title">案件詳情與進度</h1>
+        <p class="page-subtitle">查看單一案件資訊與該案件底下KOL任務的交付、驗收、追蹤與異常狀況</p>
     </div>
-    <p class="cd-meta">案件編號 — ｜ —</p>
+    <div class="cd-header-actions">
+        <a asp-action="Index" class="cd-btn cd-btn--ghost"><i class="fa-solid fa-arrow-left"></i> 返回案件監控</a>
+        <button class="cd-btn cd-btn--ghost"><i class="fa-regular fa-rectangle-list"></i> 查看異常</button>
+        <button class="cd-btn cd-btn--ghost"><i class="fa-solid fa-magnifying-glass"></i> 查看最近任務</button>
+    </div>
+</div>
 
-    <!-- ===== 統計數字列 ===== -->
-    <div class="cd-stats">
-        <div class="cd-stat">
-            <span class="cd-stat__label">報名人數</span>
-            <span class="cd-stat__value">—</span>
-        </div>
-        <div class="cd-stat cd-stat--progress">
-            <span class="cd-stat__label">已接受KOL</span>
-            <div class="cd-stat__progress-wrap">
-                <span class="cd-stat__value">— <span class="cd-stat__sub">/ —</span></span>
-            </div>
-        </div>
-        <div class="cd-stat">
-            <span class="cd-stat__label">待驗收</span>
-            <span class="cd-stat__value">—</span>
-        </div>
-        <div class="cd-stat">
-            <span class="cd-stat__label">審核處理中</span>
-            <span class="cd-stat__value cd-stat__value--red">—</span>
-        </div>
-        <div class="cd-stat">
-            <span class="cd-stat__label">已完成</span>
-            <span class="cd-stat__value">—</span>
-        </div>
-        <div class="cd-stat cd-stat--budget">
-            <span class="cd-stat__label">案件預算餘額</span>
-            <span class="cd-stat__value cd-stat__value--budget">—</span>
+<!-- ===== CASE SUMMARY ===== -->
+<div class="content-card cd-summary-card">
+    <div class="cd-summary-left">
+        <h2 class="cd-case-name">— 待資料庫連線 —</h2>
+        <span class="cd-status-pill cd-status-pill--running">執行中</span>
+        <p class="cd-case-company"><i class="fa-regular fa-building"></i> —</p>
+        <div class="cd-condition-tags">
+            <span>現金酬勞</span>
         </div>
     </div>
 
-    <!-- ===== 主要佈局 ===== -->
-    <div class="cd-layout">
-        <div class="cd-main">
-            <div class="cd-kol-header">
-                <h2 class="cd-kol-title">KOL 清單與任務狀態</h2>
-            </div>
-            <div class="cd-table-wrap">
-                <table class="cd-table">
-                    <thead>
-                        <tr>
-                            <th>KOL 名稱</th>
-                            <th>主要平台</th>
-                            <th>任務狀態</th>
-                            <th>報名時間</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="5" class="bd-empty-hint">— 待資料庫連線 —</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="cd-summary-right">
+        <div class="cd-summary-metric">
+            <span>招募進度</span>
+            <strong>— / —</strong>
+        </div>
+        <div class="cd-summary-metric">
+            <span>已成立任務</span>
+            <strong>— / —</strong>
+        </div>
+        <div class="cd-summary-metric">
+            <span>執行中任務</span>
+            <strong>—</strong>
+        </div>
+        <div class="cd-summary-metric">
+            <span>待驗收任務</span>
+            <strong class="is-danger">—</strong>
+        </div>
+        <div class="cd-summary-metric">
+            <span>已逾期任務</span>
+            <strong class="is-danger">—</strong>
+        </div>
+        <div class="cd-summary-metric">
+            <span>爭議處理中</span>
+            <strong>—</strong>
+        </div>
+        <div class="cd-summary-metric">
+            <span>導購狀態</span>
+            <strong>—</strong>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TABS ===== -->
+<nav class="cd-tabs">
+    <button class="cd-tab is-active" type="button">案件摘要</button>
+    <button class="cd-tab" type="button">合作條件</button>
+    <button class="cd-tab" type="button">任務統計</button>
+    <button class="cd-tab" type="button">KOL任務清單</button>
+    <button class="cd-tab" type="button">交付驗收</button>
+    <button class="cd-tab" type="button">導購狀態</button>
+    <button class="cd-tab" type="button">附件合約</button>
+    <button class="cd-tab" type="button">操作紀錄</button>
+</nav>
+
+<!-- ===== BASIC INFO ===== -->
+<div class="cd-grid cd-grid--2">
+    <section class="content-card cd-panel">
+        <h2 class="cd-panel-title"><i class="fa-solid fa-circle-info"></i> 案件基本資料</h2>
+        <div class="cd-kv-grid">
+            <div class="cd-kv-item"><span>案件編號</span><strong>—</strong></div>
+            <div class="cd-kv-item"><span>建立業者</span><strong>—</strong></div>
+            <div class="cd-kv-item"><span>預定招募人數</span><strong>—</strong></div>
+            <div class="cd-kv-item"><span>曝光平台</span><strong>—</strong></div>
+            <div class="cd-kv-item"><span>案件負責人</span><strong>—</strong></div>
+        </div>
+    </section>
+
+    <section class="content-card cd-panel">
+        <h2 class="cd-panel-title"><i class="fa-regular fa-calendar"></i> 時程資訊</h2>
+        <div class="cd-kv-list">
+            <div class="cd-kv-row"><span>案件執行期間</span><strong>—</strong></div>
+            <div class="cd-kv-row"><span>KOL 招募截止</span><strong>—</strong></div>
+            <div class="cd-kv-row"><span>成果交付截止</span><strong>—</strong></div>
+        </div>
+        <div class="cd-progress-wrap">
+            <div class="cd-progress-bar"><span style="width: 0%"></span></div>
+            <div class="cd-progress-meta"><span>—</span><span>—</span></div>
+        </div>
+    </section>
+</div>
+
+<!-- ===== CONDITION ===== -->
+<section class="content-card cd-panel">
+    <h2 class="cd-panel-title"><i class="fa-regular fa-handshake"></i> 合作條件</h2>
+    <div class="cd-condition-grid">
+        <article class="cd-condition-item">
+            <span><i class="fa-solid fa-wallet"></i> 現金酬勞</span>
+            <strong>—</strong>
+        </article>
+        <article class="cd-condition-item">
+            <span><i class="fa-solid fa-gift"></i> 體驗項目</span>
+            <strong>—</strong>
+        </article>
+        <article class="cd-condition-item">
+            <span><i class="fa-solid fa-chart-line"></i> 導購分潤</span>
+            <strong>—</strong>
+        </article>
+    </div>
+</section>
+
+<!-- ===== TASK STATS ===== -->
+<section class="content-card cd-panel">
+    <h2 class="cd-panel-title"><i class="fa-solid fa-chart-column"></i> 招募與任務統計</h2>
+    <div class="cd-task-stat-grid">
+        <div class="cd-task-stat"><span>報名人數</span><strong>—</strong></div>
+        <div class="cd-task-stat"><span>未入選</span><strong>—</strong></div>
+        <div class="cd-task-stat"><span>已成立任務</span><strong>—</strong></div>
+        <div class="cd-task-stat"><span>執行中</span><strong>—</strong></div>
+        <div class="cd-task-stat"><span>已交付待審</span><strong>—</strong></div>
+        <div class="cd-task-stat"><span>待處理逾期</span><strong>—</strong></div>
+    </div>
+</section>
+
+<!-- ===== TASK LIST ===== -->
+<section class="content-card cd-panel">
+    <div class="cd-section-head">
+        <h2 class="cd-panel-title"><i class="fa-solid fa-list-check"></i> KOL 任務清單</h2>
+        <div class="cd-section-actions">
+            <button class="cd-link-btn" type="button">匯出表格</button>
+            <button class="cd-link-btn" type="button">批次操作</button>
         </div>
     </div>
 
-</div><!-- /.content-card -->
+    <div class="table-section">
+        <table class="data-table cd-task-table">
+            <thead>
+                <tr>
+                    <th>KOL 名稱</th>
+                    <th>KOL 類型</th>
+                    <th>主要平台</th>
+                    <th>任務狀態</th>
+                    <th>成果提交</th>
+                    <th>驗收結果</th>
+                    <th>異議狀態</th>
+                    <th>最近更新</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="9" class="table-empty">— 待資料庫連線 —</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== GUIDE STATS ===== -->
+<section class="content-card cd-panel">
+    <div class="cd-section-head">
+        <h2 class="cd-panel-title"><i class="fa-solid fa-square-poll-horizontal"></i> 導購與訂單統計</h2>
+        <span class="cd-sync-status">—</span>
+    </div>
+    <div class="cd-sales-grid">
+        <div class="cd-sales-item">
+            <span>交易點擊數</span>
+            <strong>—</strong>
+        </div>
+        <div class="cd-sales-item">
+            <span>訂單總金額</span>
+            <strong>—</strong>
+            <small>NTD（預估）</small>
+        </div>
+        <div class="cd-sales-item">
+            <span>導購實際值</span>
+            <strong>—</strong>
+            <small>NTD</small>
+        </div>
+        <div class="cd-sales-item cd-sales-item--highlight">
+            <span>預估待分潤金</span>
+            <strong>—</strong>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FILES & LOG ===== -->
+<div class="cd-grid cd-grid--2">
+    <section class="content-card cd-panel">
+        <div class="cd-section-head">
+            <h2 class="cd-panel-title"><i class="fa-regular fa-file"></i> 附件與合約</h2>
+            <button class="cd-link-btn" type="button">上傳檔案</button>
+        </div>
+        <div class="cd-file-list">
+            <p class="table-empty">— 待資料庫連線 —</p>
+        </div>
+    </section>
+
+    <section class="content-card cd-panel">
+        <h2 class="cd-panel-title"><i class="fa-regular fa-clock"></i> 操作紀錄</h2>
+        <div class="cd-log-list">
+            <p class="table-empty">— 待資料庫連線 —</p>
+        </div>
+    </section>
+</div>
+

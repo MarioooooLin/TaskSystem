@@ -45,13 +45,14 @@
 
 - 停用業者的預設語意是停用登入帳號，而不是只改業者主檔狀態。
 - 停用範圍預設包含該 Merchant 底下所有 `MerchantMembers` 對應的 `Users`，避免業者被停用後仍可操作業者端。
-- 復權規則尚未從 Figma 定案；實作前需確認是否全部成員復權、僅 Owner 復權，或依停用前狀態還原。
+- 業者停權採整體停權：停用業者主檔後，該業者底下所有角色帳號皆不可登入或操作業者端。
+- 業者復權第一版採整體復權：恢復業者主檔，並恢復因該業者停權而停用的成員帳號；若未來需保留成員個別停用狀態，需新增停權前狀態快照或明確操作紀錄。
 - 代理登入先不實作，但規格需保留：`AdminId`、`TargetUserId`、`MerchantId`、開始時間、結束時間、原因、IP、UserAgent、代理期間操作稽核。
 
 **資料表與稽核**
 
 - 現金錢包沿用 `MerchantWallets` / `MerchantWalletTransactions`。
-- 折扣金採獨立 `MerchantCreditWallets` / `MerchantCreditTransactions`，不直接覆寫餘額，不混入現金錢包餘額；折抵規則仍待 PM/財務確認。
+- 折扣金採獨立 `MerchantCreditWallets` / `MerchantCreditTransactions`，不直接覆寫餘額，不混入現金錢包餘額；只有業者有折扣金，第一版只能折抵案件開案費，不可折抵 KOL 酬勞、導購分潤、儲值或其他款項。
 - 使用紀錄與操作紀錄預設拆開：
   - 使用紀錄：登入、登出、代理登入、代理登入結束。
   - 操作紀錄：業者資料修改、聯絡窗口新增/修改/刪除、帳號停用、折扣金異動、錢包異動。
@@ -122,7 +123,7 @@
 **主要區塊**
 
 - 統計摘要：全部 KOL、啟用中、待審核、已退回、停權中、未結案異議。
-- 功能按鈕：匯出 KOL 清單、查看待審 KOL。
+- 功能按鈕：查看待審 KOL；匯出 KOL 清單第一版暫緩，可在 UI 保留停用/隱藏占位。
 - 搜尋與篩選：
   - 關鍵字：KOL 名稱、Email、手機、社群帳號。
   - KOL 狀態：全部、啟用中、停權中、待審核、已退回等。
@@ -142,7 +143,6 @@
   - 收款資料狀態。
   - 社群驗證狀態。
   - 建立日期起訖。
-  - 可匯出時使用同一組篩選條件。
 - DTO 需包含列表列資料與頁首統計摘要；統計摘要不跟隨搜尋與篩選條件，只套用目前資料權限，作為全站 KOL 營運總覽。
 - 主要資料來源：`KolProfiles`、`Users`、`KolCategories`、`KolSocialAccounts`、`KolBankAccounts`、`Tasks`、`Submissions`、`Disputes`、`KolEarnings`。
 
@@ -152,7 +152,7 @@
 | ---- | -------- |
 | 執行篩選 | 以 Query String 帶入篩選條件，重新查詢列表。 |
 | 清除搜尋 | 清空所有篩選條件，回到第一頁。 |
-| 匯出 KOL 清單 | 依目前篩選條件匯出；欄位需與列表核心欄位一致，是否包含個資需待確認。 |
+| 匯出 KOL 清單 | 第一版暫緩實作；不建立後端 Command，不產生檔案。 |
 | 查看待審 KOL | 導向 `ADM-015 審核新進 KOL頁`。 |
 | 詳細資料 | 導向 `ADM-006 KOL詳細檔案頁`。 |
 | 任務 | 導向該 KOL 的任務清單或任務紀錄頁；目標頁面待 Figma 補齊。 |
@@ -160,8 +160,7 @@
 
 **權限**
 
-- 建議權限碼：`Admin.Kol.View`、`Admin.Kol.Export`、`Admin.Kol.Review`。
-- 匯出屬個資風險操作，需寫入操作紀錄，至少包含操作者、篩選條件、匯出時間與筆數。
+- 建議權限碼：`Admin.Kol.View`、`Admin.Kol.Review`；`Admin.Kol.Export` 可保留為未來擴充權限，第一版不啟用。
 
 **狀態與資料規則**
 
@@ -173,7 +172,7 @@
 **稽核**
 
 - 一般查詢不寫操作紀錄。
-- 匯出、停權/解除停權、代理登入、審核結果等高風險操作必須寫入操作紀錄。
+- 停權/解除停權、代理登入、審核結果等高風險操作必須寫入操作紀錄；匯出功能第一版暫緩。
 
 ### 14.7 ADM-006 KOL 詳細檔案頁
 
@@ -249,7 +248,7 @@
 **主要區塊**
 
 - 統計摘要：待審核、重送審核、已退回待補、今日新增、超過 3 日未審。
-- 功能按鈕：匯出待審清單、重新整理。
+- 功能按鈕：重新整理；匯出待審清單第一版暫緩，可在 UI 保留停用/隱藏占位。
 - 搜尋與篩選：
   - 關鍵字：KOL 名稱、Email、手機、社群帳號。
   - 狀態篩選：待審核、重送審核、已退回待補、已通過。
@@ -269,9 +268,8 @@
   - 社群資料篩選。
   - 送審日期。
   - 重送審核、已退回待補等審核狀態細分。
-  - 匯出時使用同一組篩選條件。
 - DTO 需包含列表資料與頁首統計摘要；統計摘要不跟隨搜尋與篩選條件，只套用目前資料權限，作為待審 KOL 營運總覽。
-- 主要資料來源：`KolProfiles`、`Users`、`KolCategories`、`KolSocialAccounts`、`KolBankAccounts`、`ActivityLogs`。
+- 主要資料來源：`KolProfiles`、`Users`、`KolCategories`、`KolSocialAccounts`、`KolBankAccounts`、`KolReviewEvents`、`ActivityLogs`。
 
 **提交動作**
 
@@ -279,25 +277,25 @@
 | ---- | -------- |
 | 執行篩選 | 以 Query String 帶入篩選條件，重新查詢列表。 |
 | 清除篩選 | 清空所有篩選條件，回到第一頁。 |
-| 匯出待審清單 | 依目前篩選條件匯出；欄位是否包含手機、Email、社群帳號需待確認。 |
+| 匯出待審清單 | 第一版暫緩實作；不建立後端 Command，不產生檔案。 |
 | 重新整理 | 保留目前篩選條件，重新查詢列表。 |
 | 進入審核 | 導向 `ADM-016 KOL 審核詳情頁`。 |
 
 **權限**
 
-- 建議權限碼：`Admin.Kol.Review.View`、`Admin.Kol.Review.Export`。
-- 匯出屬個資風險操作，需寫入操作紀錄。
+- 建議權限碼：`Admin.Kol.Review.View`；`Admin.Kol.Review.Export` 可保留為未來擴充權限，第一版不啟用。
 
 **狀態與資料規則**
 
-- 待審核、重送審核、已退回待補都屬審核流程狀態；目前 `VerificationStatus` 無法完整表達重送/待補語意，實作前需決定是否新增欄位或用現有狀態加時間/紀錄推導。
+- 待審核、重送審核、已退回待補都屬審核流程顯示狀態；不擴充 `VerificationStatus`，改由 `KolReviewEvents` 記錄送審、重送、通過、退回事件，再由最新審核事件推導 ADM-015 顯示狀態。
+- `VerificationStatus.Pending` 代表目前等待管理者審核；若最新送審/重送事件發生在退回事件之後，ADM-015 顯示為「重送審核」。`VerificationStatus.Rejected` 代表「已退回待補」。`VerificationStatus.Approved` 代表已通過，不列入待審清單。
 - 資料完整度應以 KOL 個人資料、社群頻道、收款資料、必要聯絡資訊計算；精確公式待確認。
 - 超過 3 日未審以送審時間起算 3 個工作日，排除假日。
 
 **稽核**
 
 - 一般查詢不寫操作紀錄。
-- 匯出、審核通過、退回修改必須寫入操作紀錄。
+- 審核通過、退回修改必須寫入操作紀錄；匯出功能第一版暫緩。
 
 ### 14.9 ADM-016 KOL 審核詳情頁
 
@@ -329,15 +327,15 @@
   - 退回原因或退回待補提示。
   - 社群審核提醒。
   - 收款資料遮罩規則。
-- 主要資料來源：`KolProfiles`、`Users`、`KolCategories`、`KolSocialAccounts`、`KolBankAccounts`、`ActivityLogs`。
+- 主要資料來源：`KolProfiles`、`Users`、`KolCategories`、`KolSocialAccounts`、`KolBankAccounts`、`KolReviewEvents`、`ActivityLogs`。
 
 **提交動作**
 
 | 動作 | 後端語意 |
 | ---- | -------- |
 | 返回 KOL 管理 | 回到 `ADM-005` 或 `ADM-015`；來源頁需透過 returnUrl 或查詢條件保留。 |
-| 審核通過 | 使用 `ApproveKolCommand`，將 KOL 審核狀態改為通過並記錄審核者與時間。 |
-| 退回修改 | 使用 `RejectKolCommand` 或後續專用退回 Command，退回原因/審核意見必填。 |
+| 審核通過 | 使用 `ApproveKolCommand`，將 KOL 審核狀態改為通過，寫入 `KolReviewEvents.ActionType = Approved`，並記錄審核者與時間。 |
+| 退回修改 | 使用 `RejectKolCommand` 或後續專用退回 Command，退回原因/審核意見必填，寫入 `KolReviewEvents.ActionType = Returned`。 |
 
 **權限**
 
@@ -355,7 +353,7 @@
 
 **稽核**
 
-- 審核通過、退回修改需記錄操作者、KolId、審核前後狀態、審核意見、時間。
+- 審核通過、退回修改需寫入 `KolReviewEvents`，記錄操作者、KolId、審核前後狀態、審核意見、時間。
 - 退回修改需保留最新退回原因，並建議保留歷次退回紀錄供後續追蹤。
 - 若審核期間觸發通知，通知發送結果也需能追蹤。
 
@@ -458,17 +456,17 @@
 | 返回案件監控 | 回到 `ADM-007` 並盡量保留原查詢條件。 |
 | 查看業者 | 導向 `ADM-003 業者詳細檔案頁`。 |
 | 查看異議任務 | 導向異議處理頁或抽屜；目標頁面依 `ADM-009-DRAWER` 補齊。 |
-| 匯出表格 | 匯出目前 KOL 任務清單；是否包含個資欄位待確認。 |
-| 批次操作 | 對 KOL 任務清單做批次處理；可用動作、條件與稽核要求待確認。 |
+| 匯出表格 | 第一版暫緩實作；不建立後端 Command，不產生檔案。 |
+| 批次操作 | 第一版移除，不建立批次 Command，不提供多選處理。 |
 | 詳情 | 查看單一 KOL 任務詳情、提交成果或驗收紀錄；目標頁面待 Figma 補齊。 |
 | 處理爭議 | 對爭議中的任務進入異議處理流程。 |
 | 下載附件 | 下載案件附件或合約，需依檔案權限檢查。 |
 
 **權限**
 
-- 建議權限碼：`Admin.CaseMonitor.View`、`Admin.CaseMonitor.Export`、`Admin.CaseMonitor.Resolve`、`Admin.File.Download`。
+- 建議權限碼：`Admin.CaseMonitor.View`、`Admin.CaseMonitor.Resolve`、`Admin.File.Download`；`Admin.CaseMonitor.Export` 可保留為未來擴充權限，第一版不啟用。
 - 附件合約可能含合約或個資，下載需寫入操作紀錄。
-- 批次操作屬高風險操作，必須先確認可操作狀態與操作範圍，並寫入操作紀錄。
+- 批次操作第一版移除；未來若恢復，需重新確認可操作狀態、操作範圍、權限與稽核要求。
 
 **狀態與資料規則**
 
@@ -482,7 +480,7 @@
 **稽核**
 
 - 查看詳情不寫操作紀錄。
-- 匯出、批次操作、下載附件、處理爭議、重跑導購同步必須寫入操作紀錄。
+- 下載附件、處理爭議、重跑導購同步必須寫入操作紀錄；匯出功能第一版暫緩，批次操作第一版移除。
 - 操作紀錄至少包含操作者、CaseId、TaskId 或 FileId、動作、前後狀態、時間。
 
 ### 14.12 ADM-009-DRAWER 異議處理
@@ -563,10 +561,10 @@
 **主要區塊**
 
 - 平台財務摘要：
-  - 平台總收入：總資金收入，主要來自業者儲值、案件預算、平台服務費、折扣或調整後收入。
-  - 平台總支出：經濟支出，主要為 KOL 淨付金額與可能的退款/調整。
-  - 平台毛利：平台營收扣除 KOL 支出、退款、折扣與必要調整後的毛利。
-- 功能按鈕：匯出報表。
+  - 平台總收入：營運收入口徑，主要來自案件結算、固定開案費、KOL 服務費、平台導購抽成與人工調整。
+  - 平台總支出：營運支出口徑，主要為 KOL 淨付金額與退款/調整。
+  - 平台毛利：平台營運收入扣除 KOL 支出、退款、折扣與必要調整後的毛利。
+- 功能按鈕：匯出報表第一版暫緩，可在 UI 保留停用/隱藏占位。
 - 搜尋與篩選：
   - 關鍵字：案件編號、案件名稱、業者名稱。
   - 監控時間範圍。
@@ -595,6 +593,13 @@
 - 主要資料來源：
   - `Cases`、`Merchants`：案件與業者資訊。
   - `MerchantWalletTransactions`：業者儲值、案件預算凍結、釋放、結算、人工調整。
+    - `OfflineDeposit`：業者線下儲值入帳，屬資金流入，不直接等同平台營收。
+    - `TaskBudgetFreeze`：案件發布時鎖款，屬資金保留，不計入收入。
+    - `TaskBudgetRelease`：案件取消、退款或釋放鎖款，屬資金釋放/退款口徑。
+    - `TaskBudgetSettle`：案件結算，作為第一版營運收入主要來源。
+    - `ManualAdjustment`：人工調整，依正負金額與備註歸類為收入或支出調整。
+  - `CaseBudgetSnapshots`：案件發布當下的固定開案費、KOL 服務費與預估凍結金額快照。
+  - `MerchantCreditTransactions`：折扣金加值、折抵開案費、退回、到期與人工調整；第一版只有折抵開案費會影響收入折抵。
   - `KolEarnings`、`KolWallets`：KOL 任務報酬、導購分潤、收益狀態。
   - `PayoutRequests`: KOL 提領與撥款狀態。
   - `Tasks`、`Submissions`：任務完成與驗收狀態。
@@ -606,19 +611,30 @@
 | 動作 | 後端語意 |
 | ---- | -------- |
 | 套用篩選 | 以 Query String 帶入篩選條件，重新查詢列表。 |
-| 匯出報表 | 依目前篩選條件匯出帳務報表。 |
+| 匯出報表 | 第一版暫緩實作；不建立後端 Command，不產生檔案。 |
 | 展開/收合案件 | 查詢或顯示該案件的 KOL 任務帳務明細。 |
 | 案件詳情 | 導向 `ADM-008 案件詳情與進度頁`。 |
 
 **權限**
 
-- 建議權限碼：`Admin.Finance.View`、`Admin.Finance.Export`、`Admin.CaseMonitor.View`。
+- 建議權限碼：`Admin.Finance.View`、`Admin.CaseMonitor.View`；`Admin.Finance.Export` 可保留為未來擴充權限，第一版不啟用。
 - 帳務監控含金額與個人收益資料，需限制為具財務權限的管理者。
-- 匯出報表屬高風險操作，需寫入操作紀錄，至少包含操作者、篩選條件、匯出時間與筆數。
 
 **狀態與資料規則**
 
-- 平台總收入、平台總支出、平台毛利都必須明確定義統計期間；若未選期間，預設範圍需待確認。
+- 預設統計期間為當月；若使用者未選期間，後端以目前台北時區月份的起訖時間查詢。
+- 目前資料表可記錄的收入/支出口徑：
+  - 資金流入：`MerchantWalletTransactions.Type = OfflineDeposit` 且狀態已核准/完成。
+  - 案件收入：`MerchantWalletTransactions.Type = TaskBudgetSettle` 且狀態已完成。
+  - 開案費與服務費明細：`CaseBudgetSnapshots.FeeItems` 與 `SettingsSnapshot`。
+  - 折扣金折抵：`MerchantCreditTransactions.Type = Use` 且狀態已完成，第一版僅折抵案件開案費，作為收入折抵或折扣列示。
+  - KOL 應付/已付支出：`KolEarnings.NetAmount` 與 `PayoutRequests.Amount`。
+  - 人工調整：`MerchantWalletTransactions.Type = ManualAdjustment`、`MerchantCreditTransactions.Type = ManualAdjustment`、`KolEarnings.SourceType = Adjustment`，需依正負金額與備註分類。
+- ADM-011 第一版建議公式：
+  - `平台總收入 = 已完成案件結算收入 + 平台服務費 + 固定開案費 + 平台導購抽成 + 收入型人工調整 - 折扣金折抵開案費`
+  - `平台總支出 = KOL 淨付金額 + 支出型人工調整 + 退款/釋放調整`
+  - `平台毛利 = 平台總收入 - 平台總支出`
+- 若畫面需要顯示「資金收入」，可另以 `MerchantWalletTransactions.OfflineDeposit` 呈現為資金流入 KPI，不應與平台營運收入混用。
 - 收入總金額（業者）應能拆解費用明細，例如內容預算、KOL 分潤、折扣金、平台服務費、人工調整；畫面中的費用明細需由交易流水或結算快照提供，不得只顯示手算字串。
 - 收入費用明細中的折扣金使用獨立折扣金錢包與交易流水，不與現金錢包混算。
 - 支出資金（KOL）應以 KOL 淨付金額彙總，需扣除稅金/手續費或平台費用後計算。
@@ -626,12 +642,12 @@
 - 稅金/手續費由後台參數設定頁維護相關費率；案件結算時需保存費率快照，ADM-011 顯示的是結算結果與快照，不在此頁手動輸入費率。
 - 目前沒有獨立帳務狀態；ADM-011 的狀態欄以案件狀態為主，需遵循 PM 案件狀態表：草稿、招募中、招募截止、執行中、已完成、已結案、已取消。
 - `已結案` 代表所有帳務與流程完成；在案件進入 `已結案` 前，若仍有未完成帳務、異議或導購同步異常，應以警示標籤或阻擋結案規則呈現，不另新增帳務狀態。
-- 所有金額欄位沿用 `DECIMAL(12,2)` 與 NTD 顯示規則；匯出時也需保留小數精度。
+- 所有金額欄位沿用 `DECIMAL(12,2)` 與 NTD 顯示規則。
 
 **稽核**
 
 - 一般查詢不寫操作紀錄。
-- 匯出報表需寫入操作紀錄。
+- 匯出報表第一版暫緩。
 - 若後續此頁加入人工調整、重算結算或重跑分潤，必須在同一 transaction 中更新交易流水與彙總資料，並寫入操作紀錄。
 
 ### 14.14 ADM-012 系統參數設定頁
@@ -966,7 +982,7 @@
   - `Admin.Merchant.View`、`Admin.Merchant.Edit`。
   - `Admin.Kol.View`、`Admin.Kol.Review`、`Admin.Kol.Suspend`。
   - `Admin.CaseMonitor.View`、`Admin.Dispute.Manage`。
-  - `Admin.Finance.View`、`Admin.Finance.Export`、`Admin.Payout.Approve`。
+  - `Admin.Finance.View`、`Admin.Payout.Approve`；`Admin.Finance.Export` 可保留為未來擴充權限，第一版不啟用。
   - `Admin.Account.View`、`Admin.Account.Manage`。
   - `Admin.Role.View`、`Admin.Role.Manage`。
 

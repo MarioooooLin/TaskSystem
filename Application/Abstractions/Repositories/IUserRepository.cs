@@ -18,4 +18,9 @@ public interface IUserRepository
     /// 業者停用時呼叫，在同一 transaction 內執行。
     /// </summary>
     Task SuspendUsersByMerchantAsync(long merchantId, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>
+    /// Restore suspended users under active merchant members when the merchant is unsuspended.
+    /// </summary>
+    Task ReactivateUsersByMerchantAsync(long merchantId, IDbSession session, CancellationToken ct = default);
 }

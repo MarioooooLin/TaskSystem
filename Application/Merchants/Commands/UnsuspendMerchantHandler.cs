@@ -10,6 +10,7 @@ namespace Application.Merchants.Commands;
 public sealed class UnsuspendMerchantHandler(
     IUnitOfWork unitOfWork,
     IMerchantRepository merchantRepo,
+    IUserRepository userRepo,
     ICurrentUser currentUser)
 {
     public async Task<Result> HandleAsync(UnsuspendMerchantCommand cmd, CancellationToken ct = default)
@@ -30,6 +31,7 @@ public sealed class UnsuspendMerchantHandler(
         merchant.UpdatedAt = DateTime.UtcNow;
 
         await merchantRepo.UpdateAsync(merchant, uow.Session, ct);
+        await userRepo.ReactivateUsersByMerchantAsync(merchant.Id, uow.Session, ct);
         await uow.CommitAsync(ct);
 
         return Result.Success();

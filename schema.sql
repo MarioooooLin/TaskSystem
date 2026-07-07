@@ -44,8 +44,8 @@ CREATE TABLE Merchants (
     Website NVARCHAR(500) NULL,
     Address NVARCHAR(300) NULL,
     EstablishedDate DATE NULL,
-    VerificationStatus SMALLINT NOT NULL DEFAULT 1,
-    -- 1=Pending  2=Approved  3=Rejected  4=Suspended
+    VerificationStatus SMALLINT NOT NULL DEFAULT 2,
+    -- Merchant first version uses only 2=Approved and 4=Suspended
     VerifiedAt DATETIME2 NULL,
     UpdatedByAdminId BIGINT NULL,
     CreatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -53,7 +53,7 @@ CREATE TABLE Merchants (
     CONSTRAINT PK_Merchants PRIMARY KEY (Id),
     CONSTRAINT FK_Merchants_Users FOREIGN KEY (UserId) REFERENCES Users(Id),
     CONSTRAINT FK_Merchants_AdminUser FOREIGN KEY (UpdatedByAdminId) REFERENCES Users(Id),
-    CONSTRAINT CK_Merchants_VerificationStatus CHECK (VerificationStatus IN (1, 2, 3, 4))
+    CONSTRAINT CK_Merchants_VerificationStatus CHECK (VerificationStatus IN (2, 4))
 );
 CREATE TABLE KolProfiles (
     Id BIGINT IDENTITY(1, 1) NOT NULL,
@@ -89,6 +89,25 @@ CREATE TABLE KolProfiles (
     CONSTRAINT FK_KolProfiles_Users FOREIGN KEY (UserId) REFERENCES Users(Id),
     CONSTRAINT FK_KolProfiles_AdminUser FOREIGN KEY (VerifiedByAdminId) REFERENCES Users(Id),
     CONSTRAINT CK_KolProfiles_VerificationStatus CHECK (VerificationStatus IN (1, 2, 3, 4))
+);
+CREATE TABLE KolReviewEvents (
+    Id BIGINT IDENTITY(1, 1) NOT NULL,
+    KolId BIGINT NOT NULL,
+    ActionType SMALLINT NOT NULL,
+    -- 1=Submitted  2=Resubmitted  3=Approved  4=Returned
+    FromStatus SMALLINT NULL,
+    -- KolProfiles.VerificationStatus before this event; NULL for first submit
+    ToStatus SMALLINT NOT NULL,
+    -- KolProfiles.VerificationStatus after this event
+    Comment NVARCHAR(1000) NULL,
+    ActorUserId BIGINT NOT NULL,
+    CreatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT PK_KolReviewEvents PRIMARY KEY (Id),
+    CONSTRAINT FK_KolReviewEvents_Kol FOREIGN KEY (KolId) REFERENCES KolProfiles(Id),
+    CONSTRAINT FK_KolReviewEvents_Actor FOREIGN KEY (ActorUserId) REFERENCES Users(Id),
+    CONSTRAINT CK_KolReviewEvents_Action CHECK (ActionType IN (1, 2, 3, 4)),
+    CONSTRAINT CK_KolReviewEvents_FromStatus CHECK (FromStatus IS NULL OR FromStatus IN (1, 2, 3, 4)),
+    CONSTRAINT CK_KolReviewEvents_ToStatus CHECK (ToStatus IN (1, 2, 3, 4))
 );
 CREATE TABLE KolCategories (
     -- KOL 類型（多選）
@@ -366,7 +385,7 @@ CREATE TABLE MerchantWalletTransactions (
     CONSTRAINT CK_MerchantWalletTx_Status CHECK (Status IN (1, 2, 3, 4, 5))
 );
 CREATE TABLE MerchantCreditWallets (
-    -- 業者折扣金錢包；獨立於現金錢包，不可混入 MerchantWallets
+    -- 業者折扣金錢包；獨立於現金錢包，不可混入 MerchantWallets；第一版只能折抵案件開案費
     Id BIGINT IDENTITY(1, 1) NOT NULL,
     MerchantId BIGINT NOT NULL,
     AvailableAmount DECIMAL(12, 2) NOT NULL DEFAULT 0,
@@ -379,7 +398,7 @@ CREATE TABLE MerchantCreditWallets (
     CONSTRAINT UQ_MerchantCreditWallets_Merchant UNIQUE (MerchantId)
 );
 CREATE TABLE MerchantCreditTransactions (
-    -- 折扣金交易流水；所有加值、扣回、折抵、退回、到期都必須寫入
+    -- 折扣金交易流水；所有加值、扣回、折抵開案費、退回、到期都必須寫入
     Id BIGINT IDENTITY(1, 1) NOT NULL,
     MerchantId BIGINT NOT NULL,
     Type SMALLINT NOT NULL,
@@ -934,6 +953,8 @@ CREATE TABLE NotificationPreferences (
 -- ================================================================
 CREATE INDEX IX_Merchants_UserId ON Merchants (UserId);
 CREATE INDEX IX_KolProfiles_UserId ON KolProfiles (UserId);
+CREATE INDEX IX_KolReviewEvents_KolCreated ON KolReviewEvents (KolId, CreatedAt DESC);
+CREATE INDEX IX_KolReviewEvents_ActionCreated ON KolReviewEvents (ActionType, CreatedAt DESC);
 CREATE INDEX IX_KolCategories_KolId ON KolCategories (KolId);
 CREATE INDEX IX_KolServiceAreas_KolId ON KolServiceAreas (KolId);
 CREATE INDEX IX_KolLanguages_KolId ON KolLanguages (KolId);

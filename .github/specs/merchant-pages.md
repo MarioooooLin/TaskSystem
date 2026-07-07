@@ -81,6 +81,7 @@
 - 最近案件排序依 `Cases.CreatedAt` 倒序，顯示筆數待確認。
 - 待辦事項只顯示需要業者行動的項目，例如成果待驗收、餘額不足、案件待補資料。
 - 餘額不足待辦只在業者嘗試發布案件且可用餘額不足時建立；首頁不主動掃描草稿或待發布案件產生餘額不足待辦。
+- 業者端案件沒有待審核狀態；若 Figma 或靜態切版出現待審核案件卡片，視為多出的示意狀態，不新增 `CaseStatus.PendingReview`。
 
 **權限**
 
@@ -444,7 +445,7 @@
 - 本期導購趨勢：訂單總金額與可結算分潤折線圖。
 - 熱門案件 Top 5：排名、案件名稱、交易數、訂單總金額、可結算分潤、查看明細。
 - 高效 KOL Top 5：排名、KOL 名稱、主要平台、交易數、訂單總金額、查看明細。
-- 頂部操作：查看交易明細、匯出統計 CSV、重新同步資料。
+- 頂部操作：查看交易明細、重新同步資料；匯出統計 CSV 第一版暫緩，可在 UI 保留停用/隱藏占位。
 
 **查詢資料**
 
@@ -452,8 +453,7 @@
   - Input：`MerchantId`、dateRange。
   - Output：KPI 摘要、趨勢資料、熱門案件排行、高效 KOL 排行。
   - 資料來源：`Cases`、`CaseApplications`、`Tasks`、`ReferralCampaigns`、`ReferralLinks`、`ReferralOrders`、`KolProfiles`。
-- `ExportMerchantReferralOverviewCommand`
-  - 依目前篩選條件匯出統計 CSV。
+- 匯出統計 CSV 第一版暫緩，不建立 `ExportMerchantReferralOverviewCommand`，不產生檔案。
 
 **提交動作**
 
@@ -473,7 +473,7 @@
 **權限**
 
 - 查看總覽需 `Merchant.Referral.View`。
-- 匯出 CSV 需 `Merchant.Referral.Export`。
+- `Merchant.Referral.Export` 可保留為未來擴充權限，第一版不啟用。
 - 導購資料由外部系統定期匯入；業者端若保留重新整理按鈕，只重新讀取本系統資料庫，不直接觸發外部同步。
 
 ## MER-016 導購明細頁
@@ -489,7 +489,7 @@
 - 篩選條件：案件名稱、KOL 合作對象、來源渠道、交易狀態、Checkout 退房時間範圍。
 - 訂單列表：訂房訂單編號、案件、KOL、使用折扣碼、使用 CID、訂單總金額、退房完成時間、可結算時間、交易狀態、操作。
 - 操作：查看明細/訂單、查看異常原因。
-- 匯出報表。
+- 匯出報表第一版暫緩，可在 UI 保留停用/隱藏占位。
 
 **查詢資料**
 
@@ -503,9 +503,7 @@
 
 **提交動作**
 
-- `ExportMerchantReferralOrdersCommand`
-  - 依目前篩選條件匯出明細報表。
-  - 匯出欄位至少包含訂單編號、案件、KOL、來源渠道、折扣碼、CID、訂單金額、分潤金額、退房完成時間、可結算時間、交易狀態。
+- 匯出明細報表第一版暫緩，不建立 `ExportMerchantReferralOrdersCommand`，不產生檔案。
 
 **交易狀態**
 
@@ -523,8 +521,8 @@
 **權限與稽核**
 
 - 查看明細需 `Merchant.Referral.Order.View`。
-- 匯出明細需 `Merchant.Referral.Order.Export`。
-- 查詢不寫操作紀錄；匯出、重新同步、外部導向需寫入操作紀錄。
+- `Merchant.Referral.Order.Export` 可保留為未來擴充權限，第一版不啟用。
+- 查詢不寫操作紀錄；重新同步、外部導向需寫入操作紀錄；匯出功能第一版暫緩。
 
 ## MER-008 設定中心
 
@@ -738,9 +736,9 @@
 | 查看 KOL 名單 / 資料 | `Merchant.Kol.View` | 是 | 是 | 是 |
 | 驗收成果 | `Merchant.Task.Review` | 是 | 是 | 否 |
 | 查看導購成效 | `Merchant.Referral.View` | 是 | 是 | 是 |
-| 匯出導購 / 報表 | `Merchant.Referral.Export` | 是 | 是 | 否 |
+| 匯出導購 / 報表 | `Merchant.Referral.Export` | 暫緩 | 暫緩 | 暫緩 |
 | 查看導購訂單明細 | `Merchant.Referral.Order.View` | 是 | 是 | 是 |
-| 匯出導購訂單明細 | `Merchant.Referral.Order.Export` | 是 | 是 | 否 |
+| 匯出導購訂單明細 | `Merchant.Referral.Order.Export` | 暫緩 | 暫緩 | 暫緩 |
 | 查看錢包 | `Merchant.Wallet.View` | 是 | 是 | 否 |
 | 充值 | `Merchant.Wallet.TopUp` | 是 | 是 | 否 |
 | 查看交易明細 | `Merchant.Wallet.Transaction.View` | 是 | 是 | 否 |
@@ -767,7 +765,7 @@
 - 角色資訊卡：角色名稱、角色說明、核心職責、系統保留提示。
 - 權限矩陣群組：
   - 案件管理 `Case Management`：新增/編輯案件、發布案件、刪除案件、查看報名名單、驗收成果。
-  - 財務結算 `Financials`：查看錢包、儲值、查看交易明細、下載報表。
+  - 財務結算 `Financials`：查看錢包、儲值、查看交易明細；下載報表/匯出第一版暫緩，可保留為未來權限項。
   - 系統設定 `Settings`：編輯成員權限、新增/移除成員、通知設定。
 - 每個群組支援全選；每個權限項目可單獨勾選。
 - Owner 預設為系統最高權限角色，通常不可移除重大管理入口。
@@ -851,7 +849,7 @@
 
 **主要區塊**
 
-- 申請註冊表單：業者名稱、統一編號、聯絡人姓名、電子郵件地址、密碼、確認密碼。
+- 申請註冊表單：帳號登入憑證為電子郵件地址、密碼、確認密碼；業者名稱、統一編號、聯絡人姓名等為業者公司/申請資料。
 - 同意條款：服務條款與隱私權政策。
 - 註冊成功頁：提示已寄送驗證信，提供回到登入頁。
 
@@ -879,6 +877,7 @@
 **狀態規則**
 
 - 註冊送出後需完成 Email 驗證；Email 驗證完成後直接啟用業者帳號。
+- 業者端帳號註冊的登入憑證最低欄位為 Email + 密碼；公司資料欄位仍依申請流程另外保存。
 - 若驗證信未收到，需提供重寄驗證信頁面。
 
 ## MER-020 忘記密碼頁

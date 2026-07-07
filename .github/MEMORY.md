@@ -1,10 +1,109 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-07 11:50
+> 最後整理時間：2026-07-07 12:10
 
 ---
 
 ## 2026-07-07
+
+### [13:20] 業者狀態收斂為 Approved / Suspended
+**決策與實作**
+
+- 業者不走審核流程，`Merchants.VerificationStatus` 第一版只使用 `Approved = 2` 與 `Suspended = 4`。
+- `Domain.Entities.Merchant` 預設狀態改為 `VerificationStatus.Approved`。
+- `schema.sql` 中 `Merchants.VerificationStatus` 預設值改為 `2`，CHECK constraint 收斂為 `(2, 4)`。
+- 修正 `SuspendUsersByMerchantAsync`：停用業者底下帳號時，`Users.Status` 應設為 `2 = Suspended`，不是 `3 = Deleted`。
+- `UnsuspendMerchantHandler` 補上整體復權：業者恢復 Approved 後，同 transaction 將該業者 Active 成員關聯底下的 Suspended 使用者恢復 Active。
+
+### [12:55] ADM-015 KOL 審核流程定案
+**決策**
+
+- `ADM-015` 不擴充 `VerificationStatus` 來表示「重送審核」等流程事件。
+- 新增 `KolReviewEvents` 作為 KOL 資料審核事件表，記錄 Submitted、Resubmitted、Approved、Returned。
+- `KolProfiles.VerificationStatus = Pending` 代表目前等待管理者審核；若最新送審/重送事件發生在退回事件之後，ADM-015 顯示「重送審核」。
+- `KolProfiles.VerificationStatus = Rejected` 定義為「已退回待補」，不是永久拒絕。
+
+**已更新**
+
+- `schema.sql`：新增 `KolReviewEvents` 與查詢索引。
+- `.github/CONTRIBUTING.md`：移除 ADM-015 流程狀態待確認項，補上定案規則。
+- `.github/specs/admin-pages.md`：ADM-015/ADM-016 改用 `KolReviewEvents` 推導與記錄審核流程。
+- `.github/specs/kol-pages.md`：KOL 送審與重送審核需寫入 `KolReviewEvents`。
+
+### [12:45] 待確認事項更新：LINE Email 補填與 MER-HOME 案件狀態
+
+**決策內容**
+
+- LINE Login 若未提供 Email，KOL 首次登入需強制補填 Email 後才能建立或完成 `Users` 帳號；`Users.Email` 維持必填且全系統唯一。
+- `MER-HOME` 不存在待審核案件狀態；若 Figma 或靜態切版出現待審核案件卡片，視為多出的示意狀態，不新增 `CaseStatus.PendingReview`。
+
+**ADM-015 建議方向**
+
+- 不建議擴充 `VerificationStatus` 來塞「重送審核」這種流程事件。
+- 建議新增 KOL 審核流程紀錄表或等價 audit table，以最新審核事件推導 ADM-015 顯示狀態。
+- `VerificationStatus.Pending` 只代表目前等待管理者審核；若最新送審事件發生在退回後，前端顯示「重送審核」。
+- `VerificationStatus.Rejected` 代表「已退回待補」，不是永久拒絕。
+
+### [12:35] ADM-011 帳務監控：預設期間與目前可記錄收支來源
+
+**決策內容**
+
+- `ADM-011` 預設統計期間為當月。
+- 目前 schema 可記錄資金流入、案件鎖款/結算/釋放、折扣金折抵、KOL 收益、KOL 提領/月結與人工調整。
+- 業者儲值屬資金流入，不直接等同平台營運收入；ADM-011 需區分「資金流入/流出」與「營運收入/支出」。
+
+**第一版建議公式**
+
+- `平台總收入 = 已完成案件結算收入 + 平台服務費 + 固定開案費 + 平台導購抽成 + 收入型人工調整 - 折扣金折抵開案費`
+- `平台總支出 = KOL 淨付金額 + 支出型人工調整 + 退款/釋放調整`
+- `平台毛利 = 平台總收入 - 平台總支出`
+- 導購訂單收入、同步狀態與預估分潤仍需依後續 `ReferralOrders` 或等價資料表補齊。
+
+### [12:25] PM 決策：ADM-008 批次操作第一版移除
+
+**決策內容**
+
+- `ADM-008` 案件詳情與進度頁不提供批次操作。
+- 第一版不建立批次 Command，不提供多選處理。
+- 頁面僅保留單筆查看、單筆爭議處理、附件下載等操作。
+- 未來若恢復批次操作，需重新確認可作用狀態、操作範圍、權限與稽核要求。
+
+**文件更新**
+
+- `.github/CONTRIBUTING.md`：移除「ADM-008 批次操作可執行哪些動作、可作用於哪些任務狀態」待確認項，新增移除規則。
+- `.github/specs/admin-pages.md`：ADM-008 批次操作改為第一版移除。
+
+### [12:20] PM 決策：所有匯出功能第一版暫緩
+
+**決策內容**
+
+- Admin / Merchant / KOL 所有匯出功能第一版暫緩實作。
+- Figma 若有匯出按鈕，可在 UI 保留停用/隱藏占位。
+- 後端第一版不建立匯出 Command，不產生 CSV / Excel / PDF。
+- 匯出欄位、格式、權限與稽核紀錄不再列為當前待確認問題；未來 PM 重新啟用匯出時再重新定義。
+
+**文件更新**
+
+- `.github/CONTRIBUTING.md`：新增「所有匯出功能第一版暫緩」共通規則，移除匯出欄位相關待確認事項。
+- `.github/specs/admin-pages.md`：ADM-005、ADM-015、ADM-008、ADM-011 的匯出動作改為暫緩。
+- `.github/specs/merchant-pages.md`：MER-014、MER-016 與業者角色權限中的匯出/下載報表改為暫緩。
+
+### [12:10] 待確認事項更新：註冊欄位、業者復權、折扣金、多語系
+
+**決策內容**
+
+- 帳號註冊的登入憑證欄位，業者端與管理者端第一版皆為 Email + 密碼；公司資料、管理者姓名/部門/角色等屬延伸資料。
+- 業者停權採整體停權：停用業者主檔後，該業者底下所有角色帳號皆不可登入或操作業者端。
+- 業者復權第一版採整體復權：恢復業者主檔，並恢復因該業者停權而停用的成員帳號；若未來需保留成員個別停用狀態，再補停權前狀態快照或明確操作紀錄。
+- 折扣金只有業者有，第一版只能折抵案件開案費，不可折抵 KOL 酬勞、導購分潤、儲值或其他款項。
+- 多語系第一版只做 UI 介面文案多語系，不做使用者輸入內容多語系；固定文案使用 `.resx` 或等價資源檔，使用者輸入內容以原文保存與顯示。
+
+**文件更新**
+
+- `.github/CONTRIBUTING.md`：移除「帳號註冊所需欄位」、「業者復權規則」、「折扣金折抵規則」三個待確認項。
+- `.github/specs/admin-pages.md`：更新 ADM-003 業者停權/復權與折扣金規則。
+- `.github/specs/merchant-pages.md`：更新 MER-019 註冊欄位語意。
+- `schema.sql`：更新 `MerchantCreditWallets` / `MerchantCreditTransactions` 註解。
 
 ### [11:50] Admin 登入流程測試通過
 
@@ -107,7 +206,7 @@
 - `SuspendUsersByMerchantAsync` 採單一 SQL 批次 UPDATE（不逐一 load Entity），避免 N+1 問題
 - `SocialPlatform` 原 6 值對應 CasePlatforms 平台順序（錯誤），與 KolSocialAccounts 的 11 值完全不同；現改為 KolSocialAccounts 正確對應
 - DTO / Entity 中 Platform 欄位皆用 `short` 而非 enum，更換後不需改其他檔案
-- `UnsuspendMerchantHandler` 業者復權規則仍在 §9.1 待確認，不動
+- `UnsuspendMerchantHandler` 後續應依整體復權規則補實作：恢復業者主檔，並恢復因該業者停權而停用的成員帳號
 
 **尚未補的（Infrastructure 層）**
 
