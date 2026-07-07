@@ -42,6 +42,15 @@ public sealed class MerchantDetailDto
     // ── 近期錢包交易（最新 10 筆） ───────────────────────
     public IReadOnlyList<MerchantWalletTransactionDto> RecentTransactions { get; init; } = [];
 
+    // ── 折扣金錢包概況 ────────────────────────────────────
+    public MerchantCreditWalletSummaryDto CreditWallet { get; init; } = new();
+
+    // ── 近期折扣金加值/扣回（最新 5 筆） ─────────────────
+    public IReadOnlyList<MerchantCreditTransactionDto> RecentCreditGrants { get; init; } = [];
+
+    // ── 近期折扣金使用（最新 5 筆） ──────────────────────
+    public IReadOnlyList<MerchantCreditTransactionDto> RecentCreditUsages { get; init; } = [];
+
     // ── 成員列表 ──────────────────────────────────────────
     public IReadOnlyList<MerchantMemberItemDto> Members { get; init; } = [];
 

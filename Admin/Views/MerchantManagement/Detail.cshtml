@@ -33,6 +33,9 @@
         <a asp-action="Update" asp-route-id="@Model.MerchantId" class="bd-btn bd-btn--edit">
             <i class="fa-solid fa-pen"></i> 編輯業者資料
         </a>
+        <button class="bd-btn bd-btn--outline" disabled title="代理登入功能開發中">
+            <i class="fa-solid fa-right-to-bracket"></i> 代理登入
+        </button>
         @if (isSuspended)
         {
             <form method="post" asp-action="Unsuspend" asp-route-id="@Model.MerchantId" class="d-inline">
@@ -93,12 +96,12 @@
             <span class="bd-info-value">@Model.OwnerEmail</span>
         </div>
         <div class="bd-info-item">
-            <span class="bd-info-label">錢包可用餘額</span>
+            <span class="bd-info-label">錢包餘額</span>
             <span class="bd-info-value bd-info-value--bold">NT$@Model.Wallet.AvailableAmount.ToString("N0")</span>
         </div>
         <div class="bd-info-item">
-            <span class="bd-info-label">已鎖定金額</span>
-            <span class="bd-info-value bd-info-value--bold">NT$@Model.Wallet.FrozenAmount.ToString("N0")</span>
+            <span class="bd-info-label">折扣金餘額</span>
+            <span class="bd-info-value bd-info-value--bold">NT$@Model.CreditWallet.AvailableAmount.ToString("N0")</span>
         </div>
     </div>
 </div>
@@ -258,15 +261,19 @@
             <strong class="bd-case-stat__value">@Model.Stats.CaseCount</strong>
         </div>
         <div class="bd-case-stat">
-            <span class="bd-case-stat__label">總任務數</span>
-            <strong class="bd-case-stat__value">@Model.Stats.TaskCount</strong>
+            <span class="bd-case-stat__label">執行中</span>
+            <strong class="bd-case-stat__value">@Model.Stats.InProgressCount</strong>
         </div>
         <div class="bd-case-stat">
             <span class="bd-case-stat__label">爭議數</span>
             <strong class="bd-case-stat__value">@Model.Stats.DisputeCount</strong>
         </div>
         <div class="bd-case-stat">
-            <span class="bd-case-stat__label">完成率</span>
+            <span class="bd-case-stat__label">已完成</span>
+            <strong class="bd-case-stat__value">@Model.Stats.CompletedCount</strong>
+        </div>
+        <div class="bd-case-stat">
+            <span class="bd-case-stat__label">成交率</span>
             <strong class="bd-case-stat__value">@Model.Stats.CompletionRate.ToString("F1")%</strong>
         </div>
     </div>
@@ -318,15 +325,15 @@
     </div>
 </div>
 
-<!-- ===== 錢包概況 ===== -->
+<!-- ===== 錢包與折扣金 ===== -->
 <div class="content-card">
     <h2 class="section-title bd-section-title">
-        <i class="fa-solid fa-wallet"></i> 錢包概況
+        <i class="fa-solid fa-wallet"></i> 錢包與折扣金
     </h2>
     <div class="bd-wallet-grid">
         <div class="bd-wallet-card bd-wallet-card--dark">
-            <span class="bd-wallet-label">累計儲值總額</span>
-            <strong class="bd-wallet-value">NT$@Model.Wallet.TotalDepositedAmount.ToString("N0")</strong>
+            <span class="bd-wallet-label">當前錢包總額</span>
+            <strong class="bd-wallet-value">NT$@((Model.Wallet.AvailableAmount + Model.Wallet.FrozenAmount).ToString("N0"))</strong>
             <i class="fa-regular fa-credit-card bd-wallet-bg-icon"></i>
         </div>
         <div class="bd-wallet-card">
@@ -339,9 +346,139 @@
             <strong class="bd-wallet-value">NT$@Model.Wallet.AvailableAmount.ToString("N0")</strong>
             <i class="fa-solid fa-circle-check bd-wallet-bg-icon"></i>
         </div>
+        <div class="bd-wallet-card bd-wallet-card--dark">
+            <span class="bd-wallet-label">當前折扣金餘額</span>
+            <strong class="bd-wallet-value">NT$@Model.CreditWallet.AvailableAmount.ToString("N0")</strong>
+            <i class="fa-solid fa-tags bd-wallet-bg-icon"></i>
+        </div>
+        <div class="bd-wallet-card">
+            <span class="bd-wallet-label">本月已用折扣</span>
+            <strong class="bd-wallet-value bd-wallet-value--accent">NT$@Model.CreditWallet.MonthlyUsedAmount.ToString("N0")</strong>
+        </div>
     </div>
 
-    <h3 class="bd-sub-title" style="margin-top:1.5rem">近期交易紀錄</h3>
+    @* ===== 折扣金加值／扣回表單 ===== *@
+    <div class="bd-discount-form">
+        <h3 class="bd-sub-title">折扣金加值／扣回操作</h3>
+        <form method="post" asp-action="AdjustCredit">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="MerchantId" value="@Model.MerchantId" />
+            <div class="bd-form-grid">
+                <div class="bd-form-field">
+                    <label class="bd-form-label">操作類型</label>
+                    <div class="bd-radio-group">
+                        <label class="bd-radio"><input type="radio" name="OperationType" value="1" checked /> 加值</label>
+                        <label class="bd-radio"><input type="radio" name="OperationType" value="4" /> 扣回</label>
+                    </div>
+                </div>
+                <div class="bd-form-field">
+                    <label class="bd-form-label">金額</label>
+                    <input type="number" name="Amount" class="bd-input" placeholder="請輸入金額" min="1" required />
+                </div>
+                <div class="bd-form-field">
+                    <label class="bd-form-label">有效期限（選填）</label>
+                    <div class="filter-date-input">
+                        <input type="date" name="ExpiresAt" class="date-input bd-date-input" />
+                        <i class="fa-regular fa-calendar date-input__icon"></i>
+                    </div>
+                </div>
+                <div class="bd-form-field">
+                    <label class="bd-form-label">異動原因 *</label>
+                    <div class="filter-select-wrap">
+                        <select name="Reason" class="filter-select" required>
+                            <option value="契約獎勵">契約獎勵</option>
+                            <option value="促銷活動">促銷活動</option>
+                            <option value="人工調整">人工調整</option>
+                            <option value="錯誤修正">錯誤修正</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                    </div>
+                </div>
+                <div class="bd-form-field bd-form-field--full">
+                    <label class="bd-form-label">備註</label>
+                    <textarea name="Note" class="bd-textarea" rows="3" placeholder="請輸入操作備註..."></textarea>
+                </div>
+            </div>
+            <div class="bd-form-submit">
+                <button type="submit" class="btn-primary bd-submit-btn"
+                        onclick="return confirm('確定要執行此折扣金操作嗎？')">
+                    確認提交
+                </button>
+            </div>
+        </form>
+    </div>
+
+    @* ===== 折扣金異動紀錄 / 使用紀錄 ===== *@
+    <div class="bd-log-grid">
+        <div class="bd-log-block">
+            <div class="bd-section-hd">
+                <h3 class="bd-sub-title" style="margin-bottom:0">折扣金異動紀錄</h3>
+                <span class="bd-log-hint">最近 5 筆</span>
+            </div>
+            <div class="table-section">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>時間</th>
+                            <th>類型</th>
+                            <th>金額</th>
+                            <th>操作者</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var g in Model.RecentCreditGrants)
+                        {
+                            var gLabel = g.Type == 4 ? "扣回" : "加值";
+                            var gCss   = g.Type == 4 ? "bd-log-type--sub" : "bd-log-type--add";
+                            <tr>
+                                <td>@g.CreatedAt.ToString("MM-dd HH:mm")</td>
+                                <td><span class="bd-log-type @gCss">@gLabel</span></td>
+                                <td class="@(g.Amount >= 0 ? "bd-amount-pos" : "bd-amount-neg")">@(g.Amount >= 0 ? "+" : "")@g.Amount.ToString("N0")</td>
+                                <td>@(g.CreatedByName ?? "—")</td>
+                            </tr>
+                        }
+                        @if (!Model.RecentCreditGrants.Any())
+                        {
+                            <tr><td colspan="4" class="bd-empty-hint">尚無紀錄。</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="bd-log-block">
+            <div class="bd-section-hd">
+                <h3 class="bd-sub-title" style="margin-bottom:0">折扣金使用紀錄</h3>
+                <span class="bd-log-hint">最近 5 筆</span>
+            </div>
+            <div class="table-section">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>時間</th>
+                            <th>對應案號</th>
+                            <th>折扣金額</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model.RecentCreditUsages)
+                        {
+                            <tr>
+                                <td>@u.CreatedAt.ToString("MM-dd HH:mm")</td>
+                                <td>@(u.RelatedCaseId.HasValue ? $"#{u.RelatedCaseId}" : "—")</td>
+                                <td class="bd-amount-neg">@u.Amount.ToString("N0")</td>
+                            </tr>
+                        }
+                        @if (!Model.RecentCreditUsages.Any())
+                        {
+                            <tr><td colspan="3" class="bd-empty-hint">尚無紀錄。</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="bd-sub-title" style="margin-top:1.5rem">近期錢包交易紀錄</h3>
     <div class="table-section">
         <table class="data-table">
             <thead>
@@ -398,29 +535,50 @@
                     <th>操作時間</th>
                     <th>操作者</th>
                     <th>操作類型</th>
-                    <th>相關案件</th>
+                    <th>異動對象</th>
+                    <th>異動內容</th>
                     <th>備註</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var log in Model.RecentActivityLogs)
                 {
+                    var (tagCss, tagText) = log.Action switch
+                    {
+                        var a when a.Contains("Credit") || a.Contains("Wallet") => ("bd-op-tag--finance", "財務異動"),
+                        var a when a.Contains("Case")   => ("bd-op-tag--case",    "案件異動"),
+                        var a when a.Contains("Status") || a.Contains("Suspend") || a.Contains("Unsuspend") => ("bd-op-tag--status", "業者狀態"),
+                        _ => ("bd-op-tag--data", "資料更新"),
+                    };
+                    var targetLabel = log.TargetType switch
+                    {
+                        "Merchants"             => "業者主檔",
+                        "MerchantContacts"      => "聯絡窗口",
+                        "MerchantWallets"       => "現金錢包",
+                        "MerchantCreditWallets" => "折扣金",
+                        "Cases"                 => log.RelatedCaseId.HasValue ? $"#{log.RelatedCaseId}" : "案件",
+                        _                       => log.TargetType ?? "—",
+                    };
                     <tr>
                         <td>@log.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
                         <td>@(log.ActorName ?? "System")</td>
+                        <td><span class="bd-op-tag @tagCss">@tagText</span></td>
+                        <td>@targetLabel</td>
                         <td>@log.Action</td>
-                        <td>@(log.RelatedCaseId.HasValue ? $"#{log.RelatedCaseId}" : "—")</td>
                         <td>@(log.Note ?? "—")</td>
                     </tr>
                 }
                 @if (!Model.RecentActivityLogs.Any())
                 {
                     <tr>
-                        <td colspan="5" class="bd-empty-hint">尚無操作紀錄。</td>
+                        <td colspan="6" class="bd-empty-hint">尚無操作紀錄。</td>
                     </tr>
                 }
             </tbody>
         </table>
+    </div>
+    <div class="bd-load-more">
+        <button class="bd-btn bd-btn--ghost" disabled title="功能開發中">載入更多紀錄</button>
     </div>
 </div>
 

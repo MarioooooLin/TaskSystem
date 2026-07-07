@@ -13,14 +13,15 @@ public sealed class MerchantStatsRepository : IMerchantStatsRepository
     {
         const string sql = """
             SELECT
-                COUNT(DISTINCT c.Id)                                                AS CaseCount,
-                COUNT(t.Id)                                                         AS TaskCount,
-                COUNT(DISTINCT d.Id)                                                AS DisputeCount,
+                COUNT(DISTINCT c.Id)                                                           AS CaseCount,
+                COUNT(DISTINCT CASE WHEN c.Status = 4 THEN c.Id END)                          AS InProgressCount,
+                COUNT(DISTINCT CASE WHEN c.Status IN (5,6) THEN c.Id END)                     AS CompletedCount,
+                COUNT(DISTINCT d.Id)                                                           AS DisputeCount,
                 CASE
                     WHEN COUNT(t.Id) = 0 THEN 0
                     ELSE CAST(SUM(CASE WHEN t.Status = 5 THEN 1 ELSE 0 END) AS DECIMAL(5,2))
                          / COUNT(t.Id) * 100
-                END                                                                  AS CompletionRate
+                END                                                                             AS CompletionRate
             FROM Cases c
             LEFT JOIN Tasks t      ON t.CaseId = c.Id
             LEFT JOIN Disputes d   ON d.CaseId = c.Id
@@ -63,6 +64,7 @@ public sealed class MerchantStatsRepository : IMerchantStatsRepository
             SELECT TOP (@Take)
                 al.Id,
                 al.Action,
+                al.TargetType,
                 u.Name          AS ActorName,
                 al.CaseId       AS RelatedCaseId,
                 al.Note,

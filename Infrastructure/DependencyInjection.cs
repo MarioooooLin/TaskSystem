@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<IMerchantStatsRepository, MerchantStatsRepository>();
         services.AddScoped<IMerchantMemberRepository, MerchantMemberRepository>();
         services.AddScoped<IMerchantWalletRepository, MerchantWalletRepository>();
+        services.AddScoped<IMerchantCreditWalletRepository, MerchantCreditWalletRepository>();
         services.AddScoped<IKolRepository, KolRepository>();
         services.AddScoped<IKolSocialAccountRepository, KolSocialAccountRepository>();
         services.AddScoped<IKolBankAccountRepository, KolBankAccountRepository>();

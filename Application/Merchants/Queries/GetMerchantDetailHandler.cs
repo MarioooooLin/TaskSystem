@@ -12,9 +12,11 @@ public sealed class GetMerchantDetailHandler(
     IMerchantContactRepository contactRepo,
     IMerchantStatsRepository statsRepo,
     IMerchantWalletRepository walletRepo,
+    IMerchantCreditWalletRepository creditWalletRepo,
     IMerchantMemberRepository memberRepo)
 {
     private const int RecentCount = 10;
+    private const int CreditRecentCount = 5;
 
     public async Task<Result<MerchantDetailDto>> HandleAsync(
         GetMerchantDetailQuery query,
@@ -28,51 +30,57 @@ public sealed class GetMerchantDetailHandler(
             return Errors.Merchant.NotFound;
 
         // 2. 依序查詢子集合，避免同一連線同時開啟多個 DataReader。
-        var contacts = await contactRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
-        var stats = await statsRepo.GetStatsByMerchantIdAsync(query.MerchantId, uow.Session, ct);
-        var cases = await statsRepo.GetRecentCasesAsync(query.MerchantId, RecentCount, uow.Session, ct);
-        var wallet = await walletRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
+        var contacts     = await contactRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
+        var stats        = await statsRepo.GetStatsByMerchantIdAsync(query.MerchantId, uow.Session, ct);
+        var cases        = await statsRepo.GetRecentCasesAsync(query.MerchantId, RecentCount, uow.Session, ct);
+        var wallet       = await walletRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
         var transactions = await walletRepo.GetRecentTransactionsAsync(query.MerchantId, RecentCount, uow.Session, ct);
-        var members = await memberRepo.GetMemberListAsync(query.MerchantId, uow.Session, ct);
-        var logs = await statsRepo.GetRecentActivityLogsAsync(query.MerchantId, RecentCount, uow.Session, ct);
+        var creditSummary   = await creditWalletRepo.GetSummaryAsync(query.MerchantId, uow.Session, ct);
+        var creditGrants    = await creditWalletRepo.GetRecentGrantsAsync(query.MerchantId, CreditRecentCount, uow.Session, ct);
+        var creditUsages    = await creditWalletRepo.GetRecentUsagesAsync(query.MerchantId, CreditRecentCount, uow.Session, ct);
+        var members      = await memberRepo.GetMemberListAsync(query.MerchantId, uow.Session, ct);
+        var logs         = await statsRepo.GetRecentActivityLogsAsync(query.MerchantId, RecentCount, uow.Session, ct);
 
         var walletSummary = wallet is null
             ? new MerchantWalletSummaryDto()
             : new MerchantWalletSummaryDto
             {
-                AvailableAmount = wallet.AvailableAmount,
-                FrozenAmount = wallet.FrozenAmount,
+                AvailableAmount      = wallet.AvailableAmount,
+                FrozenAmount         = wallet.FrozenAmount,
                 TotalDepositedAmount = wallet.TotalDepositedAmount,
             };
 
         // 3. 組裝詳情 DTO
         var detail = new MerchantDetailDto
         {
-            MerchantId = baseDto.MerchantId,
-            CompanyName = baseDto.CompanyName,
-            EnglishName = baseDto.EnglishName,
-            TaxId = baseDto.TaxId,
-            IndustryType = baseDto.IndustryType,
-            ContactName = baseDto.ContactName,
-            Phone = baseDto.Phone,
-            Fax = baseDto.Fax,
-            CompanyEmail = baseDto.CompanyEmail,
-            Website = baseDto.Website,
-            Address = baseDto.Address,
-            EstablishedDate = baseDto.EstablishedDate,
-            OwnerEmail = baseDto.OwnerEmail,
-            VerificationStatus = baseDto.VerificationStatus,
-            VerifiedAt = baseDto.VerifiedAt,
-            UpdatedByAdminName = baseDto.UpdatedByAdminName,
-            CreatedAt = baseDto.CreatedAt,
+            MerchantId          = baseDto.MerchantId,
+            CompanyName         = baseDto.CompanyName,
+            EnglishName         = baseDto.EnglishName,
+            TaxId               = baseDto.TaxId,
+            IndustryType        = baseDto.IndustryType,
+            ContactName         = baseDto.ContactName,
+            Phone               = baseDto.Phone,
+            Fax                 = baseDto.Fax,
+            CompanyEmail        = baseDto.CompanyEmail,
+            Website             = baseDto.Website,
+            Address             = baseDto.Address,
+            EstablishedDate     = baseDto.EstablishedDate,
+            OwnerEmail          = baseDto.OwnerEmail,
+            VerificationStatus  = baseDto.VerificationStatus,
+            VerifiedAt          = baseDto.VerifiedAt,
+            UpdatedByAdminName  = baseDto.UpdatedByAdminName,
+            CreatedAt           = baseDto.CreatedAt,
 
-            Contacts = contacts,
-            Stats = stats,
-            RecentCases = cases,
-            Wallet = walletSummary,
-            RecentTransactions = transactions,
-            Members = members,
-            RecentActivityLogs = logs,
+            Contacts              = contacts,
+            Stats                 = stats,
+            RecentCases           = cases,
+            Wallet                = walletSummary,
+            RecentTransactions    = transactions,
+            CreditWallet          = creditSummary,
+            RecentCreditGrants    = creditGrants,
+            RecentCreditUsages    = creditUsages,
+            Members               = members,
+            RecentActivityLogs    = logs,
         };
 
         return Result<MerchantDetailDto>.Success(detail);

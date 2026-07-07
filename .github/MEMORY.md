@@ -6,7 +6,31 @@
 
 ## 2026-07-07
 
-### [14:20] 修正 DisplayName 欄位錯誤（全域）
+### [15:30] 業者詳情頁對齊切版（折扣金、案件統計、操作紀錄）
+
+**變更內容**
+
+- 新增 `Domain.Entities.MerchantCreditWallet`
+- 新增 DTO：`MerchantCreditWalletSummaryDto`、`MerchantCreditTransactionDto`
+- 更新 `MerchantStatsDto`：TaskCount → InProgressCount + CompletedCount
+- 更新 `MerchantActivityLogDto`：加入 TargetType 欄位
+- 更新 `MerchantDetailDto`：加入 CreditWallet、RecentCreditGrants、RecentCreditUsages
+- 新增 `IMerchantCreditWalletRepository` + `MerchantCreditWalletRepository`（GetSummary/GetRecentGrants/GetRecentUsages/Upsert/InsertTransaction）
+- 新增 `AdjustMerchantCreditCommand` + `AdjustMerchantCreditHandler`（加值/扣回，含餘額驗證）
+- 新增 `AdjustCreditViewModel`
+- 更新 `GetMerchantDetailHandler`：加入折扣金查詢
+- 更新 `MerchantStatsRepository` SQL：案件狀態分項統計 + ActivityLogs 加 TargetType
+- 更新 `MerchantManagementController`：加入 AdjustCredit POST action
+- 更新 `Detail.cshtml`：代理登入(disabled)、折扣金Summary、案件統計分項、完整折扣金區塊（表單+紀錄表）、操作紀錄加欄位與色彩tag
+- 更新 DI 兩處：Application + Infrastructure
+
+**決策原因**
+
+- 當前錢包總額 = AvailableAmount + FrozenAmount（非 TotalDepositedAmount）
+- 折扣金加值/扣回屬高風險操作，需 confirm 對話框
+- 操作類型 tag 顏色由 Action 字串前綴動態推導
+
+
 
 **變更內容**
 

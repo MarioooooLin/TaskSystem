@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<AddMerchantContactHandler>();
         services.AddScoped<UpdateMerchantContactHandler>();
         services.AddScoped<RemoveMerchantContactHandler>();
+        services.AddScoped<AdjustMerchantCreditHandler>();
 
         // ── KOL Management ────────────────────────────────
         services.AddScoped<GetKolListHandler>();

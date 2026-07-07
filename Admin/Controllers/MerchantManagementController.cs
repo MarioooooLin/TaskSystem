@@ -16,7 +16,8 @@ public sealed class MerchantManagementController(
     UpdateMerchantHandler updateHandler,
     AddMerchantContactHandler addContactHandler,
     UpdateMerchantContactHandler updateContactHandler,
-    RemoveMerchantContactHandler removeContactHandler) : Controller
+    RemoveMerchantContactHandler removeContactHandler,
+    AdjustMerchantCreditHandler adjustCreditHandler) : Controller
 {
     // ── GET /MerchantManagement ───────────────────────────
     [HttpGet]
@@ -218,6 +219,37 @@ public sealed class MerchantManagementController(
             TempData["Success"] = "聯絡窗口已刪除。";
 
         return RedirectToAction(nameof(Detail), new { id = merchantId });
+    }
+
+    // ── POST /MerchantManagement/AdjustCredit ────────────
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AdjustCredit(AdjustCreditViewModel vm)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "請確認欄位填寫正確。";
+            return RedirectToAction(nameof(Detail), new { id = vm.MerchantId });
+        }
+
+        var cmd = new AdjustMerchantCreditCommand(
+            vm.MerchantId,
+            vm.OperationType,
+            vm.Amount,
+            vm.Reason,
+            vm.Note,
+            vm.ExpiresAt);
+
+        var result = await adjustCreditHandler.HandleAsync(cmd);
+
+        if (result.IsFailure)
+        {
+            TempData["Error"] = result.Error.Description;
+            return RedirectToAction(nameof(Detail), new { id = vm.MerchantId });
+        }
+
+        TempData["Success"] = vm.OperationType == 1 ? "折扣金加值成功。" : "折扣金扣回成功。";
+        return RedirectToAction(nameof(Detail), new { id = vm.MerchantId });
     }
 
     // ── 私有輔助方法 ──────────────────────────────────────
