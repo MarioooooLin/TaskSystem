@@ -1,6 +1,7 @@
 using Application.Abstractions.Persistence;
 using Application.Abstractions.Repositories;
 using Application.Abstractions.Security;
+using Common.Errors;
 using Common.Results;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -39,7 +40,7 @@ public sealed class AdjustMerchantCreditHandler(
                     $"扣回金額 {cmd.Amount:N0} 超過可用折扣金餘額 {wallet.AvailableAmount:N0}。"));
 
             wallet.AvailableAmount -= cmd.Amount;
-            wallet.RevokedAmount   += cmd.Amount;
+            wallet.RevokedAmount += cmd.Amount;
         }
         else
         {
@@ -52,15 +53,15 @@ public sealed class AdjustMerchantCreditHandler(
 
         // 寫入交易流水
         await creditWalletRepo.InsertTransactionAsync(
-            merchantId:      cmd.MerchantId,
-            type:            cmd.OperationType,
-            amount:          cmd.OperationType == 4 ? -cmd.Amount : cmd.Amount,
-            relatedCaseId:   null,
-            reason:          cmd.Reason,
-            note:            cmd.Note,
+            merchantId: cmd.MerchantId,
+            type: cmd.OperationType,
+            amount: cmd.OperationType == 4 ? -cmd.Amount : cmd.Amount,
+            relatedCaseId: null,
+            reason: cmd.Reason,
+            note: cmd.Note,
             createdByUserId: currentUser.UserId,
-            session:         uow.Session,
-            ct:              ct);
+            session: uow.Session,
+            ct: ct);
 
         await uow.CommitAsync(ct);
         return Result.Success();

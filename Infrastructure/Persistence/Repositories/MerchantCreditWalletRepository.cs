@@ -136,9 +136,16 @@ public sealed class MerchantCreditWalletRepository : IMerchantCreditWalletReposi
             """;
 
         await session.Connection.ExecuteAsync(sql,
-            new { MerchantId = merchantId, Type = type, Amount = amount,
-                  RelatedCaseId = relatedCaseId, Reason = reason, Note = note,
-                  CreatedByUserId = createdByUserId },
+            new
+            {
+                MerchantId = merchantId,
+                Type = type,
+                Amount = amount,
+                RelatedCaseId = relatedCaseId,
+                Reason = reason,
+                Note = note,
+                CreatedByUserId = createdByUserId
+            },
             session.Transaction);
     }
 }

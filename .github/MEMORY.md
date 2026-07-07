@@ -30,8 +30,6 @@
 - 折扣金加值/扣回屬高風險操作，需 confirm 對話框
 - 操作類型 tag 顏色由 Action 字串前綴動態推導
 
-
-
 **變更內容**
 
 - `MerchantMemberRepository`：`u.DisplayName` → `u.Name`
