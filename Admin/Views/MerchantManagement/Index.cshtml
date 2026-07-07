@@ -1,7 +1,9 @@
-@* 待 Infrastructure MerchantRepository SQL 完成後加上 @model
-   @model Common.Pagination.PagedResult<Application.Merchants.DTOs.MerchantListItemDto> *@
+@model Common.Pagination.PagedResult<Application.Merchants.DTOs.MerchantListItemDto>
+@using Domain.Enums
 @{
     ViewData["Title"] = "業者管理";
+    var keyword            = Context.Request.Query["keyword"].ToString();
+    var verificationStatus = Context.Request.Query["verificationStatus"].ToString();
 }
 
 @section PageCss {
@@ -20,16 +22,16 @@
 <!-- ===== KPI STATS ===== -->
 <div class="content-card bm-kpi-row">
     <div class="bm-kpi-item">
-        <span class="bm-kpi-label">全部業者</span>
-        <strong class="bm-kpi-value">—</strong>
+        <span class="bm-kpi-label">符合篩選筆數</span>
+        <strong class="bm-kpi-value">@Model.TotalCount</strong>
     </div>
     <div class="bm-kpi-item">
-        <span class="bm-kpi-label">啟用中</span>
-        <strong class="bm-kpi-value bm-kpi-value--green">—</strong>
+        <span class="bm-kpi-label">目前頁數</span>
+        <strong class="bm-kpi-value bm-kpi-value--green">@Model.Page / @Model.TotalPages</strong>
     </div>
     <div class="bm-kpi-item bm-kpi-item--last">
-        <span class="bm-kpi-label">停用中</span>
-        <strong class="bm-kpi-value bm-kpi-value--red">—</strong>
+        <span class="bm-kpi-label">每頁筆數</span>
+        <strong class="bm-kpi-value">@Model.PageSize</strong>
     </div>
 </div>
 
@@ -41,16 +43,16 @@
                 <label class="bm-filter-label">關鍵字搜尋</label>
                 <div class="filter-search">
                     <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
-                    <input type="text" name="keyword" class="filter-search__input" placeholder="業者名稱、統編、聯絡人" />
+                    <input type="text" name="keyword" value="@keyword" class="filter-search__input" placeholder="業者名稱、統編、聯絡人" />
                 </div>
             </div>
             <div class="bm-filter-item">
                 <label class="bm-filter-label">業者狀態</label>
                 <div class="filter-select-wrap">
                     <select name="verificationStatus" class="filter-select">
-                        <option value="">全部</option>
-                        <option value="2">啟用中</option>
-                        <option value="4">停用中</option>
+                        <option value="" selected="@(verificationStatus == "")">全部</option>
+                        <option value="2" selected="@(verificationStatus == "2")">啟用中</option>
+                        <option value="4" selected="@(verificationStatus == "4")">停用中</option>
                     </select>
                     <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
                 </div>
@@ -80,20 +82,75 @@
                 </tr>
             </thead>
             <tbody>
-                @* 待 MerchantRepository SQL 完成後替換
                 @foreach (var m in Model.Items)
                 {
+                    var (statusCss, statusText) = m.VerificationStatus switch
+                    {
+                        VerificationStatus.Approved  => ("case-status recruit",  "啟用中"),
+                        VerificationStatus.Pending   => ("case-status review",   "待審核"),
+                        VerificationStatus.Rejected  => ("case-status closed",   "已拒絕"),
+                        VerificationStatus.Suspended => ("case-status cancelled","已停用"),
+                        _                            => ("", "—"),
+                    };
                     <tr>
-                        <td>@m.CompanyName</td>
-                        ...
-                        <td><a asp-action="Detail" asp-route-id="@m.MerchantId" class="action-link">詳情</a></td>
+                        <td class="bm-company-name">@m.CompanyName</td>
+                        <td>@(m.TaxId ?? "—")</td>
+                        <td>@(m.ContactName ?? "—")</td>
+                        <td><span class="@statusCss">@statusText</span></td>
+                        <td>NT$@m.AvailableAmount.ToString("N0")</td>
+                        <td>@m.CaseCount</td>
+                        <td>@m.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a asp-action="Detail" asp-route-id="@m.MerchantId" class="action-link">詳情</a>
+                        </td>
                     </tr>
                 }
-                *@
-                <tr>
-                    <td colspan="8" class="empty-state">資料庫連線尚未完成，待 Repository 實作後顯示資料。</td>
-                </tr>
+                @if (!Model.Items.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="empty-state">查無符合條件的業者資料。</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="pagination">
+            <span class="pagination__info">
+                共 @Model.TotalCount 筆，第 @Model.Page / @Model.TotalPages 頁
+            </span>
+            <div class="pagination__nav">
+                @if (Model.HasPreviousPage)
+                {
+                    <a asp-action="Index"
+                       asp-route-keyword="@keyword"
+                       asp-route-verificationStatus="@verificationStatus"
+                       asp-route-page="@(Model.Page - 1)"
+                       class="page-btn">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                }
+                @for (var p = 1; p <= Model.TotalPages; p++)
+                {
+                    <a asp-action="Index"
+                       asp-route-keyword="@keyword"
+                       asp-route-verificationStatus="@verificationStatus"
+                       asp-route-page="@p"
+                       class="page-btn @(p == Model.Page ? "active" : "")">@p</a>
+                }
+                @if (Model.HasNextPage)
+                {
+                    <a asp-action="Index"
+                       asp-route-keyword="@keyword"
+                       asp-route-verificationStatus="@verificationStatus"
+                       asp-route-page="@(Model.Page + 1)"
+                       class="page-btn">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
 </div>

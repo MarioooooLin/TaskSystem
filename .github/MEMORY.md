@@ -15,21 +15,21 @@
 - 修正 `KolManagement/ReviewList.cshtml`：CSS `kol-new.css` → `kol-review.css`
 - 新建 **13 個** .cshtml（含今日完成全部）：
 
-| View | CSS |
-|---|---|
-| `MerchantManagement/Detail.cshtml` | business-detail.css |
+| View                               | CSS                                     |
+| ---------------------------------- | --------------------------------------- |
+| `MerchantManagement/Detail.cshtml` | business-detail.css                     |
 | `MerchantManagement/Update.cshtml` | business-detail.css + business-edit.css |
-| `Account/ForgotPassword.cshtml` | login.css（_LayoutLogin） |
-| `Dashboard/Index.cshtml` | index.css |
-| `CaseMonitor/Index.cshtml` | 無 |
-| `CaseMonitor/Detail.cshtml` | cases-detail.css |
-| `Finance/Index.cshtml` | wallet.css |
-| `Finance/Transactions.cshtml` | transaction-history.css |
-| `SystemSetting/Index.cshtml` | settings.css |
-| `AdminAccount/Index.cshtml` | permission.css（額外新增） |
-| `AdminAccount/Create.cshtml` | add-user.css |
-| `RolePermission/Index.cshtml` | permission-management.css |
-| `RolePermission/Detail.cshtml` | permission.css |
+| `Account/ForgotPassword.cshtml`    | login.css（\_LayoutLogin）              |
+| `Dashboard/Index.cshtml`           | index.css                               |
+| `CaseMonitor/Index.cshtml`         | 無                                      |
+| `CaseMonitor/Detail.cshtml`        | cases-detail.css                        |
+| `Finance/Index.cshtml`             | wallet.css                              |
+| `Finance/Transactions.cshtml`      | transaction-history.css                 |
+| `SystemSetting/Index.cshtml`       | settings.css                            |
+| `AdminAccount/Index.cshtml`        | permission.css（額外新增）              |
+| `AdminAccount/Create.cshtml`       | add-user.css                            |
+| `RolePermission/Index.cshtml`      | permission-management.css               |
+| `RolePermission/Detail.cshtml`     | permission.css                          |
 
 - 靜態佔位 View 資料欄位均顯示「— 待資料庫連線 —」
 - 所有 `.cshtml` 靜態資源路徑確認使用 `~/` 前綴
