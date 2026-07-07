@@ -41,7 +41,7 @@ public sealed class MerchantMemberRepository : IMerchantMemberRepository
             SELECT
                 mm.Id           AS MemberId,
                 mm.UserId,
-                u.DisplayName   AS UserName,
+                u.Name          AS UserName,
                 u.Email         AS UserEmail,
                 r.Name          AS RoleName,
                 mm.Status,

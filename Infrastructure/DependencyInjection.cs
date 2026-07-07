@@ -1,8 +1,10 @@
 using Application.Abstractions.Persistence;
 using Application.Abstractions.Repositories;
 using Application.Abstractions.Security;
+using Dapper;
 using Infrastructure.Authentication;
 using Infrastructure.Persistence.Dapper;
+using Infrastructure.Persistence.Dapper.TypeHandlers;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Transactions;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +18,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // ── Dapper TypeHandlers（全域，只需註冊一次）─────────
+        SqlMapper.AddTypeHandler(DateOnlyTypeHandler.Instance);
+
         // ── 安全性 ────────────────────────────────────────
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 

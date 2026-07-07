@@ -266,7 +266,7 @@ public sealed class KolRepository : IKolRepository
                 kp.FollowersCount,
                 kp.VerificationStatus,
                 kp.VerifiedAt,
-                adm.DisplayName     AS VerifiedByAdminName,
+                adm.Name            AS VerifiedByAdminName,
                 kp.RejectionNote,
                 kp.SuspensionNote,
                 kp.CreatedAt,

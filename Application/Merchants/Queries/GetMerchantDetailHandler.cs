@@ -27,18 +27,15 @@ public sealed class GetMerchantDetailHandler(
         if (baseDto is null)
             return Errors.Merchant.NotFound;
 
-        // 2. 平行查詢子集合（全為唯讀，不需要 Transaction 一致性）
-        var contactsTask = contactRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
-        var statsTask = statsRepo.GetStatsByMerchantIdAsync(query.MerchantId, uow.Session, ct);
-        var casesTask = statsRepo.GetRecentCasesAsync(query.MerchantId, RecentCount, uow.Session, ct);
-        var walletTask = walletRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
-        var txTask = walletRepo.GetRecentTransactionsAsync(query.MerchantId, RecentCount, uow.Session, ct);
-        var membersTask = memberRepo.GetMemberListAsync(query.MerchantId, uow.Session, ct);
-        var logsTask = statsRepo.GetRecentActivityLogsAsync(query.MerchantId, RecentCount, uow.Session, ct);
+        // 2. 依序查詢子集合，避免同一連線同時開啟多個 DataReader。
+        var contacts = await contactRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
+        var stats = await statsRepo.GetStatsByMerchantIdAsync(query.MerchantId, uow.Session, ct);
+        var cases = await statsRepo.GetRecentCasesAsync(query.MerchantId, RecentCount, uow.Session, ct);
+        var wallet = await walletRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
+        var transactions = await walletRepo.GetRecentTransactionsAsync(query.MerchantId, RecentCount, uow.Session, ct);
+        var members = await memberRepo.GetMemberListAsync(query.MerchantId, uow.Session, ct);
+        var logs = await statsRepo.GetRecentActivityLogsAsync(query.MerchantId, RecentCount, uow.Session, ct);
 
-        await Task.WhenAll(contactsTask, statsTask, casesTask, walletTask, txTask, membersTask, logsTask);
-
-        var wallet = await walletTask;
         var walletSummary = wallet is null
             ? new MerchantWalletSummaryDto()
             : new MerchantWalletSummaryDto
@@ -69,13 +66,13 @@ public sealed class GetMerchantDetailHandler(
             UpdatedByAdminName = baseDto.UpdatedByAdminName,
             CreatedAt = baseDto.CreatedAt,
 
-            Contacts = await contactsTask,
-            Stats = await statsTask,
-            RecentCases = await casesTask,
+            Contacts = contacts,
+            Stats = stats,
+            RecentCases = cases,
             Wallet = walletSummary,
-            RecentTransactions = await txTask,
-            Members = await membersTask,
-            RecentActivityLogs = await logsTask,
+            RecentTransactions = transactions,
+            Members = members,
+            RecentActivityLogs = logs,
         };
 
         return Result<MerchantDetailDto>.Success(detail);

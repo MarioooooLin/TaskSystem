@@ -1,12 +1,38 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-07 12:10
+> 最後整理時間：2026-07-07 14:00
 
 ---
 
 ## 2026-07-07
 
+### [14:20] 修正 DisplayName 欄位錯誤（全域）
+
+**變更內容**
+
+- `MerchantMemberRepository`：`u.DisplayName` → `u.Name`
+- `MerchantStatsRepository`：ActivityLogs JOIN `KolProfiles` 改為 JOIN `Users`，`DisplayName` → `Name`
+- `KolRepository`：`adm.DisplayName` (admin 查 Users) → `adm.Name`
+- `KolStatsRepository`：ActivityLogs JOIN `KolProfiles` 改為 JOIN `Users`，`DisplayName` → `Name`
+
+**決策原因**
+
+- `Users` 資料表只有 `Name` 欄位，`DisplayName` 只存在於 `KolProfiles`
+- ActivityLogs 的 ActorUserId 對應的是 `Users.Id`，應 JOIN `Users` 而非 `KolProfiles`
+
+**變更內容**
+
+- 新增 `Infrastructure/Persistence/Dapper/TypeHandlers/DateOnlyTypeHandler.cs`
+- 在 `Infrastructure/DependencyInjection.cs` 最前面加上 `SqlMapper.AddTypeHandler(DateOnlyTypeHandler.Instance)`
+- 修正業者詳情頁 `EstablishedDate` 欄位 `DataException: Error parsing column 11 (EstablishedDate=... DateTime)` 錯誤
+
+**決策原因**
+
+- SQL Server `date` 型別透過 Dapper 讀取時回傳 `DateTime`，C# 的 `DateOnly` 需要手動 TypeHandler 才能轉換
+- 採用 Singleton Instance 模式，全域只需註冊一次
+
 ### [13:20] 業者狀態收斂為 Approved / Suspended
+
 **決策與實作**
 
 - 業者不走審核流程，`Merchants.VerificationStatus` 第一版只使用 `Approved = 2` 與 `Suspended = 4`。
@@ -16,6 +42,7 @@
 - `UnsuspendMerchantHandler` 補上整體復權：業者恢復 Approved 後，同 transaction 將該業者 Active 成員關聯底下的 Suspended 使用者恢復 Active。
 
 ### [12:55] ADM-015 KOL 審核流程定案
+
 **決策**
 
 - `ADM-015` 不擴充 `VerificationStatus` 來表示「重送審核」等流程事件。

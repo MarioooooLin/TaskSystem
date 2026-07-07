@@ -63,12 +63,12 @@ public sealed class MerchantStatsRepository : IMerchantStatsRepository
             SELECT TOP (@Take)
                 al.Id,
                 al.Action,
-                u.DisplayName   AS ActorName,
+                u.Name          AS ActorName,
                 al.CaseId       AS RelatedCaseId,
                 al.Note,
                 al.CreatedAt
             FROM ActivityLogs al
-            LEFT JOIN KolProfiles u ON u.UserId = al.ActorUserId
+            LEFT JOIN Users u ON u.Id = al.ActorUserId
             WHERE al.TargetType = 'Merchants' AND al.TargetId = @MerchantId
             ORDER BY al.CreatedAt DESC
             """;
