@@ -23,6 +23,9 @@ public sealed class KolReviewListItemDto
 
     public VerificationStatus VerificationStatus { get; init; }
 
+    /// <summary>是否為重送審核（VerificationStatus = Pending 且有 KolReviewEvents ActionType = 2）。</summary>
+    public bool IsResubmit { get; init; }
+
     /// <summary>送審時間（最後一次 UpdatedAt，VerificationStatus 改為 Pending 時）。</summary>
     public DateTime SubmittedAt { get; init; }
 }

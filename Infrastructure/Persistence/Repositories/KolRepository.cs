@@ -155,25 +155,46 @@ public sealed class KolRepository : IKolRepository
     // ── GetReviewListAsync ────────────────────────────────────────
     public async Task<(IReadOnlyList<KolReviewListItemDto> Items, int TotalCount)> GetReviewListAsync(
         string? keyword,
-        VerificationStatus? verificationStatus,
+        string? statusFilter,
         short? category,
         short? platform,
+        DateOnly? submittedDate,
         PageQuery page,
         IDbSession session,
         CancellationToken ct = default)
     {
-        var conditions = new List<string> { "kp.VerificationStatus = 1" }; // Pending
+        // statusFilter chip → SQL 條件
+        var conditions = new List<string>();
+        switch (statusFilter)
+        {
+            case "pending":
+                conditions.Add("kp.VerificationStatus = 1");
+                conditions.Add("NOT EXISTS (SELECT 1 FROM KolReviewEvents kre WHERE kre.KolId = kp.Id AND kre.ActionType = 2)");
+                break;
+            case "resubmit":
+                conditions.Add("kp.VerificationStatus = 1");
+                conditions.Add("EXISTS (SELECT 1 FROM KolReviewEvents kre WHERE kre.KolId = kp.Id AND kre.ActionType = 2)");
+                break;
+            case "returned":
+                conditions.Add("kp.VerificationStatus = 3");
+                break;
+            case "approved":
+                conditions.Add("kp.VerificationStatus = 2");
+                break;
+            default:
+                // 預設：全部待審核（首次 + 重送）
+                conditions.Add("kp.VerificationStatus = 1");
+                break;
+        }
+
         if (!string.IsNullOrWhiteSpace(keyword))
             conditions.Add("(kp.DisplayName LIKE @Keyword OR u.Email LIKE @Keyword)");
-        if (verificationStatus.HasValue)
-        {
-            conditions.RemoveAt(0);
-            conditions.Insert(0, "kp.VerificationStatus = @Status");
-        }
         if (category.HasValue)
             conditions.Add("EXISTS (SELECT 1 FROM KolCategories kc WHERE kc.KolId = kp.Id AND kc.Category = @Category)");
         if (platform.HasValue)
             conditions.Add("EXISTS (SELECT 1 FROM KolSocialAccounts ksa WHERE ksa.KolId = kp.Id AND ksa.Platform = @Platform)");
+        if (submittedDate.HasValue)
+            conditions.Add("CAST(kp.UpdatedAt AS DATE) = @SubmittedDate");
 
         var where = "WHERE " + string.Join(" AND ", conditions);
 
@@ -192,7 +213,11 @@ public sealed class KolRepository : IKolRepository
                 kp.VerificationStatus,
                 kp.UpdatedAt            AS SubmittedAt,
                 ISNULL(SUM(ksa.FollowersCount), 0) AS TotalFollowers,
-                0                       AS ProfileCompleteness
+                0                       AS ProfileCompleteness,
+                CAST(CASE WHEN EXISTS (
+                    SELECT 1 FROM KolReviewEvents kre
+                    WHERE kre.KolId = kp.Id AND kre.ActionType = 2
+                ) THEN 1 ELSE 0 END AS BIT) AS IsResubmit
             FROM KolProfiles kp
             JOIN Users u ON u.Id = kp.UserId
             LEFT JOIN KolSocialAccounts ksa ON ksa.KolId = kp.Id
@@ -206,9 +231,9 @@ public sealed class KolRepository : IKolRepository
         var param = new
         {
             Keyword = string.IsNullOrWhiteSpace(keyword) ? null : $"%{keyword.Trim()}%",
-            Status = verificationStatus.HasValue ? (short)verificationStatus.Value : (short?)null,
             Category = category,
             Platform = platform,
+            SubmittedDate = submittedDate.HasValue ? (DateTime?)submittedDate.Value.ToDateTime(TimeOnly.MinValue) : null,
             Offset = page.Offset,
             PageSize = page.PageSize,
         };
@@ -248,6 +273,7 @@ public sealed class KolRepository : IKolRepository
                 Platforms = plMap.TryGetValue(x.KolId, out var p) ? p : [],
                 TotalFollowers = x.TotalFollowers,
                 ProfileCompleteness = x.ProfileCompleteness,
+                IsResubmit = x.IsResubmit,
                 VerificationStatus = x.VerificationStatus,
                 SubmittedAt = x.SubmittedAt,
             }).ToList();
@@ -307,6 +333,35 @@ public sealed class KolRepository : IKolRepository
             """;
 
         await session.Connection.ExecuteAsync(sql, kol, session.Transaction);
+    }
+
+    // ── GetReviewSummaryAsync ─────────────────────────────────────
+    public async Task<KolReviewSummaryDto> GetReviewSummaryAsync(
+        IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            SELECT
+                SUM(CASE WHEN kp.VerificationStatus = 1 AND kre.KolId IS NULL     THEN 1 ELSE 0 END) AS PendingCount,
+                SUM(CASE WHEN kp.VerificationStatus = 1 AND kre.KolId IS NOT NULL  THEN 1 ELSE 0 END) AS ResubmitCount,
+                SUM(CASE WHEN kp.VerificationStatus = 3                             THEN 1 ELSE 0 END) AS ReturnedCount,
+                SUM(CASE
+                    WHEN kp.VerificationStatus IN (1, 3)
+                         AND CAST(kp.UpdatedAt AS DATE) = CAST(GETUTCDATE() AS DATE)
+                    THEN 1 ELSE 0 END) AS TodayNewCount,
+                SUM(CASE
+                    WHEN kp.VerificationStatus = 1
+                         AND kp.UpdatedAt < DATEADD(day, -3, GETUTCDATE())
+                    THEN 1 ELSE 0 END) AS OverdueCount
+            FROM KolProfiles kp
+            LEFT JOIN (
+                SELECT DISTINCT KolId
+                FROM KolReviewEvents
+                WHERE ActionType = 2
+            ) kre ON kre.KolId = kp.Id
+            """;
+
+        return await session.Connection.QueryFirstAsync<KolReviewSummaryDto>(
+            sql, transaction: session.Transaction);
     }
 
     // ── GetSummaryAsync ───────────────────────────────────────────

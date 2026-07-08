@@ -57,6 +57,7 @@ public sealed class GetKolDetailHandler(
             VerifiedByAdminName = baseDto.VerifiedByAdminName,
             RejectionNote = baseDto.RejectionNote,
             SuspensionNote = baseDto.SuspensionNote,
+            SubmittedAt = baseDto.UpdatedAt,
 
             TotalFollowers = baseDto.FollowersCount ?? 0,
             TaskCount = stats.TaskCount,

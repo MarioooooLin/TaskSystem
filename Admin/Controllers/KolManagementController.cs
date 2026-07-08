@@ -1,5 +1,6 @@
 using Admin.ViewModels.Kol;
 using Application.Kols.Commands;
+using Application.Kols.DTOs;
 using Application.Kols.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ public sealed class KolManagementController(
     GetKolListHandler listHandler,
     GetKolSummaryHandler summaryHandler,
     GetKolReviewListHandler reviewListHandler,
+    GetKolReviewSummaryHandler reviewSummaryHandler,
     GetKolDetailHandler detailHandler,
     ApproveKolHandler approveHandler,
     RejectKolHandler rejectHandler,
@@ -51,14 +53,24 @@ public sealed class KolManagementController(
     {
         var query = new GetKolReviewListQuery(
             vm.Keyword,
-            vm.VerificationStatus,
+            vm.StatusFilter,
             vm.Category,
             vm.Platform,
+            DateOnly.TryParse(vm.SubmittedDate, out var d) ? d : (DateOnly?)null,
             vm.Page,
             vm.PageSize);
 
-        var result = await reviewListHandler.HandleAsync(query);
-        return View(result.Value);
+        var listResult = await reviewListHandler.HandleAsync(query);
+        var summaryResult = await reviewSummaryHandler.HandleAsync();
+
+        var model = new KolReviewIndexViewModel
+        {
+            List = listResult.Value,
+            Summary = summaryResult.Value,
+            Query = vm,
+        };
+
+        return View(model);
     }
 
     // ── GET /KolManagement/Detail/{id} ─────────────────────
@@ -145,5 +157,54 @@ public sealed class KolManagementController(
             TempData["Success"] = "KOL 停權已解除。";
 
         return RedirectToAction(nameof(Detail), new { id });
+    }
+
+    // ── GET /KolManagement/ReviewDetail/{id} ───────────────
+    [HttpGet]
+    public async Task<IActionResult> ReviewDetail(long id)
+    {
+        var result = await detailHandler.HandleAsync(new GetKolDetailQuery(id));
+
+        if (result.IsFailure)
+            return NotFound();
+
+        return View(result.Value);
+    }
+
+    // ── POST /KolManagement/ReviewApprove ──────────────────
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ReviewApprove(long id)
+    {
+        var result = await approveHandler.HandleAsync(new ApproveKolCommand(id));
+
+        if (result.IsFailure)
+            TempData["Error"] = result.Error.Description;
+        else
+            TempData["Success"] = "KOL 審核已通過。";
+
+        return RedirectToAction(nameof(ReviewList));
+    }
+
+    // ── POST /KolManagement/ReviewReject ───────────────────
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ReviewReject(KolRejectViewModel vm)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "退回原因為必填。";
+            return RedirectToAction(nameof(ReviewDetail), new { id = vm.KolId });
+        }
+
+        var result = await rejectHandler.HandleAsync(
+            new RejectKolCommand(vm.KolId, vm.RejectionNote));
+
+        if (result.IsFailure)
+            TempData["Error"] = result.Error.Description;
+        else
+            TempData["Success"] = "已退回修改，KOL 將收到通知。";
+
+        return RedirectToAction(nameof(ReviewList));
     }
 }

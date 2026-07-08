@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<GetKolListHandler>();
         services.AddScoped<GetKolSummaryHandler>();
         services.AddScoped<GetKolReviewListHandler>();
+        services.AddScoped<GetKolReviewSummaryHandler>();
         services.AddScoped<GetKolDetailHandler>();
         services.AddScoped<ApproveKolHandler>();
         services.AddScoped<RejectKolHandler>();

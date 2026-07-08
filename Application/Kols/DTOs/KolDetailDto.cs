@@ -27,6 +27,9 @@ public sealed class KolDetailDto
     public string? RejectionNote { get; init; }
     public string? SuspensionNote { get; init; }
 
+    /// <summary>最近一次 KolProfiles.UpdatedAt，即送審時間的近似值。</summary>
+    public DateTime SubmittedAt { get; init; }
+
     // ── 統計數字 ──────────────────────────────────────────
     public int TotalFollowers { get; init; }
     public int TaskCount { get; init; }

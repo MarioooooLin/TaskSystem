@@ -1,0 +1,427 @@
+@model Application.Kols.DTOs.KolDetailDto
+@using Domain.Enums
+@{
+    ViewData["Title"] = "KOL審核詳情";
+
+    var isPending = Model.VerificationStatus == VerificationStatus.Pending;
+    var isRejected = Model.VerificationStatus == VerificationStatus.Rejected;
+    var isApproved = Model.VerificationStatus == VerificationStatus.Approved;
+
+    var (verifyBadgeCss, verifyBadgeText) = Model.VerificationStatus switch
+    {
+        VerificationStatus.Pending => ("kr-badge--pending", "待審核"),
+        VerificationStatus.Rejected => ("kr-badge--rejected", "已退回"),
+        VerificationStatus.Approved => ("kr-badge--active", "已通過"),
+        VerificationStatus.Suspended => ("kr-badge--suspend", "已停權"),
+        _ => ("", "未知"),
+    };
+
+    string PlatformLabel(short p) => p switch
+    {
+        1 => "X",
+        2 => "Instagram",
+        3 => "Facebook",
+        4 => "YouTube",
+        5 => "Blog",
+        6 => "小紅書",
+        7 => "TikTok",
+        8 => "中國抖音",
+        9 => "Threads",
+        10 => "Snapchat",
+        11 => "微信",
+        _ => "其他"
+    };
+
+    string PlatformIcon(short p) => p switch
+    {
+        1 => "fa-brands fa-x-twitter",
+        2 => "fa-brands fa-instagram",
+        3 => "fa-brands fa-facebook",
+        4 => "fa-brands fa-youtube",
+        5 => "fa-solid fa-rss",
+        6 => "fa-solid fa-circle-dot",
+        7 => "fa-brands fa-tiktok",
+        8 => "fa-brands fa-tiktok",
+        9 => "fa-brands fa-threads",
+        10 => "fa-brands fa-snapchat",
+        11 => "fa-brands fa-weixin",
+        _ => "fa-solid fa-share-nodes"
+    };
+
+    string CategoryLabel(short c) => c switch
+    {
+        1 => "旅遊",
+        2 => "旅行",
+        3 => "時尚",
+        4 => "美妝",
+        5 => "居家生活",
+        6 => "親子",
+        7 => "寵物",
+        8 => "遊戲",
+        9 => "音樂",
+        10 => "影視",
+        11 => "藝術",
+        12 => "書籍",
+        13 => "科技",
+        14 => "財經",
+        15 => "教育",
+        16 => "職場",
+        17 => "健康",
+        18 => "健身",
+        19 => "運動",
+        20 => "飲食",
+        21 => "養生",
+        22 => "公益",
+        23 => "環保",
+        24 => "政治",
+        25 => "文化",
+        26 => "跨界",
+        _ => "其他"
+    };
+
+    string DataSourceLabel(short ds) => ds switch { 1 => "API（同步）", 2 => "手動輸入", _ => "未知" };
+
+    string BankAccountTypeLabel(short t) => t switch { 1 => "個人", 2 => "公司", _ => "其他" };
+
+    string BankStatusLabel(short s) => s switch { 1 => "待確認", 2 => "已審核", 3 => "已退回", _ => "未知" };
+
+    var mainPlatformText = string.Join(" / ",
+        Model.SocialAccounts
+             .OrderByDescending(s => s.FollowersCount ?? 0)
+             .Take(3)
+             .Select(s => PlatformLabel(s.Platform)));
+
+    var bankBound = Model.BankAccount?.Status == 2;
+    var bankBadgeCss = bankBound ? "kr-summary-value--ok" : "";
+    var bankBadgeText = Model.BankAccount is null ? "未綁定" : bankBound ? "已綁定" : "待確認";
+
+    var catText = string.Join("、", Model.Categories.Select(c => CategoryLabel(c)));
+
+    // 社群帳號中有「待確認」狀態的提醒
+    var needsConfirm = Model.SocialAccounts.Where(s => s.VerificationStatus == 3).ToList();
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/kol-review.css" asp-append-version="true" />
+}
+
+@if (TempData["Success"] is string successMsg)
+{
+    <div class="alert-success">@successMsg</div>
+}
+@if (TempData["Error"] is string errorMsg)
+{
+    <div class="alert-error">@errorMsg</div>
+}
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header kr-page-header">
+    <div class="page-header__left">
+        <nav class="adm-breadcrumb">KOL管理 &rsaquo; 審核詳情</nav>
+        <h1 class="page-title">KOL詳細檔案</h1>
+        <p class="page-subtitle">查看KOL資料、社群頻道、審核狀態、任務紀錄、收益與異常紀錄</p>
+    </div>
+    <a asp-action="ReviewList" class="kr-btn kr-btn--ghost">返回審核列表</a>
+</div>
+
+<!-- ===== SUMMARY ===== -->
+<div class="content-card kr-summary-card">
+    <div class="kr-summary-left">
+        <div class="kr-summary-icon">
+            <img src="~/images/user.svg" alt="KOL頭貼" class="kr-summary-avatar" />
+        </div>
+        <div class="kr-summary-meta">
+            <h2 class="kr-kol-name">@Model.DisplayName</h2>
+            <div class="kr-status-list">
+                <span class="kr-badge @verifyBadgeCss"><i class="fa-solid fa-circle"></i> @verifyBadgeText</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="kr-summary-grid">
+        <div class="kr-summary-item">
+            <span class="kr-summary-label">KOL類型</span>
+            <strong class="kr-summary-value">@(string.IsNullOrEmpty(catText) ? "—" : catText)</strong>
+        </div>
+        <div class="kr-summary-item">
+            <span class="kr-summary-label">主要平台</span>
+            <strong class="kr-summary-value">@(string.IsNullOrEmpty(mainPlatformText) ? "—" : mainPlatformText)</strong>
+        </div>
+        <div class="kr-summary-item">
+            <span class="kr-summary-label">粉絲總數</span>
+            <strong class="kr-summary-value">@Model.TotalFollowers.ToString("N0")</strong>
+        </div>
+        <div class="kr-summary-item">
+            <span class="kr-summary-label">收款資料狀態</span>
+            <strong class="kr-summary-value @bankBadgeCss">@bankBadgeText</strong>
+        </div>
+        <div class="kr-summary-item">
+            <span class="kr-summary-label">任務數</span>
+            <strong class="kr-summary-value">@Model.TaskCount</strong>
+        </div>
+        <div class="kr-summary-item">
+            <span class="kr-summary-label">驗收通過數</span>
+            <strong class="kr-summary-value">@Model.CompletedTaskCount</strong>
+        </div>
+        <div class="kr-summary-item">
+            <span class="kr-summary-label">未結案異議數</span>
+            @if (Model.DisputeCount > 0)
+            {
+                <strong class="kr-summary-value kr-summary-value--danger">@Model.DisputeCount</strong>
+            }
+            else
+            {
+                <strong class="kr-summary-value">0</strong>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ===== 基本資料 ===== -->
+<section class="kr-section">
+    <h2 class="section-title kr-section-title"><i class="fa-regular fa-user"></i> 基本資料</h2>
+    <div class="kr-card-grid kr-card-grid--2">
+        <article class="kr-info-card">
+            <h3 class="kr-card-title">KOL個人資料</h3>
+            <div class="kr-kv-list">
+                <div class="kr-kv-row"><span>KOL名稱</span><strong>@Model.DisplayName</strong></div>
+                <div class="kr-kv-row"><span>聯絡窗口</span><strong>@(Model.RealName ?? "—")</strong></div>
+                <div class="kr-kv-row">
+                    <span>手機</span>
+                    <strong>
+                        @if (!string.IsNullOrEmpty(Model.Phone))
+                        {
+                            @(Model.Phone.Length >= 4
+                                ? Model.Phone[..2] + "** *** " + Model.Phone[^3..]
+                                : "***")
+                        }
+                        else
+                        {
+                            <span>—</span>
+                        }
+                    </strong>
+                </div>
+                <div class="kr-kv-row"><span>Email</span><strong>@Model.UserEmail</strong></div>
+                <div class="kr-kv-row">
+                    <span>LINE綁定狀態</span>
+                    @if (!string.IsNullOrEmpty(Model.LineContactId))
+                    {
+                        <strong class="kr-text-success"><i class="fa-solid fa-circle-check"></i> 已綁定</strong>
+                    }
+                    else
+                    {
+                        <strong class="kr-text-muted">未綁定</strong>
+                    }
+                </div>
+                <div class="kr-kv-row">
+                    <span>建立日期</span>
+                    <strong>@Model.CreatedAt.ToString("yyyy-MM-dd")</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="kr-info-card">
+            <h3 class="kr-card-title">KOL定位</h3>
+            <div class="kr-kv-list kr-kv-list--stack">
+                <div class="kr-kv-stack">
+                    <span>KOL類型</span>
+                    <p>@(string.IsNullOrEmpty(catText) ? "未填寫" : catText)</p>
+                </div>
+                <div class="kr-kv-stack">
+                    <span>自我介紹</span>
+                    <p>@(string.IsNullOrEmpty(Model.Intro) ? "未填寫" : Model.Intro)</p>
+                </div>
+                <div class="kr-kv-stack">
+                    <span>可合作條件</span>
+                    <p>
+                        @if (!Model.AcceptsCash && !Model.AcceptsBarter && !Model.AcceptsCommission)
+                        {
+                            <span>未填寫</span>
+                        }
+                        else
+                        {
+                            @(Model.AcceptsCash ? "✓ 現金酬勞　" : "")
+                            @(Model.AcceptsBarter ? "✓ 體驗項目　" : "")
+                            @(Model.AcceptsCommission ? "✓ 導購分潤" : "")
+                        }
+                    </p>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+<!-- ===== 社群頻道 ===== -->
+<section class="kr-section">
+    <h2 class="section-title kr-section-title"><i class="fa-solid fa-share-nodes"></i> 社群頻道</h2>
+    <div class="content-card kr-section-card">
+        <div class="table-section">
+            <table class="data-table kr-table">
+                <thead>
+                    <tr>
+                        <th>平台</th>
+                        <th>帳號名稱</th>
+                        <th>粉絲數</th>
+                        <th>資料來源</th>
+                        <th>最後更新</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sa in Model.SocialAccounts)
+                    {
+                        <tr>
+                            <td>
+                                <i class="@PlatformIcon(sa.Platform) kr-platform-icon"></i>
+                                @PlatformLabel(sa.Platform)
+                            </td>
+                            <td>@sa.AccountName</td>
+                            <td>@((sa.FollowersCount ?? 0).ToString("N0"))</td>
+                            <td>@DataSourceLabel(sa.DataSource)</td>
+                            <td>
+                                @((sa.LastSyncAt ?? sa.UpdatedAt).ToString("yyyy-MM-dd"))
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.SocialAccounts.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="empty-state">尚未填寫社群帳號。</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (needsConfirm.Any())
+        {
+            <div class="kr-notice-box">
+                <span class="kr-notice-title"><i class="fa-solid fa-triangle-exclamation"></i> 社群審核提醒</span>
+                <ul>
+                    @foreach (var s in needsConfirm)
+                    {
+                        <li>確認 @PlatformLabel(s.Platform) 頻道連結是否與實際帳號相符（@s.AccountName）</li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ===== 收款資料 ===== -->
+<section class="kr-section">
+    <h2 class="section-title kr-section-title"><i class="fa-solid fa-building-columns"></i> 收款資料</h2>
+    @if (Model.BankAccount is not null)
+    {
+        <div class="kr-card-grid kr-card-grid--payment">
+            <article class="kr-info-card">
+                <div class="kr-kv-pair-grid">
+                    <div class="kr-kv-block">
+                        <span>收款身份</span>
+                        <strong>@BankAccountTypeLabel(Model.BankAccount.AccountType)</strong>
+                    </div>
+                    <div class="kr-kv-block">
+                        <span>收款戶名</span>
+                        <strong>@Model.BankAccount.AccountName</strong>
+                    </div>
+                    <div class="kr-kv-block">
+                        <span>銀行</span>
+                        <strong>@Model.BankAccount.BankCode @Model.BankAccount.BankName</strong>
+                    </div>
+                    <div class="kr-kv-block">
+                        <span>銀行帳號</span>
+                        <strong>@Model.BankAccount.MaskedAccountNumber</strong>
+                    </div>
+                    <div class="kr-kv-block">
+                        <span>收款資料狀態</span>
+                        <strong class="@(Model.BankAccount.Status == 2 ? "kr-text-success" : "")">
+                            @BankStatusLabel(Model.BankAccount.Status)
+                        </strong>
+                    </div>
+                    <div class="kr-kv-block">
+                        <span>最近更新</span>
+                        <strong>@Model.BankAccount.UpdatedAt.ToString("yyyy-MM-dd HH:mm")</strong>
+                    </div>
+                </div>
+            </article>
+
+            <aside class="kr-payment-hint">
+                <h3><i class="fa-solid fa-shield-halved"></i> 隱私與安全</h3>
+                <p>收款資料僅供查核，不顯示完整敏感資訊。</p>
+            </aside>
+        </div>
+    }
+    else
+    {
+        <div class="content-card">
+            <p class="empty-state">此 KOL 尚未填寫收款資料。</p>
+        </div>
+    }
+</section>
+
+<!-- ===== KOL審核 ===== -->
+<section class="kr-section">
+    <h2 class="section-title kr-section-title"><i class="fa-solid fa-gavel"></i> KOL審核</h2>
+    <div class="kr-card-grid kr-card-grid--review">
+        <article class="kr-info-card">
+            <h3 class="kr-card-title">審核狀態</h3>
+            <div class="kr-review-meta">
+                <div class="kr-review-row">
+                    <span>當前狀態</span>
+                    <strong><span class="kr-badge @verifyBadgeCss">@verifyBadgeText</span></strong>
+                </div>
+                <div class="kr-review-row">
+                    <span>送審時間</span>
+                    <strong>@Model.SubmittedAt.ToString("yyyy-MM-dd HH:mm")</strong>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.RejectionNote))
+            {
+                <div class="kr-reject-box">
+                    <span>退回原因/審核意見：</span>
+                    <p>@Model.RejectionNote</p>
+                </div>
+            }
+        </article>
+
+        @if (isPending || isRejected)
+        {
+            <article class="kr-info-card">
+                <h3 class="kr-card-title">資料審核</h3>
+                <form id="form-reject" asp-action="ReviewReject" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="KolId" value="@Model.KolId" />
+                    <textarea name="RejectionNote" class="kr-review-textarea" rows="4" placeholder="請輸入退回原因（退回修改時必填）..."
+                              aria-label="審核意見"></textarea>
+                </form>
+                <form id="form-approve" asp-action="ReviewApprove" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.KolId" />
+                </form>
+                <div class="kr-review-actions">
+                    <button type="submit" form="form-reject" class="kr-review-btn kr-review-btn--reject">退回修改</button>
+                    <button type="submit" form="form-approve" class="kr-review-btn kr-review-btn--approve"
+                            onclick="return confirm('確認審核通過此 KOL？')">審核通過</button>
+                </div>
+            </article>
+        }
+        else
+        {
+            <article class="kr-info-card">
+                <h3 class="kr-card-title">資料審核</h3>
+                <p class="kr-review-done">
+                    @if (isApproved)
+                    {
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>此 KOL 已通過審核。</span>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-ban"></i>
+                        <span>此 KOL 目前無法進行審核操作。</span>
+                    }
+                </p>
+            </article>
+        }
+    </div>
+</section>

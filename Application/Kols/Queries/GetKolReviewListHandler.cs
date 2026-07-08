@@ -20,9 +20,10 @@ public sealed class GetKolReviewListHandler(
 
         var (items, totalCount) = await kolRepo.GetReviewListAsync(
             query.Keyword,
-            query.VerificationStatus,
+            query.StatusFilter,
             query.Category,
             query.Platform,
+            query.SubmittedDate,
             pageQuery,
             uow.Session,
             ct);

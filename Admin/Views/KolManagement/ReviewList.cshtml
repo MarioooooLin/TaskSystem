@@ -1,22 +1,84 @@
-@* 待 Infrastructure KolRepository SQL 完成後加上 @model
-   @model Common.Pagination.PagedResult<Application.Kols.DTOs.KolReviewListItemDto> *@
+@model Admin.ViewModels.Kol.KolReviewIndexViewModel
+@using Domain.Enums
 @{
     ViewData["Title"] = "審核新進KOL";
+    var q = Model.Query;
+    var keyword = q.Keyword ?? "";
+    var statusFilter = q.StatusFilter ?? "";
+    var submittedDate = q.SubmittedDate ?? "";
+    var list = Model.List;
+    var summary = Model.Summary;
+    var actionUrl = Url.Action("ReviewList")!;
+
+    var platformNames = new Dictionary<short, string>
+    {
+        [1] = "X",
+        [2] = "IG",
+        [3] = "FB",
+        [4] = "YT",
+        [5] = "Blog",
+        [6] = "小紅書",
+        [7] = "TikTok",
+        [8] = "抖音",
+        [9] = "Threads",
+        [10] = "Snapchat",
+        [11] = "WeChat",
+    };
+
+    var categoryNames = new Dictionary<short, string>
+    {
+        [1] = "旅遊",
+        [2] = "旅行",
+        [3] = "時尚",
+        [4] = "美妝",
+        [5] = "居家生活",
+        [6] = "親子",
+        [7] = "寵物",
+        [8] = "遊戲",
+        [9] = "音樂",
+        [10] = "影視",
+        [11] = "藝術",
+        [12] = "書籍",
+        [13] = "科技",
+        [14] = "財經",
+        [15] = "教育",
+        [16] = "職場",
+        [17] = "健康",
+        [18] = "健身",
+        [19] = "運動",
+        [20] = "飲食",
+        [21] = "養生",
+        [22] = "公益",
+        [23] = "環保",
+        [24] = "政治",
+        [25] = "文化",
+        [26] = "跨界",
+    };
+
+    var mainCategories = new (short Id, string Name)[]
+    {
+        (1, "旅遊"), (20, "飲食"), (5, "居家生活"), (6, "親子"), (13, "科技"), (17, "健康"),
+    };
+    var mainPlatforms = new (short Id, string Name)[]
+    {
+        (2, "IG"), (4, "YT"), (7, "TikTok"), (9, "Threads"), (5, "Blog"),
+    };
 }
 
 @section PageCss {
-    <link rel="stylesheet" href="~/css/kol-review.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/kol-new.css" asp-append-version="true" />
 }
 
 <!-- ===== PAGE HEADER ===== -->
 <div class="page-header kn-page-header">
     <div class="page-header__left">
-        <nav class="adm-breadcrumb">首頁 &rsaquo; KOL管理 &rsaquo; 審核新進KOL</nav>
         <h1 class="page-title">審核新進KOL</h1>
         <p class="page-subtitle">查看待審核、重送審核與退回待補的KOL，並進入審核詳情頁完成審核判斷</p>
     </div>
     <div class="kn-header-actions">
-        <a asp-action="Index" class="kn-btn kn-btn--ghost">返回KOL管理</a>
+        <a asp-action="ReviewList" class="kn-btn kn-btn--ghost">
+            <i class="fa-solid fa-rotate-right"></i> 重新整理
+        </a>
     </div>
 </div>
 
@@ -24,42 +86,102 @@
 <div class="content-card kn-kpi-row">
     <div class="kn-kpi-item">
         <span class="kn-kpi-label"><i class="fa-regular fa-clock"></i> 待審核</span>
-        <strong class="kn-kpi-value">—</strong>
+        <strong class="kn-kpi-value">@summary.PendingCount</strong>
     </div>
     <div class="kn-kpi-item">
         <span class="kn-kpi-label"><i class="fa-solid fa-rotate"></i> 重送審核</span>
-        <strong class="kn-kpi-value">—</strong>
+        <strong class="kn-kpi-value">@summary.ResubmitCount</strong>
     </div>
     <div class="kn-kpi-item">
-        <span class="kn-kpi-label"><i class="fa-solid fa-rotate-left"></i> 已退回待補</span>
-        <strong class="kn-kpi-value">—</strong>
+        <span class="kn-kpi-label"><i class="fa-regular fa-rectangle-list"></i> 已退回待補</span>
+        <strong class="kn-kpi-value kn-kpi-value--danger">@summary.ReturnedCount</strong>
+    </div>
+    <div class="kn-kpi-item">
+        <span class="kn-kpi-label"><i class="fa-regular fa-user"></i> 今日新增</span>
+        <strong class="kn-kpi-value">@summary.TodayNewCount</strong>
+    </div>
+    <div class="kn-kpi-item kn-kpi-item--last">
+        <span class="kn-kpi-label kn-kpi-label--danger"><i class="fa-solid fa-triangle-exclamation"></i> 超過3日未審</span>
+        <strong class="kn-kpi-value kn-kpi-value--danger">@summary.OverdueCount</strong>
     </div>
 </div>
 
 <!-- ===== FILTER BAR ===== -->
-<form method="get" asp-action="ReviewList">
+<form id="kn-filter-form" method="get" asp-action="ReviewList" hx-get="@actionUrl" hx-target="#kn-results"
+      hx-select="#kn-results" hx-swap="outerHTML" hx-push-url="true">
+    <input type="hidden" name="statusFilter" id="statusFilter" value="@statusFilter" />
+    <input type="hidden" name="category" id="hidCategory" value="@(q.Category?.ToString() ?? "")" />
+    <input type="hidden" name="platform" id="hidPlatform" value="@(q.Platform?.ToString() ?? "")" />
     <div class="content-card kn-filter">
-        <div class="kn-filter-row">
+
+        <!-- Row 1：關鍵字 + 狀態 chips -->
+        <div class="kn-filter-row kn-filter-row--top">
             <div class="kn-filter-item kn-filter-item--grow">
-                <label class="bm-filter-label">關鍵字搜尋</label>
                 <div class="filter-search">
                     <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
-                    <input type="text" name="keyword" class="filter-search__input" placeholder="搜尋KOL名稱、Email" />
+                    <input type="text" name="keyword" value="@keyword" class="filter-search__input"
+                           placeholder="搜尋 KOL名稱、Email、手機、社群帳號..." />
                 </div>
             </div>
+            <div class="kn-status-wrap">
+                <span class="kn-status-label">狀態篩選：</span>
+                <div class="kn-status-chips">
+                    <button type="button"
+                            class="kn-chip @(statusFilter == "" || statusFilter == null ? "kn-chip--active" : "")"
+                            data-chip="" onclick="setStatusChip(this, '')">
+                        <i class="fa-solid fa-check"></i> 待審核
+                    </button>
+                    <button type="button" class="kn-chip @(statusFilter == "resubmit" ? "kn-chip--active" : "")"
+                            data-chip="resubmit" onclick="setStatusChip(this, 'resubmit')">
+                        <i class="fa-solid fa-rotate"></i> 重送審核
+                    </button>
+                    <button type="button" class="kn-chip @(statusFilter == "returned" ? "kn-chip--active" : "")"
+                            data-chip="returned" onclick="setStatusChip(this, 'returned')">已退回待補</button>
+                    <button type="button" class="kn-chip @(statusFilter == "approved" ? "kn-chip--active" : "")"
+                            data-chip="approved" onclick="setStatusChip(this, 'approved')">已通過</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2：細部篩選 -->
+        <div class="kn-filter-row">
             <div class="kn-filter-item">
-                <label class="bm-filter-label">審核狀態</label>
+                <label class="kn-filter-label">KOL 類型</label>
                 <div class="filter-select-wrap">
-                    <select name="verificationStatus" class="filter-select">
+                    <select id="selCategory" class="filter-select"
+                            onchange="document.getElementById('hidCategory').value=this.value">
                         <option value="">全部</option>
-                        <option value="1">待審核</option>
-                        <option value="3">已退回</option>
+                        @foreach (var (id, name) in mainCategories)
+                        {
+                            <option value="@id" selected="@(q.Category == id)">@name</option>
+                        }
                     </select>
                     <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
                 </div>
             </div>
+            <div class="kn-filter-item">
+                <label class="kn-filter-label">主要平台</label>
+                <div class="filter-select-wrap">
+                    <select id="selPlatform" class="filter-select"
+                            onchange="document.getElementById('hidPlatform').value=this.value">
+                        <option value="">全部</option>
+                        @foreach (var (id, name) in mainPlatforms)
+                        {
+                            <option value="@id" selected="@(q.Platform == id)">@name</option>
+                        }
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="kn-filter-item">
+                <label class="kn-filter-label">送審日期</label>
+                <div class="filter-date-input">
+                    <input type="date" name="submittedDate" value="@submittedDate" class="date-input"
+                           aria-label="送審日期" />
+                </div>
+            </div>
             <div class="kn-filter-actions">
-                <a asp-action="ReviewList" class="bm-btn-clear">清除篩選</a>
+                <a asp-action="ReviewList" class="kn-clear-btn">清除篩選</a>
                 <button type="submit" class="btn-primary">執行篩選</button>
             </div>
         </div>
@@ -67,37 +189,185 @@
 </form>
 
 <!-- ===== DATA TABLE ===== -->
-<div class="content-card">
-    <div class="table-section">
-        <table class="data-table kn-table">
-            <thead>
-                <tr>
-                    <th>KOL名稱</th>
-                    <th>類型 / 平台</th>
-                    <th>粉絲總數</th>
-                    <th>審核狀態</th>
-                    <th>資料完整度</th>
-                    <th>送審日期</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                @* 待 KolRepository SQL 完成後替換
-                @foreach (var kol in Model.Items)
-                {
+<div id="kn-results">
+    <div class="content-card">
+        <div class="table-section">
+            <table class="data-table kn-table">
+                <thead>
                     <tr>
-                        <td>@kol.DisplayName</td>
-                        ...
-                        <td>
-                            <a asp-action="Detail" asp-route-id="@kol.KolId" class="action-link">查看詳情</a>
-                        </td>
+                        <th>KOL / 類型</th>
+                        <th>主要平台</th>
+                        <th>追蹤總數</th>
+                        <th>資料完整度</th>
+                        <th>審核狀態</th>
+                        <th>送審時間</th>
+                        <th>操作</th>
                     </tr>
-                }
-                *@
-                <tr>
-                    <td colspan="7" class="empty-state">資料庫連線尚未完成，待 Repository 實作後顯示資料。</td>
-                </tr>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var kol in list.Items)
+                    {
+                        var avatarChar = kol.DisplayName.Length > 0 ? kol.DisplayName[0].ToString() : "?";
+                        var catText = string.Join(" / ", kol.Categories.Take(2).Select(c =>
+                            categoryNames.TryGetValue(c, out var n) ? n : c.ToString()));
+
+                        var (pillCss, pillText) = (kol.VerificationStatus, kol.IsResubmit) switch
+                        {
+                            (VerificationStatus.Pending, true) => ("kn-status-pill--resubmit", "重送審核"),
+                            (VerificationStatus.Pending, _) => ("kn-status-pill--pending", "待審核"),
+                            (VerificationStatus.Rejected, _) => ("kn-status-pill--returned", "已退回待補"),
+                            _ => ("kn-status-pill--pending", "待審核"),
+                        };
+
+                        var progressCss = kol.ProfileCompleteness < 80 ? "kn-progress kn-progress--danger" : "kn-progress";
+                        var progressValCss = kol.ProfileCompleteness < 80 ? "kn-progress-value kn-progress-value--danger" :
+        "kn-progress-value";
+
+                        <tr>
+                            <td>
+                                <div class="kn-kol-cell">
+                                    <span class="kn-avatar">@avatarChar</span>
+                                    <div class="kn-kol-meta">
+                                        <strong>@kol.DisplayName</strong>
+                                        <span>@(string.IsNullOrEmpty(catText) ? "—" : catText)</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="kn-platform-list">
+                                    @if (kol.Platforms.Count > 0)
+                                    {
+                                        foreach (var p in kol.Platforms.Take(3))
+                                        {
+                                            var pName = platformNames.TryGetValue(p, out var pn) ? pn : p.ToString();
+                                            <span class="kn-platform-tag">@pName</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="kn-platform-tag">—</span>
+                                    }
+                                </div>
+                            </td>
+                            <td>@kol.TotalFollowers.ToString("N0")</td>
+                            <td>
+                                <div class="kn-progress-cell">
+                                    <div class="@progressCss">
+                                        <span style="width: @kol.ProfileCompleteness%"></span>
+                                    </div>
+                                    <span class="@progressValCss">@kol.ProfileCompleteness%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="kn-status-pill @pillCss">
+                                    <i class="fa-solid fa-circle"></i> @pillText
+                                </span>
+                            </td>
+                            <td class="kn-time-cell">
+                                @kol.SubmittedAt.ToString("yyyy-MM-dd")<br />
+                                @kol.SubmittedAt.ToString("HH:mm")
+                            </td>
+                            <td>
+                                <a asp-action="ReviewDetail" asp-route-id="@kol.KolId" class="kn-enter-link">進入審核</a>
+                            </td>
+                        </tr>
+                    }
+                    @if (!list.Items.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="empty-state">查無符合條件的 KOL。</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (list.TotalPages > 1 || list.TotalCount > 0)
+        {
+            <div class="kn-table-footer pagination">
+                <span class="pagination__info">
+                    顯示 @((list.Page - 1) * list.PageSize + 1) - @Math.Min(list.Page * list.PageSize, list.TotalCount) 筆，
+                    共 @list.TotalCount 筆
+                </span>
+                <div class="pagination__nav">
+                    @if (list.HasPreviousPage)
+                    {
+                        <button type="button" class="page-btn" onclick="knGoToPage(@(list.Page - 1))" aria-label="上一頁">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="page-btn" disabled aria-label="上一頁">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                    }
+
+                    @{
+                        var totalPages = list.TotalPages;
+                        var curPage = list.Page;
+                        var pages = Enumerable.Range(1, totalPages)
+                            .Where(p => p == 1 || p == totalPages || Math.Abs(p - curPage) <= 1)
+                            .ToList();
+                        int? prev = null;
+                    }
+                    @foreach (var p in pages)
+                    {
+                        if (prev.HasValue && p - prev.Value > 1)
+                        {
+                            <span class="page-ellipsis">...</span>
+                        }
+                        <button type="button" class="page-btn @(p == curPage ? "active" : "")" onclick="knGoToPage(@p)" @(p ==
+                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
+                        prev = p;
+                    }
+
+                    @if (list.HasNextPage)
+                    {
+                        <button type="button" class="page-btn" onclick="knGoToPage(@(list.Page + 1))" aria-label="下一頁">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="page-btn" disabled aria-label="下一頁">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    }
+                </div>
+            </div>
+        }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict';
+
+            // ── status chip 單選 ─────────────────────────────────────────
+            window.setStatusChip = function (btn, value) {
+                document.querySelectorAll('.kn-status-chips .kn-chip').forEach(function (c) {
+                    c.classList.remove('kn-chip--active');
+                });
+                btn.classList.add('kn-chip--active');
+                document.getElementById('statusFilter').value = value;
+            };
+
+            // ── 分頁跳轉 ────────────────────────────────────────────────
+            window.knGoToPage = function (page) {
+                var form = document.getElementById('kn-filter-form');
+                var input = form.querySelector('[name="page"]');
+                if (!input) {
+                    input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'page';
+                    form.appendChild(input);
+                }
+                input.value = page;
+                form.requestSubmit();
+            };
+        })();
+    </script>
+}
+
