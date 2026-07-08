@@ -10,7 +10,8 @@ namespace Application.Kols.Commands;
 public sealed class RejectKolHandler(
     IUnitOfWork unitOfWork,
     IKolRepository kolRepo,
-    ICurrentUser currentUser)
+    ICurrentUser currentUser,
+    IActivityLogRepository activityLogRepo)
 {
     public async Task<Result> HandleAsync(RejectKolCommand cmd, CancellationToken ct = default)
     {
@@ -31,6 +32,16 @@ public sealed class RejectKolHandler(
         kol.UpdatedAt = DateTime.UtcNow;
 
         await kolRepo.UpdateAsync(kol, uow.Session, ct);
+
+        await activityLogRepo.WriteAsync(
+            targetType: "KolProfiles",
+            targetId: cmd.KolId,
+            actorUserId: currentUser.UserId,
+            action: "Reject",
+            note: cmd.RejectionNote,
+            session: uow.Session,
+            ct: ct);
+
         await uow.CommitAsync(ct);
 
         return Result.Success();

@@ -10,7 +10,8 @@ namespace Application.Kols.Commands;
 public sealed class ApproveKolHandler(
     IUnitOfWork unitOfWork,
     IKolRepository kolRepo,
-    ICurrentUser currentUser)
+    ICurrentUser currentUser,
+    IActivityLogRepository activityLogRepo)
 {
     public async Task<Result> HandleAsync(ApproveKolCommand cmd, CancellationToken ct = default)
     {
@@ -32,6 +33,16 @@ public sealed class ApproveKolHandler(
         kol.UpdatedAt = DateTime.UtcNow;
 
         await kolRepo.UpdateAsync(kol, uow.Session, ct);
+
+        await activityLogRepo.WriteAsync(
+            targetType: "KolProfiles",
+            targetId: cmd.KolId,
+            actorUserId: currentUser.UserId,
+            action: "Approve",
+            note: null,
+            session: uow.Session,
+            ct: ct);
+
         await uow.CommitAsync(ct);
 
         return Result.Success();

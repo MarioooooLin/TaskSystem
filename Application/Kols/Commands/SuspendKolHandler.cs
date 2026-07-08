@@ -11,7 +11,8 @@ public sealed class SuspendKolHandler(
     IUnitOfWork unitOfWork,
     IKolRepository kolRepo,
     IUserRepository userRepo,
-    ICurrentUser currentUser)
+    ICurrentUser currentUser,
+    IActivityLogRepository activityLogRepo)
 {
     public async Task<Result> HandleAsync(SuspendKolCommand cmd, CancellationToken ct = default)
     {
@@ -40,6 +41,15 @@ public sealed class SuspendKolHandler(
             user.UpdatedAt = DateTime.UtcNow;
             await userRepo.UpdateAsync(user, uow.Session, ct);
         }
+
+        await activityLogRepo.WriteAsync(
+            targetType: "KolProfiles",
+            targetId: cmd.KolId,
+            actorUserId: currentUser.UserId,
+            action: "Suspend",
+            note: cmd.SuspensionNote,
+            session: uow.Session,
+            ct: ct);
 
         await uow.CommitAsync(ct);
 

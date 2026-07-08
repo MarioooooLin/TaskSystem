@@ -14,11 +14,12 @@ public sealed class KolStatsRepository : IKolStatsRepository
         const string sql = """
             SELECT
                 COUNT(*)                                                    AS TaskCount,
-                SUM(CASE WHEN t.Status = 5 THEN 1 ELSE 0 END)             AS CompletedTaskCount,
-                SUM(CASE WHEN t.Status IN (3, 4) THEN 1 ELSE 0 END)       AS PendingReviewCount,
+                SUM(CASE WHEN t.Status = 6 THEN 1 ELSE 0 END)             AS CompletedTaskCount,
+                SUM(CASE WHEN t.Status = 4 THEN 1 ELSE 0 END)             AS PendingReviewCount,
                 (SELECT COUNT(*) FROM Disputes d
-                 JOIN Cases c ON c.Id = d.CaseId
-                 WHERE c.KolId = @KolId)                                   AS DisputeCount
+                 JOIN Tasks dt ON dt.Id = d.TaskId
+                 WHERE dt.KolId = @KolId
+                   AND d.Status IN (1, 2))                                 AS DisputeCount
             FROM Tasks t
             WHERE t.KolId = @KolId
             """;
@@ -60,12 +61,12 @@ public sealed class KolStatsRepository : IKolStatsRepository
                 m.CompanyName   AS MerchantName,
                 c.CashRewardAmount,
                 t.CompletedAt,
-                t.CreatedAt
+                c.CreatedAt
             FROM Tasks t
-            JOIN Cases c    ON c.Id = t.CaseId
+            JOIN Cases c     ON c.Id = t.CaseId
             JOIN Merchants m ON m.Id = c.MerchantId
             WHERE t.KolId = @KolId
-            ORDER BY t.CreatedAt DESC
+            ORDER BY c.CreatedAt DESC
             """;
 
         var result = await session.Connection.QueryAsync<KolTaskSummaryDto>(
