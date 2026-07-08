@@ -9,6 +9,7 @@ namespace Admin.Controllers;
 [Authorize]
 public sealed class KolManagementController(
     GetKolListHandler listHandler,
+    GetKolSummaryHandler summaryHandler,
     GetKolReviewListHandler reviewListHandler,
     GetKolDetailHandler detailHandler,
     ApproveKolHandler approveHandler,
@@ -23,14 +24,25 @@ public sealed class KolManagementController(
         var query = new GetKolListQuery(
             vm.Keyword,
             vm.VerificationStatus,
-            vm.Category,
-            vm.Platform,
+            vm.Categories.Count > 0 ? vm.Categories : null,
+            vm.Platforms.Count > 0 ? vm.Platforms : null,
             vm.HasBankAccount,
+            vm.DateFrom,
+            vm.DateTo,
             vm.Page,
             vm.PageSize);
 
-        var result = await listHandler.HandleAsync(query);
-        return View(result.Value);
+        var listResult = await listHandler.HandleAsync(query);
+        var summaryResult = await summaryHandler.HandleAsync();
+
+        var model = new KolIndexViewModel
+        {
+            List = listResult.Value,
+            Summary = summaryResult.Value,
+            Query = vm,
+        };
+
+        return View(model);
     }
 
     // ── GET /KolManagement/ReviewList ──────────────────────

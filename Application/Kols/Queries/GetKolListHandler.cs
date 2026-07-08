@@ -21,9 +21,11 @@ public sealed class GetKolListHandler(
         var (items, totalCount) = await kolRepo.GetListAsync(
             query.Keyword,
             query.VerificationStatus,
-            query.Category,
-            query.Platform,
+            query.Categories,
+            query.Platforms,
             query.HasBankAccount,
+            query.DateFrom,
+            query.DateTo,
             pageQuery,
             uow.Session,
             ct);

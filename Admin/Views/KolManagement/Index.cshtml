@@ -1,7 +1,82 @@
-@* 待 Infrastructure KolRepository SQL 完成後，取消下一行注釋並加上 @model
-   @model Common.Pagination.PagedResult<Application.Kols.DTOs.KolListItemDto> *@
+@model Admin.ViewModels.Kol.KolIndexViewModel
+@using Domain.Enums
 @{
     ViewData["Title"] = "KOL管理";
+    var q = Model.Query;
+    var keyword = q.Keyword ?? "";
+    var verificationStatus = q.VerificationStatus?.ToString("D") ?? "";
+    var selectedCategories = q.Categories?.ToHashSet() ?? new HashSet<short>();
+    var selectedPlatforms = q.Platforms?.ToHashSet() ?? new HashSet<short>();
+    var hasBankAccount = q.HasBankAccount?.ToString().ToLower() ?? "";
+    var dateFrom = q.DateFrom?.ToString("yyyy-MM-dd") ?? "";
+    var dateTo = q.DateTo?.ToString("yyyy-MM-dd") ?? "";
+    var list = Model.List;
+
+    var categoryNames = new Dictionary<short, string>
+    {
+        [1] = "旅遊",
+        [2] = "旅行",
+        [3] = "時尚",
+        [4] = "美妝",
+        [5] = "居家生活",
+        [6] = "親子",
+        [7] = "寵物",
+        [8] = "遊戲",
+        [9] = "音樂",
+        [10] = "影視",
+        [11] = "藝術",
+        [12] = "書籍",
+        [13] = "科技",
+        [14] = "財經",
+        [15] = "教育",
+        [16] = "職場",
+        [17] = "健康",
+        [18] = "健身",
+        [19] = "運動",
+        [20] = "飲食",
+        [21] = "養生",
+        [22] = "公益",
+        [23] = "環保",
+        [24] = "政治",
+        [25] = "文化",
+        [26] = "跨界"
+    };
+    var categoryCss = new Dictionary<short, string>
+    {
+        [1] = "km-tag--travel",
+        [2] = "km-tag--travel",
+        [3] = "km-tag--fashion",
+        [4] = "km-tag--fashion",
+        [5] = "km-tag--lifestyle",
+        [6] = "km-tag--family",
+        [7] = "km-tag--lifestyle",
+        [20] = "km-tag--food",
+    };
+
+    var platformNames = new Dictionary<short, string>
+    {
+        [1] = "X",
+        [2] = "IG",
+        [3] = "FB",
+        [4] = "YT",
+        [5] = "Blog",
+        [6] = "小紅書",
+        [7] = "TikTok",
+        [8] = "抖音",
+        [9] = "Threads",
+        [10] = "Snapchat",
+        [11] = "WeChat"
+    };
+
+    var mainCategories = new (short Id, string Name)[]
+    {
+        (1, "旅遊"), (20, "飲食"), (5, "居家生活"), (6, "親子"), (13, "科技"), (17, "健康")
+    };
+    var mainPlatforms = new (short Id, string Name)[]
+    {
+        (2, "IG"), (4, "YT"), (7, "TikTok"), (9, "Threads"), (5, "Blog")
+    };
+    var actionUrl = Url.Action("Index")!;
 }
 
 @section PageCss {
@@ -16,7 +91,7 @@
         <p class="page-subtitle">搜尋與查看KOL資料、審核狀態、社群帳號、任務績效與異常狀況</p>
     </div>
     <div class="page-header__right">
-        <button class="btn-primary btn-primary--ghost">
+        <button class="btn-primary btn-primary--ghost" disabled>
             <i class="fa-solid fa-file-export"></i> 匯出KOL清單
         </button>
         <a asp-action="ReviewList" class="btn-primary">
@@ -25,44 +100,46 @@
     </div>
 </div>
 
-<!-- ===== KPI STATS（固定統計，不跟隨篩選）===== -->
+<!-- ===== KPI STATS（全域計數，不受篩選影響）===== -->
 <div class="content-card km-kpi-row">
     <div class="km-kpi-item">
         <span class="km-kpi-label">全部KOL</span>
-        <strong class="km-kpi-value">— 位</strong>
+        <strong class="km-kpi-value">@Model.Summary.TotalCount 位</strong>
     </div>
     <div class="km-kpi-item">
         <span class="km-kpi-label">啟用中</span>
-        <strong class="km-kpi-value km-kpi-value--green">— 位</strong>
+        <strong class="km-kpi-value km-kpi-value--green">@Model.Summary.ActiveCount 位</strong>
     </div>
     <div class="km-kpi-item">
         <span class="km-kpi-label">待審核</span>
-        <strong class="km-kpi-value km-kpi-value--orange">— 位</strong>
+        <strong class="km-kpi-value km-kpi-value--orange">@Model.Summary.PendingCount 位</strong>
     </div>
     <div class="km-kpi-item">
         <span class="km-kpi-label">已退回</span>
-        <strong class="km-kpi-value km-kpi-value--muted">— 位</strong>
+        <strong class="km-kpi-value km-kpi-value--muted">@Model.Summary.RejectedCount 位</strong>
     </div>
     <div class="km-kpi-item">
         <span class="km-kpi-label">停權中</span>
-        <strong class="km-kpi-value km-kpi-value--red">— 位</strong>
+        <strong class="km-kpi-value km-kpi-value--red">@Model.Summary.SuspendedCount 位</strong>
     </div>
     <div class="km-kpi-item km-kpi-item--last">
         <span class="km-kpi-label">未結案異常</span>
-        <strong class="km-kpi-value km-kpi-value--danger">— 件</strong>
+        <strong class="km-kpi-value km-kpi-value--danger">@Model.Summary.AbnormalCount 件</strong>
     </div>
 </div>
 
 <!-- ===== FILTER BAR ===== -->
-<form method="get" asp-action="Index">
+<form id="kol-filter-form" method="get" asp-action="Index" hx-get="@actionUrl" hx-target="#kol-results"
+      hx-select="#kol-results" hx-swap="outerHTML" hx-push-url="true">
     <div class="content-card km-filter">
 
+        <!-- Row 1：關鍵字 + KOL狀態 -->
         <div class="km-filter-row">
             <div class="km-filter-item km-filter-item--grow">
                 <label class="bm-filter-label">關鍵字搜尋</label>
                 <div class="filter-search">
                     <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
-                    <input type="text" name="keyword" class="filter-search__input"
+                    <input type="text" name="keyword" value="@keyword" class="filter-search__input"
                            placeholder="搜尋KOL名稱、Email、手機、社群帳號" />
                 </div>
             </div>
@@ -71,28 +148,87 @@
                 <div class="filter-select-wrap">
                     <select name="verificationStatus" class="filter-select">
                         <option value="">全部</option>
-                        <option value="1">待審核</option>
-                        <option value="2">啟用中</option>
-                        <option value="3">已退回</option>
-                        <option value="4">停權中</option>
+                        <option value="2" selected="@(verificationStatus == "2")">啟用中</option>
+                        <option value="1" selected="@(verificationStatus == "1")">待審核</option>
+                        <option value="3" selected="@(verificationStatus == "3")">已退回</option>
+                        <option value="4" selected="@(verificationStatus == "4")">停權中</option>
                     </select>
                     <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
                 </div>
             </div>
         </div>
 
+        <!-- Row 2：KOL類型 chips（多選，點選後按執行篩選才送出）-->
+        <div class="km-filter-row km-chip-row">
+            <label class="bm-filter-label">KOL類型</label>
+            <div class="km-chip-group">
+                <button type="button" data-group="category" data-value=""
+                        class="km-chip @(selectedCategories.Count == 0 ? "km-chip--active" : "")">全部</button>
+                @foreach (var (id, name) in mainCategories)
+                {
+                    <button type="button" data-group="category" data-value="@id"
+                            class="km-chip @(selectedCategories.Contains(id) ? "km-chip--active" : "")">@name</button>
+                }
+            </div>
+        </div>
+
+        <!-- Row 3：主要平台 chips（多選，點選後按執行篩選才送出）-->
+        <div class="km-filter-row km-chip-row">
+            <label class="bm-filter-label">主要平台</label>
+            <div class="km-chip-group">
+                <button type="button" data-group="platform" data-value=""
+                        class="km-chip @(selectedPlatforms.Count == 0 ? "km-chip--active" : "")">全部</button>
+                @foreach (var (id, name) in mainPlatforms)
+                {
+                    <button type="button" data-group="platform" data-value="@id"
+                            class="km-chip @(selectedPlatforms.Contains(id) ? "km-chip--active" : "")">@name</button>
+                }
+            </div>
+        </div>
+
+        <!-- Row 4：收款資料 + 社群帳號狀態 + 建立日期 + 按鈕 -->
         <div class="km-filter-row">
+            <div class="km-filter-item">
+                <label class="bm-filter-label">收款資料狀態</label>
+                <div class="filter-select-wrap">
+                    <select name="hasBankAccount" class="filter-select">
+                        <option value="">全部</option>
+                        <option value="true" selected="@(hasBankAccount == "true")">已綁定</option>
+                        <option value="false" selected="@(hasBankAccount == "false")">未綁定</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="km-filter-item">
+                <label class="bm-filter-label">社群帳號狀態 <span class="bm-tag-todo">待確認</span></label>
+                <div class="filter-select-wrap">
+                    <select class="filter-select" disabled>
+                        <option>全部</option>
+                        <option>正常</option>
+                        <option>異常</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="km-filter-item km-filter-item--grow">
+                <label class="bm-filter-label">建立日期</label>
+                <div class="km-date-range">
+                    <input type="date" name="dateFrom" value="@dateFrom" class="date-input" aria-label="開始日期" />
+                    <span class="km-date-separator">~</span>
+                    <input type="date" name="dateTo" value="@dateTo" class="date-input" aria-label="結束日期" />
+                </div>
+            </div>
             <div class="km-filter-actions">
                 <a asp-action="Index" class="bm-btn-clear">清除篩選</a>
                 <button type="submit" class="btn-primary">執行篩選</button>
             </div>
         </div>
 
-    </div>
+    </div><!-- /.km-filter -->
 </form>
 
 <!-- ===== DATA TABLE ===== -->
-<div class="content-card">
+<div id="kol-results" class="content-card">
     <div class="table-section">
         <table class="data-table km-table">
             <thead>
@@ -109,19 +245,217 @@
                 </tr>
             </thead>
             <tbody>
-                @* 待 KolRepository SQL 完成後，替換為：
-                @foreach (var kol in Model.Items)
+                @foreach (var kol in list.Items)
                 {
+                    var (statusCss, statusText) = kol.VerificationStatus switch
+                    {
+                        VerificationStatus.Approved => ("km-status km-status--active", "啟用中"),
+                        VerificationStatus.Pending => ("km-status km-status--pending", "待審核"),
+                        VerificationStatus.Rejected => ("km-status km-status--rejected", "已退回"),
+                        VerificationStatus.Suspended => ("km-status km-status--inactive", "停權中"),
+                        _ => ("km-status", "—"),
+                    };
+                    var bankCss = kol.BankAccountStatus.HasValue ? "km-status km-status--bound" : "km-status km-status--unbound";
+                    var bankText = kol.BankAccountStatus.HasValue ? "已綁定" : "未綁定";
+                    var abnormalCss = kol.DisputeCount > 0 ? "km-status km-status--alert" : "km-status km-status--success";
+
                     <tr>
-                        <td>@kol.DisplayName</td>
-                        ...
+                        <td class="km-td-name">
+                            <span class="km-name-title">@kol.DisplayName</span>
+                            <span class="km-name-sub">@(kol.Email ?? "—")</span>
+                        </td>
+                        <td>
+                            <div class="km-type-line">
+                                @if (kol.Categories.Count > 0)
+                                {
+                                    foreach (var cat in kol.Categories.Take(2))
+                                    {
+                                        var css = categoryCss.TryGetValue(cat, out var c) ? c : "";
+                                        var name = categoryNames.TryGetValue(cat, out var n) ? n : cat.ToString();
+                                        <span class="km-tag @css">@name</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="km-tag">—</span>
+                                }
+                                <span class="km-platform">
+                                    @string.Join(" / ", kol.Platforms.Take(2).Select(p =>
+                                        platformNames.TryGetValue(p, out var pn) ? pn : p.ToString()))
+                                </span>
+                            </div>
+                        </td>
+                        <td>@kol.TotalFollowers.ToString("N0")</td>
+                        <td><span class="@statusCss">@statusText</span></td>
+                        <td><span class="@bankCss">@bankText</span></td>
+                        <td>
+                            <div class="km-task-meta">
+                                <span>@kol.TaskCount 接案</span>
+                                <span class="km-task-sub">已結案 @kol.CompletedTaskCount</span>
+                            </div>
+                        </td>
+                        <td><span class="@abnormalCss">@kol.DisputeCount</span></td>
+                        <td class="km-td-date">@kol.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td class="km-actions">
+                            <a asp-action="Detail" asp-route-id="@kol.KolId" class="action-link">詳細資料</a>
+                            @if (kol.DisputeCount > 0)
+                            {
+                                <a asp-controller="CaseMonitor" asp-action="Index" asp-route-kolId="@kol.KolId"
+                                   class="action-link action-link--danger">異常</a>
+                            }
+                        </td>
                     </tr>
                 }
-                *@
-                <tr>
-                    <td colspan="9" class="empty-state">資料庫連線尚未完成，待 Repository 實作後顯示資料。</td>
-                </tr>
+                @if (!list.Items.Any())
+                {
+                    <tr>
+                        <td colspan="9" class="empty-state">查無符合條件的 KOL 資料。</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
-</div>
+
+    <!-- ===== PAGINATION ===== -->
+    @if (list.TotalPages >= 1)
+    {
+        var startItem = (list.Page - 1) * list.PageSize + 1;
+        var endItem = Math.Min(list.Page * list.PageSize, list.TotalCount);
+        <div class="pagination">
+            <span class="pagination__info">
+                顯示第 @startItem 至 @endItem 筆KOL，共計 @list.TotalCount 筆資料
+            </span>
+            <div class="pagination__nav">
+                @if (list.HasPreviousPage)
+                {
+                    <button type="button" class="page-btn" onclick="kolGoToPage(@(list.Page - 1))"><i
+                        class="fa-solid fa-chevron-left"></i></button>
+                    }
+                else
+                    {
+                        <button class="page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                    }
+
+                    @{
+                        var totalPages = list.TotalPages;
+                        var curPage = list.Page;
+                        var pages = Enumerable.Range(1, totalPages)
+                            .Where(p => p == 1 || p == totalPages || Math.Abs(p - curPage) <= 1)
+                            .ToList();
+                        int? prev = null;
+                    }
+                    @foreach (var p in pages)
+                    {
+                        if (prev.HasValue && p - prev.Value > 1)
+                        {
+                            <span class="page-ellipsis">...</span>
+                        }
+                        <button type="button" class="page-btn @(p == curPage ? "active" : "")" onclick="kolGoToPage(@p)" @(p ==
+                                                curPage ? "aria-current=\"page\"" : "")>@p</button>
+                        prev = p;
+                    }
+
+                    @if (list.HasNextPage)
+                    {
+                        <button type="button" class="page-btn" onclick="kolGoToPage(@(list.Page + 1))"><i
+                            class="fa-solid fa-chevron-right"></i></button>
+                        }
+                else
+                        {
+                            <button class="page-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        @section Scripts {
+            <script>
+                (function () {
+                    'use strict';
+
+                    // ── Chip 多選邏輯 ─────────────────────────────────────────────
+                    function initChipGroup(groupName) {
+                        const chips = Array.from(document.querySelectorAll('[data-group="' + groupName + '"]'));
+                        const allChip = chips.find(c => c.dataset.value === '');
+
+                        chips.forEach(function (chip) {
+                            chip.addEventListener('click', function () {
+                                const value = this.dataset.value;
+                                if (value === '') {
+                                    // 點「全部」：清除全部選取
+                                    chips.forEach(c => c.classList.remove('km-chip--active'));
+                                    this.classList.add('km-chip--active');
+                                } else {
+                                    // 取消「全部」
+                                    if (allChip) allChip.classList.remove('km-chip--active');
+                                    // Toggle 此 chip
+                                    this.classList.toggle('km-chip--active');
+                                    // 若全部未選取，回歸「全部」
+                                    const anyActive = chips.some(c => c.dataset.value !== '' && c.classList.contains('km-chip--active'));
+                                    if (!anyActive && allChip) allChip.classList.add('km-chip--active');
+                                }
+                            });
+                        });
+                    }
+
+                    initChipGroup('category');
+                    initChipGroup('platform');
+
+                    // ── 表單送出前注入 hidden inputs ─────────────────────────────
+                    const form = document.getElementById('kol-filter-form');
+
+                    function injectChipInputs() {
+                        form.querySelectorAll('[data-chip-input]').forEach(el => el.remove());
+                        ['category', 'platform'].forEach(function (group) {
+                            const inputName = group === 'category' ? 'categories' : 'platforms';
+                            document.querySelectorAll('[data-group="' + group + '"].km-chip--active').forEach(function (chip) {
+                                if (chip.dataset.value) {
+                                    const inp = document.createElement('input');
+                                    inp.type = 'hidden';
+                                    inp.name = inputName;
+                                    inp.value = chip.dataset.value;
+                                    inp.setAttribute('data-chip-input', group);
+                                    form.appendChild(inp);
+                                }
+                            });
+                        });
+                    }
+
+                    // capture phase：在 htmx 攔截 submit 之前先加入 hidden inputs
+                    form.addEventListener('submit', injectChipInputs, true);
+
+                    // ── 分頁導航（保留目前 chip 選取狀態）────────────────────────
+                    window.kolGoToPage = function (page) {
+                        const params = new URLSearchParams();
+
+                        // 從表單讀取目前的篩選值
+                        const keyword = form.querySelector('[name="keyword"]').value;
+                        const status = form.querySelector('[name="verificationStatus"]').value;
+                        const bank = form.querySelector('[name="hasBankAccount"]').value;
+                        const dfrom = form.querySelector('[name="dateFrom"]').value;
+                        const dto = form.querySelector('[name="dateTo"]').value;
+
+                        if (keyword) params.set('keyword', keyword);
+                        if (status) params.set('verificationStatus', status);
+                        if (bank) params.set('hasBankAccount', bank);
+                        if (dfrom) params.set('dateFrom', dfrom);
+                        if (dto) params.set('dateTo', dto);
+
+                        // 目前 chip 選取
+                        document.querySelectorAll('[data-group="category"].km-chip--active').forEach(function (c) {
+                            if (c.dataset.value) params.append('categories', c.dataset.value);
+                        });
+                        document.querySelectorAll('[data-group="platform"].km-chip--active').forEach(function (c) {
+                            if (c.dataset.value) params.append('platforms', c.dataset.value);
+                        });
+
+                        params.set('page', page);
+
+                        const url = window.location.pathname + '?' + params.toString();
+                        htmx.ajax('GET', url, { target: '#kol-results', select: '#kol-results', swap: 'outerHTML', pushUrl: url });
+                    };
+                })();
+            </script>
+        }
+

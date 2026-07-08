@@ -15,8 +15,7 @@ public static class DependencyInjection
         services.AddScoped<LoginHandler>();
 
         // ── Merchant Management ───────────────────────────
-        services.AddScoped<GetMerchantListHandler>();
-        services.AddScoped<GetMerchantDetailHandler>();
+        services.AddScoped<GetMerchantListHandler>(); services.AddScoped<GetMerchantSummaryHandler>(); services.AddScoped<GetMerchantDetailHandler>();
         services.AddScoped<SuspendMerchantHandler>();
         services.AddScoped<UnsuspendMerchantHandler>();
         services.AddScoped<UpdateMerchantHandler>();
@@ -27,6 +26,7 @@ public static class DependencyInjection
 
         // ── KOL Management ────────────────────────────────
         services.AddScoped<GetKolListHandler>();
+        services.AddScoped<GetKolSummaryHandler>();
         services.AddScoped<GetKolReviewListHandler>();
         services.AddScoped<GetKolDetailHandler>();
         services.AddScoped<ApproveKolHandler>();

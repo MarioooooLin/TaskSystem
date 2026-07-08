@@ -7,9 +7,11 @@ namespace Application.Kols.Queries;
 public sealed record GetKolListQuery(
     string? Keyword,
     VerificationStatus? VerificationStatus,
-    short? Category,
-    short? Platform,
+    IReadOnlyList<short>? Categories,
+    IReadOnlyList<short>? Platforms,
     bool? HasBankAccount,
+    DateTime? DateFrom,
+    DateTime? DateTo,
     int Page = 1,
     int PageSize = 20)
 {

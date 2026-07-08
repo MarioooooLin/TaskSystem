@@ -37,9 +37,10 @@
 完成任何代碼變更後，依序執行：
 
 1. `get_errors` 驗證無編譯錯誤
-2. 取得當前時間（Windows：`Get-Date -Format "yyyy-MM-dd HH:mm"`）
-3. 更新 `MEMORY.md`，格式如下：
-4. 回應使用者
+2. 回報變更內容與驗證結果，等待使用者確認
+3. 使用者確認後，取得當前時間（Windows：`Get-Date -Format "yyyy-MM-dd HH:mm"`）
+4. 更新 `MEMORY.md`，格式如下：
+5. 回應使用者
 
 ### 記錄格式
 
@@ -103,6 +104,13 @@ ViewModel（Admin/ViewModels/功能名稱/）
 → Repository 具體 SQL（Infrastructure/Persistence/Repositories/）
 → Controller Action（Admin/Controllers/）
 ```
+
+### HTML 轉 cshtml 規則（強制）
+
+- 前端畫面若由既有 HTML 轉換為 `.cshtml`，排版、DOM 結構、class 命名與視覺樣式應以原 HTML 為主。
+- 轉換時只加入 Razor 必要語法，例如 `@model`、`asp-action`、`asp-route-*`、條件顯示、迴圈與表單驗證訊息。
+- 不得因後端資料綁定而任意重排版面、改動 CSS class、改變區塊順序或重新設計 UI。
+- 若 HTML 與後端資料結構不一致，先保留原畫面結構，並標記 `待確認`。
 
 ---
 

@@ -47,17 +47,19 @@ public sealed class MerchantRepository : IMerchantRepository
     // ── GetListAsync ──────────────────────────────────────────────
     public async Task<(IReadOnlyList<MerchantListItemDto> Items, int TotalCount)> GetListAsync(
         string? keyword,
-        VerificationStatus? verificationStatus,
-        PageQuery page,
+        VerificationStatus? verificationStatus, string? industryType,
+        DateTime? dateFrom,
+        bool? hasCredit, PageQuery page,
         IDbSession session,
         CancellationToken ct = default)
     {
-        var where = BuildWhereClause(keyword, verificationStatus);
+        var where = BuildWhereClause(keyword, verificationStatus, industryType, dateFrom, hasCredit);
 
         var countSql = $"""
             SELECT COUNT(*)
             FROM Merchants m
             JOIN Users u ON u.Id = m.UserId
+            LEFT JOIN MerchantCreditWallets mcw ON mcw.MerchantId = m.Id
             {where}
             """;
 
@@ -66,16 +68,19 @@ public sealed class MerchantRepository : IMerchantRepository
                 m.Id                   AS MerchantId,
                 m.CompanyName,
                 m.TaxId,
+                m.IndustryType,
                 m.ContactName,
                 m.Phone,
                 u.Email                AS OwnerEmail,
                 m.VerificationStatus,
                 m.CreatedAt,
-                ISNULL(w.AvailableAmount, 0) AS AvailableAmount,
+                ISNULL(w.AvailableAmount, 0)   AS AvailableAmount,
+                ISNULL(mcw.AvailableAmount, 0) AS CreditAmount,
                 0                      AS CaseCount
             FROM Merchants m
-            JOIN  Users           u ON u.Id = m.UserId
-            LEFT JOIN MerchantWallets w ON w.MerchantId = m.Id
+            JOIN  Users              u ON u.Id = m.UserId
+            LEFT JOIN MerchantWallets    w   ON w.MerchantId = m.Id
+            LEFT JOIN MerchantCreditWallets mcw ON mcw.MerchantId = m.Id
             {where}
             ORDER BY m.CreatedAt DESC
             OFFSET @Offset ROWS
@@ -86,6 +91,8 @@ public sealed class MerchantRepository : IMerchantRepository
         {
             Keyword = string.IsNullOrWhiteSpace(keyword) ? null : $"%{keyword.Trim()}%",
             Status = verificationStatus.HasValue ? (short)verificationStatus.Value : (short?)null,
+            IndustryType = industryType,
+            DateFrom = dateFrom,
             Offset = page.Offset,
             PageSize = page.PageSize,
         };
@@ -97,6 +104,22 @@ public sealed class MerchantRepository : IMerchantRepository
             dataSql, param, session.Transaction);
 
         return (items.AsList(), totalCount);
+    }
+
+    // ── GetSummaryAsync ──────────────────────────────────────────
+    public async Task<MerchantSummaryDto> GetSummaryAsync(
+        IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            SELECT
+                COUNT(*)                                              AS TotalCount,
+                SUM(CASE WHEN VerificationStatus = 2 THEN 1 ELSE 0 END) AS ActiveCount,
+                SUM(CASE WHEN VerificationStatus = 4 THEN 1 ELSE 0 END) AS SuspendedCount
+            FROM Merchants
+            """;
+
+        return await session.Connection.QueryFirstAsync<MerchantSummaryDto>(
+            sql, transaction: session.Transaction);
     }
 
     // ── GetDetailBaseAsync ────────────────────────────────────────
@@ -182,7 +205,12 @@ public sealed class MerchantRepository : IMerchantRepository
     }
 
     // ── 私有：動態 WHERE ──────────────────────────────────────────
-    private static string BuildWhereClause(string? keyword, VerificationStatus? status)
+    private static string BuildWhereClause(
+        string? keyword,
+        VerificationStatus? status,
+        string? industryType,
+        DateTime? dateFrom,
+        bool? hasCredit)
     {
         var conditions = new List<string>();
 
@@ -191,6 +219,17 @@ public sealed class MerchantRepository : IMerchantRepository
 
         if (status.HasValue)
             conditions.Add("m.VerificationStatus = @Status");
+
+        if (!string.IsNullOrWhiteSpace(industryType))
+            conditions.Add("m.IndustryType = @IndustryType");
+
+        if (dateFrom.HasValue)
+            conditions.Add("m.CreatedAt >= @DateFrom");
+
+        if (hasCredit == true)
+            conditions.Add("ISNULL(mcw.AvailableAmount, 0) > 0");
+        else if (hasCredit == false)
+            conditions.Add("ISNULL(mcw.AvailableAmount, 0) = 0");
 
         return conditions.Count > 0
             ? "WHERE " + string.Join(" AND ", conditions)

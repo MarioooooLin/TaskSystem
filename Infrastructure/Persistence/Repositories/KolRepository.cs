@@ -31,9 +31,11 @@ public sealed class KolRepository : IKolRepository
     public async Task<(IReadOnlyList<KolListItemDto> Items, int TotalCount)> GetListAsync(
         string? keyword,
         VerificationStatus? verificationStatus,
-        short? category,
-        short? platform,
+        IReadOnlyList<short>? categories,
+        IReadOnlyList<short>? platforms,
         bool? hasBankAccount,
+        DateTime? dateFrom,
+        DateTime? dateTo,
         PageQuery page,
         IDbSession session,
         CancellationToken ct = default)
@@ -43,16 +45,20 @@ public sealed class KolRepository : IKolRepository
             conditions.Add("(kp.DisplayName LIKE @Keyword OR u.Email LIKE @Keyword)");
         if (verificationStatus.HasValue)
             conditions.Add("kp.VerificationStatus = @Status");
-        if (category.HasValue)
-            conditions.Add("EXISTS (SELECT 1 FROM KolCategories kc WHERE kc.KolId = kp.Id AND kc.Category = @Category)");
-        if (platform.HasValue)
-            conditions.Add("EXISTS (SELECT 1 FROM KolSocialAccounts ksa WHERE ksa.KolId = kp.Id AND ksa.Platform = @Platform)");
+        if (categories?.Count > 0)
+            conditions.Add("EXISTS (SELECT 1 FROM KolCategories kc WHERE kc.KolId = kp.Id AND kc.Category IN @Categories)");
+        if (platforms?.Count > 0)
+            conditions.Add("EXISTS (SELECT 1 FROM KolSocialAccounts ksa WHERE ksa.KolId = kp.Id AND ksa.Platform IN @Platforms)");
         if (hasBankAccount.HasValue)
         {
             conditions.Add(hasBankAccount.Value
                 ? "EXISTS (SELECT 1 FROM KolBankAccounts kba WHERE kba.KolId = kp.Id)"
                 : "NOT EXISTS (SELECT 1 FROM KolBankAccounts kba WHERE kba.KolId = kp.Id)");
         }
+        if (dateFrom.HasValue)
+            conditions.Add("kp.CreatedAt >= @DateFrom");
+        if (dateTo.HasValue)
+            conditions.Add("kp.CreatedAt < @DateTo");
 
         var where = conditions.Count > 0 ? "WHERE " + string.Join(" AND ", conditions) : string.Empty;
 
@@ -72,9 +78,10 @@ public sealed class KolRepository : IKolRepository
                 kp.VerificationStatus,
                 kp.CreatedAt,
                 ISNULL(SUM(ksa.FollowersCount), 0) AS TotalFollowers,
-                (SELECT COUNT(*) FROM Cases c WHERE c.KolId = kp.Id) AS TaskCount,
-                (SELECT COUNT(*) FROM Disputes d JOIN Cases cs ON cs.Id = d.CaseId WHERE cs.KolId = kp.Id) AS DisputeCount,
-                (SELECT TOP 1 kba.VerificationStatus FROM KolBankAccounts kba WHERE kba.KolId = kp.Id ORDER BY kba.Id DESC) AS BankAccountStatus
+                (SELECT COUNT(*) FROM Tasks t WHERE t.KolId = kp.Id) AS TaskCount,
+                (SELECT COUNT(*) FROM Tasks t WHERE t.KolId = kp.Id AND t.Status = 6) AS CompletedTaskCount,
+                (SELECT COUNT(*) FROM Disputes d JOIN Tasks t ON t.Id = d.TaskId WHERE t.KolId = kp.Id AND d.Status IN (1, 2)) AS DisputeCount,
+                (SELECT TOP 1 kba.Status FROM KolBankAccounts kba WHERE kba.KolId = kp.Id ORDER BY kba.Id DESC) AS BankAccountStatus
             FROM KolProfiles kp
             JOIN Users u ON u.Id = kp.UserId
             LEFT JOIN KolSocialAccounts ksa ON ksa.KolId = kp.Id
@@ -89,8 +96,10 @@ public sealed class KolRepository : IKolRepository
         {
             Keyword = string.IsNullOrWhiteSpace(keyword) ? null : $"%{keyword.Trim()}%",
             Status = verificationStatus.HasValue ? (short)verificationStatus.Value : (short?)null,
-            Category = category,
-            Platform = platform,
+            Categories = categories,
+            Platforms = platforms,
+            DateFrom = dateFrom,
+            DateTo = dateTo.HasValue ? dateTo.Value.AddDays(1) : (DateTime?)null,
             Offset = page.Offset,
             PageSize = page.PageSize,
         };
@@ -134,6 +143,7 @@ public sealed class KolRepository : IKolRepository
                 VerificationStatus = x.VerificationStatus,
                 BankAccountStatus = x.BankAccountStatus,
                 TaskCount = x.TaskCount,
+                CompletedTaskCount = x.CompletedTaskCount,
                 DisputeCount = x.DisputeCount,
                 CreatedAt = x.CreatedAt,
             }).ToList();
@@ -297,5 +307,27 @@ public sealed class KolRepository : IKolRepository
             """;
 
         await session.Connection.ExecuteAsync(sql, kol, session.Transaction);
+    }
+
+    // ── GetSummaryAsync ───────────────────────────────────────────
+    public async Task<KolSummaryDto> GetSummaryAsync(
+        IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            SELECT
+                COUNT(*)                                                            AS TotalCount,
+                SUM(CASE WHEN kp.VerificationStatus = 2 THEN 1 ELSE 0 END)        AS ActiveCount,
+                SUM(CASE WHEN kp.VerificationStatus = 1 THEN 1 ELSE 0 END)        AS PendingCount,
+                SUM(CASE WHEN kp.VerificationStatus = 3 THEN 1 ELSE 0 END)        AS RejectedCount,
+                SUM(CASE WHEN kp.VerificationStatus = 4 THEN 1 ELSE 0 END)        AS SuspendedCount,
+                (SELECT COUNT(DISTINCT t.KolId)
+                 FROM Disputes d
+                 JOIN Tasks t ON t.Id = d.TaskId
+                 WHERE d.Status IN (1, 2) AND t.KolId IS NOT NULL)                 AS AbnormalCount
+            FROM KolProfiles kp
+            """;
+
+        return await session.Connection.QueryFirstAsync<KolSummaryDto>(
+            sql, transaction: session.Transaction);
     }
 }

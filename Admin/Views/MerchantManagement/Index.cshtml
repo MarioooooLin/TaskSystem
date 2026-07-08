@@ -1,9 +1,15 @@
-@model Common.Pagination.PagedResult<Application.Merchants.DTOs.MerchantListItemDto>
+@model Admin.ViewModels.Merchant.MerchantIndexViewModel
 @using Domain.Enums
 @{
     ViewData["Title"] = "業者管理";
-    var keyword = Context.Request.Query["keyword"].ToString();
-    var verificationStatus = Context.Request.Query["verificationStatus"].ToString();
+    var q = Model.Query;
+    var keyword = q.Keyword ?? "";
+    var verificationStatus = q.VerificationStatus?.ToString("D") ?? "";
+    var industryType = q.IndustryType ?? "";
+    var dateFrom = q.DateFrom?.ToString("yyyy-MM-dd") ?? "";
+    var hasCredit = q.HasCredit?.ToString().ToLower() ?? "";
+    var list = Model.List;
+    var actionUrl = Url.Action("Index")!;
 }
 
 @section PageCss {
@@ -17,27 +23,37 @@
         <h1 class="page-title">業者管理</h1>
         <p class="page-subtitle">搜尋與查看業者資料、狀態、案件數、錢包與折扣金摘要</p>
     </div>
+    <a asp-action="Create" class="btn-primary">
+        <i class="fa-solid fa-plus"></i> 新增業者
+    </a>
 </div>
 
 <!-- ===== KPI STATS ===== -->
 <div class="content-card bm-kpi-row">
     <div class="bm-kpi-item">
-        <span class="bm-kpi-label">符合篩選筆數</span>
-        <strong class="bm-kpi-value">@Model.TotalCount</strong>
+        <span class="bm-kpi-label">全部業者</span>
+        <strong class="bm-kpi-value">@Model.Summary.TotalCount</strong>
     </div>
     <div class="bm-kpi-item">
-        <span class="bm-kpi-label">目前頁數</span>
-        <strong class="bm-kpi-value bm-kpi-value--green">@Model.Page / @Model.TotalPages</strong>
+        <span class="bm-kpi-label">啟用中</span>
+        <strong class="bm-kpi-value bm-kpi-value--green">@Model.Summary.ActiveCount</strong>
     </div>
     <div class="bm-kpi-item bm-kpi-item--last">
-        <span class="bm-kpi-label">每頁筆數</span>
-        <strong class="bm-kpi-value">@Model.PageSize</strong>
+        <span class="bm-kpi-label">停用中</span>
+        <strong class="bm-kpi-value bm-kpi-value--red">@Model.Summary.SuspendedCount</strong>
     </div>
 </div>
 
 <!-- ===== FILTER BAR ===== -->
-<form method="get" asp-action="Index">
+<form method="get" asp-action="Index"
+      hx-get="@actionUrl"
+      hx-target="#merchant-results"
+      hx-select="#merchant-results"
+      hx-swap="outerHTML"
+      hx-push-url="true">
     <div class="content-card bm-filter">
+
+        <!-- Row 1 -->
         <div class="bm-filter-row">
             <div class="bm-filter-item bm-filter-item--grow">
                 <label class="bm-filter-label">關鍵字搜尋</label>
@@ -51,98 +67,236 @@
                 <label class="bm-filter-label">業者狀態</label>
                 <div class="filter-select-wrap">
                     <select name="verificationStatus" class="filter-select">
-                        <option value="" selected="@(verificationStatus == "")">全部</option>
+                        <option value="">全部狀態</option>
                         <option value="2" selected="@(verificationStatus == "2")">啟用中</option>
                         <option value="4" selected="@(verificationStatus == "4")">停用中</option>
                     </select>
                     <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
                 </div>
             </div>
-            <div class="bm-filter-actions">
-                <a asp-action="Index" class="bm-btn-clear">清除篩選</a>
-                <button type="submit" class="btn-primary">執行篩選</button>
+            <div class="bm-filter-item">
+                <label class="bm-filter-label">客戶類型 <span class="bm-tag-todo">待確認</span></label>
+                <div class="filter-select-wrap">
+                    <select class="filter-select" disabled>
+                        <option>全部類型</option>
+                        <option>公司</option>
+                        <option>個人／外包</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="bm-filter-item">
+                <label class="bm-filter-label">建立日期</label>
+                <div class="filter-date-input">
+                    <input type="date" name="dateFrom" value="@dateFrom" class="date-input bm-date-input" />
+                    <i class="fa-regular fa-calendar date-input__icon"></i>
+                </div>
             </div>
         </div>
-    </div>
+
+        <!-- Row 2 -->
+        <div class="bm-filter-row">
+            <div class="bm-filter-item">
+                <label class="bm-filter-label">行業類型</label>
+                <div class="filter-select-wrap">
+                    <select name="industryType" class="filter-select">
+                        <option value="">全部行業</option>
+                        <option value="旅宿" selected="@(industryType == "旅宿")">旅宿</option>
+                        <option value="民宿" selected="@(industryType == "民宿")">民宿</option>
+                        <option value="餐飲" selected="@(industryType == "餐飲")">餐飲</option>
+                        <option value="部落客" selected="@(industryType == "部落客")">部落客</option>
+                        <option value="其他" selected="@(industryType == "其他")">其他</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="bm-filter-item">
+                <label class="bm-filter-label">是否有折扣金</label>
+                <div class="filter-select-wrap">
+                    <select name="hasCredit" class="filter-select">
+                        <option value="">不限</option>
+                        <option value="true" selected="@(hasCredit == "true")">有折扣金</option>
+                        <option value="false" selected="@(hasCredit == "false")">無折扣金</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="bm-filter-actions">
+                <a asp-action="Index" class="bm-btn-clear">清除篩選</a>
+                <button type="submit" class="btn-primary">開始搜尋</button>
+            </div>
+        </div>
+
+    </div><!-- /.bm-filter -->
 </form>
 
 <!-- ===== DATA TABLE ===== -->
-<div class="content-card">
+<div id="merchant-results" class="content-card">
     <div class="table-section">
         <table class="data-table bm-table">
             <thead>
                 <tr>
-                    <th>公司名稱</th>
+                    <th>業者名稱</th>
+                    <th>客戶類型</th>
+                    <th>行業類型</th>
                     <th>統一編號</th>
-                    <th>聯絡人</th>
+                    <th>主要聯絡人</th>
                     <th>狀態</th>
-                    <th>可用餘額</th>
-                    <th>案件數</th>
+                    <th>案件</th>
+                    <th>錢包餘額</th>
+                    <th>折扣金</th>
                     <th>建立日期</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var m in Model.Items)
+                @foreach (var m in list.Items)
                 {
                     var (statusCss, statusText) = m.VerificationStatus switch
                     {
-                        VerificationStatus.Approved => ("case-status recruit", "啟用中"),
-                        VerificationStatus.Pending => ("case-status review", "待審核"),
-                        VerificationStatus.Rejected => ("case-status closed", "已拒絕"),
-                        VerificationStatus.Suspended => ("case-status cancelled", "已停用"),
-                        _ => ("", "—"),
+                        VerificationStatus.Approved => ("bm-status bm-status--active", "啟用中"),
+                        VerificationStatus.Suspended => ("bm-status bm-status--inactive", "停用中"),
+                        VerificationStatus.Pending => ("bm-status bm-status--pending", "待補資料"),
+                        _ => ("bm-status", "—"),
                     };
+
+                    var industryCss = m.IndustryType switch
+                    {
+                        "旅宿" => "bm-tag bm-tag--travel",
+                        "民宿" => "bm-tag bm-tag--inn",
+                        "餐飲" => "bm-tag bm-tag--food",
+                        "部落客" => "bm-tag bm-tag--blog",
+                        _ => "bm-tag",
+                    };
+
                     <tr>
-                        <td class="bm-company-name">@m.CompanyName</td>
-                        <td>@(m.TaxId ?? "—")</td>
-                        <td>@(m.ContactName ?? "—")</td>
-                        <td><span class="@statusCss">@statusText</span></td>
-                        <td>NT$@m.AvailableAmount.ToString("N0")</td>
-                        <td>@m.CaseCount</td>
-                        <td>@m.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td class="bm-td-name">@m.CompanyName</td>
                         <td>
-                            <a asp-action="Detail" asp-route-id="@m.MerchantId" class="action-link">詳情</a>
+                            <span class="bm-tag bm-tag--type">— <small class="bm-tag-todo">待確認</small></span>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(m.IndustryType))
+                            {
+                                <span class="@industryCss">@m.IndustryType</span>
+                            }
+                            else
+                            {
+                                <span>—</span>
+                            }
+                        </td>
+                        <td>@(m.TaxId ?? "—")</td>
+                        <td class="bm-td-contact">
+                            <span>@(m.ContactName ?? "—")</span>
+                            <span class="bm-contact-email">@m.OwnerEmail</span>
+                        </td>
+                        <td>
+                            <span class="@statusCss">
+                                <i class="fa-solid fa-circle"></i> @statusText
+                            </span>
+                        </td>
+                        <td>@m.CaseCount</td>
+                        <td>NT$@m.AvailableAmount.ToString("N0")</td>
+                        <td>NT$@m.CreditAmount.ToString("N0")</td>
+                        <td class="bm-td-date">@m.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <div class="td-actions bm-actions">
+                                <a asp-action="Detail" asp-route-id="@m.MerchantId" class="action-link">查看詳情</a>
+                                <a asp-controller="CaseMonitor" asp-action="Index" asp-route-merchantId="@m.MerchantId"
+                                   class="action-link">查看案件</a>
+                                <a asp-controller="Finance" asp-action="Index" asp-route-merchantId="@m.MerchantId"
+                                   class="action-link">查看帳務</a>
+                            </div>
                         </td>
                     </tr>
                 }
-                @if (!Model.Items.Any())
+                @if (!list.Items.Any())
                 {
                     <tr>
-                        <td colspan="8" class="empty-state">查無符合條件的業者資料。</td>
+                        <td colspan="11" class="empty-state">查無符合條件的業者資料。</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 
-    @if (Model.TotalPages > 1)
+    <!-- ===== PAGINATION ===== -->
+    @if (list.TotalPages >= 1)
     {
+        var startItem = (list.Page - 1) * list.PageSize + 1;
+        var endItem = Math.Min(list.Page * list.PageSize, list.TotalCount);
         <div class="pagination">
             <span class="pagination__info">
-                共 @Model.TotalCount 筆，第 @Model.Page / @Model.TotalPages 頁
+                顯示第 @startItem 至 @endItem 筆業者，共計 @list.TotalCount 筆資料
             </span>
             <div class="pagination__nav">
-                @if (Model.HasPreviousPage)
+                @if (list.HasPreviousPage)
                 {
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
-                       asp-route-page="@(Model.Page - 1)" class="page-btn">
+                       asp-route-industryType="@industryType" asp-route-dateFrom="@dateFrom" asp-route-hasCredit="@hasCredit"
+                       asp-route-page="@(list.Page - 1)"
+                       hx-boost="true" hx-target="#merchant-results" hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true"
+                       class="page-btn">
                         <i class="fa-solid fa-chevron-left"></i>
                     </a>
                 }
-                @for (var p = 1; p <= Model.TotalPages; p++)
+                else
                 {
-                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
-                       asp-route-page="@p" class="page-btn @(p == Model.Page ? "active" : "")">@p</a>
+                    <button class="page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
                 }
-                @if (Model.HasNextPage)
+
+                @{
+                    var totalPages = list.TotalPages;
+                    var curPage = list.Page;
+                    var pages = Enumerable.Range(1, totalPages)
+                        .Where(p => p == 1 || p == totalPages || Math.Abs(p - curPage) <= 1)
+                        .ToList();
+                    int? prev = null;
+                }
+                @foreach (var p in pages)
+                {
+                    if (prev.HasValue && p - prev.Value > 1)
+                    {
+                        <span class="page-ellipsis">...</span>
+                    }
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
+                       asp-route-industryType="@industryType" asp-route-dateFrom="@dateFrom" asp-route-hasCredit="@hasCredit"
+                       asp-route-page="@p"
+                       hx-boost="true" hx-target="#merchant-results" hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true"
+                       class="page-btn @(p == curPage ? "active" : "")">@p</a>
+                    prev = p;
+                }
+
+                @if (list.HasNextPage)
                 {
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
-                       asp-route-page="@(Model.Page + 1)" class="page-btn">
+                       asp-route-industryType="@industryType" asp-route-dateFrom="@dateFrom" asp-route-hasCredit="@hasCredit"
+                       asp-route-page="@(list.Page + 1)"
+                       hx-boost="true" hx-target="#merchant-results" hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true"
+                       class="page-btn">
                         <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 }
+                else
+                {
+                    <button class="page-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                }
+
+                <span class="bm-goto-label">跳至</span>
+                <input type="number" id="bm-goto-input" class="bm-goto-input" value="@curPage" min="1" max="@totalPages" />
+                <span class="bm-goto-label">頁</span>
             </div>
         </div>
+        <script>
+                document.getElementById('bm-goto-input').addEventListener('change', function () {
+                    var p = parseInt(this.value, 10);
+                    var max = @totalPages;
+                    if (p >= 1 && p <= max) {
+                        var url = new URL(window.location.href);
+                        url.searchParams.set('page', p);
+                        window.location.href = url.toString();
+                    }
+                });
+        </script>
     }
 </div>
+

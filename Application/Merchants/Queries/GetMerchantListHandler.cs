@@ -21,6 +21,9 @@ public sealed class GetMerchantListHandler(
         var (items, totalCount) = await merchantRepo.GetListAsync(
             query.Keyword,
             query.VerificationStatus,
+            query.IndustryType,
+            query.DateFrom,
+            query.HasCredit,
             pageQuery,
             uow.Session,
             ct);

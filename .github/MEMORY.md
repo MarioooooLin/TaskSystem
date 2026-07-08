@@ -1,10 +1,138 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-07 14:00
+> 最後整理時間：2026-07-07 19:16
 
 ---
 
 ## 2026-07-07
+
+### [19:16] KOL 管理首頁實作（ADM-005）+ htmx 局部刷新
+
+**變更內容**
+
+- 新建 `Application/Kols/DTOs/KolSummaryDto.cs`（6 個 KPI 欄位：TotalCount / ActiveCount / PendingCount / RejectedCount / SuspendedCount / AbnormalCount）
+- 新建 `Admin/ViewModels/Kol/KolIndexViewModel.cs`（List + Summary + Query 包裝）
+- 新建 `Application/Kols/Queries/GetKolSummaryHandler.cs`
+- `Application/Kols/DTOs/KolListItemDto.cs`：新增 `CompletedTaskCount`
+- `Admin/ViewModels/Kol/KolListQueryViewModel.cs`：新增 `DateFrom`、`DateTo`
+- `Application/Kols/Queries/GetKolListQuery.cs`：新增 `DateFrom`、`DateTo`
+- `Application/Kols/Queries/GetKolListHandler.cs`：傳遞新參數
+- `Application/Abstractions/Repositories/IKolRepository.cs`：新增 `GetSummaryAsync`、更新 `GetListAsync` 簽章
+- `Infrastructure/Persistence/Repositories/KolRepository.cs`：
+    - 修正 SQL（`TaskCount` / `DisputeCount` 原本錯誤地查 `Cases.KolId`，改為正確的 `Tasks.KolId`）
+    - 修正 `kba.VerificationStatus` → `kba.Status`（`KolBankAccounts` 無 `VerificationStatus` 欄位）
+    - 實作 `GetSummaryAsync`；加入日期篩選
+- `Application/DependencyInjection.cs`：註冊 `GetKolSummaryHandler`
+- `Admin/Controllers/KolManagementController.cs`：注入 summaryHandler，Index 改回傳 `KolIndexViewModel`
+- `Admin/Views/KolManagement/Index.cshtml`：完整重寫，對齊切版，含 KPI 卡、chip 篩選、資料表、分頁
+
+**htmx 局部刷新（KOL + 業者管理頁）**
+
+- `Admin/Views/Shared/_Layout.cshtml`：加入 htmx CDN（`unpkg.com/htmx.org@2.0.4`）
+- `KolManagement/Index.cshtml`：form 加 `hx-get / hx-target / hx-select / hx-swap / hx-push-url`；table+pagination 包在 `<div id="kol-results">`；分頁連結加 `hx-boost`
+- `MerchantManagement/Index.cshtml`：同上，id 為 `merchant-results`
+
+**決策原因**
+
+- htmx `hx-select` 方案：伺服器回傳完整 HTML，htmx 只取指定 element 替換，零後端改動
+- `hx-push-url="true"` 同步 URL，瀏覽器上一頁可正常使用
+- 分頁連結使用 `hx-boost="true"` 攔截點擊，繼承父層 target/select
+
+**⚠️ 待解決**
+
+- htmx 搜尋功能有異常（明日繼續排查），目前未確認確切錯誤訊息
+- 可能原因：`hx-get` 與 chip `type="submit"` 按鈕的值傳遞方式需確認；或 `hx-select` 抽取邏輯問題
+
+**決策原因**
+
+- `KolBankAccounts.Status` 不是 `VerificationStatus`，是 1=Pending/2=Verified/3=Rejected
+- 原始 SQL 用 `Cases.KolId` 是錯的，Cases 沒有 KolId；正確路徑是 Tasks 表
+- `CompletedTaskCount` 使用 `Tasks.Status = 6`（Completed）
+
+---
+
+## 2026-07-07
+
+### [18:24] 調整 MEMORY.md 更新時機
+
+**變更內容**
+
+- 更新 `.github/copilot-instructions.md`
+- 將 `MEMORY.md 更新機制` 改為：代碼變更完成並驗證後，先回報變更內容與驗證結果，等待使用者確認
+- 使用者確認後，才取得當前時間並更新 `.github/MEMORY.md`
+
+**決策原因**
+
+- 使用者希望 MEMORY 紀錄不要在編譯無誤後立即寫入，而是等使用者確認後再記錄
+- 此規則可避免尚未被使用者接受的中間變更提前進入專案記憶
+
+### [18:07] 業者管理模組完成確認
+
+**完成狀態**
+
+| 頁面                                    | 對應 Template            | 後端接通           | 切版對齊 |
+| --------------------------------------- | ------------------------ | ------------------ | -------- |
+| 業者管理首頁 `MerchantManagement/Index` | business-management.html | ✅                 | ✅       |
+| 業者詳情頁 `MerchantManagement/Detail`  | business-detail.html     | ✅                 | ✅       |
+| 業者編輯頁 `MerchantManagement/Update`  | business-edit.html       | ✅（Handler 完整） | 靜態佔位 |
+
+**其他待補頁面（靜態佔位，後端尚未接通）**
+
+| 頁面                              | 優先順序 |
+| --------------------------------- | -------- |
+| `Dashboard/Index`                 | 高       |
+| `CaseMonitor/Index` / `Detail`    | 高       |
+| `AdminAccount/Index` / `Create`   | 中       |
+| `RolePermission/Index` / `Detail` | 中       |
+| `Finance/Index` / `Transactions`  | 中       |
+| `SystemSetting/Index`             | 低       |
+| `Account/ForgotPassword`          | 低       |
+
+---
+
+### [18:07] 業者管理首頁對齊切版（完整修復）
+
+**變更內容**
+
+- `Application/Merchants/DTOs/MerchantListItemDto.cs`：新增 `IndustryType`、`CreditAmount` 欄位
+- `Application/Merchants/DTOs/MerchantSummaryDto.cs`：新建（TotalCount / ActiveCount / SuspendedCount）
+- `Admin/ViewModels/Merchant/MerchantListQueryViewModel.cs`：新增 `IndustryType`、`DateFrom`、`HasCredit` 篩選參數
+- `Admin/ViewModels/Merchant/MerchantIndexViewModel.cs`：新建，包裝 List + Summary + Query
+- `Application/Merchants/Queries/GetMerchantListQuery.cs`：新增篩選參數
+- `Application/Merchants/Queries/GetMerchantSummaryHandler.cs`：新建，查詢全域 KPI
+- `Application/Abstractions/Repositories/IMerchantRepository.cs`：新增 `GetSummaryAsync`，更新 `GetListAsync` 簽章
+- `Infrastructure/Persistence/Repositories/MerchantRepository.cs`：新增 `GetSummaryAsync` SQL；更新 `GetListAsync`（加 IndustryType / CreditAmount / DateFrom / HasCredit WHERE 條件）
+- `Application/DependencyInjection.cs`：註冊 `GetMerchantSummaryHandler`
+- `Admin/Controllers/MerchantManagementController.cs`：注入 summaryHandler，Index action 改回傳 `MerchantIndexViewModel`
+- `Admin/Views/MerchantManagement/Index.cshtml`：完全對齊 HTML template
+
+**變更要點**
+
+- KPI 卡片改為「全部業者 / 啟用中 / 停用中」（全域計數，非篩選後數值）
+- 篩選列從 1 列擴為 2 列（新增 客戶類型〔無DB欄位，標記待確認/disabled〕、建立日期、行業類型、是否有折扣金）
+- 表格欄位：業者名稱 / 客戶類型 / 行業類型 / 統編 / 主要聯絡人（含 email） / 狀態 / 案件 / 錢包餘額 / 折扣金 / 建立日期 / 操作（3 按鈕）
+- 狀態樣式改為 `bm-status bm-status--active/inactive/pending`
+- 分頁改為「顯示第 X 至 Y 筆業者，共計 Z 筆資料」格式，加入跳頁 input
+
+**決策原因**
+
+- 客戶類型（公司/個人外包）DB 無對應欄位，暫用 disabled select 佔位並標記「待確認」
+- 折扣金來自 `MerchantCreditWallets.AvailableAmount`（LEFT JOIN）
+- 全域 KPI 由獨立 `GetMerchantSummaryHandler` 提供，不影響篩選邏輯
+
+### [17:42] 更新 HTML 轉 cshtml 切版規則
+
+**變更內容**
+
+- 更新 `.github/copilot-instructions.md`
+- 新增「HTML 轉 cshtml 規則（強制）」段落
+- 規定由既有 HTML 轉換為 `.cshtml` 時，以原 HTML 的排版、DOM 結構、class 命名與視覺樣式為主
+- 規定轉換時只加入必要 Razor 語法，不因資料綁定任意重排版面或重新設計 UI
+
+**決策原因**
+
+- 使用者希望專案前端畫面從 HTML 轉為 `.cshtml` 時，以 HTML 原始格式排版為主
+- 此規則屬 AI/助理執行時的實作指令，放在 `.github/copilot-instructions.md` 最能直接約束後續轉檔行為
 
 ### [15:30] 業者詳情頁對齊切版（折扣金、案件統計、操作紀錄）
 

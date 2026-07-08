@@ -7,6 +7,9 @@ namespace Application.Merchants.Queries;
 public sealed record GetMerchantListQuery(
     string? Keyword,
     VerificationStatus? VerificationStatus,
+    string? IndustryType,
+    DateTime? DateFrom,
+    bool? HasCredit,
     int Page = 1,
     int PageSize = 20)
 {

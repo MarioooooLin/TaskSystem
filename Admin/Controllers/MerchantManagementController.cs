@@ -10,6 +10,7 @@ namespace Admin.Controllers;
 [Authorize]
 public sealed class MerchantManagementController(
     GetMerchantListHandler listHandler,
+    GetMerchantSummaryHandler summaryHandler,
     GetMerchantDetailHandler detailHandler,
     SuspendMerchantHandler suspendHandler,
     UnsuspendMerchantHandler unsuspendHandler,
@@ -26,11 +27,22 @@ public sealed class MerchantManagementController(
         var query = new GetMerchantListQuery(
             vm.Keyword,
             vm.VerificationStatus,
+            vm.IndustryType,
+            vm.DateFrom,
+            vm.HasCredit,
             vm.Page,
             vm.PageSize);
 
-        var result = await listHandler.HandleAsync(query);
-        return View(result.Value);
+        var listResult = await listHandler.HandleAsync(query);
+        var summaryResult = await summaryHandler.HandleAsync();
+
+        var pageVm = new MerchantIndexViewModel
+        {
+            List = listResult.Value,
+            Summary = summaryResult.Value,
+            Query = vm,
+        };
+        return View(pageVm);
     }
 
     // ── GET /MerchantManagement/Detail/{id} ───────────────

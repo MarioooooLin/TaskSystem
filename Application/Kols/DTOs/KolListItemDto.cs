@@ -25,6 +25,7 @@ public sealed class KolListItemDto
     public short? BankAccountStatus { get; init; }
 
     public int TaskCount { get; init; }
+    public int CompletedTaskCount { get; init; }
     public int DisputeCount { get; init; }
     public DateTime CreatedAt { get; init; }
 }

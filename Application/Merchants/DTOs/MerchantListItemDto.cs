@@ -8,6 +8,7 @@ public sealed class MerchantListItemDto
     public long MerchantId { get; init; }
     public string CompanyName { get; init; } = string.Empty;
     public string? TaxId { get; init; }
+    public string? IndustryType { get; init; }
     public string? ContactName { get; init; }
     public string? Phone { get; init; }
 
@@ -19,6 +20,9 @@ public sealed class MerchantListItemDto
 
     /// <summary>錢包可用金額（快覽用）。</summary>
     public decimal AvailableAmount { get; init; }
+
+    /// <summary>折扣金餘額（快覽用）。</summary>
+    public decimal CreditAmount { get; init; }
 
     /// <summary>案件總數（快覽用）。</summary>
     public int CaseCount { get; init; }

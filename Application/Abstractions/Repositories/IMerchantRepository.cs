@@ -17,9 +17,15 @@ public interface IMerchantRepository
     Task<(IReadOnlyList<MerchantListItemDto> Items, int TotalCount)> GetListAsync(
         string? keyword,
         VerificationStatus? verificationStatus,
+        string? industryType,
+        DateTime? dateFrom,
+        bool? hasCredit,
         PageQuery page,
         IDbSession session,
         CancellationToken ct = default);
+
+    /// <summary>取得全局 KPI 摘要（全部/啟用中/停用中 數量）。</summary>
+    Task<MerchantSummaryDto> GetSummaryAsync(IDbSession session, CancellationToken ct = default);
 
     /// <summary>
     /// 取得業者詳情頁所需的基本資料（Merchants JOIN Users）。
