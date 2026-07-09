@@ -333,88 +333,158 @@
     <div class="bd-wallet-grid">
         <div class="bd-wallet-card bd-wallet-card--dark">
             <span class="bd-wallet-label">當前錢包總額</span>
-            <strong class="bd-wallet-value">NT$@((Model.Wallet.AvailableAmount + Model.Wallet.FrozenAmount).ToString("N0"))</strong>
-            <i class="fa-regular fa-credit-card bd-wallet-bg-icon"></i>
+            <strong class="bd-wallet-value">NT$@((Model.Wallet.AvailableAmount +
+                                Model.Wallet.FrozenAmount).ToString("N0"))</strong>
+                <i class="fa-regular fa-credit-card bd-wallet-bg-icon"></i>
+            </div>
+            <div class="bd-wallet-card">
+                <span class="bd-wallet-label">已鎖定金額</span>
+                <strong class="bd-wallet-value">NT$@Model.Wallet.FrozenAmount.ToString("N0")</strong>
+                <i class="fa-solid fa-lock bd-wallet-bg-icon"></i>
+            </div>
+            <div class="bd-wallet-card">
+                <span class="bd-wallet-label">可動用餘額</span>
+                <strong class="bd-wallet-value">NT$@Model.Wallet.AvailableAmount.ToString("N0")</strong>
+                <i class="fa-solid fa-circle-check bd-wallet-bg-icon"></i>
+            </div>
+            <div class="bd-wallet-card bd-wallet-card--dark">
+                <span class="bd-wallet-label">當前折扣金餘額</span>
+                <strong class="bd-wallet-value">NT$@Model.CreditWallet.AvailableAmount.ToString("N0")</strong>
+                <i class="fa-solid fa-tags bd-wallet-bg-icon"></i>
+            </div>
+            <div class="bd-wallet-card">
+                <span class="bd-wallet-label">本月已用折扣</span>
+                <strong
+                class="bd-wallet-value bd-wallet-value--accent">NT$@Model.CreditWallet.MonthlyUsedAmount.ToString("N0")</strong>
+            </div>
         </div>
-        <div class="bd-wallet-card">
-            <span class="bd-wallet-label">已鎖定金額</span>
-            <strong class="bd-wallet-value">NT$@Model.Wallet.FrozenAmount.ToString("N0")</strong>
-            <i class="fa-solid fa-lock bd-wallet-bg-icon"></i>
-        </div>
-        <div class="bd-wallet-card">
-            <span class="bd-wallet-label">可動用餘額</span>
-            <strong class="bd-wallet-value">NT$@Model.Wallet.AvailableAmount.ToString("N0")</strong>
-            <i class="fa-solid fa-circle-check bd-wallet-bg-icon"></i>
-        </div>
-        <div class="bd-wallet-card bd-wallet-card--dark">
-            <span class="bd-wallet-label">當前折扣金餘額</span>
-            <strong class="bd-wallet-value">NT$@Model.CreditWallet.AvailableAmount.ToString("N0")</strong>
-            <i class="fa-solid fa-tags bd-wallet-bg-icon"></i>
-        </div>
-        <div class="bd-wallet-card">
-            <span class="bd-wallet-label">本月已用折扣</span>
-            <strong class="bd-wallet-value bd-wallet-value--accent">NT$@Model.CreditWallet.MonthlyUsedAmount.ToString("N0")</strong>
-        </div>
-    </div>
 
-    @* ===== 折扣金加值／扣回表單 ===== *@
-    <div class="bd-discount-form">
-        <h3 class="bd-sub-title">折扣金加值／扣回操作</h3>
-        <form method="post" asp-action="AdjustCredit">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="MerchantId" value="@Model.MerchantId" />
-            <div class="bd-form-grid">
-                <div class="bd-form-field">
-                    <label class="bd-form-label">操作類型</label>
-                    <div class="bd-radio-group">
-                        <label class="bd-radio"><input type="radio" name="OperationType" value="1" checked /> 加值</label>
-                        <label class="bd-radio"><input type="radio" name="OperationType" value="4" /> 扣回</label>
+        @* ===== 折扣金加值／扣回表單 ===== *@
+        <div class="bd-discount-form">
+            <h3 class="bd-sub-title">折扣金加值／扣回操作</h3>
+            <form method="post" asp-action="AdjustCredit">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="MerchantId" value="@Model.MerchantId" />
+                <div class="bd-form-grid">
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">操作類型</label>
+                        <div class="bd-radio-group">
+                            <label class="bd-radio"><input type="radio" name="OperationType" value="1" checked /> 加值</label>
+                            <label class="bd-radio"><input type="radio" name="OperationType" value="4" /> 扣回</label>
+                        </div>
+                    </div>
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">金額</label>
+                        <input type="number" name="Amount" class="bd-input" placeholder="請輸入金額" min="1" required />
+                    </div>
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">有效期限（選填）</label>
+                        <div class="filter-date-input">
+                            <input type="date" name="ExpiresAt" class="date-input bd-date-input" />
+                            <i class="fa-regular fa-calendar date-input__icon"></i>
+                        </div>
+                    </div>
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">異動原因 *</label>
+                        <div class="filter-select-wrap">
+                            <select name="Reason" class="filter-select" required>
+                                <option value="契約獎勵">契約獎勵</option>
+                                <option value="促銷活動">促銷活動</option>
+                                <option value="人工調整">人工調整</option>
+                                <option value="錯誤修正">錯誤修正</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="bd-form-field bd-form-field--full">
+                        <label class="bd-form-label">備註</label>
+                        <textarea name="Note" class="bd-textarea" rows="3" placeholder="請輸入操作備註..."></textarea>
                     </div>
                 </div>
-                <div class="bd-form-field">
-                    <label class="bd-form-label">金額</label>
-                    <input type="number" name="Amount" class="bd-input" placeholder="請輸入金額" min="1" required />
+                <div class="bd-form-submit">
+                    <button type="submit" class="btn-primary bd-submit-btn" onclick="return confirm('確定要執行此折扣金操作嗎？')">
+                        確認提交
+                    </button>
                 </div>
-                <div class="bd-form-field">
-                    <label class="bd-form-label">有效期限（選填）</label>
-                    <div class="filter-date-input">
-                        <input type="date" name="ExpiresAt" class="date-input bd-date-input" />
-                        <i class="fa-regular fa-calendar date-input__icon"></i>
-                    </div>
-                </div>
-                <div class="bd-form-field">
-                    <label class="bd-form-label">異動原因 *</label>
-                    <div class="filter-select-wrap">
-                        <select name="Reason" class="filter-select" required>
-                            <option value="契約獎勵">契約獎勵</option>
-                            <option value="促銷活動">促銷活動</option>
-                            <option value="人工調整">人工調整</option>
-                            <option value="錯誤修正">錯誤修正</option>
-                        </select>
-                        <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
-                    </div>
-                </div>
-                <div class="bd-form-field bd-form-field--full">
-                    <label class="bd-form-label">備註</label>
-                    <textarea name="Note" class="bd-textarea" rows="3" placeholder="請輸入操作備註..."></textarea>
-                </div>
-            </div>
-            <div class="bd-form-submit">
-                <button type="submit" class="btn-primary bd-submit-btn"
-                        onclick="return confirm('確定要執行此折扣金操作嗎？')">
-                    確認提交
-                </button>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
 
-    @* ===== 折扣金異動紀錄 / 使用紀錄 ===== *@
-    <div class="bd-log-grid">
-        <div class="bd-log-block">
-            <div class="bd-section-hd">
-                <h3 class="bd-sub-title" style="margin-bottom:0">折扣金異動紀錄</h3>
-                <span class="bd-log-hint">最近 5 筆</span>
+        @* ===== 折扣金異動紀錄 / 使用紀錄 ===== *@
+        <div class="bd-log-grid">
+            <div class="bd-log-block">
+                <div class="bd-section-hd">
+                    <h3 class="bd-sub-title" style="margin-bottom:0">折扣金異動紀錄</h3>
+                    <span class="bd-log-hint">最近 5 筆</span>
+                </div>
+                <div class="table-section">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>時間</th>
+                                <th>類型</th>
+                                <th>金額</th>
+                                <th>操作者</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var g in Model.RecentCreditGrants)
+                            {
+                                var gLabel = g.Type == 4 ? "扣回" : "加值";
+                                var gCss = g.Type == 4 ? "bd-log-type--sub" : "bd-log-type--add";
+                                <tr>
+                                    <td>@g.CreatedAt.ToString("MM-dd HH:mm")</td>
+                                    <td><span class="bd-log-type @gCss">@gLabel</span></td>
+                                    <td class="@(g.Amount >= 0 ? "bd-amount-pos" : "bd-amount-neg")">@(g.Amount >= 0 ? "+" :
+                                                 "")@g.Amount.ToString("N0")</td>
+                                        <td>@(g.CreatedByName ?? "—")</td>
+                                    </tr>
+                                }
+                                @if (!Model.RecentCreditGrants.Any())
+                                {
+                                    <tr>
+                                        <td colspan="4" class="bd-empty-hint">尚無紀錄。</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bd-log-block">
+                    <div class="bd-section-hd">
+                        <h3 class="bd-sub-title" style="margin-bottom:0">折扣金使用紀錄</h3>
+                        <span class="bd-log-hint">最近 5 筆</span>
+                    </div>
+                    <div class="table-section">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>時間</th>
+                                    <th>對應案號</th>
+                                    <th>折扣金額</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var u in Model.RecentCreditUsages)
+                                {
+                                    <tr>
+                                        <td>@u.CreatedAt.ToString("MM-dd HH:mm")</td>
+                                        <td>@(u.RelatedCaseId.HasValue ? $"#{u.RelatedCaseId}" : "—")</td>
+                                        <td class="bd-amount-neg">@u.Amount.ToString("N0")</td>
+                                    </tr>
+                                }
+                                @if (!Model.RecentCreditUsages.Any())
+                                {
+                                    <tr>
+                                        <td colspan="3" class="bd-empty-hint">尚無紀錄。</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
+            <h3 class="bd-sub-title" style="margin-top:1.5rem">近期錢包交易紀錄</h3>
             <div class="table-section">
                 <table class="data-table">
                     <thead>
@@ -422,208 +492,145 @@
                             <th>時間</th>
                             <th>類型</th>
                             <th>金額</th>
-                            <th>操作者</th>
+                            <th>相關案件</th>
+                            <th>備註</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var g in Model.RecentCreditGrants)
+                        @foreach (var tx in Model.RecentTransactions)
                         {
-                            var gLabel = g.Type == 4 ? "扣回" : "加值";
-                            var gCss   = g.Type == 4 ? "bd-log-type--sub" : "bd-log-type--add";
+                            var txTypeText = tx.Type switch
+                            {
+                                1 => "線下儲值",
+                                2 => "案件凍結",
+                                3 => "凍結釋放",
+                                4 => "案件結算",
+                                5 => "爭議扣留",
+                                6 => "人工調整",
+                                _ => "其他",
+                            };
+                            var amountCss = tx.Amount >= 0 ? "bd-amount-pos" : "bd-amount-neg";
                             <tr>
-                                <td>@g.CreatedAt.ToString("MM-dd HH:mm")</td>
-                                <td><span class="bd-log-type @gCss">@gLabel</span></td>
-                                <td class="@(g.Amount >= 0 ? "bd-amount-pos" : "bd-amount-neg")">@(g.Amount >= 0 ? "+" : "")@g.Amount.ToString("N0")</td>
-                                <td>@(g.CreatedByName ?? "—")</td>
+                                <td>@tx.CreatedAt.ToString("MM-dd HH:mm")</td>
+                                <td>@txTypeText</td>
+                                <td class="@amountCss">@(tx.Amount >= 0 ? "+" : "")@tx.Amount.ToString("N0")</td>
+                                <td>@(tx.RelatedCaseTitle ?? "—")</td>
+                                <td>@(tx.Note ?? "—")</td>
                             </tr>
                         }
-                        @if (!Model.RecentCreditGrants.Any())
+                        @if (!Model.RecentTransactions.Any())
                         {
-                            <tr><td colspan="4" class="bd-empty-hint">尚無紀錄。</td></tr>
+                            <tr>
+                                <td colspan="5" class="bd-empty-hint">尚無交易紀錄。</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="bd-log-block">
-            <div class="bd-section-hd">
-                <h3 class="bd-sub-title" style="margin-bottom:0">折扣金使用紀錄</h3>
-                <span class="bd-log-hint">最近 5 筆</span>
-            </div>
+
+        <!-- ===== 操作紀錄 ===== -->
+        <div class="content-card">
+            <h2 class="section-title bd-section-title">
+                <i class="fa-regular fa-clock"></i> 操作紀錄
+            </h2>
             <div class="table-section">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>時間</th>
-                            <th>對應案號</th>
-                            <th>折扣金額</th>
+                            <th>操作時間</th>
+                            <th>操作者</th>
+                            <th>操作類型</th>
+                            <th>異動對象</th>
+                            <th>異動內容</th>
+                            <th>備註</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var u in Model.RecentCreditUsages)
+                        @foreach (var log in Model.RecentActivityLogs)
                         {
+                            var (tagCss, tagText) = log.Action switch
+                            {
+                                var a when a.Contains("Credit") || a.Contains("Wallet") => ("bd-op-tag--finance", "財務異動"),
+                                var a when a.Contains("Case") => ("bd-op-tag--case", "案件異動"),
+                                var a when a.Contains("Status") || a.Contains("Suspend") || a.Contains("Unsuspend") =>
+                        ("bd-op-tag--status", "業者狀態"),
+                                _ => ("bd-op-tag--data", "資料更新"),
+                            };
+                            var targetLabel = log.TargetType switch
+                            {
+                                "Merchants" => "業者主檔",
+                                "MerchantContacts" => "聯絡窗口",
+                                "MerchantWallets" => "現金錢包",
+                                "MerchantCreditWallets" => "折扣金",
+                                "Cases" => log.RelatedCaseId.HasValue ? $"#{log.RelatedCaseId}" : "案件",
+                                _ => log.TargetType ?? "—",
+                            };
                             <tr>
-                                <td>@u.CreatedAt.ToString("MM-dd HH:mm")</td>
-                                <td>@(u.RelatedCaseId.HasValue ? $"#{u.RelatedCaseId}" : "—")</td>
-                                <td class="bd-amount-neg">@u.Amount.ToString("N0")</td>
+                                <td>@log.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@(log.ActorName ?? "System")</td>
+                                <td><span class="bd-op-tag @tagCss">@tagText</span></td>
+                                <td>@targetLabel</td>
+                                <td>@log.Action</td>
+                                <td>@(log.Note ?? "—")</td>
                             </tr>
                         }
-                        @if (!Model.RecentCreditUsages.Any())
+                        @if (!Model.RecentActivityLogs.Any())
                         {
-                            <tr><td colspan="3" class="bd-empty-hint">尚無紀錄。</td></tr>
+                            <tr>
+                                <td colspan="6" class="bd-empty-hint">尚無操作紀錄。</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
+            <div class="bd-load-more">
+                <button class="bd-btn bd-btn--ghost" disabled title="功能開發中">載入更多紀錄</button>
+            </div>
         </div>
-    </div>
 
-    <h3 class="bd-sub-title" style="margin-top:1.5rem">近期錢包交易紀錄</h3>
-    <div class="table-section">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>時間</th>
-                    <th>類型</th>
-                    <th>金額</th>
-                    <th>相關案件</th>
-                    <th>備註</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var tx in Model.RecentTransactions)
-                {
-                    var txTypeText = tx.Type switch
-                    {
-                        1 => "線下儲值",
-                        2 => "案件凍結",
-                        3 => "凍結釋放",
-                        4 => "案件結算",
-                        5 => "爭議扣留",
-                        6 => "人工調整",
-                        _ => "其他",
-                    };
-                    var amountCss = tx.Amount >= 0 ? "bd-amount-pos" : "bd-amount-neg";
-                    <tr>
-                        <td>@tx.CreatedAt.ToString("MM-dd HH:mm")</td>
-                        <td>@txTypeText</td>
-                        <td class="@amountCss">@(tx.Amount >= 0 ? "+" : "")@tx.Amount.ToString("N0")</td>
-                        <td>@(tx.RelatedCaseTitle ?? "—")</td>
-                        <td>@(tx.Note ?? "—")</td>
-                    </tr>
-                }
-                @if (!Model.RecentTransactions.Any())
-                {
-                    <tr>
-                        <td colspan="5" class="bd-empty-hint">尚無交易紀錄。</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- ===== 操作紀錄 ===== -->
-<div class="content-card">
-    <h2 class="section-title bd-section-title">
-        <i class="fa-regular fa-clock"></i> 操作紀錄
-    </h2>
-    <div class="table-section">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>操作時間</th>
-                    <th>操作者</th>
-                    <th>操作類型</th>
-                    <th>異動對象</th>
-                    <th>異動內容</th>
-                    <th>備註</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var log in Model.RecentActivityLogs)
-                {
-                    var (tagCss, tagText) = log.Action switch
-                    {
-                        var a when a.Contains("Credit") || a.Contains("Wallet") => ("bd-op-tag--finance", "財務異動"),
-                        var a when a.Contains("Case")   => ("bd-op-tag--case",    "案件異動"),
-                        var a when a.Contains("Status") || a.Contains("Suspend") || a.Contains("Unsuspend") => ("bd-op-tag--status", "業者狀態"),
-                        _ => ("bd-op-tag--data", "資料更新"),
-                    };
-                    var targetLabel = log.TargetType switch
-                    {
-                        "Merchants"             => "業者主檔",
-                        "MerchantContacts"      => "聯絡窗口",
-                        "MerchantWallets"       => "現金錢包",
-                        "MerchantCreditWallets" => "折扣金",
-                        "Cases"                 => log.RelatedCaseId.HasValue ? $"#{log.RelatedCaseId}" : "案件",
-                        _                       => log.TargetType ?? "—",
-                    };
-                    <tr>
-                        <td>@log.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td>@(log.ActorName ?? "System")</td>
-                        <td><span class="bd-op-tag @tagCss">@tagText</span></td>
-                        <td>@targetLabel</td>
-                        <td>@log.Action</td>
-                        <td>@(log.Note ?? "—")</td>
-                    </tr>
-                }
-                @if (!Model.RecentActivityLogs.Any())
-                {
-                    <tr>
-                        <td colspan="6" class="bd-empty-hint">尚無操作紀錄。</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="bd-load-more">
-        <button class="bd-btn bd-btn--ghost" disabled title="功能開發中">載入更多紀錄</button>
-    </div>
-</div>
-
-<!-- ==================== 新增聯絡窗口 Modal ==================== -->
-<div id="modal-add-contact" class="w3-modal" style="display:none">
-    <div class="bg_close" onclick="document.getElementById('modal-add-contact').style.display='none'"></div>
-    <div class="w3-modal-content w3-animate-top w3-card-4 alert-modal">
-        <span class="alert-close"
-              onclick="document.getElementById('modal-add-contact').style.display='none'">&times;</span>
-        <div class="modal-header"><i class="fa-solid fa-user-plus"></i> 新增聯絡窗口</div>
-        <div class="modal-body">
-            <form method="post" asp-action="AddContact">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="MerchantId" value="@Model.MerchantId" />
-                <input type="hidden" name="ContactId" value="0" />
-                <div class="bd-modal-form-grid">
-                    <div class="bd-mf-field">
-                        <label class="bd-mf-label">姓名 *</label>
-                        <input type="text" name="Name" class="bd-mf-input" placeholder="請輸入聯絡人姓名" required />
-                    </div>
-                    <div class="bd-mf-field">
-                        <label class="bd-mf-label">職稱</label>
-                        <input type="text" name="Title" class="bd-mf-input" placeholder="業務經理" />
-                    </div>
-                    <div class="bd-mf-field">
-                        <label class="bd-mf-label">公司電話</label>
-                        <input type="tel" name="Phone" class="bd-mf-input" placeholder="02-12345678" />
-                    </div>
-                    <div class="bd-mf-field bd-mf-field--span2">
-                        <label class="bd-mf-label">電子郵件</label>
-                        <input type="email" name="Email" class="bd-mf-input" placeholder="example@mail.com" />
-                    </div>
-                    <div class="bd-mf-field bd-mf-field--full">
-                        <label class="bd-mf-label">備註</label>
-                        <textarea name="Note" class="bd-mf-textarea" rows="3" placeholder="請輸入相關備註事項..."></textarea>
-                    </div>
+        <!-- ==================== 新增聯絡窗口 Modal ==================== -->
+        <div id="modal-add-contact" class="w3-modal" style="display:none">
+            <div class="bg_close" onclick="document.getElementById('modal-add-contact').style.display='none'"></div>
+            <div class="w3-modal-content w3-animate-top w3-card-4 alert-modal">
+                <span class="alert-close"
+                      onclick="document.getElementById('modal-add-contact').style.display='none'">&times;</span>
+                <div class="modal-header"><i class="fa-solid fa-user-plus"></i> 新增聯絡窗口</div>
+                <div class="modal-body">
+                    <form method="post" asp-action="AddContact">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="MerchantId" value="@Model.MerchantId" />
+                        <input type="hidden" name="ContactId" value="0" />
+                        <div class="bd-modal-form-grid">
+                            <div class="bd-mf-field">
+                                <label class="bd-mf-label">姓名 *</label>
+                                <input type="text" name="Name" class="bd-mf-input" placeholder="請輸入聯絡人姓名" required />
+                            </div>
+                            <div class="bd-mf-field">
+                                <label class="bd-mf-label">職稱</label>
+                                <input type="text" name="Title" class="bd-mf-input" placeholder="業務經理" />
+                            </div>
+                            <div class="bd-mf-field">
+                                <label class="bd-mf-label">公司電話</label>
+                                <input type="tel" name="Phone" class="bd-mf-input" placeholder="02-12345678" />
+                            </div>
+                            <div class="bd-mf-field bd-mf-field--span2">
+                                <label class="bd-mf-label">電子郵件</label>
+                                <input type="email" name="Email" class="bd-mf-input" placeholder="example@mail.com" />
+                            </div>
+                            <div class="bd-mf-field bd-mf-field--full">
+                                <label class="bd-mf-label">備註</label>
+                                <textarea name="Note" class="bd-mf-textarea" rows="3" placeholder="請輸入相關備註事項..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-btns">
+                            <button class="modal-btn--cancel" type="button"
+                                    onclick="document.getElementById('modal-add-contact').style.display='none'">取消</button>
+                            <button class="modal-btn--confirm" type="submit">
+                                <i class="fa-solid fa-floppy-disk"></i> 儲存
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-btns">
-                    <button class="modal-btn--cancel" type="button"
-                            onclick="document.getElementById('modal-add-contact').style.display='none'">取消</button>
-                    <button class="modal-btn--confirm" type="submit">
-                        <i class="fa-solid fa-floppy-disk"></i> 儲存
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>

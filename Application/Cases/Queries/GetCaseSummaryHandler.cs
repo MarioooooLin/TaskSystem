@@ -17,6 +17,7 @@ public sealed class GetCaseSummaryHandler(
         var summary = await caseMonitorRepo.GetSummaryAsync(uow.Session, ct);
         var alert = await caseMonitorRepo.GetAlertAsync(uow.Session, ct);
 
+        await uow.CommitAsync(ct);
         return Result<(CaseSummaryDto, CaseAlertDto)>.Success((summary, alert));
     }
 }

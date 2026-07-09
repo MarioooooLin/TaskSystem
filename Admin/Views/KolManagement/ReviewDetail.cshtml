@@ -101,9 +101,7 @@
     var needsConfirm = Model.SocialAccounts.Where(s => s.VerificationStatus == 3).ToList();
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/kol-review.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/kol-review.css" asp-append-version="true" />
 
 @if (TempData["Success"] is string successMsg)
 {

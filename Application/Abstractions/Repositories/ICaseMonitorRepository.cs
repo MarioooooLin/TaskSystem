@@ -28,4 +28,7 @@ public interface ICaseMonitorRepository
 
     /// <summary>取得警示卡數字（待驗收、逾期、爭議）。</summary>
     Task<CaseAlertDto> GetAlertAsync(IDbSession session, CancellationToken ct = default);
+
+    /// <summary>取得案件詳情（含任務清單、附件、操作紀錄）。找不到時回傳 null。</summary>
+    Task<CaseDetailDto?> GetDetailAsync(long caseId, IDbSession session, CancellationToken ct = default);
 }

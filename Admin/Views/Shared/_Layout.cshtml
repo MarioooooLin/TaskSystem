@@ -50,7 +50,8 @@
         <nav class="sidebar-nav">
 
             <!-- 營運總覽 -->
-            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-item">
+            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-item"
+               hx-get="/Dashboard/Index" hx-target="#main-content" hx-push-url="true">
                 <i class="fa-solid fa-grip"></i>
                 <span>營運總覽</span>
             </a>
@@ -88,7 +89,8 @@
                     <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
                 </div>
                 <div class="sidebar-group__body">
-                    <a asp-controller="CaseMonitor" asp-action="Index" class="sidebar-subitem">案件監控頁</a>
+                    <a asp-controller="CaseMonitor" asp-action="Index" class="sidebar-subitem"
+                       hx-get="/CaseMonitor/Index" hx-target="#main-content" hx-push-url="true">案件監控頁</a>
                     <a asp-controller="Dispute" asp-action="Index" class="sidebar-subitem">異常處理頁</a>
                 </div>
             </div>
@@ -148,7 +150,7 @@
         </div>
 
         <!-- MAIN CONTENT -->
-        <main class="main-content">
+        <main id="main-content" class="main-content" hx-history-elt>
             @RenderBody()
         </main>
 

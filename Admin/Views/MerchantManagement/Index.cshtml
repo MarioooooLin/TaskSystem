@@ -45,12 +45,8 @@
 </div>
 
 <!-- ===== FILTER BAR ===== -->
-<form method="get" asp-action="Index"
-      hx-get="@actionUrl"
-      hx-target="#merchant-results"
-      hx-select="#merchant-results"
-      hx-swap="outerHTML"
-      hx-push-url="true">
+<form method="get" asp-action="Index" hx-get="@actionUrl" hx-target="#merchant-results" hx-select="#merchant-results"
+      hx-swap="outerHTML" hx-push-url="true">
     <div class="content-card bm-filter">
 
         <!-- Row 1 -->
@@ -233,9 +229,8 @@
                 {
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
                        asp-route-industryType="@industryType" asp-route-dateFrom="@dateFrom" asp-route-hasCredit="@hasCredit"
-                       asp-route-page="@(list.Page - 1)"
-                       hx-boost="true" hx-target="#merchant-results" hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true"
-                       class="page-btn">
+                       asp-route-page="@(list.Page - 1)" hx-boost="true" hx-target="#merchant-results"
+                       hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true" class="page-btn">
                         <i class="fa-solid fa-chevron-left"></i>
                     </a>
                 }
@@ -260,9 +255,8 @@
                     }
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
                        asp-route-industryType="@industryType" asp-route-dateFrom="@dateFrom" asp-route-hasCredit="@hasCredit"
-                       asp-route-page="@p"
-                       hx-boost="true" hx-target="#merchant-results" hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true"
-                       class="page-btn @(p == curPage ? "active" : "")">@p</a>
+                       asp-route-page="@p" hx-boost="true" hx-target="#merchant-results" hx-select="#merchant-results"
+                       hx-swap="outerHTML" hx-push-url="true" class="page-btn @(p == curPage ? "active" : "")">@p</a>
                     prev = p;
                 }
 
@@ -270,9 +264,8 @@
                 {
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-verificationStatus="@verificationStatus"
                        asp-route-industryType="@industryType" asp-route-dateFrom="@dateFrom" asp-route-hasCredit="@hasCredit"
-                       asp-route-page="@(list.Page + 1)"
-                       hx-boost="true" hx-target="#merchant-results" hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true"
-                       class="page-btn">
+                       asp-route-page="@(list.Page + 1)" hx-boost="true" hx-target="#merchant-results"
+                       hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true" class="page-btn">
                         <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 }

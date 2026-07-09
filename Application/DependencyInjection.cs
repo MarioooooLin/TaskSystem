@@ -1,5 +1,6 @@
 using Application.Account;
 using Application.Cases.Queries;
+using Application.Dashboard.Queries;
 using Application.Kols.Commands;
 using Application.Kols.Queries;
 using Application.Merchants.Commands;
@@ -28,6 +29,10 @@ public static class DependencyInjection
         // ── Case Monitor ──────────────────────────────────
         services.AddScoped<GetCaseListHandler>();
         services.AddScoped<GetCaseSummaryHandler>();
+        services.AddScoped<GetCaseDetailHandler>();
+
+        // ── Dashboard ─────────────────────────────────────
+        services.AddScoped<GetDashboardHandler>();
 
         // ── KOL Management ────────────────────────────────
         services.AddScoped<GetKolListHandler>();

@@ -127,6 +127,185 @@ public sealed class CaseMonitorRepository : ICaseMonitorRepository
             sql, transaction: session.Transaction) ?? new CaseAlertDto();
     }
 
+    // ── GetDetailAsync ────────────────────────────────────────────
+    public async Task<CaseDetailDto?> GetDetailAsync(
+        long caseId, IDbSession session, CancellationToken ct = default)
+    {
+        var conn = session.Connection;
+        var tx = session.Transaction;
+
+        // 1. 主案件資料
+        const string caseSql = """
+            SELECT
+                c.Id                    AS CaseId,
+                c.Title,
+                c.Status,
+                m.Id                    AS MerchantId,
+                m.CompanyName           AS MerchantName,
+                CASE WHEN c.CashRewardAmount > 0
+                     THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END           AS HasCash,
+                CASE WHEN EXISTS(SELECT 1 FROM CaseBarterItems WHERE CaseId = c.Id)
+                     THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END           AS HasBarter,
+                c.IsCommissionEnabled                                       AS HasCommission,
+                c.CashRewardAmount,
+                c.CommissionRate,
+                c.CookieDays,
+                c.ApplicationDeadline,
+                c.SubmissionDeadline,
+                c.StartedAt,
+                c.CompletedAt,
+                c.WantedKolCount,
+                c.ApplicationCount,
+                c.ApprovedAssignmentCount,
+                u.Name                  AS CreatedByName,
+                c.CreatedAt
+            FROM Cases c
+            INNER JOIN Merchants m ON m.Id = c.MerchantId
+            INNER JOIN Users u ON u.Id = c.CreatedByUserId
+            WHERE c.Id = @CaseId
+            """;
+
+        var raw = await conn.QueryFirstOrDefaultAsync<CaseRawRow>(caseSql, new { CaseId = caseId }, tx);
+        if (raw is null) return null;
+
+        // 2. 任務統計
+        const string statsSql = """
+            SELECT
+                COUNT(CASE WHEN t.Status = 3 THEN 1 END)   AS TaskInProgressCount,
+                COUNT(CASE WHEN t.Status = 4 THEN 1 END)   AS TaskUnderReviewCount,
+                COUNT(CASE WHEN t.Status = 5 THEN 1 END)   AS TaskRevisionCount,
+                COUNT(CASE WHEN t.Status = 6 THEN 1 END)   AS TaskCompletedCount,
+                COUNT(CASE WHEN t.Status = 7 THEN 1 END)   AS TaskIncompleteCount,
+                COUNT(CASE WHEN t.Status = 8 THEN 1 END)   AS TaskCancelledCount,
+                COUNT(DISTINCT d.Id)                        AS TaskDisputeCount
+            FROM Tasks t
+            LEFT JOIN Disputes d ON d.TaskId = t.Id AND d.Status IN (1, 2)
+            WHERE t.CaseId = @CaseId
+            """;
+        var stats = await conn.QueryFirstAsync<TaskStatsRow>(statsSql, new { CaseId = caseId }, tx);
+
+        // 3. 未入選人數（Rejected / Cancelled / Invalid）
+        var rejectedCount = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM CaseApplications WHERE CaseId = @CaseId AND Status IN (4, 5, 6)",
+            new { CaseId = caseId }, tx);
+
+        // 4. 曝光平台
+        var platforms = (await conn.QueryAsync<short>(
+            "SELECT Platform FROM CasePlatforms WHERE CaseId = @CaseId ORDER BY Id",
+            new { CaseId = caseId }, tx)).AsList();
+
+        // 5. 體驗項目
+        var barterItems = (await conn.QueryAsync<string>(
+            "SELECT Name FROM CaseBarterItems WHERE CaseId = @CaseId ORDER BY Id",
+            new { CaseId = caseId }, tx)).AsList();
+
+        // 6. 任務清單（含 KOL、最新 Submission、Dispute）
+        const string taskSql = """
+            ;WITH LatestSub AS (
+                SELECT s.TaskId, s.Id AS SubmissionId, s.Status,
+                       ROW_NUMBER() OVER (PARTITION BY s.TaskId ORDER BY s.SubmittedAt DESC) AS rn
+                FROM Submissions s
+                INNER JOIN Tasks t2 ON t2.Id = s.TaskId
+                WHERE t2.CaseId = @CaseId
+            )
+            SELECT
+                t.Id                    AS TaskId,
+                t.Status                AS TaskStatus,
+                kp.Id                   AS KolId,
+                kp.DisplayName          AS KolName,
+                (SELECT TOP 1 Platform
+                 FROM KolSocialAccounts
+                 WHERE KolId = kp.Id ORDER BY Id)           AS KolMainPlatform,
+                (SELECT TOP 1 Category
+                 FROM KolCategories
+                 WHERE KolId = kp.Id ORDER BY Id)           AS KolFirstCategory,
+                ls.Status               AS SubmissionStatus,
+                (SELECT TOP 1 Url
+                 FROM SubmissionItems
+                 WHERE SubmissionId = ls.SubmissionId
+                   AND Url IS NOT NULL)                     AS SubmissionUrl,
+                CASE WHEN d.Id IS NOT NULL
+                     THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS HasDispute,
+                d.Status                AS DisputeStatus,
+                ISNULL(t.CompletedAt, ISNULL(t.SubmittedAt, t.StartedAt)) AS UpdatedAt
+            FROM Tasks t
+            LEFT JOIN KolProfiles kp ON kp.Id = t.KolId
+            LEFT JOIN LatestSub ls ON ls.TaskId = t.Id AND ls.rn = 1
+            LEFT JOIN Disputes d ON d.TaskId = t.Id AND d.Status IN (1, 2)
+            WHERE t.CaseId = @CaseId
+            ORDER BY t.Id
+            """;
+        var tasks = (await conn.QueryAsync<CaseTaskListItemDto>(taskSql, new { CaseId = caseId }, tx)).AsList();
+
+        // 7. 附件
+        const string filesSql = """
+            SELECT
+                f.Id        AS FileId,
+                f.FileName,
+                f.FileSize,
+                f.MimeType,
+                f.CreatedAt AS UploadedAt,
+                ca.Type     AS AttachmentType
+            FROM CaseAttachments ca
+            INNER JOIN Files f ON f.Id = ca.FileId
+            WHERE ca.CaseId = @CaseId
+            ORDER BY f.CreatedAt DESC
+            """;
+        var attachments = (await conn.QueryAsync<CaseAttachmentDto>(filesSql, new { CaseId = caseId }, tx)).AsList();
+
+        // 8. 操作紀錄（最新 10 筆）
+        const string logSql = """
+            SELECT TOP 10
+                al.Id,
+                al.Action,
+                al.Note,
+                u.Name  AS ActorName,
+                al.CreatedAt
+            FROM ActivityLogs al
+            LEFT JOIN Users u ON u.Id = al.ActorUserId
+            WHERE al.CaseId = @CaseId
+            ORDER BY al.CreatedAt DESC
+            """;
+        var logs = (await conn.QueryAsync<CaseActivityLogDto>(logSql, new { CaseId = caseId }, tx)).AsList();
+
+        return new CaseDetailDto
+        {
+            CaseId = raw.CaseId,
+            Title = raw.Title,
+            Status = raw.Status,
+            MerchantId = raw.MerchantId,
+            MerchantName = raw.MerchantName,
+            HasCash = raw.HasCash,
+            HasBarter = raw.HasBarter,
+            HasCommission = raw.HasCommission,
+            CashRewardAmount = raw.CashRewardAmount,
+            BarterItems = barterItems,
+            CommissionRate = raw.CommissionRate,
+            CookieDays = raw.CookieDays,
+            ApplicationDeadline = raw.ApplicationDeadline,
+            SubmissionDeadline = raw.SubmissionDeadline,
+            StartedAt = raw.StartedAt,
+            CompletedAt = raw.CompletedAt,
+            WantedKolCount = raw.WantedKolCount,
+            ApplicationCount = raw.ApplicationCount,
+            ApprovedAssignmentCount = raw.ApprovedAssignmentCount,
+            RejectedApplicationCount = rejectedCount,
+            TaskInProgressCount = stats.TaskInProgressCount,
+            TaskUnderReviewCount = stats.TaskUnderReviewCount,
+            TaskRevisionCount = stats.TaskRevisionCount,
+            TaskCompletedCount = stats.TaskCompletedCount,
+            TaskIncompleteCount = stats.TaskIncompleteCount,
+            TaskCancelledCount = stats.TaskCancelledCount,
+            TaskDisputeCount = stats.TaskDisputeCount,
+            CreatedByName = raw.CreatedByName,
+            Platforms = platforms,
+            CreatedAt = raw.CreatedAt,
+            Tasks = tasks,
+            Attachments = attachments,
+            ActivityLogs = logs
+        };
+    }
+
     // ── private ───────────────────────────────────────────────────
     private static string BuildListWhere(
         string? keyword,
@@ -160,4 +339,20 @@ public sealed class CaseMonitorRepository : ICaseMonitorRepository
 
         return clauses.Count == 0 ? "" : "WHERE " + string.Join(" AND ", clauses);
     }
+
+    // ── Private mapping types ─────────────────────────────────────
+    private sealed record CaseRawRow(
+        long CaseId, string Title, CaseStatus Status,
+        long MerchantId, string MerchantName,
+        bool HasCash, bool HasBarter, bool HasCommission,
+        decimal CashRewardAmount, decimal? CommissionRate, int? CookieDays,
+        DateTime ApplicationDeadline, DateTime SubmissionDeadline,
+        DateTime? StartedAt, DateTime? CompletedAt,
+        int WantedKolCount, int ApplicationCount, int ApprovedAssignmentCount,
+        string? CreatedByName, DateTime CreatedAt);
+
+    private sealed record TaskStatsRow(
+        int TaskInProgressCount, int TaskUnderReviewCount, int TaskRevisionCount,
+        int TaskCompletedCount, int TaskIncompleteCount,
+        int TaskCancelledCount, int TaskDisputeCount);
 }

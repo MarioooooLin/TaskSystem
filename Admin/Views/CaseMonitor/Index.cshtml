@@ -13,9 +13,7 @@
     var actionUrl = Url.Action("Index")!;
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/cases-monitor.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/cases-monitor.css" asp-append-version="true" />
 
 <!-- ===== PAGE HEADER ===== -->
 <div class="page-header cm-page-header">
@@ -269,7 +267,8 @@
                                 <a asp-controller="Dispute" asp-action="Index" asp-route-caseId="@c.CaseId"
                                    class="action-link action-link--danger">查看爭議</a>
                             }
-                            <a asp-action="Detail" asp-route-id="@c.CaseId" class="action-link">查看詳情</a>
+                            <a asp-action="Detail" asp-route-id="@c.CaseId" class="action-link"
+                               hx-get="/CaseMonitor/Detail/@c.CaseId" hx-target="#main-content" hx-push-url="true">查看詳情</a>
                             <a asp-controller="MerchantManagement" asp-action="Detail" asp-route-id="@c.MerchantId"
                                class="action-link">查看業者</a>
                         </td>

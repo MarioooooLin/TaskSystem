@@ -65,9 +65,7 @@
     };
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/kol-new.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/kol-new.css" asp-append-version="true" />
 
 <!-- ===== PAGE HEADER ===== -->
 <div class="page-header kn-page-header">
@@ -318,7 +316,7 @@
                             <span class="page-ellipsis">...</span>
                         }
                         <button type="button" class="page-btn @(p == curPage ? "active" : "")" onclick="knGoToPage(@p)" @(p ==
-                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
+                                                                                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
                         prev = p;
                     }
 

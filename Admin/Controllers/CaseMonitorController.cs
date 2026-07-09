@@ -1,5 +1,6 @@
 using Admin.ViewModels.CaseMonitor;
 using Application.Cases.Queries;
+using Common.Errors;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,8 @@ namespace Admin.Controllers;
 [Authorize]
 public sealed class CaseMonitorController(
     GetCaseListHandler listHandler,
-    GetCaseSummaryHandler summaryHandler) : Controller
+    GetCaseSummaryHandler summaryHandler,
+    GetCaseDetailHandler detailHandler) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index(CaseListQueryViewModel query)
@@ -40,12 +42,26 @@ public sealed class CaseMonitorController(
             Query = query
         };
 
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView(vm);
+
         return View(vm);
     }
 
     [HttpGet]
-    public IActionResult Detail(long id)
+    public async Task<IActionResult> Detail(long id)
     {
-        return View();
+        var result = await detailHandler.HandleAsync(new GetCaseDetailQuery(id));
+        if (result.IsFailure)
+        {
+            if (result.Error.Type == Common.Errors.ErrorType.NotFound)
+                return NotFound();
+            return StatusCode(500);
+        }
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView(result.Value);
+
+        return View(result.Value);
     }
 }

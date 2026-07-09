@@ -70,7 +70,9 @@ public sealed class KolManagementController(
             Query = vm,
         };
 
-        return View(model);
+        return Request.Headers.ContainsKey("HX-Request")
+            ? PartialView(model)
+            : View(model);
     }
 
     // ── GET /KolManagement/Detail/{id} ─────────────────────
@@ -82,7 +84,9 @@ public sealed class KolManagementController(
         if (result.IsFailure)
             return NotFound();
 
-        return View(result.Value);
+        return Request.Headers.ContainsKey("HX-Request")
+            ? PartialView(result.Value)
+            : View(result.Value);
     }
 
     // ── POST /KolManagement/Approve ────────────────────────
@@ -168,7 +172,9 @@ public sealed class KolManagementController(
         if (result.IsFailure)
             return NotFound();
 
-        return View(result.Value);
+        return Request.Headers.ContainsKey("HX-Request")
+            ? PartialView(result.Value)
+            : View(result.Value);
     }
 
     // ── POST /KolManagement/ReviewApprove ──────────────────

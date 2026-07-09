@@ -1,10 +1,128 @@
+﻿@model Application.Cases.DTOs.CaseDetailDto
+@using Domain.Enums
 @{
     ViewData["Title"] = "案件詳情與進度";
+
+    string CaseStatusPill(CaseStatus s) => s switch
+    {
+        CaseStatus.Draft => "cd-status-pill--draft",
+        CaseStatus.Recruiting => "cd-status-pill--recruit",
+        CaseStatus.RecruitmentClosed => "cd-status-pill--closed",
+        CaseStatus.InProgress => "cd-status-pill--running",
+        CaseStatus.Completed => "cd-status-pill--done",
+        CaseStatus.Settled => "cd-status-pill--done",
+        CaseStatus.Cancelled => "cd-status-pill--cancel",
+        _ => ""
+    };
+    string CaseStatusLabel(CaseStatus s) => s switch
+    {
+        CaseStatus.Draft => "草稿",
+        CaseStatus.Recruiting => "招募中",
+        CaseStatus.RecruitmentClosed => "招募滿額",
+        CaseStatus.InProgress => "執行中",
+        CaseStatus.Completed => "已完成",
+        CaseStatus.Settled => "已結算",
+        CaseStatus.Cancelled => "已取消",
+        _ => s.ToString()
+    };
+    string TaskStatusBadge(Domain.Enums.TaskStatus s) => s switch
+    {
+        Domain.Enums.TaskStatus.InProgress => "cd-mini-badge--running",
+        Domain.Enums.TaskStatus.UnderReview => "cd-mini-badge--paid",
+        Domain.Enums.TaskStatus.RevisionRequested => "cd-mini-badge--paid",
+        Domain.Enums.TaskStatus.Completed => "cd-mini-badge--done",
+        Domain.Enums.TaskStatus.Incomplete => "cd-mini-badge--cancel",
+        Domain.Enums.TaskStatus.Cancelled => "cd-mini-badge--cancel",
+        _ => "cd-mini-badge--pending"
+    };
+    string TaskStatusLabel(Domain.Enums.TaskStatus s) => s switch
+    {
+        Domain.Enums.TaskStatus.PendingMatch => "待媒合",
+        Domain.Enums.TaskStatus.PendingExecution => "待執行",
+        Domain.Enums.TaskStatus.InProgress => "執行中",
+        Domain.Enums.TaskStatus.UnderReview => "待驗收",
+        Domain.Enums.TaskStatus.RevisionRequested => "修改中",
+        Domain.Enums.TaskStatus.Completed => "已完成",
+        Domain.Enums.TaskStatus.Incomplete => "已過期",
+        Domain.Enums.TaskStatus.Cancelled => "已取消",
+        _ => s.ToString()
+    };
+    string PlatformLabel(short p) => p switch
+    {
+        1 => "Instagram",
+        2 => "Facebook",
+        3 => "YouTube",
+        4 => "TikTok",
+        5 => "Threads",
+        6 => "Blog",
+        _ => "其他"
+    };
+    string KolPlatformLabel(short? p) => p switch
+    {
+        1 => "Instagram",
+        2 => "Facebook",
+        3 => "YouTube",
+        4 => "TikTok",
+        5 => "Threads",
+        6 => "Blog",
+        7 => "X",
+        8 => "小紅書",
+        9 => "Snapchat",
+        _ => "—"
+    };
+    string KolCategoryLabel(short? c) => c switch
+    {
+        1 => "旅遊",
+        2 => "旅行",
+        3 => "時尚",
+        4 => "美妝",
+        5 => "居家生活",
+        6 => "親子",
+        7 => "寵物",
+        8 => "遊戲",
+        9 => "音樂",
+        10 => "影視",
+        11 => "藝術",
+        12 => "書籍",
+        13 => "科技",
+        14 => "財經",
+        15 => "教育",
+        16 => "職場",
+        17 => "健康",
+        18 => "健身",
+        19 => "運動",
+        20 => "飲食",
+        21 => "養生",
+        22 => "公益",
+        23 => "環保",
+        24 => "政治",
+        25 => "文化",
+        26 => "跨界",
+        _ => "—"
+    };
+    string FileSizeLabel(long bytes)
+    {
+        if (bytes >= 1_048_576) return $"{bytes / 1_048_576.0:F1} MB";
+        if (bytes >= 1_024) return $"{bytes / 1_024.0:F0} KB";
+        return $"{bytes} B";
+    }
+    string FileIcon(string mime) => mime switch
+    {
+        _ when mime.Contains("pdf") => "fa-regular fa-file-pdf",
+        _ when mime.Contains("word") => "fa-regular fa-file-word",
+        _ when mime.Contains("image") => "fa-regular fa-file-image",
+        _ => "fa-regular fa-file"
+    };
+
+    var start = Model.StartedAt ?? Model.CreatedAt;
+    var end = Model.CompletedAt ?? Model.SubmissionDeadline;
+    var totalDays = (end - start).TotalDays;
+    var elapsedDays = (DateTime.UtcNow - start).TotalDays;
+    var progressPct = totalDays > 0 ? Math.Min(100, Math.Max(0, elapsedDays / totalDays * 100)) : 0;
+    var remainDays = (int)Math.Max(0, (end - DateTime.UtcNow).TotalDays);
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/case-detail.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/case-detail.css" asp-append-version="true" />
 
 <!-- ===== PAGE HEADER ===== -->
 <div class="page-header cd-page-header">
@@ -13,51 +131,68 @@
         <p class="page-subtitle">查看單一案件資訊與該案件底下KOL任務的交付、驗收、追蹤與異常狀況</p>
     </div>
     <div class="cd-header-actions">
-        <a asp-action="Index" class="cd-btn cd-btn--ghost"><i class="fa-solid fa-arrow-left"></i> 返回案件監控</a>
-        <button class="cd-btn cd-btn--ghost"><i class="fa-regular fa-rectangle-list"></i> 查看異常</button>
-        <button class="cd-btn cd-btn--ghost"><i class="fa-solid fa-magnifying-glass"></i> 查看最近任務</button>
+        <a asp-action="Index" class="cd-btn cd-btn--ghost" hx-get="/CaseMonitor/Index" hx-target="#main-content"
+           hx-push-url="true">
+            <i class="fa-solid fa-arrow-left"></i> 返回案件監控
+        </a>
+        <button class="cd-btn cd-btn--ghost" type="button"><i class="fa-regular fa-rectangle-list"></i> 查看異常</button>
+        <button class="cd-btn cd-btn--ghost" type="button"><i class="fa-solid fa-magnifying-glass"></i> 查看最近任務</button>
     </div>
 </div>
 
 <!-- ===== CASE SUMMARY ===== -->
 <div class="content-card cd-summary-card">
     <div class="cd-summary-left">
-        <h2 class="cd-case-name">— 待資料庫連線 —</h2>
-        <span class="cd-status-pill cd-status-pill--running">執行中</span>
-        <p class="cd-case-company"><i class="fa-regular fa-building"></i> —</p>
+        <h2 class="cd-case-name">@Model.Title</h2>
+        <span class="cd-status-pill @CaseStatusPill(Model.Status)">@CaseStatusLabel(Model.Status)</span>
+        <p class="cd-case-company"><i class="fa-regular fa-building"></i> @Model.MerchantName</p>
         <div class="cd-condition-tags">
-            <span>現金酬勞</span>
+            @if (Model.HasCash)
+            {
+                <span>現金酬勞</span>
+            }
+            @if (Model.HasBarter)
+            {
+                <span>體驗項目</span>
+            }
+            @if (Model.HasCommission)
+            {
+                <span>導購分潤</span>
+            }
         </div>
     </div>
 
     <div class="cd-summary-right">
         <div class="cd-summary-metric">
             <span>招募進度</span>
-            <strong>— / —</strong>
+            <strong>@Model.ApplicationCount / @Model.WantedKolCount</strong>
         </div>
         <div class="cd-summary-metric">
             <span>已成立任務</span>
-            <strong>— / —</strong>
-        </div>
-        <div class="cd-summary-metric">
-            <span>執行中任務</span>
-            <strong>—</strong>
+            <strong>@Model.ApprovedAssignmentCount / @Model.WantedKolCount</strong>
         </div>
         <div class="cd-summary-metric">
             <span>待驗收任務</span>
-            <strong class="is-danger">—</strong>
+            <strong class="@(Model.TaskUnderReviewCount > 0 ? "is-danger" : "")">@Model.TaskUnderReviewCount</strong>
         </div>
         <div class="cd-summary-metric">
             <span>已逾期任務</span>
-            <strong class="is-danger">—</strong>
+            <strong class="@(Model.TaskIncompleteCount > 0 ? "is-danger" : "")">@Model.TaskIncompleteCount</strong>
         </div>
         <div class="cd-summary-metric">
             <span>爭議處理中</span>
-            <strong>—</strong>
+            <strong>@Model.TaskDisputeCount</strong>
         </div>
         <div class="cd-summary-metric">
             <span>導購狀態</span>
-            <strong>—</strong>
+            @if (Model.HasCommission)
+            {
+                <strong class="is-green">● 同步正常</strong>
+            }
+            else
+            {
+                <strong>— 未啟用</strong>
+            }
         </div>
     </div>
 </div>
@@ -79,24 +214,53 @@
     <section class="content-card cd-panel">
         <h2 class="cd-panel-title"><i class="fa-solid fa-circle-info"></i> 案件基本資料</h2>
         <div class="cd-kv-grid">
-            <div class="cd-kv-item"><span>案件編號</span><strong>—</strong></div>
-            <div class="cd-kv-item"><span>建立業者</span><strong>—</strong></div>
-            <div class="cd-kv-item"><span>預定招募人數</span><strong>—</strong></div>
-            <div class="cd-kv-item"><span>曝光平台</span><strong>—</strong></div>
-            <div class="cd-kv-item"><span>案件負責人</span><strong>—</strong></div>
+            <div class="cd-kv-item">
+                <span>案件編號</span><strong>CASE-@Model.CreatedAt.ToString("yyyyMM")-@Model.CaseId.ToString("D3")</strong>
+            </div>
+            <div class="cd-kv-item"><span>預定招募人數</span><strong>@Model.WantedKolCount 位</strong></div>
+            <div class="cd-kv-item">
+                <span>曝光平台</span>
+                <strong>
+                    @if (Model.Platforms.Count > 0)
+                    {
+                        @string.Join(", ", Model.Platforms.Select(p => PlatformLabel(p)))
+                    }
+                    else
+                    {
+                        <text>—</text>
+                    }
+                </strong>
+            </div>
+            <div class="cd-kv-item"><span>案件負責人</span><strong>@(Model.CreatedByName ?? "—")</strong></div>
         </div>
     </section>
 
     <section class="content-card cd-panel">
         <h2 class="cd-panel-title"><i class="fa-regular fa-calendar"></i> 時程資訊</h2>
         <div class="cd-kv-list">
-            <div class="cd-kv-row"><span>案件執行期間</span><strong>—</strong></div>
-            <div class="cd-kv-row"><span>KOL 招募截止</span><strong>—</strong></div>
-            <div class="cd-kv-row"><span>成果交付截止</span><strong>—</strong></div>
+            <div class="cd-kv-row">
+                <span>案件執行期間</span>
+                <strong>
+                    @(Model.StartedAt.HasValue ? Model.StartedAt.Value.ToString("yyyy-MM-dd") : "—")
+                    ~
+                    @(Model.CompletedAt.HasValue ? Model.CompletedAt.Value.ToString("yyyy-MM-dd") : "—")
+                </strong>
+            </div>
+            <div class="cd-kv-row">
+                <span>KOL 招募截止</span>
+                <strong>@Model.ApplicationDeadline.ToString("yyyy-MM-dd")</strong>
+            </div>
+            <div class="cd-kv-row">
+                <span>成果交付截止</span>
+                <strong>@Model.SubmissionDeadline.ToString("yyyy-MM-dd")</strong>
+            </div>
         </div>
         <div class="cd-progress-wrap">
-            <div class="cd-progress-bar"><span style="width: 0%"></span></div>
-            <div class="cd-progress-meta"><span>—</span><span>—</span></div>
+            <div class="cd-progress-bar"><span style="width: @progressPct.ToString("F0")%"></span></div>
+            <div class="cd-progress-meta">
+                <span>已過 @((int)elapsedDays) 天</span>
+                <span>剩餘 @remainDays 天</span>
+            </div>
         </div>
     </section>
 </div>
@@ -107,15 +271,55 @@
     <div class="cd-condition-grid">
         <article class="cd-condition-item">
             <span><i class="fa-solid fa-wallet"></i> 現金酬勞</span>
-            <strong>—</strong>
+            <strong>
+                @if (Model.HasCash)
+                {
+                    <text>NT$ @Model.CashRewardAmount.ToString("N0")</text>
+                }
+                else
+                {
+
+                    <text>— 未提供</text>
+                }
+            </strong>
         </article>
         <article class="cd-condition-item">
             <span><i class="fa-solid fa-gift"></i> 體驗項目</span>
-            <strong>—</strong>
+            <strong>
+                @if (Model.HasBarter && Model.BarterItems.Count > 0)
+                {
+                    @string.Join("、", Model.BarterItems)
+                }
+                else if (Model.HasBarter)
+                {
+
+                    <text>有提供</text>
+                }
+                else
+                {
+
+                    <text>— 未提供</text>
+                }
+            </strong>
         </article>
         <article class="cd-condition-item">
             <span><i class="fa-solid fa-chart-line"></i> 導購分潤</span>
-            <strong>—</strong>
+            <strong>
+                @if (Model.HasCommission && Model.CommissionRate.HasValue)
+                {
+                    <text>KOL @(Model.CommissionRate.Value.ToString("0.#"))%</text>
+                }
+                else if (Model.HasCommission)
+                {
+
+                    <text>已啟用</text>
+                }
+                else
+                {
+
+                    <text>— 未啟用</text>
+                }
+            </strong>
         </article>
     </div>
 </section>
@@ -124,12 +328,15 @@
 <section class="content-card cd-panel">
     <h2 class="cd-panel-title"><i class="fa-solid fa-chart-column"></i> 招募與任務統計</h2>
     <div class="cd-task-stat-grid">
-        <div class="cd-task-stat"><span>報名人數</span><strong>—</strong></div>
-        <div class="cd-task-stat"><span>未入選</span><strong>—</strong></div>
-        <div class="cd-task-stat"><span>已成立任務</span><strong>—</strong></div>
-        <div class="cd-task-stat"><span>執行中</span><strong>—</strong></div>
-        <div class="cd-task-stat"><span>已交付待審</span><strong>—</strong></div>
-        <div class="cd-task-stat"><span>待處理逾期</span><strong>—</strong></div>
+        <div class="cd-task-stat"><span>報名人數</span><strong>@Model.ApplicationCount</strong></div>
+        <div class="cd-task-stat"><span>未入選</span><strong>@Model.RejectedApplicationCount</strong></div>
+        <div class="cd-task-stat"><span>已成立任務</span><strong>@Model.ApprovedAssignmentCount</strong></div>
+        <div class="cd-task-stat"><span>執行中</span><strong>@Model.TaskInProgressCount</strong></div>
+        <div class="cd-task-stat"><span>已交付待審</span><strong>@Model.TaskUnderReviewCount</strong></div>
+        <div class="cd-task-stat">
+            <span>待處理逾期</span>
+            <strong class="@(Model.TaskIncompleteCount > 0 ? "is-danger" : "")">@Model.TaskIncompleteCount</strong>
+        </div>
     </div>
 </section>
 
@@ -159,41 +366,129 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td colspan="9" class="table-empty">— 待資料庫連線 —</td>
-                </tr>
+                @if (!Model.Tasks.Any())
+                {
+                    <tr>
+                        <td colspan="9" class="table-empty">尚無任務資料</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var task in Model.Tasks)
+                    {
+                        <tr>
+                            <td>
+                                <div class="cd-kol-name-cell">
+                                    <strong>@(string.IsNullOrEmpty(task.KolName) ? "（未媒合）" : task.KolName)</strong>
+                                </div>
+                            </td>
+                            <td>@KolCategoryLabel(task.KolFirstCategory)</td>
+                            <td>@KolPlatformLabel(task.KolMainPlatform)</td>
+                            <td>
+                                <span class="cd-mini-badge @TaskStatusBadge(task.TaskStatus)">
+                                    @TaskStatusLabel(task.TaskStatus)
+                                </span>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(task.SubmissionUrl))
+                                {
+                                    <a href="@task.SubmissionUrl" target="_blank" rel="noopener noreferrer"
+                                       class="cd-inline-link">查看連結</a>
+                                }
+                                else if (task.SubmissionStatus.HasValue)
+                                {
+                                    <text>已提交</text>
+                                }
+                                else
+                                {
+                                    <text>-</text>
+                                }
+                            </td>
+                            <td>
+                                @if (task.SubmissionStatus == SubmissionStatus.Approved)
+                                {
+                                    <span class="cd-text-green">● 通過</span>
+                                }
+                                else if (task.SubmissionStatus == SubmissionStatus.Rejected)
+                                {
+                                    <span class="cd-text-danger">● 未通過</span>
+                                }
+                                else if (task.SubmissionStatus == SubmissionStatus.Submitted || task.SubmissionStatus ==
+                        SubmissionStatus.Overdue)
+                                {
+                                    <span class="cd-text-warn">● 待驗收</span>
+                                }
+                                else if (task.SubmissionStatus == SubmissionStatus.RevisionRequested)
+                                {
+                                    <span class="cd-text-warn">● 修改中</span>
+                                }
+                                else
+                                {
+                                    <text>未開始</text>
+                                }
+                            </td>
+                            <td>
+                                @if (task.HasDispute)
+                                {
+                                    <span class="cd-text-danger">
+                                        <i class="fa-regular fa-triangle-exclamation"></i> 爭議處理中
+                                    </span>
+                                }
+                                else
+                                {
+                                    <text>-</text>
+                                }
+                            </td>
+                            <td>@(task.UpdatedAt.HasValue ? task.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm") : "—")</td>
+                            <td>
+                                <a href="#" class="action-link">詳情</a>
+                                @if (task.HasDispute)
+                                {
+                                    <a asp-controller="Dispute" asp-action="Index" class="action-link action-link--danger">處理爭議</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>
 </section>
 
 <!-- ===== GUIDE STATS ===== -->
-<section class="content-card cd-panel">
-    <div class="cd-section-head">
-        <h2 class="cd-panel-title"><i class="fa-solid fa-square-poll-horizontal"></i> 導購與訂單統計</h2>
-        <span class="cd-sync-status">—</span>
-    </div>
-    <div class="cd-sales-grid">
-        <div class="cd-sales-item">
-            <span>交易點擊數</span>
-            <strong>—</strong>
+@if (Model.HasCommission)
+{
+    <section class="content-card cd-panel">
+        <div class="cd-section-head">
+            <h2 class="cd-panel-title"><i class="fa-solid fa-square-poll-horizontal"></i> 導購與訂單統計</h2>
+            <span class="cd-sync-status">● 數據同步正常</span>
         </div>
-        <div class="cd-sales-item">
-            <span>訂單總金額</span>
-            <strong>—</strong>
-            <small>NTD（預估）</small>
+        <div class="cd-sales-grid">
+            <div class="cd-sales-item">
+                <span>交易點擊數</span>
+                <strong>—</strong>
+            </div>
+            <div class="cd-sales-item">
+                <span>訂單總金額</span>
+                <strong>—</strong>
+                <small>NTD（預估）</small>
+            </div>
+            <div class="cd-sales-item">
+                <span>導購實際值</span>
+                <strong>—</strong>
+                <small>NTD</small>
+            </div>
+            <div class="cd-sales-item cd-sales-item--highlight">
+                <span>預估待分潤金</span>
+                <strong>—</strong>
+                @if (Model.CommissionRate.HasValue)
+                {
+                    <small>基於 @(Model.CommissionRate.Value.ToString("0.#"))% 分潤率</small>
+                }
+            </div>
         </div>
-        <div class="cd-sales-item">
-            <span>導購實際值</span>
-            <strong>—</strong>
-            <small>NTD</small>
-        </div>
-        <div class="cd-sales-item cd-sales-item--highlight">
-            <span>預估待分潤金</span>
-            <strong>—</strong>
-        </div>
-    </div>
-</section>
+    </section>
+}
 
 <!-- ===== FILES & LOG ===== -->
 <div class="cd-grid cd-grid--2">
@@ -203,15 +498,59 @@
             <button class="cd-link-btn" type="button">上傳檔案</button>
         </div>
         <div class="cd-file-list">
-            <p class="table-empty">— 待資料庫連線 —</p>
+            @if (!Model.Attachments.Any())
+            {
+                <p class="table-empty">尚無附件資料</p>
+            }
+            else
+            {
+                @foreach (var file in Model.Attachments)
+                {
+                    <article class="cd-file-item">
+                        <div class="cd-file-meta">
+                            <i class="@FileIcon(file.MimeType)"></i>
+                            <div>
+                                <strong>@file.FileName</strong>
+                                <span>@FileSizeLabel(file.FileSize) - @file.UploadedAt.ToString("yyyy-MM-dd")</span>
+                            </div>
+                        </div>
+                        <button class="cd-icon-btn" type="button" aria-label="下載">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </article>
+                }
+            }
         </div>
     </section>
 
     <section class="content-card cd-panel">
         <h2 class="cd-panel-title"><i class="fa-regular fa-clock"></i> 操作紀錄</h2>
         <div class="cd-log-list">
-            <p class="table-empty">— 待資料庫連線 —</p>
+            @if (!Model.ActivityLogs.Any())
+            {
+                <p class="table-empty">尚無操作紀錄</p>
+            }
+            else
+            {
+                @foreach (var log in Model.ActivityLogs)
+                {
+                    <article class="cd-log-item">
+                        <div class="cd-log-dot"></div>
+                        <div class="cd-log-content">
+                            <strong>@log.Action</strong>
+                            @if (!string.IsNullOrEmpty(log.Note))
+                            {
+                                <p>@log.Note</p>
+                            }
+                            else if (!string.IsNullOrEmpty(log.ActorName))
+                            {
+                                <p>操作者：@log.ActorName</p>
+                            }
+                        </div>
+                        <span class="cd-log-time">@log.CreatedAt.ToString("MM-dd HH:mm")</span>
+                    </article>
+                }
+            }
         </div>
     </section>
 </div>
-

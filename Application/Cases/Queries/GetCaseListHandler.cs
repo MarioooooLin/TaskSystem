@@ -30,6 +30,7 @@ public sealed class GetCaseListHandler(
             ct);
 
         var result = new PagedResult<CaseListItemDto>(items, pageQuery.Page, pageQuery.PageSize, totalCount);
+        await uow.CommitAsync(ct);
         return Result<PagedResult<CaseListItemDto>>.Success(result);
     }
 }
