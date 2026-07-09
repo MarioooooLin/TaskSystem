@@ -1,0 +1,75 @@
+@model Admin.ViewModels.Account.LoginViewModel
+@{
+    Layout = "_LayoutLogin";
+    ViewData["Title"] = "登入";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
+<div class="wrap">
+    <div class="main">
+        <div class="wrap_left">
+            <div class="login_image"><img src="~/images/login_image.jpg" alt="管理後台登入" /></div>
+        </div>
+        <div class="wrap_right">
+            <div class="login_wrap">
+                <div class="page_title">任務系統管理者後台</div>
+                <div class="page_desc">請使用管理者帳號登入後台。</div>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert-error">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <p>@error.ErrorMessage</p>
+                        }
+                    </div>
+                }
+
+                <form method="post" asp-action="Login" asp-controller="Account">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="@(new Admin.ViewModels.Account.LoginViewModel().RememberMe)"
+                           value="false" />
+
+                    <div class="input_box">
+                        <ul>
+                            <li>
+                                <label class="field_label" asp-for="Email">帳號 / 電子郵件</label>
+                                <input asp-for="Email" type="email" placeholder="admin@example.com"
+                                       autocomplete="username" />
+                                <span asp-validation-for="Email" class="field_error"></span>
+                            </li>
+                            <li>
+                                <label class="field_label" asp-for="Password">密碼</label>
+                                <div class="password_wrap">
+                                    <input asp-for="Password" id="password-field1" type="password"
+                                           autocomplete="current-password" />
+                                    <button type="button" class="pw_toggle_btn" data-target="password-field1"
+                                            aria-label="顯示或隱藏密碼">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="Password" class="field_error"></span>
+                            </li>
+                            <li>
+                                <div class="remember_row">
+                                    <label class="remember_me">
+                                        <input asp-for="RememberMe" type="checkbox" />
+                                        <span class="prm-checkmark"></span> 記住我
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="btn login_btn">
+                                    <button type="submit">立即登入</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,8 +3,23 @@
 ## ===========================
 
 # ---- 外部設定檔（機密，不進版控）----
-Account/
+/Account/
 .github/
+
+# ---- Local editor / tooling settings ----
+.vscode/
+
+# ---- Generated spreadsheet workspace ----
+.xlsx_build_*/
+
+# ---- Local project reference files ----
+/台灣旅圖 KOL 任務系統運作規則.htm
+/台灣旅圖 KOL 任務系統運作規則.pdf
+/任務系統時程表(Mario).csv
+/任務系統時程表(Mario).xlsx
+/rules_utf8.htm
+/task-system-schema-fields-v6.xlsx
+/TTM-KOL任務管理.zip
 
 # ---- Log 檔案 ----
 **/logs/

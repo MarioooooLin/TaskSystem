@@ -1,8 +1,0 @@
-{
-    "chat.tools.terminal.autoApprove": {
-        "/^pwsh -Command \"Get-Date -Format 'yyyy-MM-dd HH:mm'\"$/": {
-            "approve": true,
-            "matchCommandLine": true
-        }
-    }
-}
