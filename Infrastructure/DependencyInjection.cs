@@ -45,6 +45,7 @@ public static class DependencyInjection
         services.AddScoped<IKolStatsRepository, KolStatsRepository>();
         services.AddScoped<IKolEarningRepository, KolEarningRepository>();
         services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
+        services.AddScoped<ICaseMonitorRepository, CaseMonitorRepository>();
         return services;
     }
 }

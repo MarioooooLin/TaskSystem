@@ -1,5 +1,16 @@
+@model Admin.ViewModels.CaseMonitor.CaseMonitorIndexViewModel
+@using Domain.Enums
 @{
     ViewData["Title"] = "案件監控";
+    var q = Model.Query;
+    var keyword = q.Keyword ?? "";
+    var statusVal = q.Status.HasValue ? ((int)q.Status.Value).ToString() : "";
+    var hasPendingReviewVal = q.HasPendingReview.HasValue ? q.HasPendingReview.Value.ToString().ToLower() : "";
+    var hasCommissionVal = q.HasCommission.HasValue ? q.HasCommission.Value.ToString().ToLower() : "";
+    var dateFrom = q.DateFrom?.ToString("yyyy-MM-dd") ?? "";
+    var dateTo = q.DateTo?.ToString("yyyy-MM-dd") ?? "";
+    var list = Model.List;
+    var actionUrl = Url.Action("Index")!;
 }
 
 @section PageCss {
@@ -18,31 +29,31 @@
 <div class="content-card cm-kpi-row">
     <div class="cm-kpi-item cm-kpi-item--total">
         <span class="cm-kpi-label">全部案件</span>
-        <strong class="cm-kpi-value">—</strong>
+        <strong class="cm-kpi-value">@Model.Summary.TotalCount</strong>
     </div>
     <div class="cm-kpi-item">
         <span class="cm-kpi-label">草稿</span>
-        <strong class="cm-kpi-value">—</strong>
+        <strong class="cm-kpi-value">@Model.Summary.DraftCount</strong>
     </div>
     <div class="cm-kpi-item cm-kpi-item--recruit">
         <span class="cm-kpi-label">招募中</span>
-        <strong class="cm-kpi-value">—</strong>
+        <strong class="cm-kpi-value">@Model.Summary.RecruitingCount</strong>
     </div>
     <div class="cm-kpi-item">
         <span class="cm-kpi-label">招募滿額</span>
-        <strong class="cm-kpi-value">—</strong>
+        <strong class="cm-kpi-value">@Model.Summary.RecruitmentClosedCount</strong>
     </div>
     <div class="cm-kpi-item cm-kpi-item--running">
         <span class="cm-kpi-label">執行中</span>
-        <strong class="cm-kpi-value">—</strong>
+        <strong class="cm-kpi-value">@Model.Summary.InProgressCount</strong>
     </div>
     <div class="cm-kpi-item">
         <span class="cm-kpi-label">已結案</span>
-        <strong class="cm-kpi-value">—</strong>
+        <strong class="cm-kpi-value">@Model.Summary.CompletedCount</strong>
     </div>
     <div class="cm-kpi-item cm-kpi-item--last">
         <span class="cm-kpi-label">已取消</span>
-        <strong class="cm-kpi-value">—</strong>
+        <strong class="cm-kpi-value">@Model.Summary.CancelledCount</strong>
     </div>
 </div>
 
@@ -50,103 +61,108 @@
 <div class="cm-alert-grid">
     <article class="content-card cm-alert-card cm-alert-card--pending">
         <span class="cm-alert-title"><i class="fa-regular fa-clock"></i> 待驗收任務</span>
-        <div class="cm-alert-count-wrap"><strong>—</strong><span>件任務</span></div>
+        <div class="cm-alert-count-wrap"><strong>@Model.Alert.PendingReviewTaskCount</strong><span>件任務</span></div>
         <p>有新的作品已提交，請提醒業者於時限內完成驗收。</p>
-        <button type="button" class="cm-alert-btn cm-alert-btn--warn">套用篩選</button>
+        <a href="@actionUrl?hasPendingReview=true" class="cm-alert-btn cm-alert-btn--warn">套用篩選</a>
     </article>
 
     <article class="content-card cm-alert-card cm-alert-card--expired">
         <span class="cm-alert-title"><i class="fa-regular fa-calendar-xmark"></i> 已逾期任務</span>
-        <div class="cm-alert-count-wrap"><strong>—</strong><span>件任務</span></div>
+        <div class="cm-alert-count-wrap"><strong>@Model.Alert.OverdueTaskCount</strong><span>件任務</span></div>
         <p>已超過約定的交付日期，需派介入確認 KOL 執行狀況。</p>
-        <button type="button" class="cm-alert-btn cm-alert-btn--danger">即刻處理</button>
+        <a href="@actionUrl?status=4" class="cm-alert-btn cm-alert-btn--danger">即刻處理</a>
     </article>
 
     <article class="content-card cm-alert-card cm-alert-card--dispute">
         <span class="cm-alert-title"><i class="fa-solid fa-gavel"></i> 爭議處理中任務</span>
-        <div class="cm-alert-count-wrap"><strong>—</strong><span>件任務</span></div>
+        <div class="cm-alert-count-wrap"><strong>@Model.Alert.DisputeTaskCount</strong><span>件任務</span></div>
         <p>業者與 KOL 之間存在驗收爭議，等待平台介入。</p>
-        <button type="button" class="cm-alert-btn cm-alert-btn--light">查看先選</button>
+        <a asp-controller="Dispute" asp-action="Index" class="cm-alert-btn cm-alert-btn--light">查看爭議</a>
     </article>
 
     <article class="content-card cm-alert-card cm-alert-card--abnormal">
         <span class="cm-alert-title"><i class="fa-solid fa-wave-square"></i> 導購同步異常案件</span>
-        <div class="cm-alert-count-wrap"><strong>—</strong><span>個案</span></div>
+        <div class="cm-alert-count-wrap"><strong>@Model.Alert.CommissionSyncErrorCount</strong><span>個案</span></div>
         <p>API 同步資料發生異常，導致導購分潤數據尚未更新。</p>
-        <button type="button" class="cm-alert-btn cm-alert-btn--ghost">診斷原因</button>
+        <button type="button" class="cm-alert-btn cm-alert-btn--ghost" disabled>診斷原因</button>
     </article>
 </div>
 
 <!-- ===== FILTER ===== -->
-<div class="content-card cm-filter">
-    <div class="cm-filter-row">
-        <div class="cm-filter-item cm-filter-item--grow">
-            <label class="cm-filter-label">關鍵字搜尋</label>
-            <div class="filter-search">
-                <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
-                <input type="text" class="filter-search__input" placeholder="案件名稱/業者名...">
-            </div>
-        </div>
-        <div class="cm-filter-item">
-            <label class="cm-filter-label">待驗收任務</label>
-            <div class="filter-select-wrap">
-                <select class="filter-select">
-                    <option>不限</option>
-                    <option>有待驗收</option>
-                    <option>無待驗收</option>
-                </select>
-                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
-            </div>
-        </div>
-        <div class="cm-filter-item">
-            <label class="cm-filter-label">導購分潤</label>
-            <div class="filter-select-wrap">
-                <select class="filter-select">
-                    <option>不限</option>
-                    <option>正常同步</option>
-                    <option>異常</option>
-                </select>
-                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
-            </div>
-        </div>
-    </div>
+<form id="cm-filter-form" method="get" asp-action="Index">
+    <input type="hidden" id="cm-status-input" name="status" value="@statusVal" />
 
-    <div class="cm-filter-row cm-filter-row--chips">
-        <label class="cm-filter-label">案件狀態</label>
-        <div class="cm-chip-group">
-            <button class="cm-chip cm-chip--active" type="button">全部</button>
-            <button class="cm-chip" type="button">草稿</button>
-            <button class="cm-chip" type="button">招募中</button>
-            <button class="cm-chip" type="button">執行中</button>
-            <button class="cm-chip" type="button">已結案</button>
-            <button class="cm-chip" type="button">已取消</button>
-        </div>
-        <label class="cm-filter-label cm-filter-label--inline">合作條件</label>
-        <div class="cm-chip-group">
-            <button class="cm-chip" type="button">現金酬勞</button>
-            <button class="cm-chip" type="button">體驗項目</button>
-            <button class="cm-chip" type="button">導購分潤</button>
-        </div>
-    </div>
-
-    <div class="cm-filter-row">
-        <div class="cm-filter-item cm-filter-item--date">
-            <label class="cm-filter-label">建立日期範圍</label>
-            <div class="cm-date-range">
-                <input type="date" class="date-input" aria-label="開始日期">
-                <span class="cm-date-sep">~</span>
-                <input type="date" class="date-input" aria-label="結束日期">
+    <div class="content-card cm-filter">
+        <div class="cm-filter-row">
+            <div class="cm-filter-item cm-filter-item--grow">
+                <label class="cm-filter-label">關鍵字搜尋</label>
+                <div class="filter-search">
+                    <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                    <input type="text" name="keyword" value="@keyword" class="filter-search__input"
+                           placeholder="案件名稱/業者名...">
+                </div>
+            </div>
+            <div class="cm-filter-item">
+                <label class="cm-filter-label">待驗收任務</label>
+                <div class="filter-select-wrap">
+                    <select name="hasPendingReview" class="filter-select">
+                        <option value="">不限</option>
+                        <option value="true" selected="@(hasPendingReviewVal == "true")">有待驗收</option>
+                        <option value="false" selected="@(hasPendingReviewVal == "false")">無待驗收</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="cm-filter-item">
+                <label class="cm-filter-label">導購分潤</label>
+                <div class="filter-select-wrap">
+                    <select name="hasCommission" class="filter-select">
+                        <option value="">不限</option>
+                        <option value="true" selected="@(hasCommissionVal == "true")">已啟用</option>
+                        <option value="false" selected="@(hasCommissionVal == "false")">未啟用</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
             </div>
         </div>
-        <div class="cm-filter-actions">
-            <button class="cm-clear-btn" type="button">重設篩選</button>
-            <button class="btn-primary" type="button">搜尋</button>
+
+        <div class="cm-filter-row cm-filter-row--chips">
+            <label class="cm-filter-label">案件狀態</label>
+            <div class="cm-chip-group" id="cm-status-chips">
+                <button class="cm-chip @(statusVal == "" ? "cm-chip--active" : "")" type="button"
+                        data-status="">全部</button>
+                <button class="cm-chip @(statusVal == "1" ? "cm-chip--active" : "")" type="button"
+                        data-status="1">草稿</button>
+                <button class="cm-chip @(statusVal == "2" ? "cm-chip--active" : "")" type="button"
+                        data-status="2">招募中</button>
+                <button class="cm-chip @(statusVal == "4" ? "cm-chip--active" : "")" type="button"
+                        data-status="4">執行中</button>
+                <button class="cm-chip @(statusVal == "5" ? "cm-chip--active" : "")" type="button"
+                        data-status="5">已結案</button>
+                <button class="cm-chip @(statusVal == "7" ? "cm-chip--active" : "")" type="button"
+                        data-status="7">已取消</button>
+            </div>
+        </div>
+
+        <div class="cm-filter-row">
+            <div class="cm-filter-item cm-filter-item--date">
+                <label class="cm-filter-label">建立日期範圍</label>
+                <div class="cm-date-range">
+                    <input type="date" name="dateFrom" value="@dateFrom" class="date-input" aria-label="開始日期">
+                    <span class="cm-date-sep">~</span>
+                    <input type="date" name="dateTo" value="@dateTo" class="date-input" aria-label="結束日期">
+                </div>
+            </div>
+            <div class="cm-filter-actions">
+                <a asp-action="Index" class="cm-clear-btn">重設篩選</a>
+                <button type="submit" class="btn-primary">搜尋</button>
+            </div>
         </div>
     </div>
-</div>
+</form>
 
 <!-- ===== TABLE ===== -->
-<div class="content-card">
+<div id="cm-results" class="content-card">
     <div class="table-section">
         <table class="data-table cm-table">
             <thead>
@@ -162,22 +178,201 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td colspan="8" class="table-empty">— 待資料庫連線 —</td>
-                </tr>
+                @foreach (var c in list.Items)
+                {
+                    var (statusCss, statusText) = c.Status switch
+                    {
+                        CaseStatus.Draft => ("cm-status cm-status--draft", "草稿"),
+                        CaseStatus.Recruiting => ("cm-status cm-status--recruit", "招募中"),
+                        CaseStatus.RecruitmentClosed => ("cm-status cm-status--recruit", "招募滿額"),
+                        CaseStatus.InProgress => ("cm-status cm-status--running", "執行中"),
+                        CaseStatus.Completed => ("cm-status cm-status--closed", "已結案"),
+                        CaseStatus.Settled => ("cm-status cm-status--closed", "已結清"),
+                        CaseStatus.Cancelled => ("cm-status cm-status--cancel", "已取消"),
+                        _ => ("cm-status", "—"),
+                    };
+
+                    <tr>
+                        <td class="cm-case-name">
+                            <strong>@c.Title</strong>
+                            <span>@c.MerchantName</span>
+                        </td>
+                        <td><span class="@statusCss">@statusText</span></td>
+                        <td class="cm-condition-cell">
+                            @if (c.HasCash)
+                            {
+                                <span>現金</span>
+                            }
+                            @if (c.HasBarter)
+                            {
+                                <span>體驗</span>
+                            }
+                            @if (c.HasCommission)
+                            {
+                                <span>導購</span>
+                            }
+                            @if (!c.HasCash && !c.HasBarter && !c.HasCommission)
+                            {
+                                <span>—</span>
+                            }
+                        </td>
+                        <td class="cm-recruit-cell">
+                            招募 @c.ApplicationCount/@c.WantedKolCount<br>
+                            成立 @c.ApprovedAssignmentCount/@c.WantedKolCount
+                        </td>
+                        <td class="cm-task-summary">
+                            @if (c.TaskInProgressCount > 0)
+                            {
+                                <span>● 執行中 (@c.TaskInProgressCount)</span>
+                            }
+                            @if (c.TaskUnderReviewCount > 0)
+                            {
+                                <span>● 待驗收 (@c.TaskUnderReviewCount)</span>
+                            }
+                            @if (c.TaskDisputeCount > 0)
+                            {
+                                <span class="cm-task-summary--danger">● 爭議中 (@c.TaskDisputeCount)</span>
+                            }
+                            @if (c.TaskCompletedCount > 0)
+                            {
+                                <span>● 已完成 (@c.TaskCompletedCount)</span>
+                            }
+                            @if (c.TaskIncompleteCount > 0)
+                            {
+                                <span class="cm-task-summary--warn">● 已逾期 (@c.TaskIncompleteCount)</span>
+                            }
+                            @if (c.TaskCancelledCount > 0)
+                            {
+                                <span>● 已取消 (@c.TaskCancelledCount)</span>
+                            }
+                            @if (c.TaskInProgressCount == 0 && c.TaskUnderReviewCount == 0 &&
+                                 c.TaskDisputeCount == 0 && c.TaskCompletedCount == 0 &&
+                                 c.TaskIncompleteCount == 0 && c.TaskCancelledCount == 0)
+                            {
+                                <span>—</span>
+                            }
+                        </td>
+                        <td>
+                            @if (c.HasCommission)
+                            {
+                                <span class="cm-guide-badge cm-guide-badge--normal">● 已啟用</span>
+                            }
+                            else
+                            {
+                                <small>未啟用</small>
+                            }
+                        </td>
+                        <td class="cm-date">@c.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td class="cm-actions">
+                            @if (c.TaskDisputeCount > 0)
+                            {
+                                <a asp-controller="Dispute" asp-action="Index" asp-route-caseId="@c.CaseId"
+                                   class="action-link action-link--danger">查看爭議</a>
+                            }
+                            <a asp-action="Detail" asp-route-id="@c.CaseId" class="action-link">查看詳情</a>
+                            <a asp-controller="MerchantManagement" asp-action="Detail" asp-route-id="@c.MerchantId"
+                               class="action-link">查看業者</a>
+                        </td>
+                    </tr>
+                }
+                @if (!list.Items.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="empty-state">查無符合條件的案件資料。</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 
-    <div class="pagination cm-pagination">
-        <span class="pagination__info">—</span>
-        <div class="pagination__nav">
-            <button class="page-btn" aria-label="第一頁"><i class="fa-solid fa-angles-left"></i></button>
-            <button class="page-btn" aria-label="上一頁"><i class="fa-solid fa-chevron-left"></i></button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn" aria-label="下一頁"><i class="fa-solid fa-chevron-right"></i></button>
-            <button class="page-btn" aria-label="最末頁"><i class="fa-solid fa-angles-right"></i></button>
+    <!-- ===== PAGINATION ===== -->
+    @if (list.TotalPages >= 1)
+    {
+        var startItem = (list.Page - 1) * list.PageSize + 1;
+        var endItem = Math.Min(list.Page * list.PageSize, list.TotalCount);
+        <div class="pagination cm-pagination">
+            <span class="pagination__info">
+                顯示第 @startItem 到 @endItem 筆，共 @list.TotalCount 案件
+            </span>
+            <div class="pagination__nav">
+                @if (list.HasPreviousPage)
+                {
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-hasPendingReview="@hasPendingReviewVal" asp-route-hasCommission="@hasCommissionVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="1" class="page-btn"
+                       aria-label="第一頁">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </a>
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-hasPendingReview="@hasPendingReviewVal" asp-route-hasCommission="@hasCommissionVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="@(list.Page - 1)"
+                       class="page-btn" aria-label="上一頁">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                }
+                else
+                {
+                    <button class="page-btn" disabled aria-label="第一頁"><i class="fa-solid fa-angles-left"></i></button>
+                    <button class="page-btn" disabled aria-label="上一頁"><i class="fa-solid fa-chevron-left"></i></button>
+                }
+
+                @{
+                    var totalPages = list.TotalPages;
+                    var curPage = list.Page;
+                    var pages = Enumerable.Range(1, totalPages)
+                        .Where(p => p == 1 || p == totalPages || Math.Abs(p - curPage) <= 1)
+                        .ToList();
+                    int? prev = null;
+                }
+                @foreach (var p in pages)
+                {
+                    if (prev.HasValue && p - prev.Value > 1)
+                    {
+                        <span class="page-ellipsis">...</span>
+                    }
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-hasPendingReview="@hasPendingReviewVal" asp-route-hasCommission="@hasCommissionVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="@p"
+                       class="page-btn @(p == curPage ? "active" : "")">@p</a>
+                    prev = p;
+                }
+
+                @if (list.HasNextPage)
+                {
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-hasPendingReview="@hasPendingReviewVal" asp-route-hasCommission="@hasCommissionVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="@(list.Page + 1)"
+                       class="page-btn" aria-label="下一頁">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-hasPendingReview="@hasPendingReviewVal" asp-route-hasCommission="@hasCommissionVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="@totalPages" class="page-btn"
+                       aria-label="最末頁">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <button class="page-btn" disabled aria-label="下一頁"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button class="page-btn" disabled aria-label="最末頁"><i class="fa-solid fa-angles-right"></i></button>
+                }
+            </div>
         </div>
-    </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('#cm-status-chips .cm-chip').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('#cm-status-chips .cm-chip').forEach(function (b) {
+                    b.classList.remove('cm-chip--active');
+                });
+                btn.classList.add('cm-chip--active');
+                document.getElementById('cm-status-input').value = btn.dataset.status;
+            });
+        });
+    </script>
+}
 

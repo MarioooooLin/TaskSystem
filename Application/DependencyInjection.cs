@@ -1,4 +1,5 @@
 using Application.Account;
+using Application.Cases.Queries;
 using Application.Kols.Commands;
 using Application.Kols.Queries;
 using Application.Merchants.Commands;
@@ -23,6 +24,10 @@ public static class DependencyInjection
         services.AddScoped<UpdateMerchantContactHandler>();
         services.AddScoped<RemoveMerchantContactHandler>();
         services.AddScoped<AdjustMerchantCreditHandler>();
+
+        // ── Case Monitor ──────────────────────────────────
+        services.AddScoped<GetCaseListHandler>();
+        services.AddScoped<GetCaseSummaryHandler>();
 
         // ── KOL Management ────────────────────────────────
         services.AddScoped<GetKolListHandler>();

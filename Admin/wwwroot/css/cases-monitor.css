@@ -21,7 +21,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: .6rem;
+    gap: 0.6rem;
     padding: 1.5rem 1.6rem;
     border-right: 1px solid var(--border);
 }
@@ -41,8 +41,6 @@
     line-height: 1;
     color: #1f2937;
 }
-
-
 
 .cm-alert-grid {
     display: grid;
@@ -75,17 +73,17 @@
 .cm-alert-title {
     font-size: 1.3rem;
     color: #6a7380;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: .5rem;
-    margin-bottom: .7rem;
+    gap: 0.5rem;
+    margin-bottom: 0.7rem;
 }
 
 .cm-alert-count-wrap {
-    display: inline-flex;
+    display: flex;
     align-items: baseline;
-    gap: .4rem;
-    margin-bottom: .7rem;
+    gap: 0.4rem;
+    margin-bottom: 0.7rem;
 }
 
 .cm-alert-count-wrap strong {
@@ -109,6 +107,7 @@
 }
 
 .cm-alert-btn {
+    display: block;
     width: 100%;
     height: 34px;
     border-radius: 6px;
@@ -117,6 +116,9 @@
     font-family: inherit;
     font-weight: 600;
     cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    line-height: 34px;
 }
 
 .cm-alert-btn--warn {
@@ -156,13 +158,13 @@
 
 .cm-filter-row--chips {
     align-items: center;
-    padding-top: .2rem;
+    padding-top: 0.2rem;
 }
 
 .cm-filter-item {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: 0.5rem;
     min-width: 180px;
 }
 
@@ -183,13 +185,13 @@
 }
 
 .cm-filter-label--inline {
-    margin-left: .4rem;
+    margin-left: 0.4rem;
 }
 
 .cm-chip-group {
     display: flex;
     flex-wrap: wrap;
-    gap: .6rem;
+    gap: 0.6rem;
 }
 
 .cm-chip {
@@ -200,7 +202,7 @@
     color: #505b68;
     font-size: 1.2rem;
     font-family: inherit;
-    padding: 0 .9rem;
+    padding: 0 0.9rem;
     cursor: pointer;
 }
 
@@ -208,13 +210,13 @@
 .cm-chip:hover {
     border-color: var(--primary);
     color: var(--primary);
-    background: rgba(222, 59, 58, .08);
+    background: rgba(222, 59, 58, 0.08);
 }
 
 .cm-date-range {
     display: flex;
     align-items: center;
-    gap: .8rem;
+    gap: 0.8rem;
 }
 
 .cm-date-sep {
@@ -239,7 +241,9 @@
     font-family: inherit;
     color: var(--text-muted);
     cursor: pointer;
-    transition: border-color .2s, color .2s;
+    transition:
+        border-color 0.2s,
+        color 0.2s;
     white-space: nowrap;
 }
 
@@ -271,7 +275,7 @@
     font-size: 1.4rem;
     font-weight: 700;
     color: #1f2937;
-    margin-bottom: .25rem;
+    margin-bottom: 0.25rem;
 }
 
 .cm-case-name span {
@@ -285,7 +289,7 @@
     align-items: center;
     height: 24px;
     border-radius: 999px;
-    padding: 0 .8rem;
+    padding: 0 0.8rem;
     font-size: 1.2rem;
     font-weight: 600;
 }
@@ -298,7 +302,7 @@
 .cm-condition-cell {
     display: flex;
     flex-wrap: wrap;
-    gap: .4rem;
+    gap: 0.4rem;
     align-items: center;
     line-height: 1.45;
     color: #4b5563;
@@ -310,7 +314,7 @@
     align-items: center;
     justify-content: center;
     height: 22px;
-    padding: 0 .7rem;
+    padding: 0 0.7rem;
     border-radius: 4px;
     background: #f1f3f5;
     color: #4b5563;
@@ -327,7 +331,7 @@
 .cm-task-summary {
     display: flex;
     flex-direction: column;
-    gap: .3rem;
+    gap: 0.3rem;
     min-width: 120px;
 }
 
@@ -340,7 +344,7 @@
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
-    padding: .2rem .8rem;
+    padding: 0.2rem 0.8rem;
     font-size: 1.2rem;
     font-weight: 600;
 }
@@ -369,7 +373,7 @@
     display: block;
     font-size: 1.2rem;
     color: #7b8491;
-    margin-top: .3rem;
+    margin-top: 0.3rem;
 }
 
 .cm-date {
@@ -381,7 +385,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: .5rem;
+    gap: 0.5rem;
     min-width: 150px;
 }
 
@@ -396,7 +400,7 @@
     }
 
     .cm-kpi-item {
-        min-width: calc(25% - .9rem);
+        min-width: calc(25% - 0.9rem);
     }
 
     .cm-alert-grid {
@@ -429,7 +433,7 @@
 
 @media (max-width: 768px) {
     .cm-kpi-item {
-        min-width: calc(50% - .6rem);
+        min-width: calc(50% - 0.6rem);
     }
 
     .cm-alert-grid {
