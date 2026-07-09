@@ -74,7 +74,8 @@
         <p class="page-subtitle">查看待審核、重送審核與退回待補的KOL，並進入審核詳情頁完成審核判斷</p>
     </div>
     <div class="kn-header-actions">
-        <a asp-action="ReviewList" class="kn-btn kn-btn--ghost">
+        <a asp-action="ReviewList" class="kn-btn kn-btn--ghost" hx-get="@Url.Action("ReviewList")"
+           hx-target="#main-content" hx-push-url="true">
             <i class="fa-solid fa-rotate-right"></i> 重新整理
         </a>
     </div>
@@ -126,17 +127,19 @@
                 <div class="kn-status-chips">
                     <button type="button"
                             class="kn-chip @(statusFilter == "" || statusFilter == null ? "kn-chip--active" : "")"
-                            data-chip="" onclick="setStatusChip(this, '')">
+                            data-chip="" onclick="setStatusChip(this, ''); syncKnHiddenInputs();">
                         <i class="fa-solid fa-check"></i> 待審核
                     </button>
                     <button type="button" class="kn-chip @(statusFilter == "resubmit" ? "kn-chip--active" : "")"
-                            data-chip="resubmit" onclick="setStatusChip(this, 'resubmit')">
+                            data-chip="resubmit" onclick="setStatusChip(this, 'resubmit'); syncKnHiddenInputs();">
                         <i class="fa-solid fa-rotate"></i> 重送審核
                     </button>
                     <button type="button" class="kn-chip @(statusFilter == "returned" ? "kn-chip--active" : "")"
-                            data-chip="returned" onclick="setStatusChip(this, 'returned')">已退回待補</button>
+                            data-chip="returned"
+                            onclick="setStatusChip(this, 'returned'); syncKnHiddenInputs();">已退回待補</button>
                     <button type="button" class="kn-chip @(statusFilter == "approved" ? "kn-chip--active" : "")"
-                            data-chip="approved" onclick="setStatusChip(this, 'approved')">已通過</button>
+                            data-chip="approved"
+                            onclick="setStatusChip(this, 'approved'); syncKnHiddenInputs();">已通過</button>
                 </div>
             </div>
         </div>
@@ -147,7 +150,7 @@
                 <label class="kn-filter-label">KOL 類型</label>
                 <div class="filter-select-wrap">
                     <select id="selCategory" class="filter-select"
-                            onchange="document.getElementById('hidCategory').value=this.value">
+                            onchange="document.getElementById('hidCategory').value=this.value; syncKnHiddenInputs();">
                         <option value="">全部</option>
                         @foreach (var (id, name) in mainCategories)
                         {
@@ -161,7 +164,7 @@
                 <label class="kn-filter-label">主要平台</label>
                 <div class="filter-select-wrap">
                     <select id="selPlatform" class="filter-select"
-                            onchange="document.getElementById('hidPlatform').value=this.value">
+                            onchange="document.getElementById('hidPlatform').value=this.value; syncKnHiddenInputs();">
                         <option value="">全部</option>
                         @foreach (var (id, name) in mainPlatforms)
                         {
@@ -179,7 +182,8 @@
                 </div>
             </div>
             <div class="kn-filter-actions">
-                <a asp-action="ReviewList" class="kn-clear-btn">清除篩選</a>
+                <a asp-action="ReviewList" class="kn-clear-btn" hx-get="@Url.Action("ReviewList")"
+                   hx-target="#kn-results" hx-select="#kn-results" hx-swap="outerHTML" hx-push-url="true">清除篩選</a>
                 <button type="submit" class="btn-primary">執行篩選</button>
             </div>
         </div>
@@ -189,7 +193,7 @@
 <!-- ===== DATA TABLE ===== -->
 <div id="kn-results">
     <div class="content-card">
-        <div class="table-section">
+        <div class="table-section table-section--scrollable">
             <table class="data-table kn-table">
                 <thead>
                     <tr>
@@ -266,7 +270,9 @@
                                 @kol.SubmittedAt.ToString("HH:mm")
                             </td>
                             <td>
-                                <a asp-action="ReviewDetail" asp-route-id="@kol.KolId" class="kn-enter-link">進入審核</a>
+                                <a asp-action="ReviewDetail" asp-route-id="@kol.KolId" class="kn-enter-link"
+                                   hx-get="@Url.Action("ReviewDetail", new { id = kol.KolId })" hx-target="#main-content"
+                                   hx-push-url="true" hx-swap="innerHTML scroll:top">進入審核</a>
                             </td>
                         </tr>
                     }
@@ -316,7 +322,7 @@
                             <span class="page-ellipsis">...</span>
                         }
                         <button type="button" class="page-btn @(p == curPage ? "active" : "")" onclick="knGoToPage(@p)" @(p ==
-                                                                                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
+                                                                                                                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
                         prev = p;
                     }
 
@@ -343,6 +349,42 @@
         (function () {
             'use strict';
 
+            var form = document.getElementById('kn-filter-form');
+
+            // ── 同步 hidden inputs（status / category / platform）────────────
+            window.syncKnHiddenInputs = function () {
+                form.querySelectorAll('[data-kn-sync]').forEach(el => el.remove());
+
+                var status = document.getElementById('statusFilter').value;
+                var category = document.getElementById('hidCategory').value;
+                var platform = document.getElementById('hidPlatform').value;
+
+                if (status !== '') {
+                    var s = document.createElement('input');
+                    s.type = 'hidden';
+                    s.name = 'statusFilter';
+                    s.value = status;
+                    s.setAttribute('data-kn-sync', 'status');
+                    form.appendChild(s);
+                }
+                if (category !== '') {
+                    var c = document.createElement('input');
+                    c.type = 'hidden';
+                    c.name = 'category';
+                    c.value = category;
+                    c.setAttribute('data-kn-sync', 'category');
+                    form.appendChild(c);
+                }
+                if (platform !== '') {
+                    var p = document.createElement('input');
+                    p.type = 'hidden';
+                    p.name = 'platform';
+                    p.value = platform;
+                    p.setAttribute('data-kn-sync', 'platform');
+                    form.appendChild(p);
+                }
+            };
+
             // ── status chip 單選 ─────────────────────────────────────────
             window.setStatusChip = function (btn, value) {
                 document.querySelectorAll('.kn-status-chips .kn-chip').forEach(function (c) {
@@ -352,9 +394,12 @@
                 document.getElementById('statusFilter').value = value;
             };
 
+            // 頁面載入時同步一次
+            syncKnHiddenInputs();
+
             // ── 分頁跳轉 ────────────────────────────────────────────────
             window.knGoToPage = function (page) {
-                var form = document.getElementById('kn-filter-form');
+                syncKnHiddenInputs();
                 var input = form.querySelector('[name="page"]');
                 if (!input) {
                     input = document.createElement('input');

@@ -5,9 +5,7 @@
     var isSuspended = Model.VerificationStatus == VerificationStatus.Suspended;
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/business-detail.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/business-detail.css" asp-append-version="true" />
 
 @* ===== TempData 通知 ===== *@
 @if (TempData["Success"] is string successMsg)
@@ -27,10 +25,12 @@
         <p class="page-subtitle">查看業者資料、聯絡窗口、案件狀態、錢包與折扣金紀錄</p>
     </div>
     <div class="bd-header-actions">
-        <a asp-action="Index" class="bd-btn bd-btn--ghost">
+        <a asp-action="Index" class="bd-btn bd-btn--ghost" hx-get="@Url.Action("Index")" hx-target="#main-content"
+           hx-push-url="true">
             <i class="fa-solid fa-arrow-left"></i> 返回業者管理
         </a>
-        <a asp-action="Update" asp-route-id="@Model.MerchantId" class="bd-btn bd-btn--edit">
+        <a asp-action="Update" asp-route-id="@Model.MerchantId" class="bd-btn bd-btn--edit"
+           hx-get="@Url.Action("Update", new { id = Model.MerchantId })" hx-target="#main-content" hx-push-url="true">
             <i class="fa-solid fa-pen"></i> 編輯業者資料
         </a>
         <button class="bd-btn bd-btn--outline" disabled title="代理登入功能開發中">
@@ -334,7 +334,7 @@
         <div class="bd-wallet-card bd-wallet-card--dark">
             <span class="bd-wallet-label">當前錢包總額</span>
             <strong class="bd-wallet-value">NT$@((Model.Wallet.AvailableAmount +
-                                Model.Wallet.FrozenAmount).ToString("N0"))</strong>
+                                                Model.Wallet.FrozenAmount).ToString("N0"))</strong>
                 <i class="fa-regular fa-credit-card bd-wallet-bg-icon"></i>
             </div>
             <div class="bd-wallet-card">
@@ -435,7 +435,7 @@
                                     <td>@g.CreatedAt.ToString("MM-dd HH:mm")</td>
                                     <td><span class="bd-log-type @gCss">@gLabel</span></td>
                                     <td class="@(g.Amount >= 0 ? "bd-amount-pos" : "bd-amount-neg")">@(g.Amount >= 0 ? "+" :
-                                                 "")@g.Amount.ToString("N0")</td>
+                                                                                         "")@g.Amount.ToString("N0")</td>
                                         <td>@(g.CreatedByName ?? "—")</td>
                                     </tr>
                                 }

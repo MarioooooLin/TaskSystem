@@ -64,7 +64,10 @@
                     <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
                 </div>
                 <div class="sidebar-group__body">
-                    <a asp-controller="MerchantManagement" asp-action="Index" class="sidebar-subitem">業者管理</a>
+                    <a asp-controller="MerchantManagement" asp-action="Index" class="sidebar-subitem"
+                       hx-get="/MerchantManagement/Index"
+                       hx-target="#main-content"
+                       hx-push-url="true">業者管理</a>
                 </div>
             </div>
 
@@ -76,8 +79,14 @@
                     <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
                 </div>
                 <div class="sidebar-group__body">
-                    <a asp-controller="KolManagement" asp-action="Index" class="sidebar-subitem">KOL管理頁</a>
-                    <a asp-controller="KolManagement" asp-action="ReviewList" class="sidebar-subitem">審核新進KOL</a>
+                    <a asp-controller="KolManagement" asp-action="Index" class="sidebar-subitem"
+                       hx-get="/KolManagement/Index"
+                       hx-target="#main-content"
+                       hx-push-url="true">KOL管理頁</a>
+                    <a asp-controller="KolManagement" asp-action="ReviewList" class="sidebar-subitem"
+                       hx-get="/KolManagement/ReviewList"
+                       hx-target="#main-content"
+                       hx-push-url="true">審核新進KOL</a>
                 </div>
             </div>
 

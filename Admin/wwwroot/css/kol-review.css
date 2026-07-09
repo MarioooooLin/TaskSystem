@@ -6,7 +6,7 @@
 .adm-breadcrumb {
     font-size: 1.3rem;
     color: var(--text-muted);
-    margin-bottom: .4rem;
+    margin-bottom: 0.4rem;
 }
 
 .kr-page-header {
@@ -26,7 +26,7 @@
     font-family: inherit;
     cursor: pointer;
     white-space: nowrap;
-    transition: all .2s;
+    transition: all 0.2s;
 }
 
 .kr-btn--ghost {
@@ -83,13 +83,13 @@
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--text-main);
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
 }
 
 .kr-status-list {
     display: inline-flex;
     flex-wrap: wrap;
-    gap: .5rem;
+    gap: 0.5rem;
 }
 
 .kr-summary-grid {
@@ -103,7 +103,7 @@
 .kr-summary-item {
     display: flex;
     flex-direction: column;
-    gap: .3rem;
+    gap: 0.3rem;
 }
 
 .kr-summary-label {
@@ -130,15 +130,15 @@
     display: inline-flex;
     align-items: center;
     width: fit-content;
-    gap: .4rem;
+    gap: 0.4rem;
     border-radius: 999px;
-    padding: .2rem .8rem;
+    padding: 0.2rem 0.8rem;
     font-size: 1.2rem;
     font-weight: 600;
 }
 
 .kr-badge i {
-    font-size: .7rem;
+    font-size: 0.7rem;
 }
 
 .kr-badge--active {
@@ -160,7 +160,7 @@
 .kr-section-title {
     display: flex;
     align-items: center;
-    gap: .7rem;
+    gap: 0.7rem;
     margin-bottom: 1.4rem;
 }
 
@@ -199,14 +199,14 @@
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 1rem;
-    padding-bottom: .8rem;
+    padding-bottom: 0.8rem;
     border-bottom: 1px solid var(--border);
 }
 
 .kr-kv-list {
     display: flex;
     flex-direction: column;
-    gap: .9rem;
+    gap: 0.9rem;
 }
 
 .kr-kv-row {
@@ -214,7 +214,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    padding-bottom: .9rem;
+    padding-bottom: 0.9rem;
     border-bottom: 1px solid var(--border);
 }
 
@@ -246,7 +246,7 @@
 .kr-kv-stack {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: 0.5rem;
 }
 
 .kr-kv-stack p {
@@ -265,7 +265,7 @@
 
 .kr-table th {
     color: #fff;
-    border-color: var(--white);;
+    border-color: var(--white);
 }
 
 .kr-table td {
@@ -274,7 +274,7 @@
 
 .kr-platform-icon {
     color: #475569;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
 }
 
 .kr-notice-box {
@@ -282,20 +282,20 @@
     border: 1px solid #f1d4d7;
     background: #fff4f5;
     border-radius: 6px;
-    padding: .9rem 1rem;
+    padding: 0.9rem 1rem;
 }
 
 .kr-notice-title {
     display: inline-flex;
     align-items: center;
-    gap: .4rem;
+    gap: 0.4rem;
     font-size: 1.2rem;
     color: #a03039;
     font-weight: 700;
 }
 
 .kr-notice-box ul {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
     margin-left: 1.5rem;
     list-style: disc;
 }
@@ -315,7 +315,7 @@
 .kr-kv-block {
     display: flex;
     flex-direction: column;
-    gap: .4rem;
+    gap: 0.4rem;
 }
 
 .kr-payment-hint {
@@ -328,8 +328,8 @@
 .kr-payment-hint h3 {
     display: flex;
     align-items: center;
-    gap: .5rem;
-    margin-bottom: .7rem;
+    gap: 0.5rem;
+    margin-bottom: 0.7rem;
     font-size: 1.4rem;
     color: var(--text-main);
 }
@@ -349,7 +349,7 @@
 .kr-review-row {
     display: flex;
     flex-direction: column;
-    gap: .4rem;
+    gap: 0.4rem;
 }
 
 .kr-reject-box {
@@ -357,7 +357,7 @@
     border: 1px solid #f1d4d7;
     background: #fff4f5;
     border-radius: 6px;
-    padding: .9rem 1rem;
+    padding: 0.9rem 1rem;
 }
 
 .kr-reject-box span {
@@ -365,7 +365,7 @@
     color: #a03039;
     font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: .4rem;
+    margin-bottom: 0.4rem;
 }
 
 .kr-reject-box p {
@@ -388,14 +388,35 @@
 
 .kr-review-textarea:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(222, 59, 58, .1);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, 0.1);
 }
 
 .kr-review-actions {
     margin-top: 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: .8rem;
+    gap: 0.8rem;
+}
+
+/* ============================
+   TABLE SCROLL
+============================== */
+.table-section--scrollable {
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+.table-section--scrollable .data-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-section--scrollable .data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--thead-tr, #3aafa9);
 }
 
 .kr-review-btn {
@@ -412,12 +433,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: .5rem;
+    gap: 0.5rem;
     background: var(--primary);
     color: #fff;
     border: 1px solid var(--primary);
     border-radius: 6px;
-    transition: background .2s, color .2s;
+    transition:
+        background 0.2s,
+        color 0.2s;
     white-space: nowrap;
 }
 

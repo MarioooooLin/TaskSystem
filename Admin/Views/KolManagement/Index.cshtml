@@ -79,9 +79,7 @@
     var actionUrl = Url.Action("Index")!;
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/kol-management.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/kol-management.css" asp-append-version="true" />
 
 <!-- ===== PAGE HEADER ===== -->
 <div class="page-header">
@@ -94,7 +92,8 @@
         <button class="btn-primary btn-primary--ghost" disabled>
             <i class="fa-solid fa-file-export"></i> 匯出KOL清單
         </button>
-        <a asp-action="ReviewList" class="btn-primary">
+        <a asp-action="ReviewList" class="btn-primary" hx-get="@Url.Action("ReviewList")" hx-target="#main-content"
+           hx-push-url="true">
             <i class="fa-solid fa-user-check"></i> 查看待審KOL
         </a>
     </div>
@@ -219,7 +218,8 @@
                 </div>
             </div>
             <div class="km-filter-actions">
-                <a asp-action="Index" class="bm-btn-clear">清除篩選</a>
+                <a asp-action="Index" class="bm-btn-clear" hx-get="@Url.Action("Index")" hx-target="#kol-results"
+                   hx-select="#kol-results" hx-swap="outerHTML" hx-push-url="true">清除篩選</a>
                 <button type="submit" class="btn-primary">執行篩選</button>
             </div>
         </div>
@@ -229,7 +229,7 @@
 
 <!-- ===== DATA TABLE ===== -->
 <div id="kol-results" class="content-card">
-    <div class="table-section">
+    <div class="table-section table-section--scrollable">
         <table class="data-table km-table">
             <thead>
                 <tr>
@@ -297,11 +297,15 @@
                         <td><span class="@abnormalCss">@kol.DisputeCount</span></td>
                         <td class="km-td-date">@kol.CreatedAt.ToString("yyyy-MM-dd")</td>
                         <td class="km-actions">
-                            <a asp-action="Detail" asp-route-id="@kol.KolId" class="action-link">詳細資料</a>
+                            <a asp-action="Detail" asp-route-id="@kol.KolId" class="action-link"
+                               hx-get="@Url.Action("Detail", new { id = kol.KolId })" hx-target="#main-content"
+                               hx-push-url="true" hx-swap="innerHTML scroll:top">詳細資料</a>
                             @if (kol.DisputeCount > 0)
                             {
                                 <a asp-controller="CaseMonitor" asp-action="Index" asp-route-kolId="@kol.KolId"
-                                   class="action-link action-link--danger">異常</a>
+                                   class="action-link action-link--danger"
+                                   hx-get="@Url.Action("Index", "CaseMonitor", new { kolId = kol.KolId })"
+                                   hx-target="#main-content" hx-push-url="true">異常</a>
                             }
                         </td>
                     </tr>
@@ -351,7 +355,7 @@
                             <span class="page-ellipsis">...</span>
                         }
                         <button type="button" class="page-btn @(p == curPage ? "active" : "")" onclick="kolGoToPage(@p)" @(p ==
-                                                                                curPage ? "aria-current=\"page\"" : "")>@p</button>
+                                                                                                                curPage ? "aria-current=\"page\"" : "")>@p</button>
                         prev = p;
                     }
 
@@ -374,6 +378,26 @@
                 (function () {
                     'use strict';
 
+                    const form = document.getElementById('kol-filter-form');
+
+                    // ── 同步 chip 選取狀態到 hidden inputs ─────────────────────────
+                    function syncChipInputs() {
+                        form.querySelectorAll('[data-chip-input]').forEach(el => el.remove());
+                        ['category', 'platform'].forEach(function (group) {
+                            const inputName = group === 'category' ? 'categories' : 'platforms';
+                            document.querySelectorAll('[data-group="' + group + '"].km-chip--active').forEach(function (chip) {
+                                if (chip.dataset.value) {
+                                    const inp = document.createElement('input');
+                                    inp.type = 'hidden';
+                                    inp.name = inputName;
+                                    inp.value = chip.dataset.value;
+                                    inp.setAttribute('data-chip-input', group);
+                                    form.appendChild(inp);
+                                }
+                            });
+                        });
+                    }
+
                     // ── Chip 多選邏輯 ─────────────────────────────────────────────
                     function initChipGroup(groupName) {
                         const chips = Array.from(document.querySelectorAll('[data-group="' + groupName + '"]'));
@@ -395,6 +419,7 @@
                                     const anyActive = chips.some(c => c.dataset.value !== '' && c.classList.contains('km-chip--active'));
                                     if (!anyActive && allChip) allChip.classList.add('km-chip--active');
                                 }
+                                syncChipInputs();
                             });
                         });
                     }
@@ -402,28 +427,8 @@
                     initChipGroup('category');
                     initChipGroup('platform');
 
-                    // ── 表單送出前注入 hidden inputs ─────────────────────────────
-                    const form = document.getElementById('kol-filter-form');
-
-                    function injectChipInputs() {
-                        form.querySelectorAll('[data-chip-input]').forEach(el => el.remove());
-                        ['category', 'platform'].forEach(function (group) {
-                            const inputName = group === 'category' ? 'categories' : 'platforms';
-                            document.querySelectorAll('[data-group="' + group + '"].km-chip--active').forEach(function (chip) {
-                                if (chip.dataset.value) {
-                                    const inp = document.createElement('input');
-                                    inp.type = 'hidden';
-                                    inp.name = inputName;
-                                    inp.value = chip.dataset.value;
-                                    inp.setAttribute('data-chip-input', group);
-                                    form.appendChild(inp);
-                                }
-                            });
-                        });
-                    }
-
-                    // capture phase：在 htmx 攔截 submit 之前先加入 hidden inputs
-                    form.addEventListener('submit', injectChipInputs, true);
+                    // 頁面載入時同步一次（例如從 URL 參數回復狀態時）
+                    syncChipInputs();
 
                     // ── 分頁導航（保留目前 chip 選取狀態）────────────────────────
                     window.kolGoToPage = function (page) {

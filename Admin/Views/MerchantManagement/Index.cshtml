@@ -12,9 +12,7 @@
     var actionUrl = Url.Action("Index")!;
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/business-management.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/business-management.css" asp-append-version="true" />
 
 <!-- ===== PAGE HEADER ===== -->
 <div class="page-header">
@@ -23,7 +21,8 @@
         <h1 class="page-title">業者管理</h1>
         <p class="page-subtitle">搜尋與查看業者資料、狀態、案件數、錢包與折扣金摘要</p>
     </div>
-    <a asp-action="Create" class="btn-primary">
+    <a asp-action="Create" class="btn-primary" hx-get="@Url.Action("Create")" hx-target="#main-content"
+       hx-push-url="true">
         <i class="fa-solid fa-plus"></i> 新增業者
     </a>
 </div>
@@ -118,7 +117,8 @@
                 </div>
             </div>
             <div class="bm-filter-actions">
-                <a asp-action="Index" class="bm-btn-clear">清除篩選</a>
+                <a asp-action="Index" class="bm-btn-clear" hx-get="@Url.Action("Index")" hx-target="#merchant-results"
+                   hx-select="#merchant-results" hx-swap="outerHTML" hx-push-url="true">清除篩選</a>
                 <button type="submit" class="btn-primary">開始搜尋</button>
             </div>
         </div>
@@ -128,7 +128,7 @@
 
 <!-- ===== DATA TABLE ===== -->
 <div id="merchant-results" class="content-card">
-    <div class="table-section">
+    <div class="table-section table-section--scrollable">
         <table class="data-table bm-table">
             <thead>
                 <tr>
@@ -196,11 +196,17 @@
                         <td class="bm-td-date">@m.CreatedAt.ToString("yyyy-MM-dd")</td>
                         <td>
                             <div class="td-actions bm-actions">
-                                <a asp-action="Detail" asp-route-id="@m.MerchantId" class="action-link">查看詳情</a>
+                                <a asp-action="Detail" asp-route-id="@m.MerchantId" class="action-link"
+                                   hx-get="@Url.Action("Detail", new { id = m.MerchantId })" hx-target="#main-content"
+                                   hx-push-url="true" hx-swap="innerHTML scroll:top">查看詳情</a>
                                 <a asp-controller="CaseMonitor" asp-action="Index" asp-route-merchantId="@m.MerchantId"
-                                   class="action-link">查看案件</a>
+                                   class="action-link"
+                                   hx-get="@Url.Action("Index", "CaseMonitor", new { merchantId = m.MerchantId })"
+                                   hx-target="#main-content" hx-push-url="true">查看案件</a>
                                 <a asp-controller="Finance" asp-action="Index" asp-route-merchantId="@m.MerchantId"
-                                   class="action-link">查看帳務</a>
+                                   class="action-link"
+                                   hx-get="@Url.Action("Index", "Finance", new { merchantId = m.MerchantId })"
+                                   hx-target="#main-content" hx-push-url="true">查看帳務</a>
                             </div>
                         </td>
                     </tr>
@@ -286,7 +292,12 @@
                     if (p >= 1 && p <= max) {
                         var url = new URL(window.location.href);
                         url.searchParams.set('page', p);
-                        window.location.href = url.toString();
+                        htmx.ajax('GET', url.toString(), {
+                            target: '#merchant-results',
+                            select: '#merchant-results',
+                            swap: 'outerHTML',
+                            pushUrl: true
+                        });
                     }
                 });
         </script>

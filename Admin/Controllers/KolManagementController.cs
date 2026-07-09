@@ -44,7 +44,9 @@ public sealed class KolManagementController(
             Query = vm,
         };
 
-        return View(model);
+        return Request.Headers.ContainsKey("HX-Request")
+            ? PartialView(model)
+            : View(model);
     }
 
     // ── GET /KolManagement/ReviewList ──────────────────────

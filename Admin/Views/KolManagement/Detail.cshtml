@@ -121,9 +121,7 @@
                       : Model.BankAccount.Status == 2 ? "已綁定" : "待確認";
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/kol-detail.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/kol-detail.css" asp-append-version="true" />
 
 @if (TempData["Success"] is string successMsg)
 {
@@ -143,7 +141,10 @@
     </div>
     <div class="kd-header-actions">
         <button class="kd-btn kd-btn--outline" disabled title="代理登入功能開發中">代理登入</button>
-        <a asp-action="Index" class="kd-btn kd-btn--ghost">返回KOL管理</a>
+        <a asp-action="Index" class="kd-btn kd-btn--ghost"
+           hx-get="@Url.Action("Index")" hx-target="#main-content" hx-push-url="true">
+            返回KOL管理
+        </a>
     </div>
 </div>
 
@@ -463,7 +464,9 @@
                                         <td>@task.CreatedAt.ToString("yyyy-MM-dd")</td>
                                         <td>
                                             <a asp-controller="CaseMonitor" asp-action="Detail" asp-route-id="@task.CaseId"
-                                               class="action-link">查看案件</a>
+                                               class="action-link"
+                                               hx-get="@Url.Action("Detail", "CaseMonitor", new { id = task.CaseId })"
+                                               hx-target="#main-content" hx-push-url="true">查看案件</a>
                                         </td>
                                     </tr>
                                 }

@@ -119,7 +119,10 @@
         <h1 class="page-title">KOL詳細檔案</h1>
         <p class="page-subtitle">查看KOL資料、社群頻道、審核狀態、任務紀錄、收益與異常紀錄</p>
     </div>
-    <a asp-action="ReviewList" class="kr-btn kr-btn--ghost">返回審核列表</a>
+    <a asp-action="ReviewList" class="kr-btn kr-btn--ghost" hx-get="@Url.Action("ReviewList")" hx-target="#main-content"
+       hx-push-url="true">
+        返回審核列表
+    </a>
 </div>
 
 <!-- ===== SUMMARY ===== -->

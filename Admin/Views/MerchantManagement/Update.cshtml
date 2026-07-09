@@ -3,10 +3,8 @@
     ViewData["Title"] = "編輯業者資料";
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/business-detail.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/business-edit.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/business-detail.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/business-edit.css" asp-append-version="true" />
 
 <form method="post" asp-action="Update">
     @Html.AntiForgeryToken()
@@ -20,7 +18,9 @@
             <p class="page-subtitle">修改業者公司資料與聯絡資訊，儲存後立即套用。</p>
         </div>
         <div class="bd-header-actions">
-            <a asp-action="Detail" asp-route-id="@Model.MerchantId" class="bd-btn bd-btn--ghost">取消</a>
+            <a asp-action="Detail" asp-route-id="@Model.MerchantId" class="bd-btn bd-btn--ghost"
+               hx-get="@Url.Action("Detail", new { id = Model.MerchantId })" hx-target="#main-content"
+               hx-push-url="true">取消</a>
             <button type="submit" class="bd-btn bd-btn--edit">
                 <i class="fa-solid fa-floppy-disk"></i> 儲存變更
             </button>

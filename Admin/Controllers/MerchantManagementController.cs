@@ -42,6 +42,10 @@ public sealed class MerchantManagementController(
             Summary = summaryResult.Value,
             Query = vm,
         };
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView(pageVm);
+
         return View(pageVm);
     }
 
@@ -53,6 +57,9 @@ public sealed class MerchantManagementController(
 
         if (result.IsFailure)
             return NotFound();
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView(result.Value);
 
         return View(result.Value);
     }
@@ -116,6 +123,9 @@ public sealed class MerchantManagementController(
             Address = m.Address,
             EstablishedDate = m.EstablishedDate,
         };
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView(vm);
 
         return View(vm);
     }
@@ -270,6 +280,9 @@ public sealed class MerchantManagementController(
         var detailResult = await detailHandler.HandleAsync(new GetMerchantDetailQuery(merchantId));
         if (detailResult.IsFailure)
             return NotFound();
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView(nameof(Detail), detailResult.Value);
 
         return View(nameof(Detail), detailResult.Value);
     }

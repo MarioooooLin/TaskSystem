@@ -12,7 +12,7 @@
 .kn-header-actions {
     display: flex;
     align-items: center;
-    gap: .8rem;
+    gap: 0.8rem;
     flex-wrap: wrap;
     justify-content: flex-end;
 }
@@ -29,9 +29,12 @@
     padding: 0 1.2rem;
     display: inline-flex;
     align-items: center;
-    gap: .5rem;
+    gap: 0.5rem;
     cursor: pointer;
-    transition: border-color .2s, color .2s, background .2s;
+    transition:
+        border-color 0.2s,
+        color 0.2s,
+        background 0.2s;
 }
 
 .kn-btn--ghost:hover {
@@ -53,7 +56,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: .6rem;
+    gap: 0.6rem;
     padding: 2rem 2.4rem;
     border-right: 1px solid var(--border);
 }
@@ -67,7 +70,7 @@
     color: #7a7a7a;
     display: inline-flex;
     align-items: center;
-    gap: .5rem;
+    gap: 0.5rem;
     line-height: 1;
 }
 
@@ -115,7 +118,7 @@
 .kn-filter-item {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: 0.5rem;
     min-width: 132px;
 }
 
@@ -132,7 +135,7 @@
 .kn-status-wrap {
     display: flex;
     align-items: center;
-    gap: .8rem;
+    gap: 0.8rem;
     flex-wrap: wrap;
 }
 
@@ -145,7 +148,7 @@
 .kn-status-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: .6rem;
+    gap: 0.6rem;
 }
 
 .kn-chip {
@@ -160,8 +163,8 @@
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: .4rem;
-    transition: all .2s;
+    gap: 0.4rem;
+    transition: all 0.2s;
 }
 
 .kn-chip:hover {
@@ -192,7 +195,9 @@
     font-family: inherit;
     color: var(--text-muted);
     cursor: pointer;
-    transition: border-color .2s, color .2s;
+    transition:
+        border-color 0.2s,
+        color 0.2s;
     white-space: nowrap;
 }
 
@@ -202,7 +207,7 @@
 }
 
 .kn-table thead tr {
-        background: var(--thead-tr);
+    background: var(--thead-tr);
 }
 
 .kn-table th {
@@ -263,7 +268,7 @@
 .kn-kol-meta {
     display: flex;
     flex-direction: column;
-    gap: .3rem;
+    gap: 0.3rem;
 }
 
 .kn-kol-meta strong {
@@ -280,7 +285,7 @@
 .kn-platform-list {
     display: flex;
     align-items: center;
-    gap: .4rem;
+    gap: 0.4rem;
 }
 
 .kn-platform-tag {
@@ -291,13 +296,13 @@
     background: #f1f2f5;
     color: #5a6270;
     font-size: 1.1rem;
-    padding: 0 .65rem;
+    padding: 0 0.65rem;
 }
 
 .kn-progress-cell {
     display: flex;
     align-items: center;
-    gap: .7rem;
+    gap: 0.7rem;
 }
 
 .kn-progress {
@@ -331,7 +336,7 @@
 .kn-status-pill {
     display: inline-flex;
     align-items: center;
-    gap: .4rem;
+    gap: 0.4rem;
     height: 28px;
     border-radius: 999px;
     padding: 0 1.1rem;
@@ -341,7 +346,7 @@
 }
 
 .kn-status-pill i {
-    font-size: .7rem;
+    font-size: 0.7rem;
 }
 
 .kn-status-pill--pending {
@@ -370,7 +375,7 @@
 
 .kn-enter-link {
     font-weight: 600;
-    transition: opacity .15s;
+    transition: opacity 0.15s;
     color: var(--primary);
     height: 30px;
     padding: 3px 5px;
@@ -380,12 +385,35 @@
     font-size: 1.3rem;
     font-family: inherit;
     cursor: pointer;
-    transition: border-color .2s, color .2s;
+    transition:
+        border-color 0.2s,
+        color 0.2s;
     white-space: nowrap;
 }
 
 .kn-enter-link:hover {
-    opacity: .7;
+    opacity: 0.7;
+}
+
+/* ============================
+   TABLE SCROLL
+============================== */
+.table-section--scrollable {
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+.table-section--scrollable .data-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-section--scrollable .data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--thead-tr, #3aafa9);
 }
 
 @media (max-width: 1200px) {
