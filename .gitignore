@@ -4,7 +4,6 @@
 
 # ---- 外部設定檔（機密，不進版控）----
 /Account/
-.github/
 
 # ---- Local editor / tooling settings ----
 .vscode/
