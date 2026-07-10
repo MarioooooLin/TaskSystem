@@ -1,68 +1,278 @@
+@model Admin.ViewModels.Finance.FinanceIndexViewModel
+@using Domain.Enums
 @{
-    ViewData["Title"] = "帳務管理";
+    ViewData["Title"] = "帳務總覽";
+    var q = Model.Query;
+    var keyword = q.Keyword ?? "";
+    var statusVal = q.Status.HasValue ? ((int)q.Status.Value).ToString() : "";
+    var dateFrom = q.DateFrom?.ToString("yyyy-MM-dd") ?? "";
+    var dateTo = q.DateTo?.ToString("yyyy-MM-dd") ?? "";
+    var list = Model.List;
+    var summary = Model.Summary;
+    var actionUrl = Url.Action("Index")!;
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/wallet.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/cases-monitor.css" asp-append-version="true" />
 
-<main class="main-content wl-main">
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header cm-page-header">
+    <div class="page-header__left">
+        <h1 class="page-title">帳務總覽</h1>
+        <p class="page-subtitle">以案件結算為單位監控平台資金收入、KOL 支出與平台毛利，並可展開查看單一案件的 KOL 任務帳務明細。</p>
+    </div>
+</div>
 
-    <h1 class="wl-page-title">帳務管理</h1>
+<!-- ===== KPI STATS ===== -->
+<div class="content-card cm-kpi-row">
+    <div class="cm-kpi-item cm-kpi-item--total">
+        <span class="cm-kpi-label">平台總收入</span>
+        <strong class="cm-kpi-value">@summary.TotalIncome.ToString("N0")</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--recruit">
+        <span class="cm-kpi-label">平台總支出</span>
+        <strong class="cm-kpi-value">@summary.TotalExpense.ToString("N0")</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--running">
+        <span class="cm-kpi-label">平台毛利</span>
+        <strong class="cm-kpi-value">@summary.GrossProfit.ToString("N0")</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--last">
+        <span class="cm-kpi-label">資金流入</span>
+        <strong class="cm-kpi-value">@summary.FundInflow.ToString("N0")</strong>
+    </div>
+</div>
 
-    <!-- ===== 餘額統計三欄 ===== -->
-    <div class="wl-balance-cards">
-        <div class="wl-balance-card">
-            <div class="wl-balance-card__header">
-                <span class="wl-balance-card__label">平台待撥款</span>
-                <i class="fa-regular fa-credit-card wl-balance-card__icon"></i>
+<!-- ===== FILTER ===== -->
+<form id="finance-filter-form" method="get" asp-action="Index" hx-get="@actionUrl" hx-target="#finance-results"
+      hx-select="#finance-results" hx-swap="outerHTML" hx-push-url="true">
+    <input type="hidden" id="finance-status-input" name="status" value="@statusVal" />
+
+    <div class="content-card cm-filter">
+        <div class="cm-filter-row">
+            <div class="cm-filter-item cm-filter-item--grow">
+                <label class="cm-filter-label">關鍵字搜尋</label>
+                <div class="filter-search">
+                    <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                    <input type="text" name="keyword" value="@keyword" class="filter-search__input"
+                           placeholder="案件編號 / 案件名稱 / 業者名稱...">
+                </div>
             </div>
-            <p class="wl-balance-card__amount">—</p>
-            <p class="wl-balance-card__desc">KOL 已完成任務待結算</p>
+            <div class="cm-filter-item cm-filter-item--date">
+                <label class="cm-filter-label">監控時間範圍</label>
+                <div class="cm-date-range">
+                    <input type="date" name="dateFrom" value="@dateFrom" class="date-input" aria-label="開始日期">
+                    <span class="cm-date-sep">~</span>
+                    <input type="date" name="dateTo" value="@dateTo" class="date-input" aria-label="結束日期">
+                </div>
+            </div>
         </div>
-        <div class="wl-balance-card">
-            <div class="wl-balance-card__header">
-                <span class="wl-balance-card__label">業者錢包總額</span>
-                <i class="fa-solid fa-coins wl-balance-card__icon"></i>
+
+        <div class="cm-filter-row cm-filter-row--chips">
+            <label class="cm-filter-label">案件狀態</label>
+            <div class="cm-chip-group" id="finance-status-chips">
+                <button class="cm-chip @(statusVal == "" ? "cm-chip--active" : "")" type="button" data-status="">全部</button>
+                <button class="cm-chip @(statusVal == "1" ? "cm-chip--active" : "")" type="button" data-status="1">草稿</button>
+                <button class="cm-chip @(statusVal == "2" ? "cm-chip--active" : "")" type="button" data-status="2">招募中</button>
+                <button class="cm-chip @(statusVal == "3" ? "cm-chip--active" : "")" type="button" data-status="3">招募截止</button>
+                <button class="cm-chip @(statusVal == "4" ? "cm-chip--active" : "")" type="button" data-status="4">執行中</button>
+                <button class="cm-chip @(statusVal == "5" ? "cm-chip--active" : "")" type="button" data-status="5">已完成</button>
+                <button class="cm-chip @(statusVal == "6" ? "cm-chip--active" : "")" type="button" data-status="6">已結案</button>
+                <button class="cm-chip @(statusVal == "7" ? "cm-chip--active" : "")" type="button" data-status="7">已取消</button>
             </div>
-            <p class="wl-balance-card__amount">—</p>
-            <p class="wl-balance-card__desc">全平台業者帳戶資產合計</p>
         </div>
-        <div class="wl-balance-card wl-balance-card--dark">
-            <div class="wl-balance-card__header">
-                <span class="wl-balance-card__label">已鎖定金額</span>
-                <i class="fa-solid fa-lock wl-balance-card__icon"></i>
+
+        <div class="cm-filter-row">
+            <div class="cm-filter-actions">
+                <a asp-action="Index" class="cm-clear-btn" hx-get="@actionUrl" hx-target="#finance-results"
+                   hx-select="#finance-results" hx-swap="outerHTML" hx-push-url="true">重設篩選</a>
+                <button type="submit" class="btn-primary">搜尋</button>
             </div>
-            <p class="wl-balance-card__amount">—</p>
-            <p class="wl-balance-card__desc">執行中案件預算預扣</p>
         </div>
     </div>
+</form>
 
-    <!-- ===== 近期交易記錄 ===== -->
-    <div class="content-card wl-txn-card">
-        <div class="wl-txn-header">
-            <h2 class="wl-section-title">近期交易記錄</h2>
-            <a asp-action="Transactions" class="btn-primary">查看完整紀錄</a>
-        </div>
-        <div class="wl-table-wrap">
-            <table class="wl-table">
-                <thead>
-                    <tr>
-                        <th>交易時間</th>
-                        <th>業者</th>
-                        <th>交易類型</th>
-                        <th>金額</th>
-                        <th>狀態</th>
-                        <th>關聯案件</th>
+<!-- ===== TABLE ===== -->
+<div id="finance-results" class="content-card">
+    <div class="table-section table-section--scrollable">
+        <table class="data-table cm-table">
+            <thead>
+                <tr>
+                    <th>結算日期</th>
+                    <th>業者名稱</th>
+                    <th>案件名稱 / 編號</th>
+                    <th>收入總金額</th>
+                    <th>支出資金（KOL）</th>
+                    <th>狀態</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in list.Items)
+                {
+                    var (statusCss, statusText) = item.Status switch
+                    {
+                        CaseStatus.Draft => ("cm-status cm-status--draft", "草稿"),
+                        CaseStatus.Recruiting => ("cm-status cm-status--recruit", "招募中"),
+                        CaseStatus.RecruitmentClosed => ("cm-status cm-status--recruit", "招募截止"),
+                        CaseStatus.InProgress => ("cm-status cm-status--running", "執行中"),
+                        CaseStatus.Completed => ("cm-status cm-status--closed", "已完成"),
+                        CaseStatus.Settled => ("cm-status cm-status--closed", "已結案"),
+                        CaseStatus.Cancelled => ("cm-status cm-status--cancel", "已取消"),
+                        _ => ("cm-status", "—"),
+                    };
+
+                    var detailId = $"finance-detail-{item.CaseId}";
+
+                    <tr id="finance-row-@item.CaseId">
+                        <td class="cm-date">@(item.SettledAt?.ToString("yyyy-MM-dd") ?? "—")</td>
+                        <td>@item.MerchantName</td>
+                        <td class="cm-case-name">
+                            <strong>@item.Title</strong>
+                            <span>@item.CaseNo</span>
+                        </td>
+                        <td class="cm-amount cm-amount--income">@item.IncomeAmount.ToString("N0")</td>
+                        <td class="cm-amount cm-amount--expense">@item.ExpenseAmount.ToString("N0")</td>
+                        <td>
+                            <span class="@statusCss">@statusText</span>
+                            @if (item.HasOpenDispute)
+                            {
+                                <span class="cm-status cm-status--cancel">異議</span>
+                            }
+                        </td>
+                        <td class="cm-actions">
+                            @* TODO: 展開明細互動樣式待設計師確認，暫以現有實作呈現 *@
+                            <button type="button" class="action-link" data-toggle-detail="@item.CaseId">展開明細</button>
+                            <a asp-controller="CaseMonitor" asp-action="Detail" asp-route-id="@item.CaseId" class="action-link"
+                               hx-get="/CaseMonitor/Detail/@item.CaseId" hx-target="#main-content" hx-push-url="true">案件詳情</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="6" class="bd-empty-hint">— 待資料庫連線 —</td>
+                    @* TODO: 帳務明細內嵌子表格視覺樣式待確認，目前為功能占位實作 *@
+                    <tr id="@detailId" class="finance-detail-row" style="display:none;">
+                        <td colspan="7">
+                            <div class="finance-detail-panel">
+                                <table class="data-table finance-detail-table">
+                                    <thead>
+                                        <tr>
+                                            <th>KOL 姓名</th>
+                                            <th>任務報酬</th>
+                                            <th>導購佣金</th>
+                                            <th>稅金/手續費</th>
+                                            <th>淨付金額</th>
+                                            <th>狀態</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var d in item.TaskDetails)
+                                        {
+                                            <tr>
+                                                <td>@d.KolName</td>
+                                                <td>@d.MissionAmount.ToString("N0")</td>
+                                                <td>@d.AffiliateAmount.ToString("N0")</td>
+                                                <td>@d.TaxFeeAmount.ToString("N0")</td>
+                                                <td>@d.NetAmount.ToString("N0")</td>
+                                                <td>@d.StatusText</td>
+                                            </tr>
+                                        }
+                                        @if (!item.TaskDetails.Any())
+                                        {
+                                            <tr>
+                                                <td colspan="6" class="empty-state">暫無 KOL 任務帳務明細。</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
                     </tr>
-                </tbody>
-            </table>
-        </div>
+                }
+                @if (!list.Items.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="empty-state">查無符合條件的帳務資料。</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 
-</main>
+    <!-- ===== PAGINATION ===== -->
+    @if (list.TotalPages >= 1)
+    {
+        var startItem = (list.Page - 1) * list.PageSize + 1;
+        var endItem = Math.Min(list.Page * list.PageSize, list.TotalCount);
+        <div class="pagination cm-pagination">
+            <span class="pagination__info">
+                顯示第 @startItem 到 @endItem 筆，共 @list.TotalCount 筆帳務
+            </span>
+            <div class="pagination__nav">
+                @if (list.HasPreviousPage)
+                {
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="1" class="page-btn" aria-label="第一頁"
+                       hx-boost="true" hx-target="#finance-results" hx-select="#finance-results" hx-swap="outerHTML" hx-push-url="true">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </a>
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="@(list.Page - 1)" class="page-btn" aria-label="上一頁"
+                       hx-boost="true" hx-target="#finance-results" hx-select="#finance-results" hx-swap="outerHTML" hx-push-url="true">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                }
+
+                @for (var i = 1; i <= list.TotalPages; i++)
+                {
+                    var activeClass = i == list.Page ? "page-btn--active" : "";
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="@i" class="page-btn @activeClass"
+                       hx-boost="true" hx-target="#finance-results" hx-select="#finance-results" hx-swap="outerHTML" hx-push-url="true">@i</a>
+                }
+
+                @if (list.HasNextPage)
+                {
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="@(list.Page + 1)" class="page-btn" aria-label="下一頁"
+                       hx-boost="true" hx-target="#finance-results" hx-select="#finance-results" hx-swap="outerHTML" hx-push-url="true">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo" asp-route-page="@list.TotalPages" class="page-btn" aria-label="最後一頁"
+                       hx-boost="true" hx-target="#finance-results" hx-select="#finance-results" hx-swap="outerHTML" hx-push-url="true">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    (function () {
+        const form = document.getElementById('finance-filter-form');
+        const statusInput = document.getElementById('finance-status-input');
+        const chips = document.getElementById('finance-status-chips');
+
+        if (chips) {
+            chips.querySelectorAll('button[data-status]').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    statusInput.value = this.dataset.status;
+                    chips.querySelectorAll('button').forEach(b => b.classList.remove('cm-chip--active'));
+                    this.classList.add('cm-chip--active');
+                    htmx.trigger(form, 'submit');
+                });
+            });
+        }
+
+        // TODO: 展開/收合互動樣式待設計師確認後更新
+        document.querySelectorAll('button[data-toggle-detail]').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const caseId = this.dataset.toggleDetail;
+                const detailRow = document.getElementById('finance-detail-' + caseId);
+                if (!detailRow) return;
+
+                const isHidden = detailRow.style.display === 'none';
+                detailRow.style.display = isHidden ? 'table-row' : 'none';
+                this.textContent = isHidden ? '收合明細' : '展開明細';
+            });
+        });
+    })();
+</script>

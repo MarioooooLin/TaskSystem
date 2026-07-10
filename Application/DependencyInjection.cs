@@ -2,6 +2,7 @@ using Application.Account;
 using Application.Cases.Queries;
 using Application.Dashboard.Queries;
 using Application.Disputes.Queries;
+using Application.Finance.Queries;
 using Application.Kols.Commands;
 using Application.Kols.Queries;
 using Application.Merchants.Commands;
@@ -38,6 +39,9 @@ public static class DependencyInjection
         // ── Dispute ───────────────────────────────────────
         services.AddScoped<GetDisputeListHandler>();
         services.AddScoped<GetDisputeSummaryHandler>();
+
+        // ── Finance ───────────────────────────────────────
+        services.AddScoped<GetFinanceListHandler>();
 
         // ── KOL Management ────────────────────────────────
         services.AddScoped<GetKolListHandler>();

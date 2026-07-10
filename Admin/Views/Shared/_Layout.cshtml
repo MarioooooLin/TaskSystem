@@ -113,7 +113,8 @@
                     <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
                 </div>
                 <div class="sidebar-group__body">
-                    <a asp-controller="Finance" asp-action="Index" class="sidebar-subitem">帳務總覽頁</a>
+                    <a asp-controller="Finance" asp-action="Index" class="sidebar-subitem"
+                       hx-get="/Finance/Index" hx-target="#main-content" hx-push-url="true">帳務總覽頁</a>
                 </div>
             </div>
 

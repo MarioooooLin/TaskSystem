@@ -394,6 +394,27 @@
     margin-bottom: 0;
 }
 
+/* ============================
+   TABLE SCROLL
+============================== */
+.table-section--scrollable {
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+.table-section--scrollable .data-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-section--scrollable .data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--thead-tr, #3aafa9);
+}
+
 @media (max-width: 1200px) {
     .cm-kpi-row {
         flex-wrap: wrap;
