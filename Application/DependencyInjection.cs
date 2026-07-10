@@ -1,6 +1,7 @@
 using Application.Account;
 using Application.Cases.Queries;
 using Application.Dashboard.Queries;
+using Application.Disputes.Queries;
 using Application.Kols.Commands;
 using Application.Kols.Queries;
 using Application.Merchants.Commands;

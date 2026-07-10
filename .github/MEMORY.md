@@ -1,6 +1,30 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-09 17:54
+> 最後整理時間：2026-07-10 14:46
+
+---
+
+## 2026-07-10
+
+### [14:46] 異常處理列表頁 HTMX 補強
+
+**變更內容**
+
+- `Admin/Views/Dispute/Index.cshtml`：
+    - 篩選表單加上 `hx-get`、`hx-target="#dispute-results"`、`hx-select`、`hx-swap="outerHTML"`、`hx-push-url="true"`
+    - 「重設篩選」連結加上相同 HTMX 屬性，只更新結果區塊
+    - 狀態籤（chips）點選後同步隱藏欄位並觸發 `htmx.trigger(form, 'submit')`
+    - 分頁連結加上 `hx-boost="true"`、`hx-target`、`hx-select`、`hx-swap`、`hx-push-url`
+- 檢查發現：
+    - `DisputeController` 目前只有 `Index` Action，無 `Detail` Action
+    - 列表頁「處理爭議」連結會導向 `/Dispute/Detail/{id}`，目前為 404
+    - 暫緩 Detail 頁實作，等待 PM/設計確認是否有對應 template
+
+**決策原因**
+
+- 參考 KOL 管理頁與業者管理頁的 HTMX 模式：表單局部刷新、結果區塊獨立 id、分頁用 `hx-boost`
+- chips 狀態篩選採用單選立即提交模式，與案件監控頁現行「點選後按搜尋」不同；此差異已標記待 PM 確認是否統一
+- 未新增 Dispute Detail Action，因為目前 `Admin/Template/` 中無對應的 detail template，避免憑空產出頁面
 
 ---
 

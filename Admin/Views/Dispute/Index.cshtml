@@ -8,6 +8,7 @@
     var typeVal = q.DisputeType ?? "";
     var list = Model.List;
     var summary = Model.Summary;
+    var actionUrl = Url.Action("Index")!;
 }
 
 <link rel="stylesheet" href="~/css/cases-monitor.css" asp-append-version="true" />
@@ -49,7 +50,8 @@
 </div>
 
 <!-- ===== FILTER ===== -->
-<form id="dispute-filter-form" method="get" asp-action="Index">
+<form id="dispute-filter-form" method="get" asp-action="Index" hx-get="@actionUrl" hx-target="#dispute-results"
+      hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
     <input type="hidden" id="dispute-status-input" name="status" value="@statusVal" />
 
     <div class="content-card cm-filter">
@@ -93,7 +95,8 @@
 
         <div class="cm-filter-row">
             <div class="cm-filter-actions">
-                <a asp-action="Index" class="cm-clear-btn">重設篩選</a>
+                <a asp-action="Index" class="cm-clear-btn" hx-get="@actionUrl" hx-target="#dispute-results"
+                   hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">重設篩選</a>
                 <button type="submit" class="btn-primary">搜尋</button>
             </div>
         </div>
@@ -186,11 +189,13 @@
                 @if (list.HasPreviousPage)
                 {
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
-                       asp-route-disputeType="@typeVal" asp-route-page="1" class="page-btn" aria-label="第一頁">
+                       asp-route-disputeType="@typeVal" asp-route-page="1" class="page-btn" aria-label="第一頁"
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
                         <i class="fa-solid fa-angles-left"></i>
                     </a>
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
-                       asp-route-disputeType="@typeVal" asp-route-page="@(list.Page - 1)" class="page-btn" aria-label="上一頁">
+                       asp-route-disputeType="@typeVal" asp-route-page="@(list.Page - 1)" class="page-btn" aria-label="上一頁"
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
                         <i class="fa-solid fa-chevron-left"></i>
                     </a>
                 }
@@ -216,18 +221,21 @@
                     }
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
                        asp-route-disputeType="@typeVal" asp-route-page="@p"
-                       class="page-btn @(p == curPage ? "active" : "")">@p</a>
+                       class="page-btn @(p == curPage ? "active" : "")"
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">@p</a>
                     prev = p;
                 }
 
                 @if (list.HasNextPage)
                 {
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
-                       asp-route-disputeType="@typeVal" asp-route-page="@(list.Page + 1)" class="page-btn" aria-label="下一頁">
+                       asp-route-disputeType="@typeVal" asp-route-page="@(list.Page + 1)" class="page-btn" aria-label="下一頁"
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
                         <i class="fa-solid fa-chevron-right"></i>
                     </a>
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
-                       asp-route-disputeType="@typeVal" asp-route-page="@totalPages" class="page-btn" aria-label="最末頁">
+                       asp-route-disputeType="@typeVal" asp-route-page="@totalPages" class="page-btn" aria-label="最末頁"
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
                         <i class="fa-solid fa-angles-right"></i>
                     </a>
                 }
@@ -250,6 +258,8 @@
                 });
                 btn.classList.add('cm-chip--active');
                 document.getElementById('dispute-status-input').value = btn.dataset.status;
+                var form = document.getElementById('dispute-filter-form');
+                htmx.trigger(form, 'submit');
             });
         });
     </script>
