@@ -50,7 +50,7 @@ builder.Services
         options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
             ? CookieSecurePolicy.SameAsRequest   // 開發時相容 HTTP
             : CookieSecurePolicy.Always;          // 正式環境強制 HTTPS
-        options.Cookie.SameSite = SameSiteMode.Strict;  // Admin 用更嚴格的 Strict
+        options.Cookie.SameSite = SameSiteMode.Lax;     // 開發時用 Lax，避免重導向後 Cookie 遺失；正式機可改回 Strict
         options.LoginPath = "/Account/Login";
         options.LogoutPath = "/Account/Logout";
         options.AccessDeniedPath = "/Account/AccessDenied";
@@ -119,7 +119,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Run();
