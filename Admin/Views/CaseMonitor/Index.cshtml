@@ -75,7 +75,8 @@
         <span class="cm-alert-title"><i class="fa-solid fa-gavel"></i> 爭議處理中任務</span>
         <div class="cm-alert-count-wrap"><strong>@Model.Alert.DisputeTaskCount</strong><span>件任務</span></div>
         <p>業者與 KOL 之間存在驗收爭議，等待平台介入。</p>
-        <a asp-controller="Dispute" asp-action="Index" class="cm-alert-btn cm-alert-btn--light">查看爭議</a>
+        <a asp-controller="Dispute" asp-action="Index" class="cm-alert-btn cm-alert-btn--light"
+           hx-get="/Dispute/Index" hx-target="#main-content" hx-push-url="true">查看爭議</a>
     </article>
 
     <article class="content-card cm-alert-card cm-alert-card--abnormal">

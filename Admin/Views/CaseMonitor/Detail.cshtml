@@ -444,7 +444,8 @@
                                 <a href="#" class="action-link">詳情</a>
                                 @if (task.HasDispute)
                                 {
-                                    <a asp-controller="Dispute" asp-action="Index" class="action-link action-link--danger">處理爭議</a>
+                                    <a asp-controller="Dispute" asp-action="Index" class="action-link action-link--danger"
+                                   hx-get="/Dispute/Index" hx-target="#main-content" hx-push-url="true">處理爭議</a>
                                 }
                             </td>
                         </tr>

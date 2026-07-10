@@ -1,0 +1,256 @@
+@model Admin.ViewModels.Dispute.DisputeIndexViewModel
+@using Domain.Enums
+@{
+    ViewData["Title"] = "異常處理";
+    var q = Model.Query;
+    var keyword = q.Keyword ?? "";
+    var statusVal = q.Status.HasValue ? ((int)q.Status.Value).ToString() : "";
+    var typeVal = q.DisputeType ?? "";
+    var list = Model.List;
+    var summary = Model.Summary;
+}
+
+<link rel="stylesheet" href="~/css/cases-monitor.css" asp-append-version="true" />
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header cm-page-header">
+    <div class="page-header__left">
+        <h1 class="page-title">異常處理</h1>
+        <p class="page-subtitle">集中查看 KOL 任務驗收、成果、逾期、報酬與導購分潤相關異議，並進行平台介入處理。</p>
+    </div>
+</div>
+
+<!-- ===== KPI STATS ===== -->
+<div class="content-card cm-kpi-row">
+    <div class="cm-kpi-item cm-kpi-item--total">
+        <span class="cm-kpi-label">全部異議</span>
+        <strong class="cm-kpi-value">@summary.TotalCount</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--recruit">
+        <span class="cm-kpi-label">待處理</span>
+        <strong class="cm-kpi-value">@summary.OpenCount</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--running">
+        <span class="cm-kpi-label">處理中</span>
+        <strong class="cm-kpi-value">@summary.UnderReviewCount</strong>
+    </div>
+    <div class="cm-kpi-item">
+        <span class="cm-kpi-label">待補件</span>
+        <strong class="cm-kpi-value">@summary.RevisionCount</strong>
+    </div>
+    <div class="cm-kpi-item">
+        <span class="cm-kpi-label">已結案</span>
+        <strong class="cm-kpi-value">@summary.ResolvedCount</strong>
+    </div>
+    <div class="cm-kpi-item cm-kpi-item--last">
+        <span class="cm-kpi-label">今日新增</span>
+        <strong class="cm-kpi-value">@summary.TodayNewCount</strong>
+    </div>
+</div>
+
+<!-- ===== FILTER ===== -->
+<form id="dispute-filter-form" method="get" asp-action="Index">
+    <input type="hidden" id="dispute-status-input" name="status" value="@statusVal" />
+
+    <div class="content-card cm-filter">
+        <div class="cm-filter-row">
+            <div class="cm-filter-item cm-filter-item--grow">
+                <label class="cm-filter-label">關鍵字搜尋</label>
+                <div class="filter-search">
+                    <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                    <input type="text" name="keyword" value="@keyword" class="filter-search__input"
+                           placeholder="異議編號 / 案件名稱 / 業者 / KOL...">
+                </div>
+            </div>
+            <div class="cm-filter-item">
+                <label class="cm-filter-label">異議類型</label>
+                <div class="filter-select-wrap">
+                    <select name="disputeType" class="filter-select">
+                        <option value="" selected="@(string.IsNullOrEmpty(typeVal) ? "selected" : null)">不限</option>
+                        <option value="驗收爭議" selected="@(typeVal == "驗收爭議" ? "selected" : null)">驗收爭議</option>
+                        <option value="成果內容爭議" selected="@(typeVal == "成果內容爭議" ? "selected" : null)">成果內容爭議</option>
+                        <option value="逾期爭議" selected="@(typeVal == "逾期爭議" ? "selected" : null)">逾期爭議</option>
+                        <option value="報酬爭議" selected="@(typeVal == "報酬爭議" ? "selected" : null)">報酬爭議</option>
+                        <option value="導購分潤爭議" selected="@(typeVal == "導購分潤爭議" ? "selected" : null)">導購分潤爭議</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="cm-filter-row cm-filter-row--chips">
+            <label class="cm-filter-label">異議狀態</label>
+            <div class="cm-chip-group" id="dispute-status-chips">
+                <button class="cm-chip @(statusVal == "" ? "cm-chip--active" : "")" type="button" data-status="">全部</button>
+                <button class="cm-chip @(statusVal == "1" ? "cm-chip--active" : "")" type="button" data-status="1">待處理</button>
+                <button class="cm-chip @(statusVal == "2" ? "cm-chip--active" : "")" type="button" data-status="2">處理中</button>
+                <button class="cm-chip @(statusVal == "3" ? "cm-chip--active" : "")" type="button" data-status="3">待補件</button>
+                <button class="cm-chip @(statusVal == "4" ? "cm-chip--active" : "")" type="button" data-status="4">維持業者</button>
+                <button class="cm-chip @(statusVal == "5" ? "cm-chip--active" : "")" type="button" data-status="5">改判KOL</button>
+                <button class="cm-chip @(statusVal == "6" ? "cm-chip--active" : "")" type="button" data-status="6">已取消</button>
+            </div>
+        </div>
+
+        <div class="cm-filter-row">
+            <div class="cm-filter-actions">
+                <a asp-action="Index" class="cm-clear-btn">重設篩選</a>
+                <button type="submit" class="btn-primary">搜尋</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- ===== TABLE ===== -->
+<div id="dispute-results" class="content-card">
+    <div class="table-section">
+        <table class="data-table cm-table">
+            <thead>
+                <tr>
+                    <th>異議編號</th>
+                    <th>狀態</th>
+                    <th>異議類型</th>
+                    <th>案件名稱 / 業者</th>
+                    <th>KOL 名稱</th>
+                    <th>任務狀態</th>
+                    <th>建立時間</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in list.Items)
+                {
+                    var (statusCss, statusText) = d.Status switch
+                    {
+                        DisputeStatus.Open => ("cm-status cm-status--cancel", "待處理"),
+                        DisputeStatus.UnderReview => ("cm-status cm-status--running", "處理中"),
+                        DisputeStatus.ResolvedForMerchant => ("cm-status cm-status--closed", "維持業者"),
+                        DisputeStatus.ResolvedForKol => ("cm-status cm-status--recruit", "改判KOL"),
+                        DisputeStatus.ResolvedCompromise => ("cm-status cm-status--closed", "協議結案"),
+                        DisputeStatus.Cancelled => ("cm-status cm-status--draft", "已取消"),
+                        _ => ("cm-status", "—"),
+                    };
+
+                    var taskStatusText = d.TaskStatus switch
+                    {
+                        Domain.Enums.TaskStatus.UnderReview => "待驗收",
+                        Domain.Enums.TaskStatus.RevisionRequested => "待補件",
+                        Domain.Enums.TaskStatus.InProgress => "執行中",
+                        Domain.Enums.TaskStatus.Completed => "已完成",
+                        Domain.Enums.TaskStatus.Incomplete => "已逾期",
+                        Domain.Enums.TaskStatus.Cancelled => "已取消",
+                        _ => "—"
+                    };
+
+                    <tr>
+                        <td class="cm-case-name">
+                            <strong>@d.DisputeNo</strong>
+                            <span>案件編號 @d.CaseNo</span>
+                        </td>
+                        <td><span class="@statusCss">@statusText</span></td>
+                        <td>@d.DisputeType</td>
+                        <td class="cm-case-name">
+                            <strong>@d.CaseTitle</strong>
+                            <span>@d.MerchantName</span>
+                        </td>
+                        <td>@(d.KolName ?? "—")</td>
+                        <td>@taskStatusText</td>
+                        <td class="cm-date">@d.OpenedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="cm-actions">
+                            <a asp-action="Detail" asp-route-id="@d.DisputeId" class="action-link"
+                               hx-get="/Dispute/Detail/@d.DisputeId" hx-target="#main-content" hx-push-url="true">處理爭議</a>
+                            <a asp-controller="CaseMonitor" asp-action="Detail" asp-route-id="@d.CaseId" class="action-link"
+                               hx-get="/CaseMonitor/Detail/@d.CaseId" hx-target="#main-content" hx-push-url="true">查看案件</a>
+                        </td>
+                    </tr>
+                }
+                @if (!list.Items.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="empty-state">查無符合條件的異議資料。</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===== PAGINATION ===== -->
+    @if (list.TotalPages >= 1)
+    {
+        var startItem = (list.Page - 1) * list.PageSize + 1;
+        var endItem = Math.Min(list.Page * list.PageSize, list.TotalCount);
+        <div class="pagination cm-pagination">
+            <span class="pagination__info">
+                顯示第 @startItem 到 @endItem 筆，共 @list.TotalCount 筆異議
+            </span>
+            <div class="pagination__nav">
+                @if (list.HasPreviousPage)
+                {
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-disputeType="@typeVal" asp-route-page="1" class="page-btn" aria-label="第一頁">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </a>
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-disputeType="@typeVal" asp-route-page="@(list.Page - 1)" class="page-btn" aria-label="上一頁">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                }
+                else
+                {
+                    <button class="page-btn" disabled aria-label="第一頁"><i class="fa-solid fa-angles-left"></i></button>
+                    <button class="page-btn" disabled aria-label="上一頁"><i class="fa-solid fa-chevron-left"></i></button>
+                }
+
+                @{
+                    var totalPages = list.TotalPages;
+                    var curPage = list.Page;
+                    var pages = Enumerable.Range(1, totalPages)
+                        .Where(p => p == 1 || p == totalPages || Math.Abs(p - curPage) <= 1)
+                        .ToList();
+                    int? prev = null;
+                }
+                @foreach (var p in pages)
+                {
+                    if (prev.HasValue && p - prev.Value > 1)
+                    {
+                        <span class="page-ellipsis">...</span>
+                    }
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-disputeType="@typeVal" asp-route-page="@p"
+                       class="page-btn @(p == curPage ? "active" : "")">@p</a>
+                    prev = p;
+                }
+
+                @if (list.HasNextPage)
+                {
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-disputeType="@typeVal" asp-route-page="@(list.Page + 1)" class="page-btn" aria-label="下一頁">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                    <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
+                       asp-route-disputeType="@typeVal" asp-route-page="@totalPages" class="page-btn" aria-label="最末頁">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <button class="page-btn" disabled aria-label="下一頁"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button class="page-btn" disabled aria-label="最末頁"><i class="fa-solid fa-angles-right"></i></button>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('#dispute-status-chips .cm-chip').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('#dispute-status-chips .cm-chip').forEach(function (b) {
+                    b.classList.remove('cm-chip--active');
+                });
+                btn.classList.add('cm-chip--active');
+                document.getElementById('dispute-status-input').value = btn.dataset.status;
+            });
+        });
+    </script>
+}

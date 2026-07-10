@@ -34,6 +34,10 @@ public static class DependencyInjection
         // ── Dashboard ─────────────────────────────────────
         services.AddScoped<GetDashboardHandler>();
 
+        // ── Dispute ───────────────────────────────────────
+        services.AddScoped<GetDisputeListHandler>();
+        services.AddScoped<GetDisputeSummaryHandler>();
+
         // ── KOL Management ────────────────────────────────
         services.AddScoped<GetKolListHandler>();
         services.AddScoped<GetKolSummaryHandler>();

@@ -47,6 +47,7 @@ public static class DependencyInjection
         services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
         services.AddScoped<ICaseMonitorRepository, CaseMonitorRepository>();
         services.AddScoped<IDashboardRepository, DashboardRepository>();
+        services.AddScoped<IDisputeRepository, DisputeRepository>();
         return services;
     }
 }
