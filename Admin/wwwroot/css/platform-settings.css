@@ -1,0 +1,224 @@
+@charset "utf-8";
+/* ============================================================
+   PLATFORM-SETTINGS.CSS  ─  平台參數設定頁專用樣式
+   ============================================================ */
+
+.ps-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+}
+
+.ps-section {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    background: var(--white);
+}
+
+.ps-section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.ps-section-count {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+.ps-section-title i {
+    color: #4b8ab7;
+}
+
+.ps-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem;
+}
+
+.ps-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.ps-form-field--full {
+    grid-column: 1 / -1;
+}
+
+.ps-form-label {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.ps-form-label .required {
+    color: #e74c3c;
+    margin-left: 0.2rem;
+}
+
+.ps-input,
+.ps-textarea {
+    height: 40px;
+    padding: 0 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    transition: border-color 0.15s;
+}
+
+.ps-input:focus,
+.ps-textarea:focus {
+    outline: none;
+    border-color: #4b8ab7;
+}
+
+.ps-input:disabled,
+.ps-textarea:disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.ps-textarea {
+    height: auto;
+    min-height: 80px;
+    padding: 1rem;
+    resize: vertical;
+}
+
+.ps-field-hint {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.ps-field-error {
+    font-size: 1.2rem;
+    color: #e74c3c;
+}
+
+.ps-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.ps-input-wrap .ps-input {
+    flex: 1;
+}
+
+.ps-input-suffix {
+    position: absolute;
+    right: 1.2rem;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.ps-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.ps-definition-list {
+    display: grid;
+    gap: 1.2rem;
+}
+
+.ps-definition-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.ps-definition-term {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.ps-definition-desc {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.ps-log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.4rem;
+}
+
+.ps-log-table th,
+.ps-log-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+.ps-log-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.ps-log-empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 1.4rem;
+}
+
+.ps-log-scroll {
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.ps-log-scroll .ps-log-table {
+    margin: 0;
+    border: none;
+}
+
+.ps-alert {
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    font-size: 1.4rem;
+    margin-bottom: 1.6rem;
+}
+
+.ps-alert--error {
+    background: #fdecea;
+    color: #c0392b;
+    border: 1px solid #f5b7b1;
+}
+
+.ps-alert--success {
+    background: #eafaf1;
+    color: #27ae60;
+    border: 1px solid #a9dfbf;
+}
+
+@media (max-width: 768px) {
+    .ps-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ps-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

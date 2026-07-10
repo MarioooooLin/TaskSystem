@@ -150,6 +150,18 @@ public static class Errors
             Error.Conflict("Dispute.AlreadyOpen", "此任務已有進行中的爭議。");
     }
 
+    public static class SystemSetting
+    {
+        public static readonly Error NotFound =
+            Error.NotFound("SystemSetting.NotFound", "系統參數不存在。");
+
+        public static readonly Error InvalidValue =
+            Error.Validation("SystemSetting.InvalidValue", "參數值格式或範圍不正確。");
+
+        public static readonly Error CommissionRateSumExceeded =
+            Error.Validation("SystemSetting.CommissionRateSumExceeded", "平台抽成比例與 KOL 最低分潤比例總和不可超過 100%。");
+    }
+
     public static class User
     {
         public static readonly Error NotFound =

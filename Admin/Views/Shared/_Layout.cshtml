@@ -126,7 +126,8 @@
                     <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
                 </div>
                 <div class="sidebar-group__body">
-                    <a asp-controller="SystemSetting" asp-action="Index" class="sidebar-subitem">系統參數設定頁</a>
+                    <a asp-controller="SystemSetting" asp-action="Parameters" class="sidebar-subitem"
+                       hx-get="/SystemSetting/Parameters" hx-target="#main-content" hx-push-url="true">系統參數設定頁</a>
                 </div>
             </div>
 

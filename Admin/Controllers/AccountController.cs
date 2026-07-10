@@ -97,4 +97,17 @@ public sealed class AccountController(LoginHandler loginHandler) : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction(nameof(Login));
     }
+
+    // ── GET /Account/AccessDenied ─────────────────
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult AccessDenied(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView();
+
+        return View();
+    }
 }

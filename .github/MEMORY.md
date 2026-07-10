@@ -1,10 +1,97 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-10 14:46
+> 最後整理時間：2026-07-10 18:55
 
 ---
 
 ## 2026-07-10
+
+### [18:55] 系統參數設定頁（ADM-012）完成 HTMX、樣式、儲存邏輯與還原彙總優化
+
+**變更內容**
+
+- `Admin/Views/SystemSetting/Parameters.cshtml`：
+    - 修正 HTMX 局部刷新後空白問題：表單最外層 `<main>` 補上 `id="main-content"`
+    - 修正 CSS 遺失問題：`<link>` 由頁面頂端改為 `@section PageCss`，讓 Layout 正確輸出到 `<head>`
+    - 移除表單與還原按鈕多餘的 `hx-select="#main-content"`，避免 HTMX 選擇器錯誤
+    - 「還原預設」按鈕移除重複的 `onclick="return confirm(...)"`，只保留 `hx-confirm`
+- `Admin/Controllers/SystemSettingController.cs`：
+    - `Parameters` POST 與 `Reset` POST 在 `HX-Request` 時回傳 `PartialView`，不再 `RedirectToAction`
+    - `MapToViewModel` 設定 `Note = string.Empty`，儲存 / 還原後清空異動備註欄位
+    - 儲存後提示改為依實際異動與否區分：「系統參數已儲存。」/「沒有異動的參數，未更新任何設定。」
+- `Application/SystemSettings/Commands/UpdateSystemSettingsHandler.cs`：
+    - 回傳型別改為 `Result<IReadOnlyList<string>>`，回報實際異動的 Key 清單
+    - 無變化的欄位不會寫入 `SystemSettingLogs`（由 Repository 層過濾）
+- `Infrastructure/Persistence/Repositories/SystemSettingRepository.cs`：
+    - `ResetToDefaultsAsync` 改為只寫一筆彙總異動紀錄 `SettingKey = 'reset_all'`（顯示名稱「還原預設」），不再每個欄位各一筆
+    - 抽出 `UpdateValueAsync` 與 `InsertLogAsync` 私有方法，減少重複 SQL
+- `Application/SystemSettings/SystemSettingKeys.cs`：新增 `ResetAll = "reset_all"`，中文名稱「還原預設」
+
+**決策原因**
+
+- HTMX `hx-select` 需回傳 HTML 內存在對應 id；PartialView 不含 Layout，所以目標 element 本身必須帶 `id="main-content"`
+- CSS 必須在 `<head>` 才會生效；HTMX 只替換 `<main>` 內容，因此 CSS 不能用 `@section` 以外的 inline `<link>`（其他頁面曾用 inline 是因放在 `<main>` 內，此處改為正規 `@section PageCss`）
+- 無異動欄位不寫 log 可避免無意義紀錄；還原預設彙總為一筆可讓近期異動紀錄更簡潔，細節仍可由 ActivityLogs 追蹤
+- 異動備註屬一次性說明，成功後清空符合操作習慣
+
+**待確認 / 下一步**
+
+- 週一（2026-07-13）繼續處理其他頁面問題
+
+---
+
+### [17:20] ADM-012 系統參數設定頁 HTMX 儲存 / 還原問題修復
+
+**變更內容**
+
+- `Admin/Views/SystemSetting/Parameters.cshtml`：
+    - 修正「還原預設」按鈕同時有 `onclick` 與 `hx-confirm` 導致雙重確認視窗
+- `Admin/Controllers/SystemSettingController.cs`：
+    - `Parameters` POST 與 `Reset` POST 在偵測到 `HX-Request` 時改回傳 `PartialView`，避免 HTMX 表單提交後因 `RedirectToAction` 拿到完整 Layout 而顯示空白
+
+**決策原因**
+
+- HTMX form submit 預設會跟隨重導向，但回傳的完整頁面被塞進 `#main-content` 會造成結構錯誤與空白
+- `hx-confirm` 與瀏覽器原生 `confirm` 同時存在會彈出兩次對話框
+
+---
+
+### [16:15] 帳務總覽頁（ADM-011）實作完成 + 明細展開樣式待確認
+
+### [16:15] 帳務總覽頁（ADM-011）實作完成 + 明細展開樣式待確認
+
+**變更內容**
+
+- 新增完整後端鏈路：
+    - `Admin/Controllers/FinanceController.cs`：Index Action，支援 `HX-Request` 回傳 `PartialView`
+    - `Admin/ViewModels/Finance/FinanceIndexViewModel.cs`、`FinanceListQueryViewModel.cs`
+    - `Application/Finance/Queries/GetFinanceListQuery.cs`、`GetFinanceListHandler.cs`
+    - `Application/Finance/DTOs/FinanceSummaryDto.cs`、`FinanceListItemDto.cs`、`FinanceTaskDetailDto.cs`
+    - `Application/Abstractions/Repositories/IFinanceRepository.cs`
+    - `Infrastructure/Persistence/Repositories/FinanceRepository.cs`
+- `Admin/Views/Finance/Index.cshtml`：以 ADM-011 規格重寫，對齊案件監控頁 HTMX 模式
+    - KPI 卡：平台總收入 / 總支出 / 毛利 / 資金流入
+    - 篩選：關鍵字、監控時間範圍、案件狀態 chips
+    - 列表：結算日期、業者、案件、收入、支出、狀態、操作
+    - 分頁：支援 `hx-boost` 局部刷新
+    - 表格加上 `table-section--scrollable`（參考 KOL 管理頁）
+- `Admin/Views/Shared/_Layout.cshtml`：側邊欄「帳務總覽頁」補上 HTMX 屬性
+- `Application/DependencyInjection.cs`、`Infrastructure/DependencyInjection.cs`：註冊 Handler 與 Repository
+
+**待確認**
+
+- 展開明細按鈕與內嵌子表格視覺樣式：
+    - 現有 `Admin/Template/` 無帳務總覽專屬切版，內嵌子表格為功能占位實作
+    - 已在 `Admin/Views/Finance/Index.cshtml` 標記三處 `TODO` 等待設計師確認後更新
+- 財務公式簡化：尚未從 `CaseBudgetSnapshots.FeeItems` JSON 拆解平台服務費、固定開案費、導購抽成明細
+- 列表時間範圍目前以 `Cases.CreatedAt` 篩選，待確認是否應改為 `Cases.SettledAt`
+
+**決策原因**
+
+- 先以功能完整與資料正確為主，視覺樣式待 PM/設計確認後再調整，避免憑空產出與 template 不符的設計
+- 參考案件監控、異常處理、KOL 管理頁的 HTMX 列表模式，保持一致跳轉體驗
+
+---
 
 ### [14:46] 異常處理列表頁 HTMX 補強
 

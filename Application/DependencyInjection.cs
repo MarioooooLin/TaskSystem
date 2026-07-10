@@ -7,6 +7,8 @@ using Application.Kols.Commands;
 using Application.Kols.Queries;
 using Application.Merchants.Commands;
 using Application.Merchants.Queries;
+using Application.SystemSettings.Commands;
+using Application.SystemSettings.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -53,6 +55,12 @@ public static class DependencyInjection
         services.AddScoped<RejectKolHandler>();
         services.AddScoped<SuspendKolHandler>();
         services.AddScoped<UnsuspendKolHandler>();
+
+        // ── System Settings ───────────────────────────────
+        services.AddScoped<GetSystemSettingsHandler>();
+        services.AddScoped<GetRecentSystemSettingLogsHandler>();
+        services.AddScoped<UpdateSystemSettingsHandler>();
+        services.AddScoped<ResetSystemSettingsHandler>();
 
         return services;
     }

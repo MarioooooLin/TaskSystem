@@ -49,6 +49,7 @@ public static class DependencyInjection
         services.AddScoped<IDashboardRepository, DashboardRepository>();
         services.AddScoped<IDisputeRepository, DisputeRepository>();
         services.AddScoped<IFinanceRepository, FinanceRepository>();
+        services.AddScoped<ISystemSettingRepository, SystemSettingRepository>();
         return services;
     }
 }

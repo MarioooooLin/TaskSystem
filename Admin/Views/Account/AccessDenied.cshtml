@@ -1,0 +1,14 @@
+@{
+    if (Context.Request.Headers.ContainsKey("HX-Request"))
+    {
+        Layout = null;
+    }
+    ViewData["Title"] = "存取被拒";
+}
+
+<main class="main-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6rem;min-height:60vh;text-align:center;">
+    <h1 style="font-size:2.4rem;font-weight:700;color:var(--text-main);">存取被拒</h1>
+    <p style="font-size:1.6rem;color:var(--text-muted);">您的帳號沒有權限瀏覽此頁面。</p>
+    <a asp-controller="Dashboard" asp-action="Index" class="st-btn st-btn--primary"
+       hx-get="/Dashboard/Index" hx-target="#main-content" hx-push-url="true">回到首頁</a>
+</main>
