@@ -190,7 +190,9 @@ br.br-break {
     /* color: var(--primary); */
     opacity: 0.7;
 }
-
+.logout-btn i {
+    margin-left: .4rem;
+}
 /* ============================
    SIDEBAR
 =============================== */
@@ -703,7 +705,7 @@ br.br-break {
     background: var(--primary);
     color: var(--white);
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: .9rem 1.8rem;
     font-size: 1.4rem;
     font-weight: 600;
@@ -1107,7 +1109,15 @@ br.br-break {
         white-space: normal;
     }
 }
-
+@media (max-width: 820px) {
+    .page-header{
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+    .page-header .btn-primary{
+        align-self: flex-end;
+    }
+}
 /* ======================================
    RWD — Mobile Landscape  ≤ 768px
 ========================================= */

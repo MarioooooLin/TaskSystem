@@ -1,72 +1,357 @@
+@model Admin.ViewModels.AdminAccount.AdminAccountIndexViewModel
+@using Domain.Enums
 @{
     ViewData["Title"] = "後台帳號管理";
+    var q = Model.Query;
+    var keyword = q.Keyword ?? "";
+    var status = q.Status?.ToString("D") ?? "";
+    var department = q.Department ?? "";
+    var roleId = q.RoleId?.ToString() ?? "";
+    var list = Model.List;
+    var summary = Model.Summary;
+    var actionUrl = Url.Action("Index")!;
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/permission.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/manager.css" asp-append-version="true" />
 
-<main class="main-content pm-main">
+<main class="main-content">
     <div class="content-card">
 
-        <div class="pm-top-bar">
-            <div class="pm-top-bar__left">
-                <h1 class="pm-page-title">後台帳號管理</h1>
-                <p class="pm-page-desc">管理後台成員帳號與角色權限。</p>
+        <div class="page-header">
+            <div class="page-header__left">
+                <h1 class="page-title">後台帳號管理</h1>
+                <p class="page-subtitle">管理後台成員帳號與角色權限。</p>
             </div>
-            <a asp-action="Create" class="pm-btn pm-btn--primary">
+            <a asp-action="Create" class="btn-primary" hx-get="@Url.Action("Create")"
+               hx-target="#main-content" hx-push-url="true">
                 <i class="fa-solid fa-user-plus"></i> 新增帳號
             </a>
         </div>
 
-        <!-- ===== 搜尋篩選列 ===== -->
-        <div class="pm-filter-bar">
-            <div class="pm-search-wrap">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" class="pm-search-input" placeholder="搜尋姓名或電子郵件...">
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="mgr-alert mgr-alert--success">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>@Model.SuccessMessage</span>
             </div>
-            <div class="pm-select-wrap">
-                <select class="pm-select">
-                    <option value="">篩選角色</option>
-                    <option value="SUPER_ADMIN">Super Admin</option>
-                    <option value="ADMIN">Admin</option>
-                </select>
-                <i class="fa-solid fa-chevron-down"></i>
+        }
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="mgr-alert mgr-alert--error">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>@Model.ErrorMessage</span>
+            </div>
+        }
+
+        <!-- ===== 統計摘要 ===== -->
+        <div class="content-card mgr-kpi-row">
+            <div class="mgr-kpi-item">
+                <span class="mgr-kpi-label">全部帳號</span>
+                <strong class="mgr-kpi-value">@summary.TotalCount</strong>
+            </div>
+            <div class="mgr-kpi-item">
+                <span class="mgr-kpi-label">啟用中</span>
+                <strong class="mgr-kpi-value mgr-kpi-value--green">@summary.ActiveCount</strong>
+            </div>
+            <div class="mgr-kpi-item">
+                <span class="mgr-kpi-label">邀請中</span>
+                <strong class="mgr-kpi-value mgr-kpi-value--blue">@summary.PendingInvitationCount</strong>
+            </div>
+            <div class="mgr-kpi-item">
+                <span class="mgr-kpi-label">停用中</span>
+                <strong class="mgr-kpi-value mgr-kpi-value--red">@summary.SuspendedCount</strong>
+            </div>
+            <div class="mgr-kpi-item mgr-kpi-item--last">
+                <span class="mgr-kpi-label">邀請過期</span>
+                <i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;font-size:2rem;"></i>
+                <strong class="mgr-kpi-value mgr-kpi-value--red">@summary.ExpiredInvitationCount</strong>
             </div>
         </div>
 
+        <!-- ===== 搜尋篩選列 ===== -->
+        <form method="get" asp-action="Index" hx-get="@actionUrl" hx-target="#admin-account-results"
+              hx-select="#admin-account-results" hx-swap="outerHTML" hx-push-url="true">
+            <div class="content-card mgr-filter">
+                <div class="mgr-filter-row">
+                    <div class="mgr-filter-item mgr-filter-item--grow">
+                        <label class="mgr-filter-label">關鍵字</label>
+                        <div class="filter-search">
+                            <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                            <input type="text" name="keyword" value="@keyword" class="filter-search__input"
+                                   placeholder="搜尋姓名、電子郵件或部門...">
+                        </div>
+                    </div>
+                    <div class="mgr-filter-item">
+                        <label class="mgr-filter-label">帳號狀態</label>
+                        <div class="filter-select-wrap">
+                            <select name="status" class="filter-select">
+                                <option value="">全部狀態</option>
+                                <option value="1" selected="@(status == "1")">啟用中</option>
+                                <option value="2" selected="@(status == "2")">停用中</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="mgr-filter-item">
+                        <label class="mgr-filter-label">角色</label>
+                        <div class="filter-select-wrap">
+                            <select name="roleId" class="filter-select">
+                                <option value="">全部角色</option>
+                                @foreach (var r in Model.AvailableRoles)
+                                {
+                                    <option value="@r.Id" selected="@(roleId == r.Id.ToString())">@r.Name</option>
+                                }
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="mgr-filter-item">
+                        <label class="mgr-filter-label">部門</label>
+                        <div class="filter-search">
+                            <input type="text" name="department" value="@department" class="filter-search__input" placeholder="部門..."
+                                   style="padding-left:1.2rem; min-width: 120px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="mgr-filter-row" style="justify-content:flex-end;margin-bottom:0;">
+                    <a asp-action="Index" class="btn-primary" style="background:transparent;color:var(--primary);border:1px solid var(--primary);" hx-get="@Url.Action("Index")"
+                       hx-target="#admin-account-results" hx-select="#admin-account-results" hx-swap="outerHTML"
+                       hx-push-url="true">清除篩選</a>
+                    <button type="submit" class="btn-primary">搜尋</button>
+                </div>
+            </div>
+        </form>
+
         <!-- ===== 成員列表 ===== -->
-        <div class="pm-panel">
-            <table class="pm-table">
+        <div id="admin-account-results" class="content-card">
+            <table class="mgr-table">
                 <thead>
                     <tr>
                         <th>姓名</th>
                         <th>電子郵件</th>
+                        <th>部門</th>
                         <th>角色</th>
                         <th>狀態</th>
+                        <th>最後登入</th>
                         <th>建立時間</th>
                         <th style="text-align:right;">操作</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="6" class="bd-empty-hint">— 待資料庫連線 —</td>
-                    </tr>
+                    @foreach (var item in list.Items)
+                    {
+                        var (statusCss, statusText) = item.Status switch
+                        {
+                            UserStatus.Active => ("mgr-status mgr-status--active", "啟用中"),
+                            UserStatus.Suspended => ("mgr-status mgr-status--disabled", "停用中"),
+                            UserStatus.Deleted => ("mgr-status mgr-status--disabled", "已刪除"),
+                            _ => ("mgr-status", "—")
+                        };
+
+                        if (item.HasPendingInvitation && !item.IsInvitationExpired)
+                        {
+                            statusCss = "mgr-status mgr-status--frozen";
+                            statusText = "邀請中";
+                        }
+                        else if (item.IsInvitationExpired)
+                        {
+                            statusCss = "mgr-status mgr-status--disabled";
+                            statusText = "邀請過期";
+                        }
+
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:.8rem;">
+                                    <div style="width:36px;height:36px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary);">@GetInitial(item.Name)</div>
+                                    <span style="font-weight:500;color:var(--text-main);">@item.Name</span>
+                                </div>
+                            </td>
+                            <td><span style="color:var(--text-muted);">@item.Email</span></td>
+                            <td>@(item.Department ?? "—")</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.RolesDisplay))
+                                {
+                                    <span class="mgr-role-badge">@item.RolesDisplay</span>
+                                }
+                                else
+                                {
+                                    <span class="mgr-role-badge">未設定</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="@statusCss">
+                                    @statusText
+                                </span>
+                            </td>
+                            <td>@(item.LastLoginAt?.ToString("yyyy-MM-dd HH:mm") ?? "—")</td>
+                            <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <div class="mgr-actions">
+                                    <a asp-action="Edit" asp-route-id="@item.UserId"
+                                       class="action-link"
+                                       hx-get="@Url.Action("Edit", new { id = item.UserId })" hx-target="#main-content"
+                                       hx-push-url="true">編輯</a>
+
+                                    @if (item.Status == UserStatus.Suspended)
+                                    {
+                                        <form method="post" asp-action="Activate" asp-route-id="@item.UserId"
+                                              style="display:inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="action-link" style="background:transparent;border:none;padding:0;cursor:pointer;">啟用</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" asp-action="Suspend" asp-route-id="@item.UserId"
+                                              style="display:inline" onsubmit="return confirm('確定要停用此帳號嗎？');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="action-link action-link--danger" style="background:transparent;border:none;padding:0;cursor:pointer;">停用</button>
+                                        </form>
+                                    }
+
+                                    @if (item.HasPendingInvitation || item.IsInvitationExpired)
+                                    {
+                                        <form method="post" asp-action="Resend" asp-route-id="@item.UserId"
+                                              style="display:inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="action-link" style="background:transparent;border:none;padding:0;cursor:pointer;">重發邀請</button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    @if (!list.Items.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="empty-state">查無符合條件的後台帳號。</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
+
+            <!-- ===== 分頁 ===== -->
+            @if (list.TotalPages >= 1)
+            {
+                var startItem = (list.Page - 1) * list.PageSize + 1;
+                var endItem = Math.Min(list.Page * list.PageSize, list.TotalCount);
+                <div class="pagination">
+                    <span class="pagination__info">
+                        顯示第 @startItem 至 @endItem 筆，共計 @list.TotalCount 筆資料
+                    </span>
+                    <div class="pagination__nav">
+                        @if (list.HasPreviousPage)
+                        {
+                            <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@status"
+                               asp-route-roleId="@roleId" asp-route-department="@department" asp-route-page="@(list.Page - 1)"
+                               hx-boost="true" hx-target="#admin-account-results" hx-select="#admin-account-results"
+                               hx-swap="outerHTML" hx-push-url="true" class="page-btn">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                        }
+
+                        @{
+                            var totalPages = list.TotalPages;
+                            var curPage = list.Page;
+                            var pages = Enumerable.Range(1, totalPages)
+                            .Where(p => p == 1 || p == totalPages || Math.Abs(p - curPage) <= 1)
+                            .ToList();
+                            int? prev = null;
+                        }
+                        @foreach (var p in pages)
+                        {
+                            if (prev.HasValue && p - prev.Value > 1)
+                            {
+                                <span class="page-ellipsis">...</span>
+                            }
+                            <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@status"
+                               asp-route-roleId="@roleId" asp-route-department="@department" asp-route-page="@p"
+                               hx-boost="true" hx-target="#admin-account-results" hx-select="#admin-account-results"
+                               hx-swap="outerHTML" hx-push-url="true" class="page-btn @(p == curPage ? "active" : "")">@p</a>
+                            prev = p;
+                        }
+
+                        @if (list.HasNextPage)
+                        {
+                            <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@status"
+                               asp-route-roleId="@roleId" asp-route-department="@department" asp-route-page="@(list.Page + 1)"
+                               hx-boost="true" hx-target="#admin-account-results" hx-select="#admin-account-results"
+                               hx-swap="outerHTML" hx-push-url="true" class="page-btn">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="page-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                        }
+                    </div>
+                </div>
+            }
         </div>
 
-        <div class="pm-security-card">
-            <div class="pm-security-card__icon">
+        <div class="content-card" style="display:flex;gap:1.2rem;align-items:flex-start;background:#fff5f5;border:1.5px solid var(--primary);">
+            <div style="font-size:2.4rem;color:#f59e0b;">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <div class="pm-security-card__body">
-                <h3 class="pm-security-card__title">帳號安全提醒</h3>
-                <p class="pm-security-card__desc">
+            <div>
+                <h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.4rem;">帳號安全提醒</h3>
+                <p style="font-size:1.3rem;color:var(--text-muted);">
                     請定期審查後台帳號清單，移除不再需要存取權限的帳號。Super Admin 具有最高權限，請謹慎指派。
                 </p>
             </div>
         </div>
-
+        <!-- ===== 最近異動紀錄 ===== -->
+        <div class="content-card">
+            <h2 class="mgr-section-title">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                帳號異動紀錄
+            </h2>
+            <table class="mgr-log-table">
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>操作者</th>
+                        <th>異動對象</th>
+                        <th>動作</th>
+                        <th>備註</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model.RecentLogs)
+                    {
+                        <tr>
+                            <td>@log.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-weight:700;font-size:1.2rem;margin-right:.6rem;">@GetInitial(log.ActorName)</span>
+                                @log.ActorName
+                            </td>
+                            <td><strong>@log.TargetName</strong></td>
+                            <td>@log.Action</td>
+                            <td>@(log.Note ?? "—")</td>
+                        </tr>
+                    }
+                        @if (!Model.RecentLogs.Any())
+                        {
+                            <tr>
+                                <td colspan="5" class="empty-state">暫無帳號異動紀錄。</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div><!-- /.content-card -->
 </main>
+
+@functions {
+    private static string GetInitial(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return "?";
+        var first = name.Trim().FirstOrDefault(c => !char.IsWhiteSpace(c));
+        return first == default ? "?" : first.ToString().ToUpperInvariant();
+    }
+}

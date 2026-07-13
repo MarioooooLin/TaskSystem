@@ -1,4 +1,6 @@
 using Application.Account;
+using Application.AdminAccounts.Commands;
+using Application.AdminAccounts.Queries;
 using Application.Cases.Queries;
 using Application.Dashboard.Queries;
 using Application.Disputes.Queries;
@@ -19,6 +21,18 @@ public static class DependencyInjection
     {
         // ── Account ───────────────────────────────────────
         services.AddScoped<LoginHandler>();
+
+        // ── Admin Account Management ──────────────────────
+        services.AddScoped<GetAdminAccountListHandler>();
+        services.AddScoped<GetAdminAccountSummaryHandler>();
+        services.AddScoped<GetAdminAccountEditHandler>();
+        services.AddScoped<GetAdminRoleOptionsHandler>();
+        services.AddScoped<GetRecentAdminAccountLogsHandler>();
+        services.AddScoped<CreateAdminAccountInvitationHandler>();
+        services.AddScoped<UpdateAdminAccountHandler>();
+        services.AddScoped<SuspendAdminAccountHandler>();
+        services.AddScoped<ActivateAdminAccountHandler>();
+        services.AddScoped<ResendAdminAccountInvitationHandler>();
 
         // ── Merchant Management ───────────────────────────
         services.AddScoped<GetMerchantListHandler>(); services.AddScoped<GetMerchantSummaryHandler>(); services.AddScoped<GetMerchantDetailHandler>();

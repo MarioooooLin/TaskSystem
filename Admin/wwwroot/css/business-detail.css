@@ -67,12 +67,12 @@
 }
 
 .bd-btn--outline {
-    background: #fff;
-    border-color: var(--border);
-    color: var(--text-main);
+        background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
 }
 .bd-btn--outline:hover {
-    border-color: var(--text-main);
+    background: var(--primary-dark);
 }
 
 .bd-btn--danger {
@@ -755,6 +755,9 @@
 @media (max-width: 820px) {
     .bd-log-grid {
         grid-template-columns: 1fr;
+    }
+    .bd-header-actions{
+        width: 100%;
     }
 }
 

@@ -274,6 +274,45 @@ CREATE TABLE UserRoles (
     CONSTRAINT FK_UserRoles_User FOREIGN KEY (UserId) REFERENCES Users(Id),
     CONSTRAINT FK_UserRoles_Role FOREIGN KEY (RoleId) REFERENCES Roles(Id)
 );
+CREATE TABLE AdminProfiles (
+    -- 後台帳號延伸資料（ADM-013）
+    Id BIGINT IDENTITY(1, 1) NOT NULL,
+    UserId BIGINT NOT NULL,
+    Department NVARCHAR(100) NULL,
+    JobTitle NVARCHAR(100) NULL,
+    Phone NVARCHAR(50) NULL,
+    Note NVARCHAR(500) NULL,
+    CreatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    UpdatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT PK_AdminProfiles PRIMARY KEY (Id),
+    CONSTRAINT FK_AdminProfiles_User FOREIGN KEY (UserId) REFERENCES Users(Id),
+    CONSTRAINT UQ_AdminProfiles_User UNIQUE (UserId)
+);
+CREATE TABLE UserInvitations (
+    -- 通用帳號邀請（Admin / Merchant / Kol 皆可擴充）
+    Id BIGINT IDENTITY(1, 1) NOT NULL,
+    UserId BIGINT NULL,
+    -- 已建立 Users 時關聯；未建立可先以 Email 邀請
+    Email NVARCHAR(255) NOT NULL,
+    InvitedByUserId BIGINT NOT NULL,
+    RoleId BIGINT NULL,
+    -- 後台帳號邀請使用 RoleId；其他類型可為 NULL
+    TokenHash NVARCHAR(500) NOT NULL,
+    AccountType SMALLINT NOT NULL DEFAULT 1,
+    -- 1=Admin  2=Merchant  3=Kol
+    Status SMALLINT NOT NULL DEFAULT 1,
+    -- 1=Pending  2=Accepted  3=Expired  4=Cancelled
+    ExpiresAt DATETIME2 NOT NULL,
+    AcceptedAt DATETIME2 NULL,
+    CreatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    UpdatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT PK_UserInvitations PRIMARY KEY (Id),
+    CONSTRAINT FK_UserInvitations_User FOREIGN KEY (UserId) REFERENCES Users(Id),
+    CONSTRAINT FK_UserInvitations_Inviter FOREIGN KEY (InvitedByUserId) REFERENCES Users(Id),
+    CONSTRAINT FK_UserInvitations_Role FOREIGN KEY (RoleId) REFERENCES Roles(Id),
+    CONSTRAINT CK_UserInvitations_AccountType CHECK (AccountType IN (1, 2, 3)),
+    CONSTRAINT CK_UserInvitations_Status CHECK (Status IN (1, 2, 3, 4))
+);
 -- ================================================================
 -- 3. 業者組織與成員
 -- ================================================================

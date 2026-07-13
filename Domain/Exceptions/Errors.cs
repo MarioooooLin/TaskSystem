@@ -178,5 +178,35 @@ public static class Errors
 
         public static readonly Error NotAdminAccount =
             Error.Forbidden("User.NotAdminAccount", "此帳號無法登入後台。");
+
+        public static readonly Error EmailAlreadyExists =
+            Error.Conflict("User.EmailAlreadyExists", "此電子郵件已被使用。");
+
+        public static readonly Error LastSystemAdmin =
+            Error.Forbidden("User.LastSystemAdmin", "無法停用或刪除最後一個系統管理者。");
+    }
+
+    public static class AdminAccount
+    {
+        public static readonly Error NotFound =
+            Error.NotFound("AdminAccount.NotFound", "後台帳號不存在。");
+
+        public static readonly Error InvalidEmail =
+            Error.Validation("AdminAccount.InvalidEmail", "電子郵件格式不正確。");
+
+        public static readonly Error RoleRequired =
+            Error.Validation("AdminAccount.RoleRequired", "請至少選擇一個角色。");
+
+        public static readonly Error RoleNotFound =
+            Error.NotFound("AdminAccount.RoleNotFound", "指定的系統角色不存在或已停用。");
+
+        public static readonly Error AlreadyActive =
+            Error.Conflict("AdminAccount.AlreadyActive", "帳號已為啟用狀態。");
+
+        public static readonly Error AlreadySuspended =
+            Error.Conflict("AdminAccount.AlreadySuspended", "帳號已處於停用狀態。");
+
+        public static readonly Error InvitationAlreadyAccepted =
+            Error.Conflict("AdminAccount.InvitationAlreadyAccepted", "邀請已被接受。");
     }
 }

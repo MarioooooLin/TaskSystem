@@ -1,6 +1,6 @@
-@model Admin.ViewModels.AdminAccount.CreateAdminAccountViewModel
+@model Admin.ViewModels.AdminAccount.EditAdminAccountViewModel
 @{
-    ViewData["Title"] = "新增後台帳號";
+    ViewData["Title"] = "編輯後台帳號";
 }
 
 <link rel="stylesheet" href="~/css/add-user.css" asp-append-version="true" />
@@ -11,11 +11,11 @@
         <nav class="au-breadcrumb">
             <a asp-action="Index" hx-get="@Url.Action("Index")" hx-target="#main-content" hx-push-url="true">後台帳號管理</a>
             <i class="fa-solid fa-chevron-right"></i>
-            <span class="au-breadcrumb__current">新增帳號</span>
+            <span class="au-breadcrumb__current">編輯帳號</span>
         </nav>
 
         <div class="au-top-bar">
-            <h1 class="au-page-title">新增後台帳號</h1>
+            <h1 class="au-page-title">編輯後台帳號</h1>
             <a asp-action="Index" class="au-back-btn" hx-get="@Url.Action("Index")" hx-target="#main-content"
                hx-push-url="true">
                 <i class="fa-solid fa-arrow-left"></i> 返回列表
@@ -24,14 +24,13 @@
 
         <div asp-validation-summary="ModelOnly" class="au-validation-summary"></div>
 
-        <!-- ===== 主內容雙欄佈局 ===== -->
         <div class="au-layout">
-
-            <!-- 左欄：表單 -->
             <div class="au-form-panel">
-                <form method="post" asp-action="Create" hx-post="@Url.Action("Create")" hx-target="#main-content"
+                <form method="post" asp-action="Edit" asp-route-id="@Model.UserId"
+                      hx-post="@Url.Action("Edit", new { id = Model.UserId })" hx-target="#main-content"
                       hx-swap="innerHTML">
                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="UserId" />
 
                     <div class="au-form-body">
                         <div class="au-form-row">
@@ -66,17 +65,21 @@
                                 <input type="text" asp-for="Phone" class="au-input" placeholder="例如：02-1234-5678">
                                 <span asp-validation-for="Phone" class="au-validation-message"></span>
                             </div>
-                            <div class="au-form-group">
-                                <label class="au-label" asp-for="RoleId">角色設定</label>
-                                <div class="au-select-wrap">
-                                    <select asp-for="RoleId" asp-items="Model.AvailableRoles" class="au-select">
-                                        <option value="">請選擇角色</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </div>
-                                <p class="au-role-desc">選擇的角色將決定該帳號可使用的後台功能權限，建立後仍可於編輯頁調整。</p>
-                                <span asp-validation-for="RoleId" class="au-validation-message"></span>
+                        </div>
+
+                        <div class="au-form-group">
+                            <label class="au-label" asp-for="RoleIds">角色設定</label>
+                            <div class="au-checkbox-list">
+                                @foreach (var role in Model.AvailableRoles)
+                                {
+                                    var isChecked = Model.RoleIds.Contains(long.Parse(role.Value!));
+                                    <label class="au-checkbox-item">
+                                        <input type="checkbox" name="RoleIds" value="@role.Value" checked="@isChecked" />
+                                        <span>@role.Text</span>
+                                    </label>
+                                }
                             </div>
+                            <span asp-validation-for="RoleIds" class="au-validation-message"></span>
                         </div>
 
                         <div class="au-form-group">
@@ -88,71 +91,39 @@
 
                         <div class="au-form-footer">
                             <button type="submit" class="au-submit-btn">
-                                <i class="fa-solid fa-paper-plane"></i> 發送邀請
+                                <i class="fa-solid fa-floppy-disk"></i> 儲存變更
                             </button>
                         </div>
                     </div>
                 </form>
             </div>
 
-            <!-- 右欄：說明 -->
             <div class="au-side-panels">
                 <div class="au-info-panel">
                     <div class="au-info-panel__header">
-                        <h2 class="au-info-panel__title">邀請說明</h2>
+                        <h2 class="au-info-panel__title">編輯提醒</h2>
                         <div class="au-info-panel__icon">
-                            <i class="fa-regular fa-envelope"></i>
+                            <i class="fa-regular fa-pen-to-square"></i>
                         </div>
                     </div>
                     <ol class="au-steps">
                         <li class="au-step">
                             <span class="au-step__num">01</span>
-                            <p class="au-step__desc">受邀帳號將透過電子郵件收到<strong>帳號開通邀請函</strong>。</p>
+                            <p class="au-step__desc">變更電子郵件後，系統將驗證是否與其他帳號重複。</p>
                         </li>
                         <li class="au-step">
                             <span class="au-step__num">02</span>
-                            <p class="au-step__desc">須在 <strong>48 小時內</strong>點擊連結完成<strong>密碼設定</strong>。</p>
+                            <p class="au-step__desc">角色異動會立即生效，既有 Session 將於下次請求時重新載入權限。</p>
                         </li>
                         <li class="au-step">
                             <span class="au-step__num">03</span>
-                            <p class="au-step__desc">設定完成後即可依角色權限使用後台功能。</p>
+                            <p class="au-step__desc">所有編輯操作均會寫入異動紀錄。</p>
                         </li>
                     </ol>
-                    <div class="au-tip">
-                        <p>提示：若帳號未收到信件，請確認電子郵件地址是否正確，或於帳號管理列表點擊「<strong>重發邀請</strong>」。</p>
-                    </div>
-                </div>
-
-                <!-- 系統狀態預覽 -->
-                <div class="au-status-panel">
-                    <h3 class="au-status-panel__title">系統狀態預覽</h3>
-                    <ul class="au-status-list">
-                        <li class="au-status-item">
-                            <div class="au-status-item__left">
-                                <span class="au-status-item__dot"></span>
-                                <div class="au-status-item__info">
-                                    <span class="au-status-item__name">郵件伺服器</span>
-                                    <span class="au-status-item__sub">已穩定運送郵件</span>
-                                </div>
-                            </div>
-                            <i class="fa-regular fa-circle-check au-status-item__ok"></i>
-                        </li>
-                        <li class="au-status-item">
-                            <div class="au-status-item__left">
-                                <span class="au-status-item__dot"></span>
-                                <div class="au-status-item__info">
-                                    <span class="au-status-item__name">可用席位</span>
-                                    <span class="au-status-item__sub">系統無人數上限</span>
-                                </div>
-                            </div>
-                            <span class="au-status-item__count">不限</span>
-                        </li>
-                    </ul>
                 </div>
             </div>
-
-        </div><!-- /.au-layout -->
-    </div><!-- /.content-card -->
+        </div>
+    </div>
 </main>
 
 @section Scripts {

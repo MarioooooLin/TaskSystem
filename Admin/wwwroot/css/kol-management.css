@@ -18,7 +18,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: .6rem;
     padding: 2rem 2.4rem;
     border-right: 1px solid var(--border);
 }
@@ -76,7 +76,7 @@
 .km-filter-item {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: .5rem;
     min-width: 160px;
 }
 
@@ -92,34 +92,31 @@
 .km-chip-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.8rem;
+    gap: .8rem;
 }
 
 .km-chip {
     border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 0.6rem 1rem;
+    padding: .6rem 1rem;
     font-size: 1.3rem;
     background: var(--white);
     color: var(--text-main);
     cursor: pointer;
-    transition:
-        border-color 0.2s,
-        background 0.2s,
-        color 0.2s;
+    transition: border-color .2s, background .2s, color .2s;
 }
 
 .km-chip:hover,
 .km-chip--active {
     border-color: var(--primary);
-    background: rgba(222, 59, 58, 0.08);
+    background: rgba(222, 59, 58, .08);
     color: var(--primary);
 }
 
 .km-date-range {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: .8rem;
 }
 
 .km-date-separator {
@@ -146,9 +143,7 @@
     font-family: inherit;
     color: var(--text-muted);
     cursor: pointer;
-    transition:
-        border-color 0.2s,
-        color 0.2s;
+    transition: border-color .2s, color .2s;
     white-space: nowrap;
 }
 
@@ -167,7 +162,7 @@
 .km-td-name {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: .25rem;
     min-width: 170px;
     font-size: 1.4rem;
 }
@@ -184,7 +179,7 @@
 .km-type-line {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: .35rem;
     min-width: 150px;
 }
 
@@ -196,7 +191,7 @@
 .km-tag {
     display: inline-flex;
     align-items: center;
-    padding: 0.3rem 0.75rem;
+    padding: .3rem .75rem;
     border-radius: 999px;
     font-size: 1.2rem;
     font-weight: 600;
@@ -223,7 +218,7 @@
 .km-status {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: .5rem;
     font-size: 1.3rem;
     font-weight: 600;
 }
@@ -259,7 +254,7 @@
 .km-task-meta {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: .25rem;
     min-width: 140px;
 }
 
@@ -278,7 +273,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.4rem;
+    gap: .4rem;
 }
 
 .action-link--danger {
@@ -289,7 +284,7 @@
     background: #fff;
     color: var(--primary);
     border: 1px solid var(--primary);
-    transition: all 0.2s;
+    transition: all .2s;
 }
 
 .btn-primary.btn-primary--ghost:hover {
@@ -309,7 +304,14 @@
         justify-content: flex-start;
     }
 }
-
+@media (max-width: 900px) {
+    .page-header__right{
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.8rem;
+    }
+}
 @media (max-width: 768px) {
     .page-header {
         flex-direction: column;
@@ -331,30 +333,9 @@
         margin-left: 0;
     }
     .km-chip-group {
-        gap: 0.6rem;
+        gap: .6rem;
     }
     .km-table {
         min-width: 720px;
     }
-}
-
-/* ============================
-   TABLE SCROLL
-============================== */
-.table-section--scrollable {
-    max-height: 500px;
-    overflow-y: auto;
-    border-radius: 8px;
-}
-
-.table-section--scrollable .data-table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table-section--scrollable .data-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: var(--thead-tr, #3aafa9);
 }

@@ -9,7 +9,7 @@
 .adm-breadcrumb {
     font-size: 1.3rem;
     color: var(--text-muted);
-    margin-bottom: 0.4rem;
+    margin-bottom: .4rem;
 }
 
 .kd-page-header {
@@ -19,7 +19,7 @@
 .kd-header-actions {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: .8rem;
     flex-wrap: wrap;
     justify-content: flex-end;
 }
@@ -40,12 +40,13 @@
     font-family: inherit;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.2s;
+    transition: all .2s;
+    gap: 0.5rem;
 }
 
 .kd-btn--ghost {
     background: #fff;
-    color: var(--text-main);
+    color: var(--text-muted);
     border-color: var(--border);
 }
 
@@ -55,15 +56,18 @@
 }
 
 .kd-btn--outline {
-    background: #fff;
-    color: var(--text-main);
-    border-color: var(--border);
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
 }
 
 .kd-btn--outline:hover {
-    border-color: var(--text-main);
+    border-color: var(--primary-dark);
+    background: var(--primary-dark);
 }
-
+/* .kd-btn--outline i{
+    margin-right: .5rem;
+} */
 .kd-btn--danger {
     background: var(--primary);
     color: #fff;
@@ -91,7 +95,7 @@
 .kd-section-title {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: .7rem;
     margin-bottom: 1.6rem;
 }
 
@@ -153,7 +157,7 @@
 .kd-summary-info-item {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: .3rem;
 }
 
 .kd-kol-name {
@@ -185,14 +189,14 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: .5rem;
 }
 
 .kd-chip {
     display: inline-flex;
     align-items: center;
     height: 24px;
-    padding: 0 0.9rem;
+    padding: 0 .9rem;
     border-radius: 14px;
     background: #edf5fa;
     color: #3d5f7a;
@@ -206,16 +210,16 @@
 .kd-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: .4rem;
     width: fit-content;
     border-radius: 16px;
-    padding: 0.2rem 0.8rem;
+    padding: .2rem .8rem;
     font-size: 1.2rem;
     font-weight: 600;
 }
 
 .kd-badge i {
-    font-size: 0.8rem;
+    font-size: .8rem;
 }
 
 .kd-badge--active {
@@ -271,14 +275,14 @@
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 1.2rem;
-    padding-bottom: 0.9rem;
+    padding-bottom: .9rem;
     border-bottom: 1px solid var(--border);
 }
 
 .kd-kv-list {
     display: flex;
     flex-direction: column;
-    gap: 0.9rem;
+    gap: .9rem;
 }
 
 .kd-kv-list--payment {
@@ -335,30 +339,50 @@
 
 .kd-platform-icon {
     color: #3f5f80;
-    margin-right: 0.5rem;
+    margin-right: .5rem;
 }
 
 .kd-notice-box {
-    margin-top: 1.2rem;
-    border: 1px solid #c7dbf0;
-    background: #f4f9ff;
+    background: #fff8e6;
+    border: 1px solid #fbd38d;
     border-radius: 8px;
-    padding: 1rem 1.2rem;
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 2.2rem;
 }
 
-.kd-notice-title {
-    display: inline-flex;
+.kd-notice-box__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fcc419;
+    color: var(--white);
+    display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-size: 1.3rem;
-    color: #4b6f93;
-    font-weight: 700;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-top: .2rem;
 }
 
-.kd-notice-box p {
-    margin-top: 0.4rem;
+.kd-notice-box__content {
+    flex: 1;
+}
+
+.kd-notice-box__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #663c00;
+    margin-bottom: .4rem;
+    margin: 0;
+}
+
+.kd-notice-box__text {
     font-size: 1.3rem;
-    color: #4b6f93;
+    color: #8b6914;
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* ============================
@@ -374,8 +398,8 @@
 .kd-payment-hint h3 {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.7rem;
+    gap: .5rem;
+    margin-bottom: .7rem;
     font-size: 1.4rem;
     color: var(--text-main);
 }
@@ -399,7 +423,7 @@
     display: block;
     font-size: 1.3rem;
     color: var(--text-main);
-    margin-bottom: 0.8rem;
+    margin-bottom: .8rem;
     font-weight: 700;
 }
 
@@ -422,7 +446,7 @@
 .kd-management-actions {
     margin-top: 1rem;
     display: flex;
-    gap: 0.8rem;
+    gap: .8rem;
 }
 
 .kd-text-danger {
@@ -446,7 +470,7 @@
     background: #fff;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: .3rem;
 }
 
 .kd-income-item span {
@@ -468,7 +492,7 @@
     padding: 1.2rem;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.8rem;
+    gap: .8rem;
     font-size: 1.4rem;
     color: var(--text-main);
 }
@@ -476,34 +500,13 @@
 .kd-log-item mark {
     background: #f1f5f9;
     color: #1f3d60;
-    padding: 0.1rem 0.6rem;
+    padding: .1rem .6rem;
     border-radius: 10px;
 }
 
 .kd-log-user {
     color: var(--text-muted);
     margin-left: auto;
-}
-
-/* ============================
-   TABLE SCROLL
-============================== */
-.table-section--scrollable {
-    max-height: 500px;
-    overflow-y: auto;
-    border-radius: 8px;
-}
-
-.table-section--scrollable .data-table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table-section--scrollable .data-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: var(--thead-tr, #3aafa9);
 }
 
 /* ============================
@@ -561,6 +564,15 @@
 
     .kd-kv-row strong {
         text-align: left;
+    }
+
+    .kd-notice-box {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .kd-notice-box__icon {
+        margin-top: 0;
     }
 }
 

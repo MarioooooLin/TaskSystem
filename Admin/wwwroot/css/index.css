@@ -94,8 +94,8 @@
 }
 
 .adm-section-hd .section-title i {
-    color: var(--primary);
-    font-size: 1.6rem;
+    color: #3aafa9;
+    font-size: 1.8rem;
 }
 
 .adm-section-hd .section-title i.fa-triangle-exclamation {
@@ -104,7 +104,7 @@
 
 .adm-section-link {
     font-size: 1.3rem;
-    color: #4b8ab7;
+    color: var(--primary);
     display: inline-flex;
     align-items: center;
     gap: .4rem;

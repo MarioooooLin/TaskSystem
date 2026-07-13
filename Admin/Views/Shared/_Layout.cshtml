@@ -139,7 +139,8 @@
                     <i class="fa-solid fa-chevron-down sidebar-group__arrow"></i>
                 </div>
                 <div class="sidebar-group__body">
-                    <a asp-controller="AdminAccount" asp-action="Index" class="sidebar-subitem">後台帳號管理頁</a>
+                    <a asp-controller="AdminAccount" asp-action="Index" class="sidebar-subitem"
+                       hx-get="/AdminAccount/Index" hx-target="#main-content" hx-push-url="true">後台帳號管理頁</a>
                     <a asp-controller="RolePermission" asp-action="Index" class="sidebar-subitem">後台角色與權限設定頁</a>
                 </div>
             </div>

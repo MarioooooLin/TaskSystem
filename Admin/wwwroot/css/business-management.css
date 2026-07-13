@@ -9,7 +9,7 @@
 .adm-breadcrumb {
     font-size: 1.3rem;
     color: var(--text-muted);
-    margin-bottom: 0.4rem;
+    margin-bottom: .4rem;
 }
 
 /* ============================
@@ -29,7 +29,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: .6rem;
     padding: 2rem 2.8rem;
     border-right: 1px solid var(--border);
 }
@@ -78,7 +78,7 @@
 .bm-filter-item {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: .5rem;
     min-width: 160px;
 }
 
@@ -118,9 +118,7 @@
     font-family: inherit;
     color: var(--text-muted);
     cursor: pointer;
-    transition:
-        border-color 0.2s,
-        color 0.2s;
+    transition: border-color .2s, color .2s;
     white-space: nowrap;
 }
 
@@ -150,7 +148,7 @@
 ============================== */
 .bm-tag {
     display: inline-block;
-    padding: 0.25rem 0.8rem;
+    padding: .25rem .8rem;
     border-radius: 4px;
     font-size: 1.2rem;
     font-weight: 600;
@@ -195,14 +193,14 @@
 .bm-status {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: .5rem;
     font-size: 1.3rem;
     font-weight: 600;
     white-space: nowrap;
 }
 
 .bm-status i.fa-circle {
-    font-size: 0.7rem;
+    font-size: .7rem;
 }
 
 .bm-status--active {
@@ -223,7 +221,7 @@
 .bm-td-contact {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: .2rem;
     font-size: 1.4rem;
     min-width: 150px;
 }
@@ -248,28 +246,7 @@
 .bm-actions {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.3rem;
-}
-
-/* ============================
-   TABLE SCROLL
-============================== */
-.table-section--scrollable {
-    max-height: 500px;
-    overflow-y: auto;
-    border-radius: 8px;
-}
-
-.table-section--scrollable .data-table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table-section--scrollable .data-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: var(--thead-tr, #3aafa9);
+    gap: .3rem;
 }
 
 /* ============================
@@ -278,7 +255,7 @@
 .bm-goto-label {
     font-size: 1.3rem;
     color: var(--text-muted);
-    margin: 0 0.3rem;
+    margin: 0 .3rem;
 }
 
 .bm-goto-input {
@@ -302,7 +279,7 @@
 
 .bm-goto-input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(222, 59, 58, 0.1);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, .1);
 }
 
 /* ============================
@@ -354,7 +331,7 @@
     }
 
     .bm-filter-item {
-        flex: 1 1 calc(50% - 0.5rem);
+        flex: 1 1 calc(50% - .5rem);
         min-width: 140px;
     }
 
