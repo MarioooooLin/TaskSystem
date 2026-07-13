@@ -1,6 +1,82 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-10 18:55
+> 最後整理時間：2026-07-13 15:30
+
+---
+
+## 2026-07-13
+
+### [16:00] KOL 審核詳情頁提醒框 / 退回原因框對齊 template
+
+**變更內容**
+
+- `Admin/wwwroot/css/kol-review.css`：
+    - `.kr-notice-box` 與 `.kr-reject-box` 改為 `kol-review.html` template 的黃色提示框樣式
+    - 新增 `__icon` / `__content` / `__title` / `__text` 子元素樣式，使用圓形 icon 背景與左右並排布局
+- `Admin/Views/KolManagement/ReviewDetail.cshtml`：
+    - 社群審核提醒區塊改為 `<div class="kr-notice-box__icon">` + `<div class="kr-notice-box__content">` 結構
+    - 退回原因區塊改為 `<div class="kr-reject-box__icon">` + `<div class="kr-reject-box__content">` 結構
+    - 收款資料隱私提示 icon 改為 `fa-regular fa-shield-check`，對齊 `kol-review.html`
+
+**決策原因**
+
+- 設計師 template 使用統一的黃色提示框元件，包含左側圓形 icon 與右側標題/內文
+- 原有 `.kr-notice-box` 樣式是紅底警告風格，與 template 不一致
+- 先更新 CSS 再調整 DOM 結構，避免結構改變後樣式遺失
+
+**測試狀態**
+
+- 畫面顯示正常，待後續塞入假資料確認提醒框與退回原因框在真實資料下的呈現
+
+---
+
+### [15:30] KOL Detail 新增「放棄任務次數」統計，並補上 TaskCancellationSource 區分取消來源
+
+**變更內容**
+
+- `Domain/Enums/TaskCancellationSource.cs`（新建）：定義取消來源
+    - `Unspecified = 0`（預設 / 歷史資料）
+    - `KolAbandoned = 1`（KOL 放棄任務）
+    - `MerchantCancelled = 2`（業者取消案件 / 取消任務）
+    - `SystemCancelled = 3`（系統或管理員取消）
+- `Domain/Entities/CaseTask.cs`：新增 `CancellationSource` 屬性
+- `.github/schema.sql`：
+    - `Tasks` 表新增 `CancellationSource SMALLINT NOT NULL DEFAULT 0`
+    - 補上 `CK_Tasks_CancellationSource` CHECK 限制 `(0,1,2,3)`
+- `Application/Kols/DTOs/KolStatsDto.cs` 與 `KolDetailDto.cs`：新增 `AbandonedTaskCount`
+- `Application/Kols/Queries/GetKolDetailHandler.cs`：組裝 DTO 時帶入 `AbandonedTaskCount`
+- `Infrastructure/Persistence/Repositories/KolStatsRepository.cs`：
+    - `GetStatsByKolIdAsync` SQL 改為只統計 `Status = 8 AND CancellationSource = 1`（KOL 放棄）
+- `Admin/Views/KolManagement/Detail.cshtml`：Summary grid 將「驗收中任務」改為「放棄任務次數」
+
+**決策原因**
+
+- 原 `Status = 8`（Cancelled）語義同時包含業者取消、KOL 放棄、系統取消，直接用於「放棄任務次數」會誤導使用者
+- PM 確認應區分取消來源，因此新增 `TaskCancellationSource` enum 與資料庫欄位，讓「放棄任務次數」只統計 KOL 主動放棄的任務
+- 歷史資料預設為 `Unspecified = 0`，不會被誤計為 KOL 放棄；未來業者取消或系統取消時應寫入對應來源
+- `CaseMonitorRepository` 的 `TaskCancelledCount` 維持統計全部 `Status = 8`（案件監控關注整體取消數），不受本次欄位新增影響
+
+---
+
+## 2026-07-13
+
+### Admin Template baseline 建立
+
+**變更內容**
+
+- 新增 `.github/admin-template-baseline.md`，記錄目前 `Admin/Template/` 內既有 HTML template。
+- 分類為 Admin 後台頁面、共用片段 / Layout template、目前放在 `Admin/Template/` 但不列為 Admin 後台頁的 template。
+- 補上目前未看到明確 template 的 Admin 缺頁 / 待確認頁，供後續設計師補頁後比對：
+    - `Dispute/Detail`
+    - `ADM-011` 帳務總覽展開明細專屬切版
+    - `SystemSetting` 完整異動紀錄頁
+    - `AdminAccount` 邀請接受 / 設定密碼 / 邀請過期頁
+    - `RolePermission` 完整角色異動紀錄頁
+
+**後續使用方式**
+
+- 設計師補上新 template 後，先與 `.github/admin-template-baseline.md` 比對 `Admin/Template/` 新增、刪除、改名的 `.html`。
+- 若只更新既有 template 內容，需另外檢查對應 `.cshtml` 是否同步調整。
 
 ---
 

@@ -1,0 +1,252 @@
+@charset "utf-8";
+/* ============================================================
+   PERMISSION.CSS  ─  後台角色管理頁面專用樣式
+   ============================================================ */
+
+/* ── KPI Row ── */
+.perm-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.6rem;
+    margin-bottom: 2rem;
+}
+
+.perm-kpi-card {
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+}
+
+.perm-kpi-card--danger {
+    border: 1.5px solid var(--primary);
+    background: #fff5f5;
+}
+
+.perm-kpi-card__danger-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.perm-kpi-danger-icon {
+    font-size: 2rem;
+    color: #f59e0b;
+}
+
+.perm-kpi-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.perm-kpi-value {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.1;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+
+.perm-kpi-value--red {
+    color: var(--primary);
+}
+
+.perm-kpi-badge {
+    display: inline-block;
+    padding: .3rem .8rem;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.perm-kpi-badge--green {
+    background: #d1f4e9;
+    color: #057a54;
+}
+
+/* ── Filter Bar ── */
+.perm-filter {
+    padding: 1.6rem;
+    margin-bottom: 1.6rem;
+}
+
+.perm-filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.perm-filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    min-width: 160px;
+}
+
+.perm-filter-item--grow {
+    flex: 1;
+    min-width: 220px;
+}
+
+.perm-filter-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* ── Main Table ── */
+.perm-table {
+    width: 100%;
+}
+
+.perm-td-desc {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    max-width: 260px;
+}
+
+.perm-td-date {
+    white-space: nowrap;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+/* ── Status Badge ── */
+.perm-status {
+    display: inline-block;
+    padding: .4rem 1rem;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.perm-status--active {
+    background: #d1f4e9;
+    color: #057a54;
+}
+
+.perm-status--disabled {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+/* ── System Badge ── */
+.perm-badge {
+    display: inline-block;
+    padding: .4rem .8rem;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.perm-badge--dark {
+    background: #5b9ee1;
+    color: #fff;
+}
+
+/* ── Risk Badge ── */
+.perm-risk {
+    display: inline-block;
+    padding: .4rem .8rem;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.perm-risk--yes {
+    background: #fee2e2;
+    color: var(--primary);
+}
+
+.perm-risk--no {
+    color: var(--text-muted);
+    font-size: 1.3rem;
+}
+
+/* ── Pagination ── */
+.perm-pagination {
+    margin-top: 1.4rem;
+    margin-bottom: 0;
+}
+
+/* ── Log Section ── */
+.perm-section-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.perm-section-title i {
+    color: #3aafa9;
+    font-size: 1.8rem;
+}
+
+.perm-log-table {
+    width: 100%;
+}
+
+.perm-log-time {
+    white-space: nowrap;
+    color: var(--text-muted);
+    font-size: 1.3rem;
+}
+
+/* ── Log Avatar ── */
+.perm-log-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    vertical-align: middle;
+    margin-right: .4rem;
+}
+
+.perm-log-avatar--aw {
+    background: #3b82f6;
+}
+
+.perm-log-avatar--ll {
+    background: #8b5cf6;
+}
+
+/* ── RWD ── */
+@media (max-width: 1200px) {
+    .perm-kpi-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .perm-kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .perm-filter-row {
+        flex-direction: column;
+    }
+
+    .perm-filter-item,
+    .perm-filter-item--grow {
+        min-width: 100%;
+        width: 100%;
+        flex: none;
+    }
+
+    .perm-td-desc {
+        max-width: 140px;
+    }
+}

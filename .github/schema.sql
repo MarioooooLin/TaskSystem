@@ -740,6 +740,8 @@ CREATE TABLE Tasks (
     Status SMALLINT NOT NULL DEFAULT 1,
     -- 1=PendingMatch  2=PendingExecution  3=InProgress  4=UnderReview
     -- 5=RevisionRequested  6=Completed  7=Incomplete  8=Cancelled
+    CancellationSource SMALLINT NOT NULL DEFAULT 0,
+    -- 0=Unspecified  1=KolAbandoned  2=MerchantCancelled  3=SystemCancelled
     StartedAt DATETIME2 NULL,
     SubmittedAt DATETIME2 NULL,
     CompletedAt DATETIME2 NULL,
@@ -748,7 +750,8 @@ CREATE TABLE Tasks (
     CONSTRAINT FK_Tasks_Case FOREIGN KEY (CaseId) REFERENCES Cases(Id),
     CONSTRAINT FK_Tasks_Kol FOREIGN KEY (KolId) REFERENCES KolProfiles(Id),
     CONSTRAINT FK_Tasks_Application FOREIGN KEY (ApplicationId) REFERENCES CaseApplications(Id),
-    CONSTRAINT CK_Tasks_Status CHECK (Status IN (1, 2, 3, 4, 5, 6, 7, 8))
+    CONSTRAINT CK_Tasks_Status CHECK (Status IN (1, 2, 3, 4, 5, 6, 7, 8)),
+    CONSTRAINT CK_Tasks_CancellationSource CHECK (CancellationSource IN (0, 1, 2, 3))
 );
 -- Tasks 建立後補上 KolEarnings FK
 ALTER TABLE KolEarnings

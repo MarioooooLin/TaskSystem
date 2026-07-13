@@ -121,7 +121,7 @@
     </div>
     <a asp-action="ReviewList" class="kr-btn kr-btn--ghost" hx-get="@Url.Action("ReviewList")" hx-target="#main-content"
        hx-push-url="true">
-        返回審核列表
+        <i class="fa-solid fa-arrow-left"></i> 返回審核列表
     </a>
 </div>
 
@@ -296,13 +296,18 @@
         @if (needsConfirm.Any())
         {
             <div class="kr-notice-box">
-                <span class="kr-notice-title"><i class="fa-solid fa-triangle-exclamation"></i> 社群審核提醒</span>
-                <ul>
-                    @foreach (var s in needsConfirm)
-                    {
-                        <li>確認 @PlatformLabel(s.Platform) 頻道連結是否與實際帳號相符（@s.AccountName）</li>
-                    }
-                </ul>
+                <div class="kr-notice-box__icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="kr-notice-box__content">
+                    <p class="kr-notice-box__title">社群審核提醒</p>
+                    <ul>
+                        @foreach (var s in needsConfirm)
+                        {
+                            <li>確認 @PlatformLabel(s.Platform) 頻道連結是否與實際帳號相符（@s.AccountName）</li>
+                        }
+                    </ul>
+                </div>
             </div>
         }
     </div>
@@ -346,7 +351,7 @@
             </article>
 
             <aside class="kr-payment-hint">
-                <h3><i class="fa-solid fa-shield-halved"></i> 隱私與安全</h3>
+                <h3><i class="fa-regular fa-shield-check"></i> 隱私與安全</h3>
                 <p>收款資料僅供查核，不顯示完整敏感資訊。</p>
             </aside>
         </div>
@@ -379,8 +384,13 @@
             @if (!string.IsNullOrEmpty(Model.RejectionNote))
             {
                 <div class="kr-reject-box">
-                    <span>退回原因/審核意見：</span>
-                    <p>@Model.RejectionNote</p>
+                    <div class="kr-reject-box__icon">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </div>
+                    <div class="kr-reject-box__content">
+                        <p class="kr-reject-box__title">退回原因/審核意見</p>
+                        <p class="kr-reject-box__text">@Model.RejectionNote</p>
+                    </div>
                 </div>
             }
         </article>

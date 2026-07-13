@@ -6,13 +6,16 @@
     <link rel="stylesheet" href="~/css/permission-management.css" asp-append-version="true" />
 }
 
-<main class="main-content prm-main">
+@* TODO: 本頁對應 Admin/Template/permission-management.html；目前尚無 RolePermissionController 與後端資料，僅為前端佔位 *@
+
+<main id="main-content" class="main-content prm-main">
     <div class="content-card">
 
         <nav class="prm-breadcrumb">
             <a asp-action="Index" asp-controller="SystemSetting">設定中心</a>
             <i class="fa-solid fa-chevron-right"></i>
-            <a asp-action="Detail">後台帳號</a>
+            @* TODO: 後台帳號列表頁（AdminAccountController）尚未建立，連結先保留 *@
+            <a href="#" onclick="return false;">後台帳號</a>
             <i class="fa-solid fa-chevron-right"></i>
             <span class="prm-breadcrumb__current">角色權限管理</span>
         </nav>

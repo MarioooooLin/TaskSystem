@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-綜合財務監控</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/account.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header acc-page-header">
+                <div class="page-header__left">
+                    <h1 class="page-title">綜合財務監控面板</h1>
+                    <p class="page-subtitle">全面追蹤案件資金收入、支出與結算狀態。</p>
+                </div>
+                <button type="button" class="btn-primary">
+                    <i class="fa-solid fa-file-arrow-down"></i> 匯出報表
+                </button>
+            </div>
+
+            <!-- ===== KPI SUMMARY ===== -->
+            <div class="acc-kpi-row">
+                <div class="content-card acc-kpi-card">
+                    <div class="acc-kpi-card__header">
+                        <span class="acc-kpi-card__label">平台總收入</span>
+                        <span class="acc-kpi-card__icon acc-kpi-card__icon--income">
+                            <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                        </span>
+                    </div>
+                    <strong class="acc-kpi-card__amount">NT$ 5,000,000</strong>
+                    <span class="acc-kpi-card__sub">總資金收入（業主）</span>
+                </div>
+                <div class="content-card acc-kpi-card">
+                    <div class="acc-kpi-card__header">
+                        <span class="acc-kpi-card__label">平台總支出</span>
+                        <span class="acc-kpi-card__icon acc-kpi-card__icon--expense">
+                            <i class="fa-solid fa-calculator"></i>
+                        </span>
+                    </div>
+                    <strong class="acc-kpi-card__amount">NT$ 4,150,000</strong>
+                    <span class="acc-kpi-card__sub">總資金支出（KOL）</span>
+                </div>
+                <div class="content-card acc-kpi-card">
+                    <div class="acc-kpi-card__header">
+                        <span class="acc-kpi-card__label">平台毛利</span>
+                        <span class="acc-kpi-card__icon acc-kpi-card__icon--profit">
+                            <i class="fa-solid fa-cash-register"></i>
+                        </span>
+                    </div>
+                    <strong class="acc-kpi-card__amount">NT$ 850,000</strong>
+                    <span class="acc-kpi-card__sub">平台淨利潤料</span>
+                </div>
+            </div>
+
+            <!-- ===== FILTER ===== -->
+            <div class="content-card acc-filter">
+                <div class="acc-filter-row">
+                    <div class="acc-filter-item acc-filter-item--grow">
+                        <div class="filter-search">
+                            <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                            <input type="text" class="filter-search__input" placeholder="搜尋案件編號、業者名稱...">
+                        </div>
+                    </div>
+                    <div class="acc-filter-item">
+                        <label class="acc-filter-label">監控時間範圍</label>
+                        <div class="acc-filter-daterange">
+                            <input type="date" class="acc-date-input">
+                            <span class="acc-date-sep">至</span>
+                            <input type="date" class="acc-date-input">
+                        </div>
+                    </div>
+                    <div class="acc-filter-item">
+                        <label class="acc-filter-label">狀態</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部 (All)</option>
+                                <option>執行中</option>
+                                <option>已結案</option>
+                                <option>爭議中</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-primary acc-filter-btn">套用篩選</button>
+                </div>
+            </div>
+
+            <!-- ===== MAIN TABLE ===== -->
+            <div class="content-card">
+                <div class="table-section">
+                    <table class="data-table acc-table">
+                        <thead>
+                            <tr>
+                                <th class="acc-th-toggle"></th>
+                                <th>建立日期</th>
+                                <th>業者名稱</th>
+                                <th>案件名稱</th>
+                                <th>收入金額（業者）</th>
+                                <th>支出金額（KOL）</th>
+                                <th>狀態</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <!-- ── ROW 1 (expanded) ── -->
+                            <tr class="acc-main-row acc-main-row--open" data-row="1">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn acc-toggle-btn--open">
+                                        <i class="fa-solid fa-chevron-down"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-05-15</td>
+                                <td class="acc-td-biz">Global Retail Co.</td>
+                                <td class="acc-td-case">
+                                    <strong>午夜品牌行銷專案</strong>
+                                    <span>#2024-C001</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 1,000,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$100k</span></li>
+                                        <li><span>門票費用</span><span>NT$800k</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$200k</span></li>
+                                        <li><span>折扣/退款</span><span class="acc-deduct">-NT$100k</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 980,000</td>
+                                <td><span class="acc-status acc-status--closed">已結案</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <!-- Sub-table Row 1 -->
+                            <tr class="acc-sub-row" data-parent="1">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th>
+                                                    <th>任務稿酬 (MISSION)</th>
+                                                    <th>導購佣金 (AFFILIATE)</th>
+                                                    <th>稅金/手續費</th>
+                                                    <th>浮付金額</th>
+                                                    <th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Jason Wang</td>
+                                                    <td>NT$ 300,000</td>
+                                                    <td>NT$ 20,000</td>
+                                                    <td>NT$ 6,666</td>
+                                                    <td><strong>NT$ 326,666</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--paid">已付款</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Emily Chen</td>
+                                                    <td>NT$ 300,000</td>
+                                                    <td>NT$ 20,000</td>
+                                                    <td>NT$ 6,666</td>
+                                                    <td><strong>NT$ 326,666</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--paid">已付款</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Michael Lee</td>
+                                                    <td>NT$ 300,000</td>
+                                                    <td>NT$ 20,000</td>
+                                                    <td>NT$ 6,666</td>
+                                                    <td><strong>NT$ 326,666</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--dispute">爭議處理中</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 2 ── -->
+                            <tr class="acc-main-row" data-row="2">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-06-05</td>
+                                <td class="acc-td-biz">星際科技</td>
+                                <td class="acc-td-case">
+                                    <strong>夏季新品發表會</strong>
+                                    <span>#2024-C002</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 450,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$25k</span></li>
+                                        <li><span>門票費用</span><span>NT$200k</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$200k</span></li>
+                                        <li><span>折扣/退款</span><span>NT$0</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 380,000</td>
+                                <td><span class="acc-status acc-status--running">執行中</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="2">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th>
+                                                    <th>任務稿酬 (MISSION)</th>
+                                                    <th>導購佣金 (AFFILIATE)</th>
+                                                    <th>稅金/手續費</th>
+                                                    <th>浮付金額</th>
+                                                    <th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>林小雅</td>
+                                                    <td>NT$ 180,000</td>
+                                                    <td>NT$ 15,000</td>
+                                                    <td>NT$ 4,333</td>
+                                                    <td><strong>NT$ 199,333</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--paid">已付款</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>王大明</td>
+                                                    <td>NT$ 160,000</td>
+                                                    <td>NT$ 10,000</td>
+                                                    <td>NT$ 3,800</td>
+                                                    <td><strong>NT$ 173,800</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--pending">待付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 3 ── -->
+                            <tr class="acc-main-row" data-row="3">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-06-12</td>
+                                <td class="acc-td-biz">美滿家飾</td>
+                                <td class="acc-td-case">
+                                    <strong>家居生活節促銷</strong>
+                                    <span>#2024-C003</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 210,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$100k</span></li>
+                                        <li><span>門票費用</span><span>NT$130k</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$0</span></li>
+                                        <li><span>折扣/退款</span><span class="acc-deduct">-NT$20k</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 175,000</td>
+                                <td><span class="acc-status acc-status--closed">已結案</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="3">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th><th>任務稿酬 (MISSION)</th><th>導購佣金 (AFFILIATE)</th><th>稅金/手續費</th><th>浮付金額</th><th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>陳美玲</td><td>NT$ 150,000</td><td>NT$ 8,000</td><td>NT$ 3,466</td><td><strong>NT$ 161,466</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--paid">已付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 4 ── -->
+                            <tr class="acc-main-row" data-row="4">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-06-18</td>
+                                <td class="acc-td-biz">雲端通訊</td>
+                                <td class="acc-td-case">
+                                    <strong>B2B 技術顧問服務</strong>
+                                    <span>#2024-C004</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 890,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$500k</span></li>
+                                        <li><span>門票費用</span><span>NT$0</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$440k</span></li>
+                                        <li><span>折扣/退款</span><span class="acc-deduct">-NT$50k</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 750,000</td>
+                                <td><span class="acc-status acc-status--dispute">爭議中</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="4">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th><th>任務稿酬 (MISSION)</th><th>導購佣金 (AFFILIATE)</th><th>稅金/手續費</th><th>浮付金額</th><th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>張志遠</td><td>NT$ 400,000</td><td>NT$ 25,000</td><td>NT$ 8,750</td><td><strong>NT$ 433,750</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--dispute">爭議處理中</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>吳秀珍</td><td>NT$ 280,000</td><td>NT$ 18,000</td><td>NT$ 5,960</td><td><strong>NT$ 303,960</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--paid">已付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 5 ── -->
+                            <tr class="acc-main-row" data-row="5">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-06-20</td>
+                                <td class="acc-td-biz">TechNova Systems</td>
+                                <td class="acc-td-case">
+                                    <strong>雲端架構部署服務</strong>
+                                    <span>#2024-C005</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 850,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$0</span></li>
+                                        <li><span>門票費用</span><span>NT$400k</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$450k</span></li>
+                                        <li><span>折扣/退款</span><span>NT$0</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 710,000</td>
+                                <td><span class="acc-status acc-status--running">執行中</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="5">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th><th>任務稿酬 (MISSION)</th><th>導購佣金 (AFFILIATE)</th><th>稅金/手續費</th><th>浮付金額</th><th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>劉建宏</td><td>NT$ 350,000</td><td>NT$ 22,000</td><td>NT$ 7,700</td><td><strong>NT$ 379,700</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--pending">待付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 6 ── -->
+                            <tr class="acc-main-row" data-row="6">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-06-25</td>
+                                <td class="acc-td-biz">維也納餐飲</td>
+                                <td class="acc-td-case">
+                                    <strong>夏季限定菜單推廣</strong>
+                                    <span>#2024-C006</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 150,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$80k</span></li>
+                                        <li><span>門票費用</span><span>NT$60k</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$0</span></li>
+                                        <li><span>折扣/退款</span><span class="acc-deduct">-NT$10k</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 120,000</td>
+                                <td><span class="acc-status acc-status--closed">已結案</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="6">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th><th>任務稿酬 (MISSION)</th><th>導購佣金 (AFFILIATE)</th><th>稅金/手續費</th><th>浮付金額</th><th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>蔡依靜</td><td>NT$ 100,000</td><td>NT$ 5,000</td><td>NT$ 2,333</td><td><strong>NT$ 107,333</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--paid">已付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 7 ── -->
+                            <tr class="acc-main-row" data-row="7">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-06-28</td>
+                                <td class="acc-td-biz">愛迪兒文創</td>
+                                <td class="acc-td-case">
+                                    <strong>原創市集行銷支援</strong>
+                                    <span>#2024-C007</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 320,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$150k</span></li>
+                                        <li><span>門票費用</span><span>NT$170k</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$0</span></li>
+                                        <li><span>折扣/退款</span><span>NT$0</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 270,000</td>
+                                <td><span class="acc-status acc-status--running">執行中</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="7">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th><th>任務稿酬 (MISSION)</th><th>導購佣金 (AFFILIATE)</th><th>稅金/手續費</th><th>浮付金額</th><th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>許佳琪</td><td>NT$ 230,000</td><td>NT$ 12,000</td><td>NT$ 5,133</td><td><strong>NT$ 247,133</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--pending">待付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 8 ── -->
+                            <tr class="acc-main-row" data-row="8">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-06-30</td>
+                                <td class="acc-td-biz">極速物流</td>
+                                <td class="acc-td-case">
+                                    <strong>最後一哩路配送計畫</strong>
+                                    <span>#2024-C008</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 1,500,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$900k</span></li>
+                                        <li><span>門票費用</span><span>NT$700k</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$0</span></li>
+                                        <li><span>折扣/退款</span><span class="acc-deduct">-NT$100k</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 1,250,000</td>
+                                <td><span class="acc-status acc-status--dispute">爭議中</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="8">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th><th>任務稿酬 (MISSION)</th><th>導購佣金 (AFFILIATE)</th><th>稅金/手續費</th><th>浮付金額</th><th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>黃俊豪</td><td>NT$ 600,000</td><td>NT$ 35,000</td><td>NT$ 14,583</td><td><strong>NT$ 649,583</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--dispute">爭議處理中</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>鄭雅婷</td><td>NT$ 550,000</td><td>NT$ 30,000</td><td>NT$ 13,333</td><td><strong>NT$ 593,333</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--paid">已付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 9 ── -->
+                            <tr class="acc-main-row" data-row="9">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-07-02</td>
+                                <td class="acc-td-biz">樂活生技</td>
+                                <td class="acc-td-case">
+                                    <strong>保健食品年度廣告</strong>
+                                    <span>#2024-C009</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 550,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$300k</span></li>
+                                        <li><span>門票費用</span><span>NT$0</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$250k</span></li>
+                                        <li><span>折扣/退款</span><span>NT$0</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 460,000</td>
+                                <td><span class="acc-status acc-status--running">執行中</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="9">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th><th>任務稿酬 (MISSION)</th><th>導購佣金 (AFFILIATE)</th><th>稅金/手續費</th><th>浮付金額</th><th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>洪雅萍</td><td>NT$ 220,000</td><td>NT$ 15,000</td><td>NT$ 4,916</td><td><strong>NT$ 239,916</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--pending">待付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- ── ROW 10 ── -->
+                            <tr class="acc-main-row" data-row="10">
+                                <td class="acc-td-toggle">
+                                    <button type="button" class="acc-toggle-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                                <td class="acc-td-date">2024-07-05</td>
+                                <td class="acc-td-biz">創智教育</td>
+                                <td class="acc-td-case">
+                                    <strong>線上課程推廣串串車</strong>
+                                    <span>#2024-C010</span>
+                                </td>
+                                <td class="acc-td-income">
+                                    <strong class="acc-income-total">NT$ 120,000</strong>
+                                    <ul class="acc-income-breakdown">
+                                        <li><span>管理佣金</span><span>NT$50k</span></li>
+                                        <li><span>門票費用</span><span>NT$80k</span></li>
+                                        <li><span>KOL委任佣金</span><span>NT$0</span></li>
+                                        <li><span>折扣/退款</span><span class="acc-deduct">-NT$10k</span></li>
+                                    </ul>
+                                </td>
+                                <td class="acc-td-expense">NT$ 98,000</td>
+                                <td><span class="acc-status acc-status--closed">已結案</span></td>
+                                <td class="ob-actions"><button type="button" class="action-link">案件詳情</button></td>
+                            </tr>
+                            <tr class="acc-sub-row acc-sub-row--hidden" data-parent="10">
+                                <td colspan="8" class="acc-sub-cell">
+                                    <div class="acc-subtable-wrap">
+                                        <p class="acc-subtable-title"><i class="fa-solid fa-list-check"></i> 任務明細</p>
+                                        <table class="acc-subtable">
+                                            <thead>
+                                                <tr>
+                                                    <th>KOL 姓名</th><th>任務稿酬 (MISSION)</th><th>導購佣金 (AFFILIATE)</th><th>稅金/手續費</th><th>浮付金額</th><th>狀態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>林佑安</td><td>NT$ 85,000</td><td>NT$ 4,000</td><td>NT$ 1,983</td><td><strong>NT$ 90,983</strong></td>
+                                                    <td><span class="acc-sub-status acc-sub-status--paid">已付款</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PAGINATION -->
+                <div class="pagination">
+                    <span class="pagination__info">顯示 1 到 10 筆，共 128 筆資料</span>
+                    <div class="pagination__nav">
+                        <button class="page-btn" aria-label="上一頁" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span class="page-ellipsis">…</span>
+                        <button class="page-btn">26</button>
+                        <button class="page-btn" aria-label="下一頁"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- end .content-wrapper -->
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('click', function(e) {
+            var btn = e.target.closest('.acc-toggle-btn');
+            if (!btn) return;
+            var mainRow = btn.closest('.acc-main-row');
+            var rowId = mainRow.dataset.row;
+            var subRow = document.querySelector('.acc-sub-row[data-parent="' + rowId + '"]');
+            var isOpen = mainRow.classList.contains('acc-main-row--open');
+            if (isOpen) {
+                mainRow.classList.remove('acc-main-row--open');
+                subRow.classList.add('acc-sub-row--hidden');
+                btn.classList.remove('acc-toggle-btn--open');
+                btn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+            } else {
+                mainRow.classList.add('acc-main-row--open');
+                subRow.classList.remove('acc-sub-row--hidden');
+                btn.classList.add('acc-toggle-btn--open');
+                btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+            }
+        });
+    </script>
+</body>
+</html>

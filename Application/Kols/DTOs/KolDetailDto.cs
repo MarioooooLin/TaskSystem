@@ -36,6 +36,7 @@ public sealed class KolDetailDto
     public int CompletedTaskCount { get; init; }
     public int PendingReviewCount { get; init; }
     public int DisputeCount { get; init; }
+    public int AbandonedTaskCount { get; init; }
 
     // ── 社群帳號 ──────────────────────────────────────────
     public IReadOnlyList<KolSocialAccountDto> SocialAccounts { get; init; } = [];

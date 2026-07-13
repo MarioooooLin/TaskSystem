@@ -16,6 +16,7 @@ public class CaseTask
     public long? ApplicationId { get; set; }  // null = 尚未綁定
 
     public TaskStatus Status { get; set; } = TaskStatus.PendingMatch;
+    public TaskCancellationSource CancellationSource { get; set; } = TaskCancellationSource.Unspecified;
 
     public DateTime? StartedAt { get; set; }
     public DateTime? SubmittedAt { get; set; }

@@ -7,4 +7,5 @@ public sealed class KolStatsDto
     public int CompletedTaskCount { get; init; }
     public int PendingReviewCount { get; init; }
     public int DisputeCount { get; init; }
+    public int AbandonedTaskCount { get; init; }
 }

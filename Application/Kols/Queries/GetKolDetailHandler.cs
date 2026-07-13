@@ -64,6 +64,7 @@ public sealed class GetKolDetailHandler(
             CompletedTaskCount = stats.CompletedTaskCount,
             PendingReviewCount = stats.PendingReviewCount,
             DisputeCount = stats.DisputeCount,
+            AbandonedTaskCount = stats.AbandonedTaskCount,
 
             SocialAccounts = socialAccounts,
             BankAccount = bankAccount,

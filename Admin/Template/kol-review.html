@@ -42,7 +42,7 @@
                     <h1 class="page-title">KOL詳細檔案</h1>
                     <p class="page-subtitle">查看KOL資料、社群頻道、審核狀態、任務紀錄、收益與異常紀錄</p>
                 </div>
-                <a href="kol-new.html" class="kr-btn kr-btn--ghost">返回KOL管理</a>
+                <a href="kol-new.html" class="kr-btn kr-btn--ghost"><i class="fa-solid fa-arrow-left"></i>返回KOL管理</a>
             </div>
 
             <!-- ===== SUMMARY ===== -->
@@ -163,10 +163,15 @@
                     </div>
 
                     <div class="kr-notice-box">
-                        <span class="kr-notice-title"><i class="fa-solid fa-triangle-exclamation"></i> 社群審核提醒</span>
-                        <ul>
-                            <li>確認 TikTok 頻道連結是否與實際帳號相符</li>
-                        </ul>
+                        <div class="kr-notice-box__icon">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="kr-notice-box__content">
+                            <p class="kr-notice-box__title">社群審核提醒</p>
+                            <ul>
+                                <li>確認 TikTok 頻道連結是否與實際帳號相符</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -229,8 +234,13 @@
                         </div>
 
                         <div class="kr-reject-box">
-                            <span>退回原因/審核意見：</span>
-                            <p>社群頻道網址缺少一筆（IG連結失效）。</p>
+                            <div class="kr-reject-box__icon">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </div>
+                            <div class="kr-reject-box__content">
+                                <p class="kr-reject-box__title">退回原因/審核意見</p>
+                                <p class="kr-reject-box__text">社群頻道網址缺少一筆（IG連結失效）。</p>
+                            </div>
                         </div>
                     </article>
 

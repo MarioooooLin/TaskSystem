@@ -1,0 +1,389 @@
+@charset "utf-8";
+/* ============================================================
+   BUSINESS-MANAGEMENT.CSS  ─  業者管理頁面專用樣式
+   ============================================================ */
+
+/* ============================
+   BREADCRUMB（共用，與 index.css 一致）
+============================== */
+.adm-breadcrumb {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: .4rem;
+}
+
+/* ============================
+   KPI STATS ROW
+============================== */
+.bm-kpi-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    margin-bottom: 2.4rem;
+    overflow: hidden;
+}
+
+.bm-kpi-item {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    padding: 2rem 2.8rem;
+    border-right: 1px solid var(--border);
+}
+
+.bm-kpi-item--last {
+    border-right: none;
+}
+
+.bm-kpi-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.bm-kpi-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.bm-kpi-value--green {
+    color: #27ae60;
+}
+
+.bm-kpi-value--red {
+    color: var(--primary);
+}
+
+/* ============================
+   FILTER BAR
+============================== */
+.bm-filter {
+    margin-bottom: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+.bm-filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.bm-filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    min-width: 160px;
+}
+
+.bm-filter-item--grow {
+    flex: 1;
+    min-width: 220px;
+}
+
+.bm-filter-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+/* date input 與其他高度對齊 */
+.bm-date-input {
+    width: 180px;
+}
+
+/* Filter actions (清除篩選 + 開始搜尋) */
+.bm-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+    padding-bottom: 0;
+    flex-shrink: 0;
+}
+
+.bm-btn-clear {
+    height: 38px;
+    padding: 0 1.6rem;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+    white-space: nowrap;
+}
+
+.bm-btn-clear:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ============================
+   TABLE
+============================== */
+.bm-table {
+    width: auto;
+    min-width: 100%;
+    table-layout: auto;
+    white-space: nowrap;
+}
+
+.bm-td-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    min-width: 140px;
+}
+
+/* ============================
+   TAGS（客戶類型 / 行業類型）
+============================== */
+.bm-tag {
+    display: inline-block;
+    padding: .25rem .8rem;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* 客戶類型：中性灰 */
+.bm-tag--type {
+    background: #f0f0f0;
+    color: #555;
+}
+
+.bm-tag--solo {
+    background: #ece8ff;
+    color: #6b4fd8;
+}
+
+/* 行業類型 */
+.bm-tag--travel {
+    background: #e0f4ff;
+    color: #2a8fc0;
+}
+
+.bm-tag--inn {
+    background: #e8f7f6;
+    color: #2b8a85;
+}
+
+.bm-tag--food {
+    background: #fff0e0;
+    color: var(--accent-orange);
+}
+
+.bm-tag--blog {
+    background: #fff4e0;
+    color: #e6a020;
+}
+
+/* ============================
+   STATUS DOT + TEXT
+============================== */
+.bm-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.bm-status i.fa-circle {
+    font-size: .7rem;
+}
+
+.bm-status--active {
+    color: #27ae60;
+}
+
+.bm-status--inactive {
+    color: var(--primary);
+}
+
+.bm-status--pending {
+    color: #e6a020;
+}
+
+/* ============================
+   CONTACT CELL
+============================== */
+.bm-td-contact {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    font-size: 1.4rem;
+    min-width: 150px;
+}
+
+.bm-contact-email {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+/* ============================
+   DATE CELL
+============================== */
+.bm-td-date {
+    white-space: nowrap;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+/* ============================
+   ACTION LINKS（垂直排列）
+============================== */
+.bm-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .3rem;
+}
+
+/* ============================
+   PAGINATION GOTO
+============================== */
+.bm-goto-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin: 0 .3rem;
+}
+
+.bm-goto-input {
+    width: 46px;
+    height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-family: inherit;
+    color: var(--text-main);
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.bm-goto-input::-webkit-inner-spin-button,
+.bm-goto-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.bm-goto-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, .1);
+}
+
+/* ============================
+   RWD ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+    .bm-kpi-item {
+        padding: 1.6rem 2rem;
+        min-width: 130px;
+    }
+
+    .bm-kpi-value {
+        font-size: 2.4rem;
+    }
+
+    .bm-date-input {
+        width: 150px;
+    }
+}
+
+/* ============================
+   RWD ≤ 768px
+============================== */
+@media (max-width: 768px) {
+    /* KPI: 2 欄 */
+    .bm-kpi-row {
+        flex-wrap: wrap;
+    }
+
+    .bm-kpi-item {
+        flex: 0 0 50%;
+        min-width: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .bm-kpi-item:nth-child(odd) {
+        border-right: 1px solid var(--border);
+    }
+
+    .bm-kpi-item--last {
+        border-right: none;
+        border-bottom: none;
+    }
+
+    /* Filter: 全部展開，actions 換行 */
+    .bm-filter-row {
+        gap: 1rem;
+    }
+
+    .bm-filter-item {
+        flex: 1 1 calc(50% - .5rem);
+        min-width: 140px;
+    }
+
+    .bm-filter-item--grow {
+        flex: 1 1 100%;
+    }
+
+    .bm-filter-actions {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .bm-date-input {
+        width: 100%;
+    }
+}
+
+/* ============================
+   RWD ≤ 480px
+============================== */
+@media (max-width: 480px) {
+    /* KPI: 1 欄 */
+    .bm-kpi-item {
+        flex: 0 0 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .bm-kpi-item:nth-child(odd) {
+        border-right: none;
+    }
+
+    .bm-kpi-item--last {
+        border-bottom: none;
+    }
+
+    .bm-kpi-value {
+        font-size: 2.2rem;
+    }
+
+    .bm-filter-item {
+        flex: 1 1 100%;
+    }
+
+    .bm-filter-actions {
+        flex-wrap: wrap;
+    }
+
+    .bm-btn-clear,
+    #doSearch {
+        flex: 1;
+        justify-content: center;
+    }
+}

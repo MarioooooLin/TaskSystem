@@ -1,0 +1,419 @@
+@charset "utf-8";
+/* ============================================================
+   ACCOUNT.CSS  ─  綜合財務監控頁面專用樣式
+   ============================================================ */
+
+/* ── Page Header ── */
+.acc-page-header {
+    margin-bottom: 2.2rem;
+}
+
+/* ── KPI Row ── */
+.acc-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+    margin-bottom: 2.2rem;
+}
+
+.acc-kpi-card {
+    padding: 2rem 2.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.acc-kpi-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.acc-kpi-card__label {
+    font-size: 1.4rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.acc-kpi-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.acc-kpi-card__icon--income {
+    background: #e8f7f6;
+    color: #3aafa9;
+}
+
+.acc-kpi-card__icon--expense {
+    background: #fef0e6;
+    color: var(--accent-orange);
+}
+
+.acc-kpi-card__icon--profit {
+    background: #fce8e8;
+    color: var(--primary);
+}
+
+.acc-kpi-card__amount {
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.1;
+    margin-top: 0.4rem;
+}
+
+.acc-kpi-card__sub {
+    font-size: 1.25rem;
+    color: #9ca3af;
+}
+
+/* ── Filter ── */
+.acc-filter {
+    margin-bottom: 2.2rem;
+    padding: 1.8rem 2.4rem;
+}
+
+.acc-filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.acc-filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.acc-filter-item--grow {
+    flex: 1;
+    min-width: 240px;
+}
+
+.acc-filter-label {
+    font-size: 1.2rem;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.acc-filter-daterange {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.acc-date-input {
+    height: 38px;
+    width: 150px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 1.2rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.acc-date-input:focus {
+    border-color: var(--primary);
+}
+
+.acc-date-sep {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.acc-filter-btn {
+    height: 38px;
+    padding: 0 2rem;
+    flex-shrink: 0;
+    align-self: flex-end;
+}
+
+/* ── Main Table ── */
+.acc-table .acc-th-toggle {
+    width: 40px;
+    padding: 1rem 0.6rem;
+}
+
+.acc-td-toggle {
+    width: 40px;
+    padding: 0.8rem 0.6rem;
+    text-align: center;
+}
+
+.acc-toggle-btn {
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--white);
+    color: #6b7280;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        border-color 0.2s,
+        color 0.2s,
+        background 0.2s;
+}
+
+.acc-toggle-btn:hover,
+.acc-toggle-btn--open {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.acc-td-date {
+    font-size: 1.3rem;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.acc-td-biz {
+    font-size: 1.4rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.acc-td-case strong {
+    display: block;
+    font-size: 1.4rem;
+    color: #1f2937;
+}
+
+.acc-td-case span {
+    display: block;
+    font-size: 1.2rem;
+    color: #9ca3af;
+}
+
+/* Income breakdown */
+.acc-td-income {
+    white-space: nowrap;
+}
+
+.acc-income-total {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.acc-income-breakdown {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.acc-income-breakdown li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    color: #6b7280;
+}
+
+.acc-income-breakdown li span:first-child::before {
+    content: "• ";
+}
+
+.acc-income-breakdown li span:last-child {
+    color: #374151;
+}
+
+.acc-deduct {
+    color: var(--accent-red) !important;
+}
+
+.acc-td-expense {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+}
+
+/* ── Status Badges ── */
+.acc-status {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.acc-status--running {
+    background: #e8f7f6;
+    color: #3aafa9;
+}
+
+.acc-status--closed {
+    background: #f0f0f2;
+    color: #6b7280;
+}
+
+.acc-status--dispute {
+    background: #fce8e8;
+    color: var(--accent-red);
+}
+
+/* ── Sub Row ── */
+.acc-sub-row--hidden {
+    display: none;
+}
+
+.acc-sub-cell {
+    padding: 0 !important;
+    background: #f8fafb;
+    border-bottom: 2px solid var(--border);
+}
+
+.acc-subtable-wrap {
+    padding: 1.6rem 2.4rem 1.6rem 4rem;
+}
+
+.acc-subtable-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.acc-subtable-title i {
+    color: #3aafa9;
+    font-size: 1.8rem;
+}
+
+.acc-subtable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.35rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.acc-subtable thead tr {
+    background: #e8f3f2;
+}
+
+.acc-subtable th {
+    padding: 0.8rem 1.2rem;
+    font-weight: 600;
+    color: #374151;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+}
+
+.acc-subtable tbody tr {
+    border-bottom: 1px solid #eef1f3;
+    transition: background 0.15s;
+}
+
+.acc-subtable tbody tr:hover {
+    background: #f0faf9;
+}
+
+.acc-subtable td {
+    padding: 0.9rem 1.2rem;
+    color: var(--text-main);
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.acc-subtable td strong {
+    color: #1f2937;
+}
+
+/* ── Sub Status Badges ── */
+.acc-sub-status {
+    display: inline-block;
+    padding: 0.25rem 0.9rem;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.acc-sub-status--paid {
+    background: #e8f7f6;
+    color: #3aafa9;
+}
+
+.acc-sub-status--pending {
+    background: #fff4e0;
+    color: #d4860a;
+}
+
+.acc-sub-status--dispute {
+    background: #fce8e8;
+    color: var(--accent-red);
+}
+
+/* ── Main row open highlight ── */
+.acc-main-row--open {
+    background: #f0faf9;
+}
+
+/* ── RWD ── */
+@media (max-width: 1100px) {
+    .acc-kpi-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .acc-kpi-card__amount {
+        font-size: 2.4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .acc-kpi-row {
+        grid-template-columns: 1fr;
+    }
+
+    .acc-filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .acc-filter-item--grow {
+        min-width: unset;
+    }
+
+    .acc-filter-daterange {
+        flex-wrap: wrap;
+    }
+
+    .acc-date-input {
+        width: 100%;
+    }
+
+    .acc-page-header {
+        align-items: flex-start;
+    }
+
+    .btn-primary {
+        align-self: flex-end;
+    }
+}

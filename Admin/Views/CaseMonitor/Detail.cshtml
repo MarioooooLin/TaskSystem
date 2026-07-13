@@ -135,8 +135,8 @@
            hx-push-url="true">
             <i class="fa-solid fa-arrow-left"></i> 返回案件監控
         </a>
-        <button class="cd-btn cd-btn--ghost" type="button"><i class="fa-regular fa-rectangle-list"></i> 查看異常</button>
-        <button class="cd-btn cd-btn--ghost" type="button"><i class="fa-solid fa-magnifying-glass"></i> 查看最近任務</button>
+        <button class="cd-btn" type="button"><i class="fa-regular fa-rectangle-list"></i> 查看異常</button>
+        <button class="cd-btn" type="button"><i class="fa-solid fa-magnifying-glass"></i> 查看最近任務</button>
     </div>
 </div>
 
@@ -445,7 +445,7 @@
                                 @if (task.HasDispute)
                                 {
                                     <a asp-controller="Dispute" asp-action="Index" class="action-link action-link--danger"
-                                   hx-get="/Dispute/Index" hx-target="#main-content" hx-push-url="true">處理爭議</a>
+                                       hx-get="/Dispute/Index" hx-target="#main-content" hx-push-url="true">處理爭議</a>
                                 }
                             </td>
                         </tr>

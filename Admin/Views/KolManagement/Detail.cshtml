@@ -140,7 +140,7 @@
         <p class="page-subtitle">查看KOL資料、社群頻道、審核狀態、任務紀錄、收款與異常紀錄</p>
     </div>
     <div class="kd-header-actions">
-        <button class="kd-btn kd-btn--outline" disabled title="代理登入功能開發中">代理登入</button>
+        <button class="kd-btn kd-btn--outline" disabled title="代理登入功能開發中"><i class="fa-solid fa-arrow-right-to-bracket"></i> 代理登入</button>
         <a asp-action="Index" class="kd-btn kd-btn--ghost"
            hx-get="@Url.Action("Index")" hx-target="#main-content" hx-push-url="true">
             返回KOL管理
@@ -202,8 +202,8 @@
             class="kd-summary-value @(Model.DisputeCount > 0 ? "kd-summary-value--danger" : "")">@Model.DisputeCount</span>
         </div>
         <div class="kd-summary-info-item">
-            <span class="kd-summary-label">驗收中任務</span>
-            <span class="kd-summary-value">@Model.PendingReviewCount</span>
+            <span class="kd-summary-label">放棄任務次數</span>
+            <span class="kd-summary-value">@Model.AbandonedTaskCount</span>
         </div>
     </div>
 </div>
@@ -353,7 +353,7 @@
                             </div>
                         </section>
                         <aside class="kd-payment-hint">
-                            <h3><i class="fa-solid fa-shield-halved"></i> 隱私與安全</h3>
+                            <h3><i class="fa-regular fa-shield-check"></i> 隱私與安全</h3>
                             <p>收款資料僅供查核，不顯示完整敏感資訊。</p>
                         </aside>
                     </div>
@@ -444,9 +444,8 @@
                             <tr>
                                 <th>狀態</th>
                                 <th>案件名稱</th>
-                                <th>業者</th>
-                                <th>稿酬</th>
-                                <th>建立日期</th>
+                                <th>合作條件</th>
+                                <th>備註</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -459,9 +458,8 @@
                                         <td><span class="kd-badge @TaskStatusCss(task.TaskStatus)">@TaskStatusLabel(task.TaskStatus)</span>
                                         </td>
                                         <td>@task.CaseTitle</td>
-                                        <td>@(task.MerchantName ?? "—")</td>
                                         <td>NT$@task.CashRewardAmount.ToString("N0")</td>
-                                        <td>@task.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                        <td>—</td>
                                         <td>
                                             <a asp-controller="CaseMonitor" asp-action="Detail" asp-route-id="@task.CaseId"
                                                class="action-link"
@@ -474,7 +472,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="6" class="empty-state">尚無任務紀錄</td>
+                                    <td colspan="5" class="empty-state">尚無任務紀錄</td>
                                 </tr>
                             }
                         </tbody>

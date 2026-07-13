@@ -4,246 +4,252 @@
     var canManage = Model.CanManage;
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/settings.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/platform-settings.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/parameter.css" asp-append-version="true" />
 
 <main id="main-content" class="main-content ps-main">
-    <div class="content-card">
 
-        <nav class="st-breadcrumb">
-            <a asp-action="Index" asp-controller="Dashboard">首頁</a>
-            <span class="st-breadcrumb__sep">/</span>
-            <a asp-action="Index">設定中心</a>
-            <span class="st-breadcrumb__sep">/</span>
-            <span class="st-breadcrumb__current">平台參數設定</span>
-        </nav>
-
-        <div class="st-page-header">
-            <div class="page-header__left">
-                <h1 class="st-page-title">平台參數設定</h1>
-                <p class="st-page-desc">維護全平台商務參數，供案件建立、預算估算、導購分潤、KOL 提領與關帳規則使用。</p>
-            </div>
+    <!-- ===== PAGE HEADER ===== -->
+    <div class="page-header param-page-header">
+        <div class="page-header__left">
+            <h1 class="page-title">參數設定</h1>
+            <p class="page-subtitle">設定全平台業務核心參與機構的相關數值與商業邏輯。</p>
         </div>
-
-        @if (!ViewData.ModelState.IsValid)
+        @if (canManage)
         {
-            <div class="ps-alert ps-alert--error">
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <div>@error.ErrorMessage</div>
-                }
+            <div class="param-page-actions">
+                <button type="button" class="btn-primary btn-primary--ghost" hx-post="/SystemSetting/Reset"
+                        hx-target="#main-content" hx-swap="outerHTML" hx-confirm="確定要將所有參數還原為預設值嗎？">
+                    <i class="fa-solid fa-arrows-rotate"></i> 回復預設
+                </button>
+                <button type="submit" form="parameters-form" class="btn-primary">
+                    <i class="fa-solid fa-check"></i> 確認修改
+                </button>
             </div>
         }
+    </div>
 
-        @if (TempData["ErrorMessage"] is string errorMessage)
-        {
-            <div class="ps-alert ps-alert--error">
-                @errorMessage
-            </div>
-        }
-
-        @if (TempData["SuccessMessage"] is string successMessage)
-        {
-            <div class="ps-alert ps-alert--success">
-                @successMessage
-            </div>
-        }
-
-        <form method="post" asp-action="Parameters" hx-post="/SystemSetting/Parameters" hx-target="#main-content" hx-swap="outerHTML">
-            @Html.AntiForgeryToken()
-
-            <!-- 全局提醒 -->
-            <div class="ps-section">
-                <h2 class="ps-section-title"><i class="fa-solid fa-circle-info"></i> 全局設定提醒</h2>
-                <p class="ps-definition-desc">
-                    以下參數為平台全局預設值，修改後只影響未來新建立的案件與使用者行為；已成立的訂單、案件任務與既有結算不會被回溯改寫。
+    <!-- ===== ALERT BOX ===== -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="param-alert param-alert--error">
+            <div class="param-alert__icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div class="param-alert__content">
+                <p class="param-alert__title">請修正以下錯誤</p>
+                <p class="param-alert__text">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <span>@error.ErrorMessage</span><br />
+                    }
                 </p>
             </div>
+        </div>
+    }
 
-            <!-- 核心商務參數 -->
-            <div class="ps-section">
-                <h2 class="ps-section-title"><i class="fa-solid fa-sliders"></i> 核心商務參數</h2>
-                <div class="ps-form-grid">
+    @if (TempData["ErrorMessage"] is string errorMessage)
+    {
+        <div class="param-alert param-alert--error">
+            <div class="param-alert__icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div class="param-alert__content">
+                <p class="param-alert__title">處理失敗</p>
+                <p class="param-alert__text">@errorMessage</p>
+            </div>
+        </div>
+    }
 
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="CaseOpeningFeeAmount"><span class="required">*</span> 案件開案費（NT$）</label>
-                        <input asp-for="CaseOpeningFeeAmount" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                        <span asp-validation-for="CaseOpeningFeeAmount" class="ps-field-error"></span>
-                    </div>
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="param-alert" style="background:#e8f7f6;border-color:#3aafa9;">
+            <div class="param-alert__icon" style="background:#3aafa9;"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="param-alert__content">
+                <p class="param-alert__title" style="color:#1f2937;">儲存成功</p>
+                <p class="param-alert__text" style="color:#374151;">@successMessage</p>
+            </div>
+        </div>
+    }
 
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="KolServiceFeeRate"><span class="required">*</span> KOL 服務費率（%）</label>
-                        <div class="ps-input-wrap">
-                            <input asp-for="KolServiceFeeRate" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                            <span class="ps-input-suffix">%</span>
+    <form id="parameters-form" method="post" asp-action="Parameters" hx-post="/SystemSetting/Parameters"
+          hx-target="#main-content" hx-swap="outerHTML">
+        @Html.AntiForgeryToken()
+
+        <!-- ===== MAIN CONTENT GRID ===== -->
+        <div class="param-main-grid">
+
+            <!-- LEFT: CORE PARAMETERS -->
+            <div class="param-left">
+
+                <div class="content-card param-section">
+                    <h2 class="param-section__title">
+                        <i class="fa-solid fa-gear"></i>
+                        核心商務參數
+                    </h2>
+
+                    <!-- Group 1: 案件開案規則 -->
+                    <h3 class="param-group__heading">1. 案件開案規則</h3>
+                    <div class="param-group">
+                        <div class="param-field param-field--half">
+                            <label class="param-label" asp-for="CaseOpeningFeeAmount">案件開案費 (NT$)</label>
+                            <input asp-for="CaseOpeningFeeAmount" type="number" step="0.01" class="param-input"
+                                   disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="CaseOpeningFeeAmount" class="text-danger"></span>
                         </div>
-                        <span asp-validation-for="KolServiceFeeRate" class="ps-field-error"></span>
-                    </div>
-
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="AffiliatePlatformCommissionRate"><span class="required">*</span> 平台抽成比例（%）</label>
-                        <div class="ps-input-wrap">
-                            <input asp-for="AffiliatePlatformCommissionRate" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                            <span class="ps-input-suffix">%</span>
+                        <div class="param-field param-field--half">
+                            <label class="param-label" asp-for="KolServiceFeeRate">KOL 服務費率 (%)</label>
+                            <input asp-for="KolServiceFeeRate" type="number" step="0.01" class="param-input"
+                                   disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="KolServiceFeeRate" class="text-danger"></span>
                         </div>
-                        <span asp-validation-for="AffiliatePlatformCommissionRate" class="ps-field-error"></span>
                     </div>
 
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="AffiliateKolMinCommissionRate"><span class="required">*</span> KOL 最低分潤比例（%）</label>
-                        <div class="ps-input-wrap">
-                            <input asp-for="AffiliateKolMinCommissionRate" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                            <span class="ps-input-suffix">%</span>
+                    <!-- Group 2: 導購分潤規則 -->
+                    <h3 class="param-group__heading">2. 導購分潤規則</h3>
+                    <div class="param-group">
+                        <div class="param-field param-field--half">
+                            <label class="param-label" asp-for="AffiliatePlatformCommissionRate">平台抽成比例 (%)</label>
+                            <input asp-for="AffiliatePlatformCommissionRate" type="number" step="0.01"
+                                   class="param-input" disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="AffiliatePlatformCommissionRate" class="text-danger"></span>
                         </div>
-                        <span asp-validation-for="AffiliateKolMinCommissionRate" class="ps-field-error"></span>
-                    </div>
-
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="CaseAutoExecutionThresholdRate"><span class="required">*</span> 案件自動執行門檻（%）</label>
-                        <div class="ps-input-wrap">
-                            <input asp-for="CaseAutoExecutionThresholdRate" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                            <span class="ps-input-suffix">%</span>
+                        <div class="param-field param-field--half">
+                            <label class="param-label" asp-for="AffiliateKolMinCommissionRate">KOL 最低分潤比例 (%)</label>
+                            <input asp-for="AffiliateKolMinCommissionRate" type="number" step="0.01" class="param-input"
+                                   disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="AffiliateKolMinCommissionRate" class="text-danger"></span>
                         </div>
-                        <span asp-validation-for="CaseAutoExecutionThresholdRate" class="ps-field-error"></span>
-                        <p class="ps-field-hint">招募截止時，錄取人數達預計招募人數的此比例即可自動進入執行中。</p>
                     </div>
 
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="KolMinPayoutAmount"><span class="required">*</span> 最低提領金額（NT$）</label>
-                        <input asp-for="KolMinPayoutAmount" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                        <span asp-validation-for="KolMinPayoutAmount" class="ps-field-error"></span>
-                    </div>
-
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="KolTaxRate"><span class="required">*</span> KOL 稅金扣除率（%）</label>
-                        <div class="ps-input-wrap">
-                            <input asp-for="KolTaxRate" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                            <span class="ps-input-suffix">%</span>
+                    <!-- Group 3: 案件相關參數 -->
+                    <h3 class="param-group__heading">3. 案件相關參數</h3>
+                    <div class="param-group">
+                        <div class="param-field">
+                            <label class="param-label" asp-for="CaseAutoExecutionThresholdRate">案件自動執行門檻 (%)</label>
+                            <input asp-for="CaseAutoExecutionThresholdRate" type="number" step="0.01"
+                                   class="param-input" disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="CaseAutoExecutionThresholdRate" class="text-danger"></span>
                         </div>
-                        <span asp-validation-for="KolTaxRate" class="ps-field-error"></span>
                     </div>
 
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="KolPayoutFeeRate"><span class="required">*</span> KOL 提領手續費率（%）</label>
-                        <div class="ps-input-wrap">
-                            <input asp-for="KolPayoutFeeRate" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                            <span class="ps-input-suffix">%</span>
+                    <!-- Group 4: KOL 提領設定 -->
+                    <h3 class="param-group__heading">4. KOL 提領設定</h3>
+                    <div class="param-group">
+                        <div class="param-field param-field--half">
+                            <label class="param-label" asp-for="KolMinPayoutAmount">最低提領金額 (NT$)</label>
+                            <input asp-for="KolMinPayoutAmount" type="number" step="0.01" class="param-input"
+                                   disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="KolMinPayoutAmount" class="text-danger"></span>
                         </div>
-                        <span asp-validation-for="KolPayoutFeeRate" class="ps-field-error"></span>
+                        <div class="param-field param-field--half">
+                            <label class="param-label" asp-for="KolPayoutMode">提領方式</label>
+                            <input asp-for="KolPayoutMode" type="text" class="param-input"
+                                   disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="KolPayoutMode" class="text-danger"></span>
+                        </div>
                     </div>
-
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="KolPayoutFixedFeeAmount"><span class="required">*</span> KOL 提領固定手續費（NT$）</label>
-                        <input asp-for="KolPayoutFixedFeeAmount" type="number" step="0.01" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                        <span asp-validation-for="KolPayoutFixedFeeAmount" class="ps-field-error"></span>
+                    <div class="param-group">
+                        <div class="param-field param-field--half">
+                            <label class="param-label" asp-for="KolPayoutDays">撥款日</label>
+                            <input asp-for="KolPayoutDays" type="text" class="param-input" placeholder="例如：10,25"
+                                   disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="KolPayoutDays" class="text-danger"></span>
+                        </div>
+                        <div class="param-field param-field--half">
+                            <label class="param-label" asp-for="KolPayoutClosingDayOffset">關帳日設定（撥款日前 N 日）</label>
+                            <input asp-for="KolPayoutClosingDayOffset" type="number" class="param-input"
+                                   disabled="@(canManage ? null : "disabled")" />
+                            <span asp-validation-for="KolPayoutClosingDayOffset" class="text-danger"></span>
+                        </div>
                     </div>
+                    <p class="param-group__footer">多個日期請用逗號分隔；關帳日請輸入負數，例如 -5 表示撥款日前 5 日關帳。</p>
 
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="KolPayoutMode"><span class="required">*</span> 提領方式</label>
-                        <input asp-for="KolPayoutMode" type="text" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                        <span asp-validation-for="KolPayoutMode" class="ps-field-error"></span>
+                    <!-- 異動備註 -->
+                    <div class="param-group">
+                        <div class="param-field">
+                            <label class="param-label" asp-for="Note">異動備註</label>
+                            <textarea asp-for="Note" class="param-input" rows="3"
+                                      disabled="@(canManage ? null : "disabled")" placeholder="記錄此次異動原因，便於後續稽核追蹤"></textarea>
+                            <span asp-validation-for="Note" class="text-danger"></span>
+                        </div>
                     </div>
-
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="KolPayoutDays"><span class="required">*</span> 撥款日</label>
-                        <input asp-for="KolPayoutDays" type="text" class="ps-input" placeholder="例如：10,25" disabled="@(canManage ? null : "disabled")" />
-                        <span asp-validation-for="KolPayoutDays" class="ps-field-error"></span>
-                        <p class="ps-field-hint">多個日期請以逗號分隔，例如 10,25。</p>
-                    </div>
-
-                    <div class="ps-form-field">
-                        <label class="ps-form-label" asp-for="KolPayoutClosingDayOffset"><span class="required">*</span> 關帳日設定（撥款日前 N 日）</label>
-                        <input asp-for="KolPayoutClosingDayOffset" type="number" class="ps-input" disabled="@(canManage ? null : "disabled")" />
-                        <span asp-validation-for="KolPayoutClosingDayOffset" class="ps-field-error"></span>
-                        <p class="ps-field-hint">請輸入負數，例如 -5 表示撥款日前 5 日關帳。</p>
-                    </div>
-
-                    <div class="ps-form-field ps-form-field--full">
-                        <label class="ps-form-label" asp-for="Note">異動備註</label>
-                        <textarea asp-for="Note" class="ps-textarea" disabled="@(canManage ? null : "disabled")" placeholder="記錄此次異動原因，便於後續稽核追蹤"></textarea>
-                        <span asp-validation-for="Note" class="ps-field-error"></span>
-                    </div>
-
                 </div>
+
             </div>
 
-            <!-- 名詞與業務定義 -->
-            <div class="ps-section">
-                <h2 class="ps-section-title"><i class="fa-solid fa-book-open"></i> 名詞與業務定義</h2>
-                <div class="ps-definition-list">
-                    <div class="ps-definition-item">
-                        <span class="ps-definition-term">現金酬勞</span>
-                        <span class="ps-definition-desc">業者直接支付給 KOL 的固定現金報酬，不包含後續導購抽成。</span>
+            <!-- RIGHT: DEFINITIONS -->
+            <div class="param-right">
+
+                <div class="content-card param-def-card">
+                    <h2 class="param-def-card__title">
+                        <i class="fa-solid fa-book"></i>
+                        名詞與業務定義
+                    </h2>
+
+                    <div class="param-def-item">
+                        <h3 class="param-def-item__title">現金酬勞</h3>
+                        <p class="param-def-item__text">業者直接支付給 KOL 的固定現金報酬，不包含後續導購抽成。</p>
                     </div>
-                    <div class="ps-definition-item">
-                        <span class="ps-definition-term">體驗項目</span>
-                        <span class="ps-definition-desc">業者提供的商品或服務，作為實物報酬，平台不對體驗項目的價值進行抽成，僅收取開案費。</span>
+
+                    <div class="param-def-item">
+                        <h3 class="param-def-item__title">體驗項目</h3>
+                        <p class="param-def-item__text">業者提供的商品或服務，作為實物報酬，平台不對體驗項目的價值進行抽成，僅收取開案費。</p>
                     </div>
-                    <div class="ps-definition-item">
-                        <span class="ps-definition-term">導購分潤</span>
-                        <span class="ps-definition-desc">透過專屬連結產生的訂單金額，依據設定比例分配給 KOL 與平台。</span>
+
+                    <div class="param-def-item">
+                        <h3 class="param-def-item__title">導購分潤</h3>
+                        <p class="param-def-item__text">透過專屬連結產生的訂單金額，依據設定比例分配給 KOL 與平台。</p>
                     </div>
                 </div>
+
             </div>
 
-            @if (canManage)
-            {
-                <div class="ps-actions">
-                    <button type="button"
-                            class="st-btn st-btn--outline"
-                            hx-post="/SystemSetting/Reset" hx-target="#main-content" hx-swap="outerHTML"
-                            hx-confirm="確定要將所有參數還原為預設值嗎？">
-                        <i class="fa-solid fa-rotate-left"></i> 還原預設
-                    </button>
-                    <button type="submit" class="st-btn st-btn--primary">
-                        <i class="fa-solid fa-floppy-disk"></i> 儲存設定
-                    </button>
-                </div>
-            }
-        </form>
+        </div>
+    </form>
 
-        <!-- 近期異動紀錄 -->
-        <div class="ps-section">
-            <h2 class="ps-section-title"><i class="fa-solid fa-clock-rotate-left"></i> 近期異動紀錄 <span class="ps-section-count">（最近 @Model.RecentLogs.Count 筆）</span></h2>
-            @if (Model.RecentLogs.Count == 0)
-            {
-                <p class="ps-log-empty">目前尚無異動紀錄。</p>
-            }
-            else
-            {
-                <div class="ps-log-scroll">
-                    <table class="ps-log-table">
-                        <thead>
-                            <tr>
-                                <th>異動時間</th>
-                                <th>操作人員</th>
-                                <th>異動項目</th>
-                                <th>原設定值</th>
-                                <th>新設定值</th>
-                                <th>備註</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var log in Model.RecentLogs)
-                            {
-                                <tr>
-                                    <td>@log.ChangedAt.ToString("yyyy-MM-dd HH:mm")</td>
-                                    <td>@log.ChangedByName</td>
-                                    <td>@log.SettingName</td>
-                                    <td>@log.OldValue</td>
-                                    <td>@log.NewValue</td>
-                                    <td>@log.Note</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
+    <!-- ===== RECENT ACTIVITY LOG ===== -->
+    <div class="content-card">
+        <div class="param-log-header">
+            <h2 class="section-title param-section__title">
+                <i class="fa-solid fa-history"></i>
+                近期異動紀錄
+            </h2>
+            @* TODO: 完整異動紀錄頁尚未建立 *@
+            <a href="#" class="param-log-link" onclick="return false;">查看完整紀錄 &gt;</a>
         </div>
 
+        @if (Model.RecentLogs.Count == 0)
+        {
+            <p class="ps-log-empty">目前尚無異動紀錄。</p>
+        }
+        else
+        {
+            <div class="table-section">
+                <table class="data-table param-log-table">
+                    <thead>
+                        <tr>
+                            <th>異動時間</th>
+                            <th>操作人員</th>
+                            <th>異動項目</th>
+                            <th>原設定值</th>
+                            <th>新設定值</th>
+                            <th>備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model.RecentLogs)
+                        {
+                            <tr>
+                                <td class="td-time">@log.ChangedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td class="td-operator">@log.ChangedByName</td>
+                                <td class="td-item">@log.SettingName</td>
+                                <td class="td-old">@log.OldValue</td>
+                                <td class="td-new">@log.NewValue</td>
+                                <td>@log.Note</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
+
 </main>
 
 @section Scripts {

@@ -11,41 +11,42 @@
     var actionUrl = Url.Action("Index")!;
 }
 
-<link rel="stylesheet" href="~/css/cases-monitor.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/objection.css" asp-append-version="true" />
 
 <!-- ===== PAGE HEADER ===== -->
-<div class="page-header cm-page-header">
+<div class="page-header ob-page-header">
     <div class="page-header__left">
-        <h1 class="page-title">異常處理</h1>
-        <p class="page-subtitle">集中查看 KOL 任務驗收、成果、逾期、報酬與導購分潤相關異議，並進行平台介入處理。</p>
+        <h1 class="page-title">異議處理</h1>
+        <p class="page-subtitle">集中處理 KOL 任務層級的驗收、成果、逾期、報酬與導購分潤異議</p>
     </div>
 </div>
 
-<!-- ===== KPI STATS ===== -->
-<div class="content-card cm-kpi-row">
-    <div class="cm-kpi-item cm-kpi-item--total">
-        <span class="cm-kpi-label">全部異議</span>
-        <strong class="cm-kpi-value">@summary.TotalCount</strong>
+<!-- ===== KPI SUMMARY ===== -->
+<p class="ob-kpi-section-title">異議摘要</p>
+<div class="content-card ob-kpi-row">
+    <div class="ob-kpi-item">
+        <span class="ob-kpi-label">全部異議</span>
+        <strong class="ob-kpi-value">@summary.TotalCount</strong>
     </div>
-    <div class="cm-kpi-item cm-kpi-item--recruit">
-        <span class="cm-kpi-label">待處理</span>
-        <strong class="cm-kpi-value">@summary.OpenCount</strong>
+    <div class="ob-kpi-item ob-kpi-item--pending">
+        <span class="ob-kpi-label">待處理</span>
+        <strong class="ob-kpi-value">@summary.OpenCount</strong>
     </div>
-    <div class="cm-kpi-item cm-kpi-item--running">
-        <span class="cm-kpi-label">處理中</span>
-        <strong class="cm-kpi-value">@summary.UnderReviewCount</strong>
+    <div class="ob-kpi-item">
+        <span class="ob-kpi-label">處理中</span>
+        <strong class="ob-kpi-value">@summary.UnderReviewCount</strong>
     </div>
-    <div class="cm-kpi-item">
-        <span class="cm-kpi-label">待補件</span>
-        <strong class="cm-kpi-value">@summary.RevisionCount</strong>
+    <div class="ob-kpi-item">
+        <span class="ob-kpi-label">待補件</span>
+        <strong class="ob-kpi-value">@summary.RevisionCount</strong>
     </div>
-    <div class="cm-kpi-item">
-        <span class="cm-kpi-label">已結案</span>
-        <strong class="cm-kpi-value">@summary.ResolvedCount</strong>
+    <div class="ob-kpi-item">
+        <span class="ob-kpi-label">已結案</span>
+        <strong class="ob-kpi-value">@summary.ResolvedCount</strong>
     </div>
-    <div class="cm-kpi-item cm-kpi-item--last">
-        <span class="cm-kpi-label">今日新增</span>
-        <strong class="cm-kpi-value">@summary.TodayNewCount</strong>
+    <div class="ob-kpi-item ob-kpi-item--today ob-kpi-item--last">
+        <span class="ob-kpi-label">今日新增</span>
+        <strong class="ob-kpi-value">@summary.TodayNewCount</strong>
     </div>
 </div>
 
@@ -54,21 +55,36 @@
       hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
     <input type="hidden" id="dispute-status-input" name="status" value="@statusVal" />
 
-    <div class="content-card cm-filter">
-        <div class="cm-filter-row">
-            <div class="cm-filter-item cm-filter-item--grow">
-                <label class="cm-filter-label">關鍵字搜尋</label>
+    <div class="content-card ob-filter">
+        <div class="ob-filter-row">
+            <div class="ob-filter-item ob-filter-item--grow">
+                <label class="ob-filter-label">關鍵字</label>
                 <div class="filter-search">
                     <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
                     <input type="text" name="keyword" value="@keyword" class="filter-search__input"
-                           placeholder="異議編號 / 案件名稱 / 業者 / KOL...">
+                           placeholder="搜尋編號、名稱...">
                 </div>
             </div>
-            <div class="cm-filter-item">
-                <label class="cm-filter-label">異議類型</label>
+            <div class="ob-filter-item ob-filter-item--select">
+                <label class="ob-filter-label">異議狀態</label>
+                <div class="filter-select-wrap">
+                    <select name="statusSelect" class="filter-select" id="dispute-status-select">
+                        <option value="" selected="@(string.IsNullOrEmpty(statusVal) ? "selected" : null)">全部狀態</option>
+                        <option value="1" selected="@(statusVal == "1" ? "selected" : null)">待處理</option>
+                        <option value="2" selected="@(statusVal == "2" ? "selected" : null)">處理中</option>
+                        <option value="3" selected="@(statusVal == "3" ? "selected" : null)">待補件</option>
+                        <option value="4" selected="@(statusVal == "4" ? "selected" : null)">維持業者</option>
+                        <option value="5" selected="@(statusVal == "5" ? "selected" : null)">改判 KOL</option>
+                        <option value="6" selected="@(statusVal == "6" ? "selected" : null)">已取消</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                </div>
+            </div>
+            <div class="ob-filter-item ob-filter-item--select">
+                <label class="ob-filter-label">異議類型</label>
                 <div class="filter-select-wrap">
                     <select name="disputeType" class="filter-select">
-                        <option value="" selected="@(string.IsNullOrEmpty(typeVal) ? "selected" : null)">不限</option>
+                        <option value="" selected="@(string.IsNullOrEmpty(typeVal) ? "selected" : null)">全部類型</option>
                         <option value="驗收爭議" selected="@(typeVal == "驗收爭議" ? "selected" : null)">驗收爭議</option>
                         <option value="成果內容爭議" selected="@(typeVal == "成果內容爭議" ? "selected" : null)">成果內容爭議</option>
                         <option value="逾期爭議" selected="@(typeVal == "逾期爭議" ? "selected" : null)">逾期爭議</option>
@@ -79,40 +95,19 @@
                 </div>
             </div>
         </div>
-
-        <div class="cm-filter-row cm-filter-row--chips">
-            <label class="cm-filter-label">異議狀態</label>
-            <div class="cm-chip-group" id="dispute-status-chips">
-                <button class="cm-chip @(statusVal == "" ? "cm-chip--active" : "")" type="button" data-status="">全部</button>
-                <button class="cm-chip @(statusVal == "1" ? "cm-chip--active" : "")" type="button" data-status="1">待處理</button>
-                <button class="cm-chip @(statusVal == "2" ? "cm-chip--active" : "")" type="button" data-status="2">處理中</button>
-                <button class="cm-chip @(statusVal == "3" ? "cm-chip--active" : "")" type="button" data-status="3">待補件</button>
-                <button class="cm-chip @(statusVal == "4" ? "cm-chip--active" : "")" type="button" data-status="4">維持業者</button>
-                <button class="cm-chip @(statusVal == "5" ? "cm-chip--active" : "")" type="button" data-status="5">改判KOL</button>
-                <button class="cm-chip @(statusVal == "6" ? "cm-chip--active" : "")" type="button" data-status="6">已取消</button>
-            </div>
-        </div>
-
-        <div class="cm-filter-row">
-            <div class="cm-filter-actions">
-                <a asp-action="Index" class="cm-clear-btn" hx-get="@actionUrl" hx-target="#dispute-results"
-                   hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">重設篩選</a>
-                <button type="submit" class="btn-primary">搜尋</button>
-            </div>
-        </div>
     </div>
 </form>
 
 <!-- ===== TABLE ===== -->
 <div id="dispute-results" class="content-card">
     <div class="table-section">
-        <table class="data-table cm-table">
+        <table class="data-table ob-table">
             <thead>
                 <tr>
                     <th>異議編號</th>
-                    <th>狀態</th>
+                    <th>異議狀態</th>
                     <th>異議類型</th>
-                    <th>案件名稱 / 業者</th>
+                    <th>案件與業者</th>
                     <th>KOL 名稱</th>
                     <th>任務狀態</th>
                     <th>建立時間</th>
@@ -124,15 +119,17 @@
                 {
                     var (statusCss, statusText) = d.Status switch
                     {
-                        DisputeStatus.Open => ("cm-status cm-status--cancel", "待處理"),
-                        DisputeStatus.UnderReview => ("cm-status cm-status--running", "處理中"),
-                        DisputeStatus.ResolvedForMerchant => ("cm-status cm-status--closed", "維持業者"),
-                        DisputeStatus.ResolvedForKol => ("cm-status cm-status--recruit", "改判KOL"),
-                        DisputeStatus.ResolvedCompromise => ("cm-status cm-status--closed", "協議結案"),
-                        DisputeStatus.Cancelled => ("cm-status cm-status--draft", "已取消"),
-                        _ => ("cm-status", "—"),
+                        DisputeStatus.Open => ("ob-status ob-status--pending", "待處理"),
+                        DisputeStatus.UnderReview => ("ob-status ob-status--processing", "處理中"),
+                        DisputeStatus.ResolvedForMerchant => ("ob-status ob-status--closed", "維持業者"),
+                        DisputeStatus.ResolvedForKol => ("ob-status ob-status--closed", "改判 KOL"),
+                        DisputeStatus.ResolvedCompromise => ("ob-status ob-status--closed", "協議結案"),
+                        DisputeStatus.Cancelled => ("ob-status ob-status--closed", "已取消"),
+                        _ => ("ob-status", "—"),
                     };
 
+                    var taskStatusClass = d.TaskStatus == Domain.Enums.TaskStatus.Incomplete ? "ob-task-status--expired" :
+ "";
                     var taskStatusText = d.TaskStatus switch
                     {
                         Domain.Enums.TaskStatus.UnderReview => "待驗收",
@@ -144,25 +141,40 @@
                         _ => "—"
                     };
 
+                    var avatarText = string.IsNullOrEmpty(d.KolName) ? "—" : new string(d.KolName.Take(2).ToArray());
+
                     <tr>
-                        <td class="cm-case-name">
-                            <strong>@d.DisputeNo</strong>
-                            <span>案件編號 @d.CaseNo</span>
-                        </td>
+                        <td class="ob-dispute-no">@d.DisputeNo</td>
                         <td><span class="@statusCss">@statusText</span></td>
                         <td>@d.DisputeType</td>
-                        <td class="cm-case-name">
+                        <td class="ob-case-name">
                             <strong>@d.CaseTitle</strong>
                             <span>@d.MerchantName</span>
                         </td>
-                        <td>@(d.KolName ?? "—")</td>
-                        <td>@taskStatusText</td>
-                        <td class="cm-date">@d.OpenedAt.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td class="cm-actions">
-                            <a asp-action="Detail" asp-route-id="@d.DisputeId" class="action-link"
-                               hx-get="/Dispute/Detail/@d.DisputeId" hx-target="#main-content" hx-push-url="true">處理爭議</a>
-                            <a asp-controller="CaseMonitor" asp-action="Detail" asp-route-id="@d.CaseId" class="action-link"
-                               hx-get="/CaseMonitor/Detail/@d.CaseId" hx-target="#main-content" hx-push-url="true">查看案件</a>
+                        <td>
+                            @if (!string.IsNullOrEmpty(d.KolName))
+                            {
+                                <div class="ob-kol-cell">
+                                    <span class="ob-kol-avatar" style="background:#3aafa9;">@avatarText</span>
+                                    <span class="ob-kol-name">@d.KolName</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="ob-kol-name">—</span>
+                            }
+                        </td>
+                        <td><span class="ob-task-status @taskStatusClass">@taskStatusText</span></td>
+                        <td class="ob-date">@d.OpenedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="ob-actions">
+                            @* TODO: Detail 後端尚未建立，目前僅開啟前端 drawer 佔位 *@
+                            <button type="button" class="action-link" data-dispute-id="@d.DisputeId"
+                                    data-dispute-no="@d.DisputeNo" data-dispute-type="@d.DisputeType"
+                                    data-dispute-status="@statusText" data-dispute-status-css="@statusCss"
+                                    data-case-title="@d.CaseTitle" data-merchant="@d.MerchantName"
+                                    data-kol="@(d.KolName ?? "—")">
+                                處理爭議
+                            </button>
                         </td>
                     </tr>
                 }
@@ -181,21 +193,22 @@
     {
         var startItem = (list.Page - 1) * list.PageSize + 1;
         var endItem = Math.Min(list.Page * list.PageSize, list.TotalCount);
-        <div class="pagination cm-pagination">
+        <div class="pagination ob-pagination">
             <span class="pagination__info">
-                顯示第 @startItem 到 @endItem 筆，共 @list.TotalCount 筆異議
+                顯示 @startItem 到 @endItem 筆，共 @list.TotalCount 筆異議案件
             </span>
             <div class="pagination__nav">
                 @if (list.HasPreviousPage)
                 {
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
-                       asp-route-disputeType="@typeVal" asp-route-page="1" class="page-btn" aria-label="第一頁"
-                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
+                       asp-route-disputeType="@typeVal" asp-route-page="1" class="page-btn" aria-label="第一頁" hx-boost="true"
+                       hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
                         <i class="fa-solid fa-angles-left"></i>
                     </a>
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
                        asp-route-disputeType="@typeVal" asp-route-page="@(list.Page - 1)" class="page-btn" aria-label="上一頁"
-                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML"
+                       hx-push-url="true">
                         <i class="fa-solid fa-chevron-left"></i>
                     </a>
                 }
@@ -217,12 +230,12 @@
                 {
                     if (prev.HasValue && p - prev.Value > 1)
                     {
-                        <span class="page-ellipsis">...</span>
+                        <span class="page-ellipsis">…</span>
                     }
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
-                       asp-route-disputeType="@typeVal" asp-route-page="@p"
-                       class="page-btn @(p == curPage ? "active" : "")"
-                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">@p</a>
+                       asp-route-disputeType="@typeVal" asp-route-page="@p" class="page-btn @(p == curPage ? "active" : "")"
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML"
+                       hx-push-url="true">@p</a>
                     prev = p;
                 }
 
@@ -230,12 +243,14 @@
                 {
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
                        asp-route-disputeType="@typeVal" asp-route-page="@(list.Page + 1)" class="page-btn" aria-label="下一頁"
-                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML"
+                       hx-push-url="true">
                         <i class="fa-solid fa-chevron-right"></i>
                     </a>
                     <a asp-action="Index" asp-route-keyword="@keyword" asp-route-status="@statusVal"
                        asp-route-disputeType="@typeVal" asp-route-page="@totalPages" class="page-btn" aria-label="最末頁"
-                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML" hx-push-url="true">
+                       hx-boost="true" hx-target="#dispute-results" hx-select="#dispute-results" hx-swap="outerHTML"
+                       hx-push-url="true">
                         <i class="fa-solid fa-angles-right"></i>
                     </a>
                 }
@@ -249,18 +264,179 @@
     }
 </div>
 
-@section Scripts {
-    <script>
-        document.querySelectorAll('#dispute-status-chips .cm-chip').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('#dispute-status-chips .cm-chip').forEach(function (b) {
-                    b.classList.remove('cm-chip--active');
-                });
-                btn.classList.add('cm-chip--active');
-                document.getElementById('dispute-status-input').value = btn.dataset.status;
-                var form = document.getElementById('dispute-filter-form');
-                htmx.trigger(form, 'submit');
-            });
-        });
-    </script>
-}
+<!-- ===== 異議處理 SIDE DRAWER（前端佔位） ===== -->
+<div class="ob-drawer-overlay" id="obDrawerOverlay" style="display:none;"></div>
+<aside class="ob-drawer" id="obDrawer" role="dialog" aria-modal="true" aria-label="異議處理" style="display:none;">
+    <div class="ob-drawer__header">
+        <span class="ob-drawer__title"><i class="fa-solid fa-gavel"></i> 異議處理</span>
+        <button class="ob-drawer__close" id="obDrawerClose" aria-label="關閉">&times;</button>
+    </div>
+    <div class="ob-drawer__body">
+        <div class="ob-di-meta">
+            <div class="ob-di-meta__item">
+                <span class="ob-di-meta__label">異議編號</span>
+                <strong class="ob-di-meta__value" id="diNo">—</strong>
+            </div>
+            <div class="ob-di-meta__item">
+                <span class="ob-di-meta__label">異議類型</span>
+                <span class="ob-di-meta__value" id="diType">—</span>
+            </div>
+            <div class="ob-di-meta__item">
+                <span class="ob-di-meta__label">異議狀態</span>
+                <span id="diStatus">—</span>
+            </div>
+        </div>
+
+        <section class="ob-di-section">
+            <h3 class="ob-di-section__title"><i class="fa-regular fa-address-book"></i> 雙方聯絡方式</h3>
+            <div class="ob-di-contact-grid">
+                <div class="ob-di-contact-card">
+                    <p class="ob-di-contact-card__heading"><i class="fa-solid fa-building"></i> 業者：<span
+                        id="diMerchant">—</span></p>
+                        <ul class="ob-di-contact-list">
+                            @* TODO: Detail 後端未建立，聯絡方式暫無資料 *@
+                            <li><span class="ob-di-contact-label">主要聯絡人</span>—</li>
+                            <li><span class="ob-di-contact-label">市話</span>—</li>
+                            <li><span class="ob-di-contact-label">手機</span>—</li>
+                            <li><span class="ob-di-contact-label">Email</span>—</li>
+                        </ul>
+                    </div>
+                    <div class="ob-di-contact-card">
+                        <p class="ob-di-contact-card__heading"><i class="fa-solid fa-user"></i> KOL：<span
+                            id="diKol">—</span></p>
+                            <ul class="ob-di-contact-list">
+                                <li><span class="ob-di-contact-label">手機</span>—</li>
+                                <li><span class="ob-di-contact-label">Email</span>—</li>
+                                <li><span class="ob-di-contact-label">LINE</span><span class="ob-di-line-badge">—</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ob-di-section">
+                    <h3 class="ob-di-section__title"><i class="fa-regular fa-file-lines"></i> 內容詳情</h3>
+                    <div class="ob-di-summary-row">
+                        <span class="ob-di-field-label">案件與任務摘要</span>
+                        <p class="ob-di-summary-text" id="diCaseTitle">—</p>
+                    </div>
+                    @* TODO: Detail 欄位（交付要求、交付內容、拒收原因、異議內容）待後端建立後補齊 *@
+                    <div class="ob-di-detail-grid">
+                        <div class="ob-di-field">
+                            <span class="ob-di-field-label">業者交付要求</span>
+                            <p class="ob-di-field-value">—</p>
+                        </div>
+                        <div class="ob-di-field">
+                            <span class="ob-di-field-label">KOL 交付內容</span>
+                            <p class="ob-di-field-value">—</p>
+                        </div>
+                        <div class="ob-di-field">
+                            <span class="ob-di-field-label">業者拒收原因</span>
+                            <p class="ob-di-field-value">—</p>
+                        </div>
+                        <div class="ob-di-field">
+                            <span class="ob-di-field-label">KOL 異議內容</span>
+                            <p class="ob-di-field-value">—</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ob-di-section">
+                    <h3 class="ob-di-section__title"><i class="fa-regular fa-clock"></i> 處理紀錄</h3>
+                    @* TODO: Detail 後端未建立，處理紀錄暫無資料 *@
+                    <ul class="ob-di-timeline">
+                        <li class="ob-di-timeline__item">
+                            <span class="ob-di-timeline__dot ob-di-timeline__dot--current"></span>
+                            <div class="ob-di-timeline__content">
+                                <time class="ob-di-timeline__time">—</time>
+                                <p class="ob-di-timeline__text">待建立 Detail 後端後顯示完整紀錄</p>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="ob-di-section">
+                    <h3 class="ob-di-section__title"><i class="fa-solid fa-sliders"></i> 平台處理操作</h3>
+                    @* TODO: Detail 後端未建立，處理操作僅為前端佔位 *@
+                    <div class="ob-di-form">
+                        <div class="ob-di-form__field">
+                            <label class="ob-di-form__label">處理結果 <span class="ob-di-required">*</span></label>
+                            <div class="filter-select-wrap">
+                                <select class="filter-select" disabled>
+                                    <option>請選擇處理結果</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                            </div>
+                        </div>
+                        <div class="ob-di-form__field">
+                            <label class="ob-di-form__label">平台處理意見 <span class="ob-di-required">*</span></label>
+                            <textarea class="ob-di-form__textarea" rows="4" disabled placeholder="Detail 後端建立後才可輸入"></textarea>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="ob-drawer__footer">
+                <button class="ob-drawer__btn-close" id="obDrawerCloseBtn" type="button">關閉</button>
+                <div class="ob-drawer__footer-actions">
+                    <button class="ob-drawer__btn-save" type="button" disabled><i class="fa-regular fa-floppy-disk"></i>
+                        儲存處理紀錄</button>
+                        <button class="ob-drawer__btn-confirm btn-primary" type="button" disabled><i class="fa-solid fa-check"></i>
+                            確認處理結果</button>
+                        </div>
+                    </div>
+                </aside>
+
+                @section Scripts {
+                    <script>
+                        document.addEventListener('change', function (e) {
+                            if (e.target && e.target.id === 'dispute-status-select') {
+                                document.getElementById('dispute-status-input').value = e.target.value;
+                                var form = document.getElementById('dispute-filter-form');
+                                htmx.trigger(form, 'submit');
+                            }
+                        });
+
+                        function openDrawer(data) {
+                            document.getElementById('diNo').textContent = data.no || '—';
+                            document.getElementById('diType').textContent = data.type || '—';
+                            document.getElementById('diStatus').innerHTML = data.statusHtml || '—';
+                            document.getElementById('diCaseTitle').textContent = data.caseTitle || '—';
+                            document.getElementById('diMerchant').textContent = data.merchant || '—';
+                            document.getElementById('diKol').textContent = data.kol || '—';
+
+            var drawer = document.getElementById('obDrawer');
+            var overlay = document.getElementById('obDrawerOverlay');
+            drawer.style.display = 'flex';
+            overlay.style.display = 'block';
+            // 強制 reflow 讓 transition 生效
+            void drawer.offsetWidth;
+            drawer.classList.add('ob-drawer--open');
+            overlay.classList.add('ob-drawer-overlay--active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            var drawer = document.getElementById('obDrawer');
+            var overlay = document.getElementById('obDrawerOverlay');
+            drawer.classList.remove('ob-drawer--open');
+            overlay.classList.remove('ob-drawer-overlay--active');
+            setTimeout(function () {
+                drawer.style.display = 'none';
+                overlay.style.display = 'none';
+            }, 320);
+                                type: btn.dataset.disputeType,
+                                statusHtml: '<span class="' + btn.dataset.disputeStatusCss + '">' + btn.dataset.disputeStatus + '</span>',
+                                caseTitle: btn.dataset.caseTitle,
+                                merchant: btn.dataset.merchant,
+                                kol: btn.dataset.kol
+                            });
+                        });
+
+                        document.getElementById('obDrawerClose').addEventListener('click', closeDrawer);
+                        document.getElementById('obDrawerCloseBtn').addEventListener('click', closeDrawer);
+                        document.getElementById('obDrawerOverlay').addEventListener('click', closeDrawer);
+
+                        document.addEventListener('keydown', function (e) {
+                            if (e.key === 'Escape') closeDrawer();
+                        });
+                    </script>
+                }

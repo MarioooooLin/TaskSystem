@@ -19,7 +19,8 @@ public sealed class KolStatsRepository : IKolStatsRepository
                 (SELECT COUNT(*) FROM Disputes d
                  JOIN Tasks dt ON dt.Id = d.TaskId
                  WHERE dt.KolId = @KolId
-                   AND d.Status IN (1, 2))                                 AS DisputeCount
+                   AND d.Status IN (1, 2))                                 AS DisputeCount,
+                SUM(CASE WHEN t.Status = 8 AND t.CancellationSource = 1 THEN 1 ELSE 0 END) AS AbandonedTaskCount
             FROM Tasks t
             WHERE t.KolId = @KolId
             """;

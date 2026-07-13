@@ -1,0 +1,377 @@
+@charset "utf-8";
+/* ============================================================
+   NOTIFICATION-SETTINGS.CSS  ─  通知偏好設定頁面專用樣式
+   依設計圖 MER-012.jpg 製作
+   ============================================================ */
+
+/* ============================
+   MAIN
+============================== */
+.ns-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ============================
+   頁面標題區
+============================== */
+.ns-page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+    margin-bottom: .6rem;
+}
+
+.ns-page-desc {
+    font-size: 1.6rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+/* ============================
+   區塊 Panel（有外框）
+============================== */
+.ns-panel {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.6rem;
+}
+
+.ns-panel:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Panel 標頭列 */
+.ns-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.6rem;
+    background: #f7f8fa;
+    border-bottom: 1px solid var(--border);
+}
+
+.ns-panel__title {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.ns-panel__title i {
+    color: var(--primary);
+    font-size: 1.8rem;
+}
+
+.ns-panel__hint {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+/* Panel 內容 */
+.ns-panel__body {
+    padding: 1.6rem;
+    background: var(--white);
+}
+
+/* ============================
+   全域通知管道（三個 Checkbox 橫排）
+============================== */
+.ns-channels {
+    display: flex;
+    align-items: flex-start;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.ns-channel-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    cursor: pointer;
+    user-select: none;
+}
+
+.ns-channel-item input[type="checkbox"] {
+    display: none;
+}
+
+/* 自訂 checkmark 方塊 */
+.ns-checkmark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    transition: border-color .2s, background .2s;
+    background: var(--white);
+}
+
+.ns-checkmark::after {
+    content: '';
+    display: none;
+    width: 5px;
+    height: 9px;
+    border: 2px solid var(--white);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+}
+
+.ns-channel-item input:checked+.ns-checkmark,
+label input:checked+.ns-checkmark {
+    background: #4b8ab7;
+    border-color: #4b8ab7;
+}
+
+.ns-channel-item input:checked+.ns-checkmark::after,
+label input:checked+.ns-checkmark::after {
+    display: block;
+}
+
+.ns-channel-info {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.ns-channel-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.ns-channel-desc {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* ============================
+   事件觸發矩陣 Table
+============================== */
+.ns-matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.3rem;
+}
+
+/* 表頭 */
+.ns-matrix-table thead tr {
+    background: #f2f4f6;
+}
+
+.ns-matrix-table th {
+    padding: .9rem 1.2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.ns-matrix-table th.ns-col-channel {
+    text-align: center;
+    width: 90px;
+}
+
+/* 表格內容列 */
+.ns-matrix-table tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: background .12s;
+}
+
+.ns-matrix-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.ns-matrix-table tbody tr:hover {
+    background: var(--primary-light);
+}
+
+.ns-matrix-table td {
+    padding: 1.1rem 1.2rem;
+    vertical-align: middle;
+}
+
+/* 事件名稱欄 */
+.ns-event-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: .2rem;
+}
+
+.ns-event-desc {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* 各管道 checkbox 欄 */
+.ns-matrix-table td.ns-col-channel {
+    text-align: center;
+}
+
+/* 矩陣 label 置中排列 */
+.ns-matrix-table td.ns-col-channel label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ns-matrix-table td.ns-col-channel input[type="checkbox"] {
+    display: none;
+}
+
+/* ============================
+   底部操作列
+============================== */
+.ns-footer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.6rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+    margin-top: 1.6rem;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.ns-footer-bar__hint {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.3rem;
+    flex: 1;
+    color: var(--accent-red);
+    line-height: 1.6;
+}
+
+.ns-footer-bar__hint i {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.ns-footer-bar__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+/* 按鈕 */
+.ns-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    height: 38px;
+    padding: 0 1.8rem;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .18s;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.ns-btn--outline {
+    background: var(--white);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.ns-btn--outline:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: #d1eafc;
+}
+
+.ns-btn--primary {
+    background: #4b8ab7;
+    color: var(--white);
+    border: 1px solid #4b8ab7;
+}
+
+.ns-btn--primary:hover {
+    background: #3a7aaa;
+    border-color: #3a7aaa;
+}
+
+/* ============================
+   RWD — Tablet ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+
+    .ns-matrix-table th.ns-col-channel,
+    .ns-matrix-table td.ns-col-channel {
+        width: 70px;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 768px
+============================== */
+@media (max-width: 768px) {
+    .ns-page-title {
+        font-size: 2.2rem;
+    }
+
+    .ns-channels {
+        flex-direction: column;
+        gap: 1.4rem;
+    }
+
+    .ns-footer-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ns-footer-bar__actions {
+        width: 100%;
+    }
+
+    .ns-btn {
+        flex: 1;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 480px
+============================== */
+@media (max-width: 480px) {
+    .ns-matrix-table {
+        font-size: 1.2rem;
+    }
+
+    .ns-matrix-table th,
+    .ns-matrix-table td {
+        padding: .8rem .8rem;
+    }
+
+    .ns-footer-bar__hint {
+        align-items: flex-start;
+    }
+
+    .ns-footer-bar__hint i {
+        margin-top: 3px;
+    }
+}

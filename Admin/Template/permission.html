@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
-    <title>任務系統-使用者與權限管理</title>
+    <title>任務系統後台-後台角色管理</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
     <meta name="author" content="dannykids">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link rel="SHORTCUT ICON" href="favicon.ico">
@@ -14,18 +15,17 @@
     <link rel="stylesheet" type="text/css" href="css/all-style.css" />
     <link rel="stylesheet" type="text/css" href="css/permission.css" />
 </head>
-
 <body>
 
-    <!-- TOP NAVIGATION BAR -->
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
     <header class="top-nav"></header>
     <script>$('header').load('header.html');</script>
 
-    <!-- SIDEBAR -->
+    <!-- ==================== SIDEBAR ==================== -->
     <aside class="sidebar"></aside>
     <script>$('aside.sidebar').load('sidebar.html');</script>
 
-    <!-- CONTENT WRAPPER -->
+    <!-- ==================== CONTENT WRAPPER ==================== -->
     <div class="content-wrapper">
 
         <!-- SUB HEADER -->
@@ -33,189 +33,228 @@
         <script>$('.sub-header').load('sub-header.html');</script>
 
         <!-- MAIN CONTENT -->
-        <main class="main-content pm-main">
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header">
+                <div class="page-header__left">
+                    <h1 class="page-title">後台角色管理</h1>
+                    <p class="page-subtitle">管理內部後台角色模板，並進入單一角色設定頁調整權限</p>
+                </div>
+                <button type="button" class="btn-primary">
+                    <i class="fa-solid fa-plus"></i> 新增角色
+                </button>
+            </div>
+
+            <!-- ===== KPI STATS ===== -->
+            <div class="perm-kpi-row">
+                <div class="content-card perm-kpi-card">
+                    <span class="perm-kpi-label">角色模板數</span>
+                    <strong class="perm-kpi-value">5</strong>
+                </div>
+                <div class="content-card perm-kpi-card">
+                    <span class="perm-kpi-label">啟用角色</span>
+                    <strong class="perm-kpi-value">5 <span class="perm-kpi-badge perm-kpi-badge--green">100%</span></strong>
+                </div>
+                <div class="content-card perm-kpi-card">
+                    <span class="perm-kpi-label">停用角色</span>
+                    <strong class="perm-kpi-value">0</strong>
+                </div>
+                <div class="content-card perm-kpi-card">
+                    <span class="perm-kpi-label">使用中帳號</span>
+                    <strong class="perm-kpi-value">28</strong>
+                </div>
+                <div class="content-card perm-kpi-card perm-kpi-card--danger">
+                    <div class="perm-kpi-card__danger-header">
+                        <span class="perm-kpi-label">高風險權限角色</span>
+                        <i class="fa-solid fa-triangle-exclamation perm-kpi-danger-icon"></i>
+                    </div>
+                    <strong class="perm-kpi-value perm-kpi-value--red">2</strong>
+                </div>
+            </div>
+
+            <!-- ===== FILTER BAR ===== -->
+            <div class="content-card perm-filter">
+                <div class="perm-filter-row">
+                    <div class="perm-filter-item perm-filter-item--grow">
+                        <label class="perm-filter-label">關鍵字</label>
+                        <div class="filter-search">
+                            <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                            <input type="text" class="filter-search__input" placeholder="角色名稱或角色說明">
+                        </div>
+                    </div>
+                    <div class="perm-filter-item">
+                        <label class="perm-filter-label">角色狀態</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部</option>
+                                <option>啟用</option>
+                                <option>停用</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="perm-filter-item">
+                        <label class="perm-filter-label">是否系統保留</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部</option>
+                                <option>是</option>
+                                <option>否</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="perm-filter-item">
+                        <label class="perm-filter-label">是否高風險角色</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部</option>
+                                <option>是</option>
+                                <option>否</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MAIN TABLE ===== -->
             <div class="content-card">
-
-                <!-- ===== 頂部標題列 ===== -->
-                <div class="pm-top-bar">
-                    <div class="pm-top-bar__left">
-                        <h1 class="pm-page-title">使用者與權限管理</h1>
-                        <p class="pm-page-desc">管理公司成員帳號與權限，系統至少需保留一位 Owner 以確保帳號管理完整性。</p>
-                    </div>
-                    <button class="pm-btn pm-btn--primary" id="pmAddMemberBtn">
-                        <i class="fa-solid fa-user-plus"></i> 新增成員
-                    </button>
-                </div>
-
-                <!-- ===== 搜尋 + 篩選列 ===== -->
-                <div class="pm-filter-bar">
-                    <div class="pm-search-wrap">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" class="pm-search-input" id="pmSearchInput" placeholder="搜尋姓名、電子郵件或角色...">
-                    </div>
-                    <div class="pm-select-wrap">
-                        <select class="pm-select" id="pmRoleFilter">
-                            <option value="">篩選角色</option>
-                            <option value="OWNER">Owner</option>
-                            <option value="ADMIN">Admin</option>
-                            <option value="MEMBER">Member</option>
-                        </select>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-                    <button class="pm-btn pm-btn--outline" id="pmConfirmFilterBtn">確定</button>
-                </div>
-
-                <!-- ===== 成員列表 ===== -->
-                <div class="pm-panel">
-                    <table class="pm-table" id="pmTable">
+                <div class="table-section">
+                    <table class="data-table perm-table">
                         <thead>
                             <tr>
-                                <th>姓名</th>
-                                <th>電子郵件</th>
-                                <th>角色</th>
-                                <th>狀態</th>
-                                <th>加入時間</th>
-                                <th style="text-align:right;">操作</th>
+                                <th>角色名稱</th>
+                                <th>角色說明</th>
+                                <th>使用帳號數</th>
+                                <th>角色狀態</th>
+                                <th>系統保留</th>
+                                <th>高風險權限</th>
+                                <th>最近異動</th>
+                                <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="pmTableBody">
-                            <!-- 陳大文 OWNER -->
+                        <tbody>
                             <tr>
-                                <td>
-                                    <div class="pm-user-cell">
-                                        <div class="pm-avatar">陳</div>
-                                        <span class="pm-user-name">陳大文</span>
-                                    </div>
-                                </td>
-                                <td><span class="pm-email">davon.chen@merchantcorp.com</span></td>
-                                <td><span class="pm-role-badge pm-role-badge--owner">OWNER</span></td>
-                                <td>
-                                    <span class="pm-status pm-status--active">
-                                        <span class="pm-status__dot"></span>已啟用
-                                    </span>
-                                </td>
-                                <td><span class="pm-date">2023-01-15</span></td>
-                                <td>
-                                    <div class="pm-actions">
-                                        <button class="pm-btn pm-btn--outline pm-btn--sm">編輯</button>
-                                        <button class="pm-btn pm-btn--outline pm-btn--sm">權限轉移</button>
-                                    </div>
-                                </td>
+                                <td><strong>系統管理者</strong></td>
+                                <td class="perm-td-desc">可管理所有後台功能與系統設定</td>
+                                <td>2</td>
+                                <td><span class="perm-status perm-status--active">啟用</span></td>
+                                <td><span class="perm-badge perm-badge--dark">是</span></td>
+                                <td><span class="perm-risk perm-risk--yes">有</span></td>
+                                <td class="perm-td-date">2026-05-22 16:10</td>
+                                <td class="mgr-actions"><a href="#" class="action-link">編輯</a></td>
                             </tr>
-                            <!-- 林鵬華 ADMIN -->
                             <tr>
-                                <td>
-                                    <div class="pm-user-cell">
-                                        <div class="pm-avatar">林</div>
-                                        <span class="pm-user-name">林鵬華</span>
-                                    </div>
-                                </td>
-                                <td><span class="pm-email">shane.lin@merchantcorp.com</span></td>
-                                <td><span class="pm-role-badge pm-role-badge--admin">ADMIN</span></td>
-                                <td>
-                                    <span class="pm-status pm-status--active">
-                                        <span class="pm-status__dot"></span>已啟用
-                                    </span>
-                                </td>
-                                <td><span class="pm-date">2023-03-22</span></td>
-                                <td>
-                                    <div class="pm-actions">
-                                        <button class="pm-btn pm-btn--outline pm-btn--sm">編輯</button>
-                                        <button class="pm-btn pm-btn--outline pm-btn--sm">停用</button>
-                                    </div>
-                                </td>
+                                <td><strong>主管檢視</strong></td>
+                                <td class="perm-td-desc">查看營運資訊與統計，不執行高風險操作</td>
+                                <td>4</td>
+                                <td><span class="perm-status perm-status--active">啟用</span></td>
+                                <td><span class="perm-badge perm-badge--dark">是</span></td>
+                                <td><span class="perm-risk perm-risk--no">無</span></td>
+                                <td class="perm-td-date">2026-05-20 18:00</td>
+                                <td class="mgr-actions"><a href="#" class="action-link">編輯</a></td>
                             </tr>
-                            <!-- 王小明 MEMBER 待確認 -->
                             <tr>
-                                <td>
-                                    <div class="pm-user-cell">
-                                        <div class="pm-avatar">王</div>
-                                        <span class="pm-user-name">王小明</span>
-                                    </div>
-                                </td>
-                                <td><span class="pm-email">ming.wang@merchantcorp.com</span></td>
-                                <td><span class="pm-role-badge pm-role-badge--member">MEMBER</span></td>
-                                <td>
-                                    <span class="pm-status pm-status--pending">
-                                        <span class="pm-status__dot"></span>待確認
-                                    </span>
-                                </td>
-                                <td><span class="pm-date">2023-11-05</span></td>
-                                <td>
-                                    <div class="pm-actions">
-                                        <button class="pm-btn pm-btn--outline pm-btn--sm">編輯</button>
-                                        <button class="pm-btn pm-btn--outline pm-btn--sm">邀請重發</button>
-                                        <button class="pm-btn pm-btn--danger pm-btn--sm">刪除</button>
-                                    </div>
-                                </td>
+                                <td><strong>業務</strong></td>
+                                <td class="perm-td-desc">管理業者資料、業者折扣金與合作資訊</td>
+                                <td>6</td>
+                                <td><span class="perm-status perm-status--active">啟用</span></td>
+                                <td><span class="perm-badge perm-badge--dark">是</span></td>
+                                <td><span class="perm-risk perm-risk--yes">有</span></td>
+                                <td class="perm-td-date">2026-05-19 14:20</td>
+                                <td class="mgr-actions"><a href="#" class="action-link">編輯</a></td>
                             </tr>
-                            <!-- 張小雲 MEMBER 已啟用 -->
                             <tr>
-                                <td>
-                                    <div class="pm-user-cell">
-                                        <div class="pm-avatar">張</div>
-                                        <span class="pm-user-name">張小雲</span>
-                                    </div>
-                                </td>
-                                <td><span class="pm-email">cloud.chang@merchantcorp.com</span></td>
-                                <td><span class="pm-role-badge pm-role-badge--member">MEMBER</span></td>
-                                <td>
-                                    <span class="pm-status pm-status--active">
-                                        <span class="pm-status__dot"></span>已啟用
-                                    </span>
-                                </td>
-                                <td><span class="pm-date">2023-12-01</span></td>
-                                <td>
-                                    <div class="pm-actions">
-                                        <button class="pm-btn pm-btn--outline pm-btn--sm">編輯</button>
-                                        <button class="pm-btn pm-btn--outline pm-btn--sm">停用</button>
-                                    </div>
-                                </td>
+                                <td><strong>平台營運</strong></td>
+                                <td class="perm-td-desc">管理KOL審核、案件監控與異議處理</td>
+                                <td>12</td>
+                                <td><span class="perm-status perm-status--active">啟用</span></td>
+                                <td><span class="perm-badge perm-badge--dark">是</span></td>
+                                <td><span class="perm-risk perm-risk--yes">有</span></td>
+                                <td class="perm-td-date">2026-05-22 10:30</td>
+                                <td class="mgr-actions"><a href="#" class="action-link">編輯</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>財務會計</strong></td>
+                                <td class="perm-td-desc">處理KOL提領、扣繳、附件查核與付款狀態</td>
+                                <td>4</td>
+                                <td><span class="perm-status perm-status--active">啟用</span></td>
+                                <td><span class="perm-badge perm-badge--dark">是</span></td>
+                                <td><span class="perm-risk perm-risk--yes">有</span></td>
+                                <td class="perm-td-date">2026-05-22 16:10</td>
+                                <td class="mgr-actions"><a href="#" class="action-link">編輯</a></td>
                             </tr>
                         </tbody>
                     </table>
-
-                </div><!-- /.pm-panel -->
-
-                <!-- 分頁列 -->
-                <div class="pagination">
-                    <span class="pagination__info" id="pmPageInfo">顯示第 1 至 4 名成員，共 4 名成員</span>
-                    <div class="pagination__nav" id="pmPagination">
-                        <button class="page-btn" id="pmPrevBtn" disabled>
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <button class="page-btn active" data-page="1">1</button>
-                        <button class="page-btn" data-page="2">2</button>
-                        <button class="page-btn" id="pmNextBtn">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
                 </div>
 
-                <!-- ===== 帳號安全提醒 ===== -->
-                <div class="pm-security-card">
-                    <div class="pm-security-card__icon">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                    <div class="pm-security-card__body">
-                        <h3 class="pm-security-card__title">帳號安全提醒</h3>
-                        <p class="pm-security-card__desc">
-                            為了確保您的商戶帳號安全，建議定期審查成員清單並清楚移除不再需要訪問權限的離職員工。具有 Admin 權限的成員可以配置系統設定，而 Owner 具有轉移所有權的唯一權利。
-                        </p>
+                <!-- PAGINATION -->
+                <div class="pagination perm-pagination">
+                    <span class="pagination__info">顯示第 1 到 5 項，共 5 項角色</span>
+                    <div class="pagination__nav">
+                        <button class="page-btn" aria-label="上一頁"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn" aria-label="下一頁"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
+            </div>
 
-            </div><!-- /.content-card -->
+            <!-- ===== ACTIVITY LOG ===== -->
+            <div class="content-card">
+                <h2 class="section-title perm-section-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    角色異動紀錄
+                </h2>
+                <div class="table-section">
+                    <table class="data-table perm-log-table">
+                        <thead>
+                            <tr>
+                                <th>時間</th>
+                                <th>操作者</th>
+                                <th>異動類型</th>
+                                <th>異動對象</th>
+                                <th>異動內容</th>
+                                <th>備註</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="perm-log-time">2026-05-22 16:10</td>
+                                <td>
+                                    <span class="perm-log-avatar perm-log-avatar--aw">AW</span>
+                                    Admin王
+                                </td>
+                                <td>編輯</td>
+                                <td><strong>財務會計</strong></td>
+                                <td>調整 [付款單據匯出] 權限為 [可檢視及操作]</td>
+                                <td>年度審核權限調整</td>
+                            </tr>
+                            <tr>
+                                <td class="perm-log-time">2026-05-22 10:30</td>
+                                <td>
+                                    <span class="perm-log-avatar perm-log-avatar--ll">LL</span>
+                                    Lee林
+                                </td>
+                                <td>編輯</td>
+                                <td><strong>平台營運</strong></td>
+                                <td>新增 [異議申訴二次審核] 權限</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </main>
 
-        <!-- FOOTER -->
+        <!-- ==================== FOOTER ==================== -->
         <footer class="footer"></footer>
         <script>$('footer.footer').load('footer.html');</script>
 
-    </div><!-- /.content-wrapper -->
+    </div><!-- end .content-wrapper -->
 
-    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
-
+    <script src="js/main.js"></script>
 </body>
-
 </html>

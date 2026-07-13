@@ -1,0 +1,255 @@
+@charset "utf-8";
+/* ============================================================
+   REGISTER.CSS  ─ 申請註冊頁面專用樣式（共用 login.css 基礎樣式）
+   ============================================================ */
+
+/* ============================
+   PAGE BACKGROUND
+============================== */
+body {
+    background-color: #f2f4f6;
+}
+
+/* ============================
+   PAGE LAYOUT
+============================== */
+.reg-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100% - 41px);
+    padding: 48px 20px 60px;
+}
+
+/* ============================
+   BRAND TITLE
+============================== */
+.reg-brand {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+/* ============================
+   CARD：覆寫 login_wrap
+============================== */
+.reg-page .login_wrap {
+    width: 100%;
+    max-width: 560px;
+    padding: 40px 48px;
+    border-radius: 6px;
+}
+
+/* ============================
+   TOP LINK（已有帳號？前往登入）
+============================== */
+.reg-top-link {
+    font-size: 1.3rem;
+    color: #888;
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.reg-top-link a {
+    color: #c07a2a;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.reg-top-link a:hover {
+    color: #a5a5a5;
+}
+
+/* ============================
+   頁面主標題：覆寫 register 用
+============================== */
+.reg-page .page_title {
+    font-size: 2.6rem;
+    margin-bottom: 8px;
+}
+
+/* ============================
+   密碼雙欄列
+============================== */
+.input_box ul li.pw_two_col {
+    display: flex;
+    gap: 14px;
+}
+
+.input_box ul li.pw_two_col > div {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ============================
+   條款 checkbox：頂部對齊
+============================== */
+.terms_row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 1.4rem;
+    color: #555;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.6;
+}
+
+.terms_row input[type="checkbox"] {
+    display: none;
+}
+
+.terms_row .prm-checkmark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    cursor: pointer;
+    transition: all .15s;
+    margin-top: 2px;
+}
+
+.terms_row .prm-checkmark::after {
+    content: '';
+    display: none;
+    width: 4px;
+    height: 8px;
+    border: 2px solid var(--white);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+}
+
+.terms_row input:checked + .prm-checkmark {
+    background: #4b8ab7;
+    border-color: #4b8ab7;
+}
+
+.terms_row input:checked + .prm-checkmark::after {
+    display: block;
+}
+
+.terms_row a {
+    color: #4b8ab7;
+    text-decoration: underline;
+}
+
+.terms_row a:hover {
+    color: #a5a5a5;
+}
+
+/* ============================
+   MODAL
+============================== */
+.bg_close {
+    position: fixed;
+    inset: 0;
+    cursor: pointer;
+    z-index: 0;
+}
+
+.alert-modal {
+    position: relative;
+    z-index: 1;
+    border-radius: 12px !important;
+    width: 100%;
+    max-width: 480px;
+    margin: 50px auto auto;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .18);
+}
+
+.alert-close {
+    position: absolute;
+    top: 1.4rem;
+    right: 1.6rem;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color .15s;
+    z-index: 2;
+}
+
+.alert-close:hover {
+    color: var(--text-main);
+}
+
+.modal-body {
+    padding: 1.6rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+/* ============================
+   註冊成功 Modal 內容
+============================== */
+.reg-success-body {
+    align-items: center;
+    padding: 3.2rem 2.4rem;
+    gap: 1.6rem;
+    text-align: center;
+}
+
+.reg-success-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    font-size: 2.8rem;
+    color: #333;
+    margin: 0 auto;
+}
+
+.reg-success-title {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.reg-success-desc {
+    font-size: 1.4rem;
+    color: #c07a2a;
+    line-height: 1.7;
+    max-width: 340px;
+    margin: 0 auto;
+}
+
+.reg-success-btn {
+    display: block;
+    width: 100%;
+    padding: 1.2rem;
+    background-color: #4b8ab7;
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 500;
+    text-align: center;
+    border-radius: 4px;
+    letter-spacing: 2px;
+    transition: background-color .2s;
+}
+
+.reg-success-btn:hover {
+    background-color: #3a7aaa;
+    color: #fff;
+}
+
+.reg-success-note {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}

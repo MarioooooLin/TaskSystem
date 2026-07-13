@@ -278,32 +278,50 @@
 }
 
 .kr-notice-box {
+    background: #fff8e6;
+    border: 1px solid #fbd38d;
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    gap: 1.2rem;
     margin-top: 1.2rem;
-    border: 1px solid #f1d4d7;
-    background: #fff4f5;
-    border-radius: 6px;
-    padding: 0.9rem 1rem;
 }
 
-.kr-notice-title {
-    display: inline-flex;
+.kr-notice-box__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fcc419;
+    color: var(--white);
+    display: flex;
     align-items: center;
-    gap: 0.4rem;
+    justify-content: center;
     font-size: 1.2rem;
-    color: #a03039;
+    margin-top: 0.2rem;
+}
+
+.kr-notice-box__content {
+    flex: 1;
+}
+
+.kr-notice-box__title {
+    font-size: 1.4rem;
     font-weight: 700;
+    color: #663c00;
+    margin: 0 0 0.4rem 0;
 }
 
 .kr-notice-box ul {
-    margin-top: 0.5rem;
-    margin-left: 1.5rem;
+    margin: 0;
+    padding-left: 1.5rem;
     list-style: disc;
 }
 
 .kr-notice-box li {
     font-size: 1.3rem;
-    color: #a03039;
-    line-height: 1.5;
+    color: #8b6914;
+    line-height: 1.6;
 }
 
 .kr-kv-pair-grid {
@@ -353,25 +371,45 @@
 }
 
 .kr-reject-box {
+    background: #fff8e6;
+    border: 1px solid #fbd38d;
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    gap: 1.2rem;
     margin-top: 1.2rem;
-    border: 1px solid #f1d4d7;
-    background: #fff4f5;
-    border-radius: 6px;
-    padding: 0.9rem 1rem;
 }
 
-.kr-reject-box span {
-    display: block;
-    color: #a03039;
+.kr-reject-box__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fcc419;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
+    margin-top: 0.2rem;
 }
 
-.kr-reject-box p {
-    color: #a03039;
+.kr-reject-box__content {
+    flex: 1;
+}
+
+.kr-reject-box__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #663c00;
+    margin: 0 0 0.4rem 0;
+}
+
+.kr-reject-box__text {
     font-size: 1.3rem;
-    line-height: 1.5;
+    color: #8b6914;
+    line-height: 1.6;
+    margin: 0;
 }
 
 .kr-review-textarea {
