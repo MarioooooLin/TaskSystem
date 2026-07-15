@@ -1,5 +1,9 @@
 using Application.Abstractions.Persistence;
+using Application.Roles.DTOs;
+using Application.Roles.Queries;
+using Common.Pagination;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Abstractions.Repositories;
 
@@ -15,6 +19,27 @@ public interface IRoleRepository
     /// 查詢路徑：UserRoles → RolePermissions → Permissions.Code
     /// </summary>
     Task<IReadOnlyList<string>> GetPermissionCodesByUserIdAsync(long userId, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>分頁查詢 Scope = System 的後台角色列表。</summary>
+    Task<(IReadOnlyList<AdminRoleListItemDto> Items, int TotalCount)> GetSystemRoleListAsync(
+        string? keyword,
+        bool? isActive,
+        bool? isSystemReserved,
+        bool? hasHighRiskPermission,
+        PageQuery page,
+        IDbSession session,
+        CancellationToken ct = default);
+
+    /// <summary>取得後台角色 KPI 摘要。</summary>
+    Task<AdminRoleSummaryDto> GetSystemRoleSummaryAsync(IDbSession session, CancellationToken ct = default);
+
+    /// <summary>依名稱與 Scope 查詢角色。</summary>
+    Task<Role?> GetByNameAndScopeAsync(
+        string name, RoleScope scope, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>重建角色的權限對應（先刪除後插入）。</summary>
+    Task ReplacePermissionsAsync(
+        long roleId, IEnumerable<long> permissionIds, IDbSession session, CancellationToken ct = default);
 
     Task<long> InsertAsync(Role role, IDbSession session, CancellationToken ct = default);
 

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-角色權限設定</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/permission-setting.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header">
+                <div class="page-header__left">
+                    <h1 class="page-title">角色權限設定</h1>
+                    <p class="page-subtitle">設置每一項功能使用者具備的進階操作，以確保使用者管理權限適當且符合職務要求</p>
+                </div>
+                <div class="page-header__right">
+                    <button type="button" class="btn-secondary">
+                        <i class="fa-solid fa-arrow-left"></i> 返回權限管理
+                    </button>
+                    <button type="button" class="btn-primary">
+                        <i class="fa-solid fa-pen-to-square"></i> 編輯權限設定
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== PERMISSION TABLE ===== -->
+            <div class="content-card">
+                <div class="perm-setting-table-header">
+                    <h2 class="section-title">權限矩陣清單</h2>
+                </div>
+                <div class="table-section">
+                    <table class="data-table perm-setting-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>說明</th>
+                                <th>檢視</th>
+                                <th>編輯</th>
+                                <th>審核管理</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>管理者資貴/管理絕密</strong></td>
+                                <td class="perm-setting-td-desc">後台儀表板、數據圖表與即時狀態監控</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox"></td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>管理資料查詢與統計</strong></td>
+                                <td class="perm-setting-td-desc">歷史索件報表匯出、財務對帳明細查詢</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox"></td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>允許手機號碼 <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b; font-size: 1rem;"></i></strong></td>
+                                <td class="perm-setting-td-desc">核視用戶與 KOL 的原始手機驗證訊息(不影響)</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox"></td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>允許分功證手號 <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b; font-size: 1rem;"></i></strong></td>
+                                <td class="perm-setting-td-desc">核視身分證字號明碼資訊，主要用於納稅查核</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox"></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox"></td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>KOL管理</strong></td>
+                                <td class="perm-setting-td-desc">查詢、核視所有 KOL 檔案及協議合作紀錄</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox"></td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>審核通過KOL</strong></td>
+                                <td class="perm-setting-td-desc">變更 KOL 狀態為「已驗認」，影響分測與關閉顯限</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                            </tr>
+                            <tr>
+                                <td><strong>停權KOL <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b; font-size: 1rem;"></i></strong></td>
+                                <td class="perm-setting-td-desc">強制中斷 KOL 帳號使用權，涉及重大契約變動</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                            </tr>
+                            <tr>
+                                <td><strong>案件監控</strong></td>
+                                <td class="perm-setting-td-desc">追蹤各執行中案件之關鍵 KPI 與對話內容</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox"></td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>異議處理</strong></td>
+                                <td class="perm-setting-td-desc">介入處理案件爭議、退款帳求或糾紛協商</td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                                <td><input type="checkbox" class="perm-setting-checkbox" checked></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== HIGH RISK WARNING ===== -->
+            <div class="perm-setting-alert">
+                <div class="perm-setting-alert__icon">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+                <div class="perm-setting-alert__content">
+                    <p class="perm-setting-alert__title">高風險權限安全性警示</p>
+                    <p class="perm-setting-alert__desc">此角色在核核服務中具備「允許手機認謆」、「碗詰KOL」、「關核商家KOL」等高風險權限。建議定期檢查（Audit Logs）以追蹤使用者的操作紀錄，並確保僅授予必要權限。</p>
+                    <ul class="perm-setting-alert__list">
+                        <li>允許手機認謆操作日誌</li>
+                        <li>允許分功驗謆検驗紀錄</li>
+                        <li>碗詰 KOL 核核操作紀錄</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== ACTIVITY LOG ===== -->
+            <div class="content-card">
+                <h2 class="section-title perm-setting-section-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    最近變更紀錄
+                </h2>
+                <div class="table-section">
+                    <table class="data-table perm-setting-log-table">
+                        <thead>
+                            <tr>
+                                <th>時間</th>
+                                <th>操作者</th>
+                                <th>異動內容</th>
+                                <th>異動項目</th>
+                                <th>新數值</th>
+                                <th>舊值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="perm-setting-log-time" data-label="時間">2024-05-12 14:22:10</td>
+                                <td class="perm-setting-log-user" data-label="操作者">
+                                    <span class="perm-setting-log-avatar">A</span>
+                                    Admin.Chen
+                                </td>
+                                <td data-label="異動內容">編輯KOL</td>
+                                <td data-label="異動項目">砌期KOL</td>
+                                <td data-label="新數值"><span class="perm-setting-status--active">啟用核核</span></td>
+                                <td data-label="舊值">因兼第三方評審薄清請求評估</td>
+                            </tr>
+                            <tr>
+                                <td class="perm-setting-log-time" data-label="時間">2024-05-10 09:15:33</td>
+                                <td class="perm-setting-log-user" data-label="操作者">
+                                    <span class="perm-setting-log-avatar perm-setting-log-avatar--system">S</span>
+                                    System_Auto
+                                </td>
+                                <td data-label="異動內容">系統操作</td>
+                                <td data-label="異動項目">安全認定</td>
+                                <td data-label="新數值"><span class="perm-setting-status--inactive">暫停認証</span></td>
+                                <td data-label="舊值">初設與自動認定</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>$('footer').load('footer.html');</script>
+
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

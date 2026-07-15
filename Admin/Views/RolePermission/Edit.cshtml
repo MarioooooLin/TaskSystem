@@ -1,0 +1,94 @@
+@model Admin.ViewModels.RolePermission.EditAdminRoleViewModel
+@{
+    ViewData["Title"] = "編輯角色權限";
+}
+
+<link rel="stylesheet" href="~/css/permission-setting.css" asp-append-version="true" />
+
+<main class="main-content">
+    <div class="content-card">
+
+        <div class="page-header">
+            <div class="page-header__left">
+                <h1 class="page-title">編輯角色權限</h1>
+                <p class="page-subtitle">調整角色基本資料與權限矩陣。</p>
+            </div>
+            <div class="page-header__right">
+                <a asp-action="Index" class="btn-secondary" hx-get="@Url.Action("Index")" hx-target="#main-content"
+                   hx-push-url="true">
+                    <i class="fa-solid fa-arrow-left"></i> 返回角色管理
+                </a>
+            </div>
+        </div>
+
+        <form method="post" asp-action="Edit" asp-route-id="@Model.Id">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="validation-summary"
+                 style="color:var(--primary);margin-bottom:1.6rem;"></div>
+
+            <div class="content-card" style="margin-bottom:1.6rem;">
+                <h2 class="section-title" style="margin-bottom:1.2rem;">基本資料</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-input" placeholder="請輸入角色名稱">
+                        <span asp-validation-for="Name" class="field-validation-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="form-label"></label>
+                        <input asp-for="Description" class="form-input" placeholder="請輸入角色說明">
+                        <span asp-validation-for="Description" class="field-validation-error"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-check">
+                        <input asp-for="IsSystemReserved" type="checkbox" class="form-checkbox" disabled>
+                        <label asp-for="IsSystemReserved" class="form-label" style="color:var(--text-muted);"></label>
+                        <input type="hidden" asp-for="IsSystemReserved" />
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="IsActive" type="checkbox" class="form-checkbox">
+                        <label asp-for="IsActive" class="form-label"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card" style="margin-bottom:1.6rem;">
+                <h2 class="section-title" style="margin-bottom:1.2rem;">權限矩陣</h2>
+                @foreach (var group in Model.PermissionGroups)
+                {
+                    <div class="perm-setting-panel" style="margin-bottom:1.6rem;">
+                        <h3 class="perm-setting-panel__title">@group.GroupName</h3>
+                        <div class="perm-setting-grid">
+                            @foreach (var item in group.Items)
+                            {
+                                <label class="perm-setting-checkbox-label">
+                                    <input type="checkbox" name="PermissionIds" value="@item.Value"
+                                           class="perm-setting-checkbox"
+                                           checked="@(Model.PermissionIds.Contains(long.Parse(item.Value!)) ? "checked" : null)" />
+                                    <span>@item.Text</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                }
+                @if (!Model.PermissionGroups.Any())
+                {
+                    <p class="empty-state">尚未設定任何權限項目。</p>
+                }
+            </div>
+
+            <div class="form-actions" style="display:flex;gap:1.2rem;justify-content:flex-end;">
+                <a asp-action="Index" class="btn-secondary" hx-get="@Url.Action("Index")" hx-target="#main-content"
+                   hx-push-url="true">取消</a>
+                <button type="submit" class="btn-primary">儲存變更</button>
+            </div>
+        </form>
+
+    </div><!-- /.content-card -->
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

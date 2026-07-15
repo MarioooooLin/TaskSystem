@@ -121,6 +121,18 @@ public static class Errors
 
         public static readonly Error InvalidScope =
             Error.Problem("Role.InvalidScope", "此角色不適用於指派給業者成員。");
+
+        public static readonly Error PermissionDenied =
+            Error.Forbidden("Role.PermissionDenied", "您沒有管理角色的權限。");
+
+        public static readonly Error NameRequired =
+            Error.Validation("Role.NameRequired", "角色名稱為必填。");
+
+        public static readonly Error DuplicateName =
+            Error.Conflict("Role.DuplicateName", "相同作用範圍下已有相同名稱的角色。");
+
+        public static readonly Error PermissionNotFound =
+            Error.Validation("Role.PermissionNotFound", "部分權限項目不存在。");
     }
 
     public static class Wallet

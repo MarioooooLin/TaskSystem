@@ -1,207 +1,256 @@
+@model Admin.ViewModels.RolePermission.AdminRoleIndexViewModel
 @{
-    ViewData["Title"] = "角色權限管理";
+    ViewData["Title"] = "後台角色管理";
+    var q = Model.Query;
+    var keyword = q.Keyword ?? "";
+    var isActive = q.IsActive?.ToString().ToLowerInvariant() ?? "";
+    var isSystemReserved = q.IsSystemReserved?.ToString().ToLowerInvariant() ?? "";
+    var hasHighRiskPermission = q.HasHighRiskPermission?.ToString().ToLowerInvariant() ?? "";
+    var list = Model.List;
+    var summary = Model.Summary;
+    var actionUrl = Url.Action("Index")!;
 }
 
-@section PageCss {
-    <link rel="stylesheet" href="~/css/permission-management.css" asp-append-version="true" />
-}
+<link rel="stylesheet" href="~/css/permission.css" asp-append-version="true" />
 
-@* TODO: 本頁對應 Admin/Template/permission-management.html；目前尚無 RolePermissionController 與後端資料，僅為前端佔位 *@
-
-<main id="main-content" class="main-content prm-main">
+<main class="main-content">
     <div class="content-card">
 
-        <nav class="prm-breadcrumb">
-            <a asp-action="Index" asp-controller="SystemSetting">設定中心</a>
-            <i class="fa-solid fa-chevron-right"></i>
-            @* TODO: 後台帳號列表頁（AdminAccountController）尚未建立，連結先保留 *@
-            <a href="#" onclick="return false;">後台帳號</a>
-            <i class="fa-solid fa-chevron-right"></i>
-            <span class="prm-breadcrumb__current">角色權限管理</span>
-        </nav>
-
-        <h1 class="prm-page-title">角色權限管理</h1>
-        <p class="prm-page-desc">定義系統內各角色的權限範圍，確保帳號僅能存取其職務所需之功能。</p>
-
-        <!-- ===== 角色切換 Tab 列 ===== -->
-        <div class="prm-role-tabs">
-            <button class="prm-role-tab active" data-role="owner">Super Admin</button>
-            <button class="prm-role-tab" data-role="admin">Admin</button>
-            <button class="prm-add-role-btn" id="prmAddRoleBtn">
+        <div class="page-header">
+            <div class="page-header__left">
+                <h1 class="page-title">後台角色管理</h1>
+                <p class="page-subtitle">管理內部後台角色模板，並進入單一角色設定頁調整權限。</p>
+            </div>
+            <a asp-action="Create" class="btn-primary" hx-get="@Url.Action("Create")" hx-target="#main-content"
+               hx-push-url="true">
                 <i class="fa-solid fa-plus"></i> 新增角色
-            </button>
+            </a>
         </div>
 
-        <!-- ===== 主要雙欄佈局 ===== -->
-        <div class="prm-layout">
+        <!-- ===== KPI 摘要 ===== -->
+        <div class="perm-kpi-row">
+            <div class="content-card perm-kpi-card">
+                <span class="perm-kpi-label">角色模板數</span>
+                <strong class="perm-kpi-value">@summary.TotalCount</strong>
+            </div>
+            <div class="content-card perm-kpi-card">
+                <span class="perm-kpi-label">啟用角色</span>
+                <strong class="perm-kpi-value">
+                    @summary.ActiveCount
+                    <span class="perm-kpi-badge perm-kpi-badge--green">
+                        @(summary.TotalCount > 0 ? $"{summary.ActiveCount * 100 / summary.TotalCount}%" : "0%")
+                    </span>
+                </strong>
+            </div>
+            <div class="content-card perm-kpi-card">
+                <span class="perm-kpi-label">停用角色</span>
+                <strong class="perm-kpi-value">@summary.DisabledCount</strong>
+            </div>
+            <div class="content-card perm-kpi-card">
+                <span class="perm-kpi-label">使用中帳號</span>
+                <strong class="perm-kpi-value">@summary.InUseAccountCount</strong>
+            </div>
+            <div class="content-card perm-kpi-card perm-kpi-card--danger">
+                <div class="perm-kpi-card__danger-header">
+                    <span class="perm-kpi-label">高風險權限角色</span>
+                    <i class="fa-solid fa-triangle-exclamation perm-kpi-danger-icon"></i>
+                </div>
+                <strong class="perm-kpi-value perm-kpi-value--red">@summary.HighRiskRoleCount</strong>
+            </div>
+        </div>
 
-            <!-- 左欄：權限矩陣 -->
-            <div class="prm-perm-panels" id="prmPermPanels">
-
-                <!-- 業者管理 -->
-                <div class="prm-perm-panel">
-                    <div class="prm-perm-panel__header">
-                        <label class="prm-select-all-wrap">
-                            <input type="checkbox" class="prm-select-all" data-group="merchant" checked>
-                            <span class="prm-checkmark"></span>
-                            <span class="prm-select-all-label">全選</span>
-                        </label>
-                        <span class="prm-perm-panel__category">業者管理</span>
-                        <span class="prm-perm-panel__en">Merchant Management</span>
+        <!-- ===== 搜尋篩選列 ===== -->
+        <form method="get" asp-action="Index" hx-get="@actionUrl" hx-target="#role-permission-results"
+              hx-select="#role-permission-results" hx-swap="outerHTML" hx-push-url="true">
+            <div class="content-card perm-filter">
+                <div class="perm-filter-row">
+                    <div class="perm-filter-item perm-filter-item--grow">
+                        <label class="perm-filter-label">關鍵字</label>
+                        <div class="filter-search">
+                            <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                            <input type="text" name="keyword" value="@keyword" class="filter-search__input"
+                                   placeholder="角色名稱或角色說明">
+                        </div>
                     </div>
-                    <ul class="prm-perm-list">
-                        <li class="prm-perm-item">
-                            <div class="prm-perm-item__info">
-                                <span class="prm-perm-item__name">查看業者列表</span>
-                            </div>
-                            <div class="prm-perm-item__check">
-                                <label><input type="checkbox" data-group="merchant" checked><span
-                                    class="prm-checkmark"></span></label>
-                                </div>
-                            </li>
-                            <li class="prm-perm-item">
-                                <div class="prm-perm-item__info">
-                                    <span class="prm-perm-item__name">停用 / 解除停用業者</span>
-                                </div>
-                                <div class="prm-perm-item__check">
-                                    <label><input type="checkbox" data-group="merchant" checked><span
-                                        class="prm-checkmark"></span></label>
-                                    </div>
-                                </li>
-                                <li class="prm-perm-item">
-                                    <div class="prm-perm-item__info">
-                                        <span class="prm-perm-item__name">編輯業者資料</span>
-                                    </div>
-                                    <div class="prm-perm-item__check">
-                                        <label><input type="checkbox" data-group="merchant" checked><span
-                                            class="prm-checkmark"></span></label>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                    <div class="perm-filter-item">
+                        <label class="perm-filter-label">角色狀態</label>
+                        <div class="filter-select-wrap">
+                            <select name="isActive" class="filter-select">
+                                <option value="">全部</option>
+                                <option value="true" selected="@(isActive == "true")">啟用</option>
+                                <option value="false" selected="@(isActive == "false")">停用</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="perm-filter-item">
+                        <label class="perm-filter-label">是否系統保留</label>
+                        <div class="filter-select-wrap">
+                            <select name="isSystemReserved" class="filter-select">
+                                <option value="">全部</option>
+                                <option value="true" selected="@(isSystemReserved == "true")">是</option>
+                                <option value="false" selected="@(isSystemReserved == "false")">否</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="perm-filter-item">
+                        <label class="perm-filter-label">是否高風險角色</label>
+                        <div class="filter-select-wrap">
+                            <select name="hasHighRiskPermission" class="filter-select">
+                                <option value="">全部</option>
+                                <option value="true" selected="@(hasHighRiskPermission == "true")">是</option>
+                                <option value="false" selected="@(hasHighRiskPermission == "false")">否</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="perm-filter-row" style="justify-content:flex-end;margin-bottom:0;">
+                    <a asp-action="Index" class="btn-primary"
+                       style="background:transparent;color:var(--primary);border:1px solid var(--primary);"
+                       hx-get="@Url.Action("Index")" hx-target="#role-permission-results"
+                       hx-select="#role-permission-results" hx-swap="outerHTML" hx-push-url="true">清除篩選</a>
+                    <button type="submit" class="btn-primary">搜尋</button>
+                </div>
+            </div>
+        </form>
 
-                            <!-- KOL 管理 -->
-                            <div class="prm-perm-panel">
-                                <div class="prm-perm-panel__header">
-                                    <label class="prm-select-all-wrap">
-                                        <input type="checkbox" class="prm-select-all" data-group="kol" checked>
-                                        <span class="prm-checkmark"></span>
-                                        <span class="prm-select-all-label">全選</span>
-                                    </label>
-                                    <span class="prm-perm-panel__category">KOL 管理</span>
-                                    <span class="prm-perm-panel__en">KOL Management</span>
-                                </div>
-                                <ul class="prm-perm-list">
-                                    <li class="prm-perm-item">
-                                        <div class="prm-perm-item__info">
-                                            <span class="prm-perm-item__name">審核 KOL</span>
-                                        </div>
-                                        <div class="prm-perm-item__check">
-                                            <label><input type="checkbox" data-group="kol" checked><span
-                                                class="prm-checkmark"></span></label>
-                                            </div>
-                                        </li>
-                                        <li class="prm-perm-item">
-                                            <div class="prm-perm-item__info">
-                                                <span class="prm-perm-item__name">停用 / 解除停用 KOL</span>
-                                            </div>
-                                            <div class="prm-perm-item__check">
-                                                <label><input type="checkbox" data-group="kol" checked><span
-                                                    class="prm-checkmark"></span></label>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+        <!-- ===== 角色列表 ===== -->
+        <div id="role-permission-results" class="content-card">
+            <div class="table-section">
+                <table class="data-table perm-table">
+                    <thead>
+                        <tr>
+                            <th>角色名稱</th>
+                            <th>角色說明</th>
+                            <th>使用帳號數</th>
+                            <th>角色狀態</th>
+                            <th>系統保留</th>
+                            <th>高風險權限</th>
+                            <th>最近異動</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in list.Items)
+                        {
+                            <tr>
+                                <td><strong>@item.Name</strong></td>
+                                <td class="perm-td-desc">@(item.Description ?? "—")</td>
+                                <td>@item.UsageCount</td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="perm-status perm-status--active">啟用</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="perm-status perm-status--disabled">停用</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsSystemReserved)
+                                    {
+                                        <span class="perm-badge perm-badge--dark">是</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="perm-risk--no">否</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.HasHighRiskPermission)
+                                    {
+                                        <span class="perm-risk perm-risk--yes">有</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="perm-risk perm-risk--no">無</span>
+                                    }
+                                </td>
+                                <td class="perm-td-date">@item.UpdatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td class="mgr-actions">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="action-link"
+                                       hx-get="@Url.Action("Edit", new { id = item.Id })" hx-target="#main-content"
+                                       hx-push-url="true">編輯</a>
+                                </td>
+                            </tr>
+                        }
+                        @if (!list.Items.Any())
+                        {
+                            <tr>
+                                <td colspan="8" class="empty-state">查無符合條件的角色。</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
 
-                                    <!-- 帳務管理 -->
-                                    <div class="prm-perm-panel">
-                                        <div class="prm-perm-panel__header">
-                                            <label class="prm-select-all-wrap">
-                                                <input type="checkbox" class="prm-select-all" data-group="finance" checked>
-                                                <span class="prm-checkmark"></span>
-                                                <span class="prm-select-all-label">全選</span>
-                                            </label>
-                                            <span class="prm-perm-panel__category">帳務管理</span>
-                                            <span class="prm-perm-panel__en">Finance</span>
-                                        </div>
-                                        <ul class="prm-perm-list">
-                                            <li class="prm-perm-item">
-                                                <div class="prm-perm-item__info">
-                                                    <span class="prm-perm-item__name">查看交易紀錄</span>
-                                                </div>
-                                                <div class="prm-perm-item__check">
-                                                    <label><input type="checkbox" data-group="finance" checked><span
-                                                        class="prm-checkmark"></span></label>
-                                                    </div>
-                                                </li>
-                                                <li class="prm-perm-item">
-                                                    <div class="prm-perm-item__info">
-                                                        <span class="prm-perm-item__name">執行撥款</span>
-                                                    </div>
-                                                    <div class="prm-perm-item__check">
-                                                        <label><input type="checkbox" data-group="finance" checked><span
-                                                            class="prm-checkmark"></span></label>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
+            <!-- ===== 分頁 ===== -->
+            @if (list.TotalPages >= 1)
+            {
+                var startItem = (list.Page - 1) * list.PageSize + 1;
+                var endItem = Math.Min(list.Page * list.PageSize, list.TotalCount);
+                <div class="pagination perm-pagination">
+                    <span class="pagination__info">
+                        顯示第 @startItem 到 @endItem 項，共 @list.TotalCount 項角色
+                    </span>
+                    <div class="pagination__nav">
+                        @if (list.HasPreviousPage)
+                        {
+                            <a asp-action="Index" asp-route-keyword="@keyword" asp-route-isActive="@isActive"
+                               asp-route-isSystemReserved="@isSystemReserved"
+                               asp-route-hasHighRiskPermission="@hasHighRiskPermission" asp-route-page="@(list.Page - 1)"
+                               hx-boost="true" hx-target="#role-permission-results" hx-select="#role-permission-results"
+                               hx-swap="outerHTML" hx-push-url="true" class="page-btn">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                        }
 
-                                            <!-- 系統設定 -->
-                                            <div class="prm-perm-panel">
-                                                <div class="prm-perm-panel__header">
-                                                    <label class="prm-select-all-wrap">
-                                                        <input type="checkbox" class="prm-select-all" data-group="settings" checked>
-                                                        <span class="prm-checkmark"></span>
-                                                        <span class="prm-select-all-label">全選</span>
-                                                    </label>
-                                                    <span class="prm-perm-panel__category">系統設定</span>
-                                                    <span class="prm-perm-panel__en">Settings</span>
-                                                </div>
-                                                <ul class="prm-perm-list">
-                                                    <li class="prm-perm-item">
-                                                        <div class="prm-perm-item__info">
-                                                            <span class="prm-perm-item__name">新增 / 移除後台帳號</span>
-                                                        </div>
-                                                        <div class="prm-perm-item__check">
-                                                            <label><input type="checkbox" data-group="settings" checked><span
-                                                                class="prm-checkmark"></span></label>
-                                                            </div>
-                                                        </li>
-                                                        <li class="prm-perm-item">
-                                                            <div class="prm-perm-item__info">
-                                                                <span class="prm-perm-item__name">修改角色權限</span>
-                                                            </div>
-                                                            <div class="prm-perm-item__check">
-                                                                <label><input type="checkbox" data-group="settings" checked><span
-                                                                    class="prm-checkmark"></span></label>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                        @{
+                            var totalPages = list.TotalPages;
+                            var curPage = list.Page;
+                            var pages = Enumerable.Range(1, totalPages)
+                                .Where(p => p == 1 || p == totalPages || Math.Abs(p - curPage) <= 1)
+                                .ToList();
+                            int? prev = null;
+                        }
+                        @foreach (var p in pages)
+                        {
+                            if (prev.HasValue && p - prev.Value > 1)
+                            {
+                                <span class="page-ellipsis">...</span>
+                            }
+                            <a asp-action="Index" asp-route-keyword="@keyword" asp-route-isActive="@isActive"
+                               asp-route-isSystemReserved="@isSystemReserved"
+                               asp-route-hasHighRiskPermission="@hasHighRiskPermission" asp-route-page="@p" hx-boost="true"
+                               hx-target="#role-permission-results" hx-select="#role-permission-results" hx-swap="outerHTML"
+                               hx-push-url="true" class="page-btn @(p == curPage ? "active" : "")">@p</a>
+                            prev = p;
+                        }
 
-                                                </div><!-- /.prm-perm-panels -->
-
-                                                <!-- 右欄：角色資訊卡 -->
-                                                <div class="prm-role-card">
-                                                    <div class="prm-role-card__header">
-                                                        <span class="prm-role-card__name" id="prmRoleName">Super Admin</span>
-                                                    </div>
-                                                    <p class="prm-role-card__desc">系統最高權限，擁有所有管理功能的完整控制權。</p>
-                                                    <div class="prm-role-card__core-title">核心職責</div>
-                                                    <ul class="prm-core-list">
-                                                        <li class="prm-core-item"><i class="fa-regular fa-circle-check"></i> 全站功能完全存取</li>
-                                                        <li class="prm-core-item"><i class="fa-regular fa-circle-check"></i> 管理財務與帳務</li>
-                                                        <li class="prm-core-item"><i class="fa-regular fa-circle-check"></i> 管理後台帳號與角色</li>
-                                                    </ul>
-                                                </div>
-
-                                            </div><!-- /.prm-layout -->
-
-                                        </div><!-- /.content-card -->
-                                    </main>
-
-                                    <!-- Sticky Action Bar -->
-                                    <div class="prm-action-bar" id="prmActionBar">
-                                        <button class="prm-btn prm-btn--outline" id="prmCancelBtn">取消</button>
-                                        <button class="prm-btn prm-btn--primary" id="prmSaveBtn">儲存變更</button>
-                                    </div>
+                        @if (list.HasNextPage)
+                        {
+                            <a asp-action="Index" asp-route-keyword="@keyword" asp-route-isActive="@isActive"
+                               asp-route-isSystemReserved="@isSystemReserved"
+                               asp-route-hasHighRiskPermission="@hasHighRiskPermission" asp-route-page="@(list.Page + 1)"
+                               hx-boost="true" hx-target="#role-permission-results" hx-select="#role-permission-results"
+                               hx-swap="outerHTML" hx-push-url="true" class="page-btn">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="page-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div><!-- /.content-card -->
+</main>

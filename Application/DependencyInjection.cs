@@ -9,6 +9,8 @@ using Application.Kols.Commands;
 using Application.Kols.Queries;
 using Application.Merchants.Commands;
 using Application.Merchants.Queries;
+using Application.Roles.Commands;
+using Application.Roles.Queries;
 using Application.SystemSettings.Commands;
 using Application.SystemSettings.Queries;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +35,12 @@ public static class DependencyInjection
         services.AddScoped<SuspendAdminAccountHandler>();
         services.AddScoped<ActivateAdminAccountHandler>();
         services.AddScoped<ResendAdminAccountInvitationHandler>();
+
+        // ── Role Permission Management ────────────────────
+        services.AddScoped<GetAdminRoleListHandler>();
+        services.AddScoped<GetAdminRolePermissionEditHandler>();
+        services.AddScoped<CreateAdminRoleHandler>();
+        services.AddScoped<UpdateAdminRoleHandler>();
 
         // ── Merchant Management ───────────────────────────
         services.AddScoped<GetMerchantListHandler>(); services.AddScoped<GetMerchantSummaryHandler>(); services.AddScoped<GetMerchantDetailHandler>();

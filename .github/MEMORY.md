@@ -1,10 +1,45 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-13 15:30
+> 最後整理時間：2026-07-13 18:50
 
 ---
 
 ## 2026-07-13
+
+### [18:50] 後台帳號管理頁（ADM-013）樣式修正 + 系統參數設定頁（ADM-012）資料庫修正
+
+**變更內容**
+
+- `Admin/Views/AdminAccount/Index.cshtml`：
+    - CSS 引用由 `permission.css` 修正為 `manager.css`
+    - 所有 `pm-*` class 改為對應 `mgr-*` 或通用樣式（`page-header`、`btn-primary`、`filter-search`、`data-table`、`mgr-table`、`mgr-status`、`mgr-actions`、`mgr-log-table` 等）
+    - KPI、篩選列、列表、分頁、帳號安全提醒、異動紀錄對齊設計師切版
+- `Admin/Views/AdminAccount/Create.cshtml`：
+    - 補上角色說明文案
+    - 邀請時效由「7 天內」改為「48 小時內」
+    - 右欄補上系統狀態預覽（郵件伺服器 / 可用席位）與提示區塊
+- `Application/AdminAccounts/Commands/CreateAdminAccountInvitationHandler.cs` 與 `ResendAdminAccountInvitationHandler.cs`：
+    - 邀請 Token 過期時間由 `AddDays(7)` 改為 `AddHours(48)`
+- 資料庫 `SystemSettings` 表：
+    - 補上 `DefaultValue` 欄位
+    - 修正 seed key：`kol_payout_min_amount` → `kol_min_payout_amount`
+    - 補齊缺少的 7 筆系統參數
+    - 同步既有資料的 `DefaultValue = Value`
+
+**決策原因**
+
+- `permission.css` 是後台角色管理頁專用樣式（`perm-*`），不適用於後台帳號管理頁；後台帳號管理列表頁應使用 `manager.css`（`mgr-*`）
+- 設計師 `manager.html` 切版有亂碼與假資料錯置，因此保留視覺結構但採用符合系統狀態的文案與欄位
+- 前端文案「48 小時」需與後端邀請 Token 過期時間一致
+- `SystemSettings` 表缺少 `DefaultValue` 是系統參數頁 500 錯誤的主因；seed 資料不完整會導致部分參數讀取失敗
+
+**測試狀態**
+
+- 後台帳號管理列表與新增頁外觀樣式正常
+- 系統參數設定頁可正常載入與儲存
+- 編輯功能與邀請流程待假資料補齊後測試
+
+---
 
 ### [16:00] KOL 審核詳情頁提醒框 / 退回原因框對齊 template
 
