@@ -202,10 +202,12 @@ public sealed class RolePermissionController(
             .Select(g => new PermissionGroupViewModel
             {
                 GroupName = g.Key,
-                Items = g.Select(p => new SelectListItem
+                Items = g.Select(p => new PermissionItemViewModel
                 {
-                    Value = p.Id.ToString(),
-                    Text = $"{p.Code}{(p.RiskLevel == 2 ? " ⚠" : "")}"
+                    Id = p.Id,
+                    Code = p.Code,
+                    Description = p.Description,
+                    RiskLevel = p.RiskLevel
                 }).ToList()
             })
             .ToList();

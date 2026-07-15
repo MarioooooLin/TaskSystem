@@ -1,6 +1,60 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-13 18:50
+> 最後整理時間：2026-07-15 14:48
+
+---
+
+## 2026-07-15
+
+### [14:48] 後台角色管理（ADM-014）與角色權限設定頁（ADM-015）實作完成
+
+**變更內容**
+
+- `Admin/Views/RolePermission/Index.cshtml`：
+    - 角色列表頁對齊 `refs/permission-management.html`（先前已完成）
+    - KPI 卡片、篩選列、角色資料表、分頁、建立/編輯連結
+- `Admin/Controllers/RolePermissionController.cs`：
+    - 新增 `Create`（GET/POST）、`Edit`（GET/POST）Action
+    - 新增 `MapPermissionGroups` 方法，將系統權限依功能群組分類
+- `Admin/ViewModels/RolePermission/CreateAdminRoleViewModel.cs`：
+    - 新增 `PermissionGroupViewModel` 與 `PermissionItemViewModel`
+    - 新增 `GroupDisplayName`、`GroupDescription`、`ActionDisplayName` 等中文對照屬性
+- `Admin/ViewModels/RolePermission/EditAdminRoleViewModel.cs`：
+    - 共用 `PermissionGroupViewModel` 群組結構
+- `Application/Roles/Commands/CreateAdminRoleCommand.cs`、`CreateAdminRoleHandler.cs`：
+    - 建立角色 Command / Handler，含名稱重複檢查、權限存在檢查、RolePermissions 寫入、ActivityLog 紀錄
+- `Application/Roles/Commands/UpdateAdminRoleCommand.cs`、`UpdateAdminRoleHandler.cs`：
+    - 更新角色 Command / Handler，含系統保留角色保護、權限置換
+- `Application/Roles/Queries/GetAdminRolePermissionEditQuery.cs`、`GetAdminRolePermissionEditHandler.cs`：
+    - 取得角色編輯頁資料，同時用於 Create 頁（`RoleId = 0`）
+    - 修正 `RoleId = 0` 時原會回傳 NotFound 導致新增角色 500 的問題
+- `Infrastructure/Persistence/Repositories/PermissionRepository.cs`：
+    - 修正 `GetAllSystemPermissionsAsync` 的 `GroupName` 提取邏輯
+    - 由原本抓 Code 第一段（全部變成 `Admin`）改為抓第二段（`Merchant`、`Kol`、`Account` 等功能群組）
+- `Admin/Views/RolePermission/Create.cshtml` 與 `Edit.cshtml`：
+    - 重構為 `permission-setting.html` 設計稿風格
+    - 權限矩陣改以表格呈現，欄位：項目 / 說明 / 檢視 / 編輯 / 審核管理
+    - 基本資料表單改為兩欄網格 + 獨立 checkbox 列，視覺更整齊
+    - 權限動作顯示中文（檢視、編輯、更新、管理、審核、停用、結案、處理、核准、變更狀態、信用額度調整）
+    - 加入高風險權限警告區塊（當勾選 RiskLevel = 2 的權限時顯示）
+    - 加入「最近變更記錄」占位表格
+- `Admin/wwwroot/css/permission-setting.css`：
+    - 新增表單樣式（`.perm-setting-form-row`、`.perm-setting-form-group`、`.perm-setting-form-input`、`.perm-setting-form-check` 等）
+    - 新增權限 checkbox 垂直排列樣式（`.perm-setting-checkbox-cell`、`.perm-setting-action-label`）
+
+**決策原因**
+
+- 設計師 `permission-setting.html` 的權限表格以「項目 / 說明 / 檢視 / 編輯 / 審核管理」為欄位，因此將動態 Permission.Code 依最後一段動作名稱映射到這三類欄位
+- 權限分組改抓 Code 第二段，才能正確區分 `Admin.Merchant.View`、`Admin.Kol.View` 等功能領域，否則全部歸到 `Admin`
+- 動作名稱中文化可提升管理者理解，例如 `Suspend` 顯示「停用」、`CreditAdjust` 顯示「信用額度調整」
+- 高風險權限（RiskLevel = 2）標示黃色警告，提醒授權者謹慎授予影響系統安全或資金的權限
+- `RoleId = 0` 時不查詢角色資料，直接回傳空白角色 + 所有權限，讓新增角色頁面可正常載入
+
+**待確認 / 下一步**
+
+- 權限矩陣的實際儲存與權限控管機制已實作（登入時載入 Claims、Controller 以 `HasPermission` 檢查），但尚未實際登入測試驗證
+- 「最近變更記錄」表格目前為靜態占位，未來需串接 `ActivityLogs` 或 `RolePermissionLogs` 等資料來源
+- 使用者已確認畫面沒問題，暫不進行功能測試
 
 ---
 

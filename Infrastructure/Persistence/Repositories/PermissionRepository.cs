@@ -33,7 +33,10 @@ public sealed class PermissionRepository : IPermissionRepository
                 Description,
                 RiskLevel,
                 CASE
-                    WHEN CHARINDEX('.', Code) > 0 THEN LEFT(Code, CHARINDEX('.', Code) - 1)
+                    WHEN LEN(Code) - LEN(REPLACE(Code, '.', '')) >= 2
+                        THEN PARSENAME(REPLACE(Code, '.', '.'), 2)
+                    WHEN CHARINDEX('.', Code) > 0
+                        THEN PARSENAME(REPLACE(Code, '.', '.'), 1)
                     ELSE Code
                 END AS GroupName
             FROM Permissions

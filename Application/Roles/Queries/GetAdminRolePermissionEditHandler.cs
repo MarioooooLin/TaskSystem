@@ -18,6 +18,23 @@ public sealed class GetAdminRolePermissionEditHandler(
     {
         await using var uow = await unitOfWork.BeginAsync(ct);
 
+        var permissions = await permissionRepo.GetAllSystemPermissionsAsync(uow.Session, ct);
+
+        if (query.RoleId == 0)
+        {
+            await uow.CommitAsync(ct);
+            return new AdminRolePermissionEditDto
+            {
+                Id = 0,
+                Name = string.Empty,
+                Description = null,
+                IsActive = true,
+                IsSystemReserved = false,
+                SelectedPermissionIds = [],
+                Permissions = permissions
+            };
+        }
+
         var role = await roleRepo.GetByIdAsync(query.RoleId, uow.Session, ct);
         if (role is null || role.Scope != RoleScope.System)
         {
@@ -25,7 +42,6 @@ public sealed class GetAdminRolePermissionEditHandler(
             return Domain.Exceptions.Errors.Role.NotFound;
         }
 
-        var permissions = await permissionRepo.GetAllSystemPermissionsAsync(uow.Session, ct);
         var selectedIds = await permissionRepo.GetPermissionIdsByRoleIdAsync(role.Id, uow.Session, ct);
 
         await uow.CommitAsync(ct);

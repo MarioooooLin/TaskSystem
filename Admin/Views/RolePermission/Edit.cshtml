@@ -1,12 +1,20 @@
 @model Admin.ViewModels.RolePermission.EditAdminRoleViewModel
 @{
     ViewData["Title"] = "編輯角色權限";
+
+    var hasHighRisk = Model.PermissionGroups
+        .SelectMany(g => g.Items)
+        .Any(i => i.RiskLevel == 2 && Model.PermissionIds.Contains(i.Id));
 }
 
 <link rel="stylesheet" href="~/css/permission-setting.css" asp-append-version="true" />
 
 <main class="main-content">
-    <div class="content-card">
+    <form method="post" asp-action="Edit" asp-route-id="@Model.Id">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="validation-summary"
+             style="color:var(--primary);margin-bottom:1.6rem;"></div>
 
         <div class="page-header">
             <div class="page-header__left">
@@ -21,72 +29,184 @@
             </div>
         </div>
 
-        <form method="post" asp-action="Edit" asp-route-id="@Model.Id">
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="ModelOnly" class="validation-summary"
-                 style="color:var(--primary);margin-bottom:1.6rem;"></div>
-
-            <div class="content-card" style="margin-bottom:1.6rem;">
-                <h2 class="section-title" style="margin-bottom:1.2rem;">基本資料</h2>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label asp-for="Name" class="form-label"></label>
-                        <input asp-for="Name" class="form-input" placeholder="請輸入角色名稱">
-                        <span asp-validation-for="Name" class="field-validation-error"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Description" class="form-label"></label>
-                        <input asp-for="Description" class="form-input" placeholder="請輸入角色說明">
-                        <span asp-validation-for="Description" class="field-validation-error"></span>
-                    </div>
+        <div class="content-card" style="margin-bottom:1.6rem;">
+            <h2 class="section-title" style="margin-bottom:1.6rem;">基本資料</h2>
+            <div class="perm-setting-form-row">
+                <div class="perm-setting-form-group">
+                    <label asp-for="Name" class="perm-setting-form-label"></label>
+                    <input asp-for="Name" class="perm-setting-form-input" placeholder="請輸入角色名稱">
+                    <span asp-validation-for="Name" class="perm-setting-field-error"></span>
                 </div>
-                <div class="form-row">
-                    <div class="form-check">
-                        <input asp-for="IsSystemReserved" type="checkbox" class="form-checkbox" disabled>
-                        <label asp-for="IsSystemReserved" class="form-label" style="color:var(--text-muted);"></label>
-                        <input type="hidden" asp-for="IsSystemReserved" />
-                    </div>
-                    <div class="form-check">
-                        <input asp-for="IsActive" type="checkbox" class="form-checkbox">
-                        <label asp-for="IsActive" class="form-label"></label>
-                    </div>
+                <div class="perm-setting-form-group">
+                    <label asp-for="Description" class="perm-setting-form-label"></label>
+                    <input asp-for="Description" class="perm-setting-form-input" placeholder="請輸入角色說明">
+                    <span asp-validation-for="Description" class="perm-setting-field-error"></span>
                 </div>
             </div>
+            <div class="perm-setting-form-check-group">
+                <label class="perm-setting-form-check is-muted">
+                    <input asp-for="IsSystemReserved" type="checkbox" disabled>
+                    <span>系統保留</span>
+                </label>
+                <input type="hidden" asp-for="IsSystemReserved" />
+                <label class="perm-setting-form-check">
+                    <input asp-for="IsActive" type="checkbox">
+                    <span>啟用狀態</span>
+                </label>
+            </div>
+        </div>
 
-            <div class="content-card" style="margin-bottom:1.6rem;">
-                <h2 class="section-title" style="margin-bottom:1.2rem;">權限矩陣</h2>
-                @foreach (var group in Model.PermissionGroups)
-                {
-                    <div class="perm-setting-panel" style="margin-bottom:1.6rem;">
-                        <h3 class="perm-setting-panel__title">@group.GroupName</h3>
-                        <div class="perm-setting-grid">
-                            @foreach (var item in group.Items)
-                            {
-                                <label class="perm-setting-checkbox-label">
-                                    <input type="checkbox" name="PermissionIds" value="@item.Value"
-                                           class="perm-setting-checkbox"
-                                           checked="@(Model.PermissionIds.Contains(long.Parse(item.Value!)) ? "checked" : null)" />
-                                    <span>@item.Text</span>
-                                </label>
-                            }
-                        </div>
+        <div class="content-card" style="margin-bottom:1.6rem;">
+            <div class="perm-setting-table-header">
+                <h2 class="section-title">權限矩陣</h2>
+            </div>
+
+            @if (hasHighRisk)
+            {
+                <div class="perm-setting-alert" role="alert">
+                    <div class="perm-setting-alert__icon">
+                        <i class="fa-solid fa-exclamation"></i>
                     </div>
-                }
-                @if (!Model.PermissionGroups.Any())
-                {
-                    <p class="empty-state">尚未設定任何權限項目。</p>
-                }
-            </div>
+                    <div class="perm-setting-alert__content">
+                        <p class="perm-setting-alert__title">高風險權限警告</p>
+                        <p class="perm-setting-alert__desc">
+                            此角色已勾選高風險權限（標示 <i class="fa-solid fa-triangle-exclamation" style="color:#fcc419;"></i> 項目）。
+                            請再次確認是否需要授予這些可能影響系統安全或資金的操作權限。
+                        </p>
+                    </div>
+                </div>
+            }
 
-            <div class="form-actions" style="display:flex;gap:1.2rem;justify-content:flex-end;">
-                <a asp-action="Index" class="btn-secondary" hx-get="@Url.Action("Index")" hx-target="#main-content"
-                   hx-push-url="true">取消</a>
-                <button type="submit" class="btn-primary">儲存變更</button>
-            </div>
-        </form>
+            <table class="data-table perm-setting-table">
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>說明</th>
+                        <th>檢視</th>
+                        <th>編輯</th>
+                        <th>審核管理</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var group in Model.PermissionGroups)
+                    {
+                        var viewItems = group.Items.Where(i => i.ActionName == "View").ToList();
+                        var editItems = group.Items.Where(i => i.ActionName is "Edit" or "Update").ToList();
+                        var manageItems = group.Items.Where(i => i.ActionName is not "View" and not "Edit" and not "Update").ToList();
 
-    </div><!-- /.content-card -->
+                        <tr>
+                            <td>
+                                <strong>@group.GroupDisplayName</strong>
+                                @if (group.Items.Any(i => i.RiskLevel == 2))
+                                {
+                                    <i class="fa-solid fa-triangle-exclamation" style="color:#fcc419;margin-left:.4rem;"
+                                       title="包含高風險權限"></i>
+                                }
+                            </td>
+                            <td class="perm-setting-td-desc">@group.GroupDescription</td>
+                            <td>
+                                @if (viewItems.Any())
+                                {
+                                    @foreach (var item in viewItems)
+                                    {
+                                        <label class="perm-setting-checkbox-cell" title="@item.Code">
+                                            <input type="checkbox" name="PermissionIds" value="@item.Id"
+                                                   class="perm-setting-checkbox"
+                                                   @(Model.PermissionIds.Contains(item.Id) ? "checked" : "") />
+                                            <span class="perm-setting-action-label">@item.ActionDisplayName</span>
+                                        </label>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">--</span>
+                                }
+                            </td>
+                            <td>
+                                @if (editItems.Any())
+                                {
+                                    @foreach (var item in editItems)
+                                    {
+                                        <label class="perm-setting-checkbox-cell" title="@item.Code">
+                                            <input type="checkbox" name="PermissionIds" value="@item.Id"
+                                                   class="perm-setting-checkbox"
+                                                   @(Model.PermissionIds.Contains(item.Id) ? "checked" : "") />
+                                            <span class="perm-setting-action-label">@item.ActionDisplayName</span>
+                                            @if (item.RiskLevel == 2)
+                                            {
+                                                <i class="fa-solid fa-triangle-exclamation" style="color:#fcc419;margin-left:.2rem;"></i>
+                                            }
+                                        </label>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">--</span>
+                                }
+                            </td>
+                            <td>
+                                @if (manageItems.Any())
+                                {
+                                    @foreach (var item in manageItems)
+                                    {
+                                        <label class="perm-setting-checkbox-cell" title="@item.Code">
+                                            <input type="checkbox" name="PermissionIds" value="@item.Id"
+                                                   class="perm-setting-checkbox"
+                                                   @(Model.PermissionIds.Contains(item.Id) ? "checked" : "") />
+                                            <span class="perm-setting-action-label">@item.ActionDisplayName</span>
+                                            @if (item.RiskLevel == 2)
+                                            {
+                                                <i class="fa-solid fa-triangle-exclamation" style="color:#fcc419;margin-left:.2rem;"></i>
+                                            }
+                                        </label>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">--</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (!Model.PermissionGroups.Any())
+            {
+                <p class="empty-state">尚未設定任何權限項目。</p>
+            }
+        </div>
+
+        <div class="content-card" style="margin-bottom:1.6rem;">
+            <h2 class="perm-setting-section-title">
+                <i class="fa-solid fa-clock-rotate-left"></i> 最近變更記錄
+            </h2>
+            <table class="data-table perm-setting-log-table">
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>操作者</th>
+                        <th>異動內容</th>
+                        <th>異動項目</th>
+                        <th>新數值</th>
+                        <th>舊數值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="text-center" style="padding:2rem;color:var(--text-muted);">
+                            變更記錄功能即將上線，目前暫無資料。
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-actions" style="display:flex;gap:1.2rem;justify-content:flex-end;">
+            <a asp-action="Index" class="btn-secondary" hx-get="@Url.Action("Index")" hx-target="#main-content"
+               hx-push-url="true">取消</a>
+            <button type="submit" class="btn-primary">儲存變更</button>
+        </div>
+    </form>
 </main>
 
 @section Scripts {

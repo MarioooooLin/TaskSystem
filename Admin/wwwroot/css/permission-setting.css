@@ -8,14 +8,14 @@
     background: #fff;
     border: 1px solid var(--border);
     color: var(--text-muted);
-    padding: .9rem 1.8rem;
+    padding: 0.9rem 1.8rem;
     border-radius: 6px;
     font-size: 1.4rem;
     font-family: inherit;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    transition: all .2s;
+    transition: all 0.2s;
 }
 
 .btn-secondary:hover {
@@ -28,6 +28,95 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+}
+
+/* ── Form Layout ── */
+.perm-setting-form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem 2.4rem;
+    margin-bottom: 1.6rem;
+}
+
+.perm-setting-form-row:last-child {
+    margin-bottom: 0;
+}
+
+.perm-setting-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.perm-setting-form-label {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.perm-setting-form-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.perm-setting-form-input:focus {
+    border-color: var(--thead-tr);
+    box-shadow: 0 0 0 3px rgba(58, 175, 169, 0.12);
+}
+
+.perm-setting-form-input::placeholder {
+    color: #bbb;
+}
+
+.perm-setting-form-input:disabled {
+    background: #f3f4f6;
+    cursor: not-allowed;
+}
+
+.perm-setting-form-check-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.4rem;
+    align-items: center;
+    margin-top: 0.4rem;
+}
+
+.perm-setting-form-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: var(--text-main);
+}
+
+.perm-setting-form-check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--thead-tr);
+    flex-shrink: 0;
+}
+
+.perm-setting-form-check.is-muted {
+    color: var(--text-muted);
+}
+
+.perm-setting-field-error {
+    font-size: 1.2rem;
+    color: var(--primary);
+    min-height: 1.6rem;
 }
 
 /* ── Table Header ── */
@@ -143,7 +232,7 @@
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
-    margin-top: .2rem;
+    margin-top: 0.2rem;
 }
 
 .perm-setting-alert__content {
@@ -154,7 +243,7 @@
     font-size: 1.4rem;
     font-weight: 700;
     color: #663c00;
-    margin-bottom: .4rem;
+    margin-bottom: 0.4rem;
     margin: 0;
 }
 
@@ -174,7 +263,7 @@
 .perm-setting-alert__list li {
     font-size: 1.2rem;
     color: #8b6914;
-    margin-bottom: .6rem;
+    margin-bottom: 0.6rem;
 }
 
 /* ── Log Section ── */
@@ -185,7 +274,7 @@
     margin-bottom: 1.6rem;
     display: flex;
     align-items: center;
-    gap: .6rem;
+    gap: 0.6rem;
 }
 
 .perm-setting-section-title i {
@@ -195,6 +284,32 @@
 
 .perm-setting-log-table {
     width: 100%;
+}
+
+/* ── Checkbox Cell ── */
+.perm-setting-checkbox-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+.perm-setting-checkbox-cell + .perm-setting-checkbox-cell {
+    border-top: 1px dashed var(--border);
+    margin-top: 0.4rem;
+}
+
+.perm-setting-action-label {
+    font-size: 1.3rem;
+    color: var(--text-main);
+    white-space: nowrap;
+}
+
+/* ── Text Muted ── */
+.text-muted {
+    color: var(--text-muted);
 }
 
 .perm-setting-log-table thead th {
@@ -227,7 +342,7 @@
 .perm-setting-log-user {
     display: flex;
     align-items: center;
-    gap: .6rem;
+    gap: 0.6rem;
     font-size: 1.2rem;
 }
 
@@ -252,7 +367,7 @@
 /* ── Status & Badges ── */
 .perm-setting-status--active {
     display: inline-block;
-    padding: .4rem 1rem;
+    padding: 0.4rem 1rem;
     border-radius: 4px;
     background: #d1f4e9;
     color: #057a54;
@@ -262,7 +377,7 @@
 
 .perm-setting-status--inactive {
     display: inline-block;
-    padding: .4rem 1rem;
+    padding: 0.4rem 1rem;
     border-radius: 4px;
     background: #f3f4f6;
     color: #6b7280;
@@ -312,11 +427,11 @@
 
     .perm-setting-table thead th {
         font-size: 1.2rem;
-        padding: .8rem;
+        padding: 0.8rem;
     }
 
     .perm-setting-table tbody td {
-        padding: .8rem;
+        padding: 0.8rem;
         font-size: 1.2rem;
     }
 
