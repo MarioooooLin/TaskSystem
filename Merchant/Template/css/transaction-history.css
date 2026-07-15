@@ -1,0 +1,414 @@
+@charset "utf-8";
+/* ============================================================
+   TRANSACTION-HISTORY.CSS  ─  交易紀錄明細頁面專用樣式
+   依設計圖 MER-0101.jpg 製作
+   ============================================================ */
+
+/* ============================
+   MAIN
+============================== */
+.th-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ============================
+   頁面標題
+============================== */
+.th-page-header {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.th-page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.th-page-desc {
+    font-size: 1.6rem;
+    color: var(--text-muted);
+}
+
+/* ============================
+   篩選區卡片
+============================== */
+.th-filter-card {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+/* 四格 Grid */
+.th-filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem 2.4rem;
+}
+
+.th-filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.th-filter-label {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* 日期範圍橫排 */
+.th-date-range {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+
+.th-date-sep {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+/* 通用 input */
+.th-form-input {
+    width: 100%;
+    height: 44px;
+    padding: 0 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s;
+}
+
+.th-form-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(58, 175, 169, .12);
+}
+
+/* Select */
+.th-select-wrap {
+    position: relative;
+}
+
+.th-form-select {
+    width: 100%;
+    height: 44px;
+    padding: 0 3.2rem 0 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: border-color .2s;
+}
+
+.th-form-select:focus {
+    border-color: var(--primary);
+}
+
+.th-select-arrow {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+/* 關鍵字搜尋 */
+.th-search-wrap {
+    position: relative;
+}
+
+.th-search-input {
+    padding-right: 3.6rem;
+}
+
+.th-search-icon {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+/* 執行搜尋按鈕列 */
+.th-filter-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.th-search-btn {
+    height: 44px;
+    padding: 0 2.8rem;
+    background: #4b8ab7;
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: .04em;
+    transition: background .2s;
+}
+
+.th-search-btn:hover {
+    background: #3a7aaa;
+}
+
+/* ============================
+   表格卡片
+============================== */
+.th-table-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.th-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.th-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.3rem;
+    min-width: 680px;
+}
+
+/* 表頭 */
+.th-table thead tr {
+    background: var(--primary);
+    border-bottom: 2px solid var(--border);
+}
+
+.th-table th {
+    padding: 1.2rem 1.6rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--white);
+    text-align: left;
+    white-space: nowrap;
+    border: 1px solid var(--white);
+}
+
+.th-col-balance {
+    text-align: right;
+}
+
+/* 表格列 */
+.th-table tbody tr {
+    border-bottom: 1px solid #e5e5e5;
+    transition: background .15s;
+}
+
+.th-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.th-table tbody tr:hover {
+    background: var(--primary-light);
+}
+
+.th-table td {
+    padding: 1.2rem 1.6rem;
+    vertical-align: middle;
+    color: var(--text-main);
+}
+
+/* 交易時間 */
+.th-txn-date {
+    color: var(--text-muted);
+    white-space: nowrap;
+    font-size: 1.3rem;
+}
+
+/* 金額 */
+.th-amount {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.th-amount--red {
+    color: var(--accent-red);
+}
+
+.th-amount--green {
+    color: #1aaa6e;
+}
+
+/* 餘額欄靠右 */
+.th-balance {
+    text-align: right;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--text-main);
+}
+
+/* 無關聯案件 */
+.th-case-none {
+    color: var(--text-muted);
+}
+
+/* 關聯案件連結 */
+.th-case-link {
+    font-size: 1.3rem;
+    color: var(--text-main);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+    transition: color .15s;
+}
+
+.th-case-link:hover {
+    color: #4b8ab7;
+}
+
+/* ============================
+   交易狀態 Badge
+============================== */
+.th-status {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .9rem;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.th-status--done {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.th-status--processing {
+    background: var(--white);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
+.th-status--cancelled {
+    background: #fff0f0;
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+}
+
+.th-status--pending {
+    background: #fff4e0;
+    color: #c07000;
+    border: 1px solid #f4b452;
+}
+
+/* ============================
+   表格底部
+============================== */
+.th-table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    padding: 1.8rem 1.6rem;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+}
+
+.th-table-footer i {
+    font-size: 1.4rem;
+    color: var(--primary);
+}
+
+/* 無資料提示 */
+.th-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .8rem;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+    font-size: 1.4rem;
+}
+
+.th-empty__icon {
+    font-size: 4rem;
+    color: #ccc;
+}
+
+/* ============================
+   RWD — Tablet ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+    .th-filter-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem 1.6rem;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 768px
+============================== */
+@media (max-width: 768px) {
+    /* .th-page-title {
+        font-size: 2.2rem;
+    } */
+
+    .th-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .th-date-range {
+        flex-wrap: wrap;
+    }
+
+    .th-date-range .th-form-input {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .th-filter-actions {
+        justify-content: stretch;
+    }
+
+    .th-search-btn {
+        width: 100%;
+    }
+
+    .th-table-card {
+        padding: 0;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 480px
+============================== */
+@media (max-width: 480px) {
+    .th-filter-card {
+        padding: 1.4rem;
+    }
+
+    .th-table th,
+    .th-table td {
+        padding: 1rem 1rem;
+    }
+}

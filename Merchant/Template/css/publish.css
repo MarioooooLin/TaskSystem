@@ -1,0 +1,602 @@
+@charset "utf-8";
+/* ============================================================
+   PUBLISH.CSS  ─  發佈案件確認頁面專用樣式
+   依設計圖 MER-004.jpg 製作
+   ============================================================ */
+
+/* ============================
+   MAIN PADDING（為底部 action bar 留空間）
+============================== */
+.pub-main {
+    padding-bottom: 9rem;
+}
+
+/* footer 需額外墊高，避免被固定 action bar（72px）遮住 */
+.content-wrapper .footer {
+    padding-bottom: calc(1.4rem + 72px);
+}
+
+/* ============================
+   BREADCRUMB
+============================== */
+.pub-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+}
+
+.pub-breadcrumb a {
+    color: var(--text-muted);
+    transition: color .15s;
+}
+
+.pub-breadcrumb a:hover {
+    color: var(--primary);
+}
+
+.pub-breadcrumb i {
+    font-size: 1rem;
+}
+
+.pub-breadcrumb span {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* ============================
+   PAGE TITLE
+============================== */
+.pub-page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 2rem;
+}
+
+/* ============================
+   WARNING ALERT
+============================== */
+.pub-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    background: #fff8f0;
+    border: 1px solid #f4a84a;
+    border-radius: 8px;
+    padding: 1.4rem 1.8rem;
+    margin-bottom: 2.4rem;
+}
+
+.pub-alert__icon {
+    font-size: 2rem;
+    color: #e6820a;
+    flex-shrink: 0;
+    margin-top: .1rem;
+}
+
+.pub-alert__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #c66a00;
+    margin-bottom: .4rem;
+}
+
+.pub-alert__desc {
+    font-size: 1.3rem;
+    color: #8a5a00;
+    line-height: 1.6;
+}
+
+/* ============================
+   MAIN LAYOUT
+============================== */
+.pub-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.4rem;
+}
+
+.pub-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+/* ============================
+   SECTION
+============================== */
+.pub-section {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.8rem 2rem;
+    background: var(--white);
+}
+
+.pub-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.4rem;
+}
+
+.pub-section__title {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.pub-section__title i {
+    color: var(--primary);
+    font-size: 1.8rem;
+}
+
+.pub-section__badge {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    background: #f0f0f0;
+    border-radius: 4px;
+    padding: .2rem .8rem;
+}
+
+/* ============================
+   INFO GRID（案件摘要）
+============================== */
+.pub-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.6rem 2rem;
+}
+
+.pub-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.pub-info-label {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.pub-info-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* ============================
+   TWO COLUMN SECTIONS
+============================== */
+.pub-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.6rem;
+}
+
+/* ============================
+   KV TABLE（合作條件）
+============================== */
+.pub-kv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.4rem;
+}
+
+.pub-kv-table tr + tr td {
+    padding-top: 1rem;
+}
+
+.pub-kv-label {
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding-right: 1.6rem;
+    vertical-align: top;
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.pub-kv-value {
+    color: var(--text-main);
+    font-weight: 600;
+    vertical-align: top;
+}
+
+/* ============================
+   PLATFORM TAGS
+============================== */
+.pub-platform-tags {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-bottom: .8rem;
+}
+
+.pub-platform-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .4rem 1.2rem;
+    background: var(--text-main);
+    color: var(--white);
+    border-radius: 4px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+
+.pub-delivery-text {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    word-break: break-all;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* ============================
+   FILE LIST
+============================== */
+.pub-file-list {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+}
+
+.pub-file-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.4rem;
+    background: #fafafa;
+}
+
+.pub-file-icon {
+    font-size: 2rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.pub-file-name {
+    flex: 1;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.pub-file-size {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* ============================
+   CONFIRM CHECKLIST
+============================== */
+.pub-section--confirm {
+    background: #fafcfb;
+}
+
+.pub-check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pub-check-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    cursor: pointer;
+    user-select: none;
+}
+
+.pub-check-item input[type="checkbox"] {
+    display: none;
+}
+
+.pub-checkmark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    transition: border-color .2s, background .2s;
+    background: var(--white);
+}
+
+.pub-checkmark::after {
+    content: '';
+    display: none;
+    width: 5px;
+    height: 9px;
+    border: 2px solid var(--white);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+}
+
+.pub-check-item input:checked + .pub-checkmark {
+    background: #4b8ab7;
+    border-color: #4b8ab7;
+}
+
+.pub-check-item input:checked + .pub-checkmark::after {
+    display: block;
+}
+
+/* ============================
+   BUDGET SIDEBAR（右側）
+============================== */
+.pub-budget {
+    width: 280px;
+    flex-shrink: 0;
+    align-self: flex-start;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.8rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    position: sticky;
+    top: calc(var(--topnav-h) + 2.4rem);
+}
+
+.pub-budget__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.6rem;
+}
+
+.pub-budget__rows {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    margin-bottom: 1.2rem;
+}
+
+.pub-budget__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3rem;
+    color: var(--text-main);
+}
+
+.pub-budget__row--red span {
+    color: var(--accent-red);
+    font-weight: 600;
+}
+
+.pub-budget__divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.2rem 0;
+}
+
+.pub-budget__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.pub-budget__total-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+/* ============================
+   BOTTOM ACTION BAR（固定底部）
+============================== */
+.pub-action-bar {
+    position: fixed;
+    bottom: 0;
+    left: var(--sidebar-width);
+    right: 0;
+    height: 72px;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 12px rgba(0,0,0,.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.4rem;
+    z-index: 500;
+    transition: left .25s ease;
+}
+
+.pub-action-bar__back {
+    display: inline-flex;
+    align-items: center;
+    gap: .8rem;
+    height: 40px;
+    padding: 0 1.6rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--text-main);
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+}
+
+.pub-action-bar__back:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: #d1eafc;
+}
+
+.pub-action-bar__right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.pub-action-bar__amount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .1rem;
+}
+
+.pub-action-bar__amount-label {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.pub-action-bar__amount-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.pub-action-bar__submit {
+    height: 44px;
+    padding: 0 2.8rem;
+    background: #4b8ab7;
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s, opacity .2s;
+}
+
+.pub-action-bar__submit:hover:not(:disabled) {
+    background: #3a7aaa;
+}
+
+.pub-action-bar__submit:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+/* sidebar 收起時 action bar 跟著展開 */
+.content-wrapper--expanded ~ .pub-action-bar,
+.sidebar--collapsed ~ .content-wrapper ~ .pub-action-bar {
+    left: 0;
+}
+
+/* ============================
+   RWD — Tablet ≤ 1024px
+============================== */
+@media (max-width: 1024px) {
+    .pub-budget {
+        width: 230px;
+        padding: 1.6rem 1.4rem;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 768px
+============================== */
+@media (max-width: 768px) {
+    .pub-layout {
+        flex-direction: column;
+    }
+
+    .pub-budget {
+        width: 100%;
+        position: static;
+    }
+
+    .pub-body {
+        order: 1;
+    }
+
+    .pub-budget {
+        order: 0; /* 手機版預算移到頂部 */
+    }
+
+    .pub-two-col {
+        grid-template-columns: 1fr;
+    }
+
+    .pub-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+
+    .pub-action-bar {
+        left: 0;
+        padding: 0 1.6rem;
+        height: 68px;
+    }
+
+    .pub-action-bar__amount-value {
+        font-size: 1.5rem;
+    }
+
+    .pub-action-bar__submit {
+        padding: 0 2rem;
+        font-size: 1.4rem;
+    }
+}
+
+/* ============================
+   RWD — Mobile ≤ 480px
+============================== */
+@media (max-width: 480px) {
+    /* .pub-page-title {
+        font-size: 2rem;
+    } */
+
+    .pub-alert {
+        padding: 1.2rem;
+    }
+
+    .pub-alert__title {
+        font-size: 1.4rem;
+    }
+
+    .pub-alert__desc {
+        font-size: 1.2rem;
+    }
+
+    .pub-section {
+        padding: 1.4rem 1.4rem;
+    }
+
+    .pub-section__title {
+        font-size: 1.4rem;
+    }
+
+    .pub-action-bar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 1rem 1.4rem;
+        gap: .8rem;
+    }
+
+    .pub-action-bar__back {
+        font-size: 1.3rem;
+    }
+
+    .pub-action-bar__submit {
+        padding: 0 1.6rem;
+        height: 40px;
+    }
+}

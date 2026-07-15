@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <title>任務系統-角色權限管理</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/permission-management.css" />
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content prm-main">
+            <div class="content-card">
+
+                <!-- ===== 麵包屑 ===== -->
+                <nav class="prm-breadcrumb">
+                    <a href="settings.html">設置</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <a href="permission.html">成員管理</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span class="prm-breadcrumb__current">角色權限管理</span>
+                </nav>
+
+                <!-- ===== 頁面標題 ===== -->
+                <h1 class="prm-page-title">角色權限管理</h1>
+                <p class="prm-page-desc">定義系統內預設角色的權限範圍，確保成員僅能存取其職務所需之功能。</p>
+
+                <!-- ===== 角色切換 Tab 列 ===== -->
+                <div class="prm-role-tabs">
+                    <button class="prm-role-tab active" data-role="owner">Owner</button>
+                    <button class="prm-role-tab" data-role="admin">Admin</button>
+                    <button class="prm-role-tab" data-role="member">Member</button>
+                    <button class="prm-add-role-btn" id="prmAddRoleBtn">
+                        <i class="fa-solid fa-plus"></i> 新增角色
+                    </button>
+                </div>
+
+                <!-- ===== 主要雙欄佈局 ===== -->
+                <div class="prm-layout">
+
+                    
+
+                    <!-- ===== 左欄：權限矩陣 ===== -->
+                    <div class="prm-perm-panels" id="prmPermPanels">
+
+                        <!-- 案件管理 -->
+                        <div class="prm-perm-panel">
+                            <div class="prm-perm-panel__header">
+                                <label class="prm-select-all-wrap">
+                                    <input type="checkbox" class="prm-select-all" data-group="case" checked>
+                                    <span class="prm-checkmark"></span>
+                                    <span class="prm-select-all-label">全選</span>
+                                </label>
+                                <span class="prm-perm-panel__category">案件管理</span>
+                                <span class="prm-perm-panel__en">Case Management</span>
+                            </div>
+                            <ul class="prm-perm-list">
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">新增 / 編輯案件</span>
+                                        <span class="prm-perm-item__desc">建立新案件或編輯現有案件內容</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="case" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">發布案件</span>
+                                        <span class="prm-perm-item__desc">將案件公開並邀請 KOL 報名</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="case" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">刪除案件</span>
+                                        <span class="prm-perm-item__desc">永久移除案件及其相關資料</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="case" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">查看報名名單</span>
+                                        <span class="prm-perm-item__desc">檢視所有應徵 KOL 的詳細資訊</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="case" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">驗收成果</span>
+                                        <span class="prm-perm-item__desc">審查及驗收 KOL 上傳之推廣成果</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="case" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 財務結算 -->
+                        <div class="prm-perm-panel">
+                            <div class="prm-perm-panel__header">
+                                <label class="prm-select-all-wrap">
+                                    <input type="checkbox" class="prm-select-all" data-group="finance" checked>
+                                    <span class="prm-checkmark"></span>
+                                    <span class="prm-select-all-label">全選</span>
+                                </label>
+                                <span class="prm-perm-panel__category">財務結算</span>
+                                <span class="prm-perm-panel__en">Financials</span>
+                            </div>
+                            <ul class="prm-perm-list">
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">查看錢包</span>
+                                        <span class="prm-perm-item__desc">檢視目前餘額與費用支出</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="finance" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">儲值</span>
+                                        <span class="prm-perm-item__desc">進行線上儲值以增加錢包餘額</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="finance" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">查看交易明細</span>
+                                        <span class="prm-perm-item__desc">瀏覽所有歷史交易及帳務紀錄</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="finance" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">匯出財務報告</span>
+                                        <span class="prm-perm-item__desc">將財務報告匯出為 EXCEL 或 PDF 格式</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="finance" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 系統設定 -->
+                        <div class="prm-perm-panel">
+                            <div class="prm-perm-panel__header">
+                                <label class="prm-select-all-wrap">
+                                    <input type="checkbox" class="prm-select-all" data-group="settings" checked>
+                                    <span class="prm-checkmark"></span>
+                                    <span class="prm-select-all-label">全選</span>
+                                </label>
+                                <span class="prm-perm-panel__category">系統設定</span>
+                                <span class="prm-perm-panel__en">Settings</span>
+                            </div>
+                            <ul class="prm-perm-list">
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">編輯成員權限</span>
+                                        <span class="prm-perm-item__desc">修改其他成員的角色與關閉停用帳號</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="settings" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">新增 / 移除成員</span>
+                                        <span class="prm-perm-item__desc">邀請新成員並加入或停用帳號</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="settings" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                                <li class="prm-perm-item">
+                                    <div class="prm-perm-item__info">
+                                        <span class="prm-perm-item__name">通知設定</span>
+                                        <span class="prm-perm-item__desc">配置 Email 與站內信提醒頻道</span>
+                                    </div>
+                                    <div class="prm-perm-item__check">
+                                        <label><input type="checkbox" data-group="settings" checked><span class="prm-checkmark"></span></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div><!-- /.prm-perm-panels -->
+
+                    <!-- ===== 右欄：角色資訊卡 ===== -->
+                    <div class="prm-role-card">
+                        <div class="prm-role-card__header">
+                            <span class="prm-role-card__name" id="prmRoleName">Owner</span>
+                            <div class="prm-role-card__actions">
+                                <button class="prm-icon-btn prm-icon-btn--edit" onclick="document.getElementById('id1').style.display='block'" title="編輯角色名稱">
+                                    <i class="fa-solid fa-pencil"></i>
+                                </button>
+                                <button class="prm-icon-btn prm-icon-btn--delete" title="刪除角色">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="prm-role-card__desc" id="prmRoleDesc">
+                            系統最高權限擁有者。擁有所有案件管理、財務設置與系統設定之完整控制權，通常為企業負責人或主要管理窗口。
+                        </p>
+                        <div class="prm-role-card__core-title">核心職責</div>
+                        <ul class="prm-core-list">
+                            <li class="prm-core-item">
+                                <i class="fa-regular fa-circle-check"></i>
+                                全站功能完全存取
+                            </li>
+                            <li class="prm-core-item">
+                                <i class="fa-regular fa-circle-check"></i>
+                                管理財務及錢包儲值
+                            </li>
+                            <li class="prm-core-item">
+                                <i class="fa-regular fa-circle-check"></i>
+                                編輯及刪除其他管理員
+                            </li>
+                        </ul>
+                    </div>
+                </div><!-- /.prm-layout -->
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <!-- ===== 底部 Sticky Action Bar ===== -->
+    <div class="prm-action-bar" id="prmActionBar">
+        <button class="prm-btn prm-btn--outline" id="prmCancelBtn">取消</button>
+        <button class="prm-btn prm-btn--primary" id="prmSaveBtn">儲存變更</button>
+    </div>
+
+    <!-- 編輯角色Lightbox -->
+    <div id="id1" class="w3-modal">
+        <div class="bg_close" onclick="document.getElementById('id1').style.display='none'"></div>
+        <div class="w3-modal-content w3-animate-top w3-card-4 alert-modal">
+            <!-- 關閉按鈕 -->
+            <span class="alert-close" onclick="document.getElementById('id1').style.display='none'">&times;</span>
+            <div class="modal-header">編輯角色</div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+
+                <!-- 角色名稱 -->
+                <div class="prm-modal-form-group">
+                    <label class="prm-modal-label" for="editRoleName">角色名稱</label>
+                    <input type="text" id="editRoleName" class="prm-modal-input" value="Owner" placeholder="請輸入角色名稱">
+                </div>
+
+                <!-- 角色描述 -->
+                <div class="prm-modal-form-group">
+                    <label class="prm-modal-label" for="editRoleDesc">角色描述</label>
+                    <textarea id="editRoleDesc" class="prm-modal-textarea" placeholder="請輸入角色描述">系統最高權限擁有者。擁有所有案件管理、財務結算與系統設定之完整控制權，通常為企業負責人或主要管理窗口。</textarea>
+                </div>
+
+                <!-- 底部按鈕 -->
+                <div class="prm-modal-btns">
+                    <button class="prm-modal-btn--cancel" onclick="document.getElementById('id1').style.display='none'">取消</button>
+                    <button class="prm-modal-btn--confirm" id="editRoleConfirmBtn">確認儲存</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,419 @@
+@charset "utf-8";
+/* ============================================================
+   PERMISSION.CSS  ?�  使用?��?權�?管�??�面專用�??
+   依設計�? MER-011.jpg 製�?
+   ============================================================ */
+
+/* ============================
+   MAIN
+============================== */
+.pm-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ============================
+   ?�部標�???
+============================== */
+.pm-top-bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+}
+
+.pm-top-bar__left {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.pm-page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.pm-page-desc {
+    font-size: 1.6rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+/* ============================
+   ?�用?��?
+============================== */
+.pm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    height: 38px;
+    padding: 0 1.6rem;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .18s;
+    white-space: nowrap;
+}
+
+.pm-btn--primary {
+    background: #4b8ab7;
+    color: var(--white);
+    border: 1px solid #4b8ab7;
+}
+
+.pm-btn--primary:hover {
+    background: #3a7aaa;
+    border-color: #3a7aaa;
+}
+
+.pm-btn--outline {
+    background: var(--white);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.pm-btn--outline:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: rgb(209, 234, 252);
+}
+
+.pm-btn--sm {
+    height: 30px;
+    padding: 0 1rem;
+    font-size: 1.3rem;
+}
+
+.pm-btn--danger {
+    background: var(--white);
+    color: var(--accent-red);
+    border: 1px solid var(--border);
+}
+
+.pm-btn--danger:hover {
+    border-color: var(--accent-red);
+    background: #fff5f5;
+}
+
+/* ============================
+   ?��? + 篩選??
+============================== */
+.pm-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.pm-search-wrap {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+}
+
+.pm-search-wrap i {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.pm-search-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 1.2rem 0 3.4rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s;
+}
+
+.pm-search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(58, 175, 169, .12);
+}
+
+.pm-search-input::placeholder {
+    color: #bbb;
+}
+
+.pm-select-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.pm-select {
+    height: 40px;
+    padding: 0 3rem 0 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    min-width: 120px;
+    transition: border-color .2s;
+}
+
+.pm-select:focus {
+    border-color: var(--primary);
+}
+
+.pm-select-wrap i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+/* ============================
+   ?�員?�表 Panel
+============================== */
+.pm-panel {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: var(--white);
+    margin-bottom: 2rem;
+}
+
+/* 表格 */
+.pm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.3rem;
+    min-width: 700px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.pm-table thead tr {
+    background: var(--primary);
+    border-bottom: 1px solid var(--border);
+}
+
+.pm-table th {
+    padding: 1rem 1.2rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--white);
+    text-align: left;
+    white-space: nowrap;
+    border: 1px solid var(--white);
+}
+
+.pm-table tbody tr {
+    border-bottom: 1px solid #e5e5e5;
+    transition: background .15s;
+}
+
+.pm-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.pm-table tbody tr:hover {
+    background: var(--primary-light);
+}
+
+.pm-table td {
+    padding: 1rem 1.2rem;
+    vertical-align: middle;
+    color: var(--text-main);
+}
+
+/* 姓�?欄�??��?縮寫 + 姓�? */
+.pm-user-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pm-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    background: #ddd;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.pm-user-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* ?��??�件 */
+.pm-email {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+/* 角色 Badge */
+.pm-role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .8rem;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    white-space: nowrap;
+}
+
+.pm-role-badge--owner {
+    background: var(--text-main);
+    color: var(--white);
+}
+
+.pm-role-badge--admin {
+    background: #444;
+    color: var(--white);
+}
+
+.pm-role-badge--member {
+    background: var(--white);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+/* ?�??*/
+.pm-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.3rem;
+    white-space: nowrap;
+}
+
+.pm-status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.pm-status--active .pm-status__dot {
+    background: #22c55e;
+}
+
+.pm-status--pending .pm-status__dot {
+    background: transparent;
+    border: 2px solid var(--text-muted);
+}
+
+.pm-status--disabled .pm-status__dot {
+    background: #bbb;
+}
+
+/* ?�入?��? */
+.pm-date {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* ?��?�?*/
+.pm-actions {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    justify-content: flex-end;
+}
+
+/* ============================
+   帳�?安全?��???
+============================== */
+.pm-security-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    background: #fff8f0;
+    border: 1px solid #f4a84a;
+    border-radius: 8px;
+    padding: 1.4rem 1.8rem;
+}
+
+.pm-security-card__icon {
+    font-size: 2rem;
+    color: #e6820a;
+    flex-shrink: 0;
+    margin-top: .1rem;
+}
+
+.pm-security-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.pm-security-card__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #c66a00;
+}
+
+.pm-security-card__desc {
+    font-size: 1.3rem;
+    color: #8a5a00;
+    line-height: 1.6;
+}
+
+/* ============================
+   RWD ??Tablet ??1024px
+============================== */
+@media (max-width: 1024px) {
+    .pm-table {
+        min-width: 700px;
+    }
+}
+
+/* ============================
+   RWD ??Mobile ??768px
+============================== */
+@media (max-width: 768px) {
+    .pm-page-title {
+        font-size: 2.2rem;
+    }
+
+    .pm-top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pm-filter-bar {
+        flex-wrap: wrap;
+    }
+
+    .pm-search-wrap {
+        min-width: 100%;
+    }
+}

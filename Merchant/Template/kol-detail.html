@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統-KOL詳情</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/kol-detail.css" />
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="content-card kd-card">
+
+                <!-- ===== KOL 頂部資訊列 ===== -->
+                <div class="kd-hero">
+                    <div class="kd-hero__left">
+                        <div class="kd-avatar">
+                            <i class="fa-solid fa-user kd-avatar__icon"></i>
+                        </div>
+                        <div class="kd-hero__info">
+                            <div class="kd-hero__name-row">
+                                <h1 class="kd-name">內內 Nene</h1>
+                                <a class="kd-rating" onclick="document.getElementById('id1').style.display='block'">
+                                    <i class="fa-solid fa-star kd-rating__star"></i>
+                                    4.8 (25)
+                                </a>
+                                <span class="kd-badge kd-badge--using">啟用中</span>
+                            </div>
+                            <div class="kd-tags">
+                                <span class="kd-tag">旅遊</span>
+                                <span class="kd-tag">美食</span>
+                                <span class="kd-tag">生活風格</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== 平台統計列 ===== -->
+                <div class="kd-stats">
+                    <div class="kd-stat">
+                        <span class="kd-stat__label">主要平台</span>
+                        <span class="kd-stat__value">Instagram</span>
+                    </div>
+                    <div class="kd-stat">
+                        <span class="kd-stat__label">粉絲總數</span>
+                        <span class="kd-stat__value">120,000</span>
+                    </div>
+                    <div class="kd-stat">
+                        <span class="kd-stat__label">驗證狀態</span>
+                        <span class="kd-stat__value kd-stat__value--verified">
+                            <i class="fa-solid fa-circle-check"></i> 已驗證
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ===== KOL 自我推薦 ===== -->
+                <section class="kd-section">
+                    <div class="kd-section__title">
+                        KOL 自我推薦
+                    </div>
+                    <blockquote class="kd-quote">
+                        「我過去拍攝過許多交溫泉與民宿開箱內容，擅長以生活感短影音呈現住宿體驗。這次可以結合 IG Reels 與 TikTok 短影音，呈現房型、早餐與溫泉體驗。我對本次合作非常有信心，希望能為品牌帶來最佳的曝光效果！」
+                    </blockquote>
+                </section>
+
+                <!-- ===== 基本資料 ===== -->
+                <section class="kd-section">
+                    <div class="kd-section__title">
+                        基本資料
+                    </div>
+
+                    <div class="kd-info-block">
+                        <!-- 左：基本識別 -->
+                        <div class="kd-info-col">
+                            <p class="kd-info-group-title">
+                                <i class="fa-regular fa-user"></i> 基本識別
+                            </p>
+                            <div class="kd-kv-list">
+                                <div class="kd-kv-row">
+                                    <span class="kd-kv-label">KOL 名稱</span>
+                                    <span class="kd-kv-value">內內 Nene</span>
+                                </div>
+                                <div class="kd-kv-row">
+                                    <span class="kd-kv-label">KOL 類型</span>
+                                    <span class="kd-kv-value">旅遊, 美食, 生活風格</span>
+                                </div>
+                                <div class="kd-kv-row">
+                                    <span class="kd-kv-label">審核狀態</span>
+                                    <span class="kd-kv-value kd-kv-value--green">已通過</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 右：狀態摘要 -->
+                        <div class="kd-info-col">
+                            <p class="kd-info-group-title">
+                                <i class="fa-regular fa-chart-bar"></i> 狀態摘要
+                            </p>
+                            <div class="kd-kv-list">
+                                <div class="kd-kv-row">
+                                    <span class="kd-kv-label">KOL 狀態</span>
+                                    <span class="kd-kv-value">啟用中</span>
+                                </div>
+                                <div class="kd-kv-row">
+                                    <span class="kd-kv-label">資料完整度</span>
+                                    <span class="kd-kv-value">100%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 聯絡資訊 -->
+                    <div class="kd-divider"></div>
+                    <p class="kd-info-group-title">
+                        <i class="fa-regular fa-envelope"></i> 聯絡資訊
+                    </p>
+                    <div class="kd-contact-grid">
+                        <div class="kd-kv-row">
+                            <span class="kd-kv-label">聯絡窗口</span>
+                            <span class="kd-kv-value">內內</span>
+                        </div>
+                        <div class="kd-kv-row">
+                            <span class="kd-kv-label">Email</span>
+                            <span class="kd-kv-value">nene@example.com</span>
+                        </div>
+                        <div class="kd-kv-row">
+                            <span class="kd-kv-label">手機</span>
+                            <span class="kd-kv-value">09**-***-888</span>
+                        </div>
+                        <div class="kd-kv-row kd-kv-row--line">
+                            <span class="kd-kv-label">LINE 狀況</span>
+                            <span class="kd-kv-value">
+                                <button class="kd-line-btn">已確認 LINE</button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 擅長與地區 -->
+                    <div class="kd-divider"></div>
+                    <div class="kd-specialty-grid">
+                        <div class="kd-specialty-item">
+                            <span class="kd-kv-label">擅長主題</span>
+                            <p class="kd-specialty-value">溫泉旅館、親子旅遊、美食體驗、住宿開箱</p>
+                        </div>
+                        <div class="kd-specialty-item">
+                            <span class="kd-kv-label">可合作地區</span>
+                            <p class="kd-specialty-value">北部, 中部, 宜蘭, 花蓮</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== 社群頻道 ===== -->
+                <section class="kd-section">
+                    <div class="kd-section__title">
+                        社群頻道
+                    </div>
+                    <div class="kd-channels">
+
+                        <div class="kd-channel-item">
+                            <div class="kd-channel__icon kd-channel__icon--ig">
+                                <i class="fa-brands fa-instagram"></i>
+                            </div>
+                            <div class="kd-channel__info">
+                                <p class="kd-channel__name">Instagram | nene_travel
+                                    <i class="fa-solid fa-circle-check kd-verified-icon"></i>
+                                </p>
+                                <p class="kd-channel__sub">58,000 粉絲・高黏度高</p>
+                            </div>
+                            <a href="#" class="kd-channel__link">查看連結</a>
+                        </div>
+
+                        <div class="kd-channel-item">
+                            <div class="kd-channel__icon kd-channel__icon--tiktok">
+                                <i class="fa-brands fa-tiktok"></i>
+                            </div>
+                            <div class="kd-channel__info">
+                                <p class="kd-channel__name">TikTok | nene_trip
+                                    <i class="fa-solid fa-circle-check kd-verified-icon"></i>
+                                </p>
+                                <p class="kd-channel__sub">36,000 粉絲・互動性佳</p>
+                            </div>
+                            <a href="#" class="kd-channel__link">查看連結</a>
+                        </div>
+
+                        <div class="kd-channel-item">
+                            <div class="kd-channel__icon kd-channel__icon--yt">
+                                <i class="fa-brands fa-youtube"></i>
+                            </div>
+                            <div class="kd-channel__info">
+                                <p class="kd-channel__name">YouTube | Nene旅行日記
+                                    <i class="fa-solid fa-circle-check kd-verified-icon"></i>
+                                </p>
+                                <p class="kd-channel__sub">27,000 粉絲・高畫質影片</p>
+                            </div>
+                            <a href="#" class="kd-channel__link">查看連結</a>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- ===== 合作偏好 ===== -->
+                <section class="kd-section">
+                    <div class="kd-section__title">
+                        合作偏好
+                    </div>
+                    <div class="kd-pref-grid">
+                        <div class="kd-pref-item">
+                            <span class="kd-kv-label">合作條件</span>
+                            <div class="kd-pref-tags">
+                                <span class="kd-pref-tag">互惠</span>
+                                <span class="kd-pref-tag">付費</span>
+                                <span class="kd-pref-tag">導購分潤</span>
+                            </div>
+                        </div>
+                        <div class="kd-pref-item">
+                            <span class="kd-kv-label">是否接受零傭分潤</span>
+                            <span class="kd-kv-value">是</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== 過往合作紀錄 ===== -->
+                <section class="kd-section">
+                    <div class="kd-section__title">
+                        過往合作紀錄
+                    </div>
+                    <div class="kd-history-list">
+
+                        <div class="kd-history-item">
+                            <div class="kd-history__dot kd-history__dot--done"></div>
+                            <div class="kd-history__body">
+                                <div class="kd-history__header">
+                                    <span class="kd-history__title">宜蘭寵物友善民宿開箱</span>
+                                    <button class="kd-history__btn">驗收通過</button>
+                                </div>
+                                <p class="kd-history__meta">業主：桃源民宿 ｜ 金額：NT$8,000 ｜ 日期：2026-04-20</p>
+                                <div class="kd-history__tags">
+                                    <span class="kd-htag kd-htag--done">成果驗收</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kd-history-item">
+                            <div class="kd-history__dot kd-history__dot--done"></div>
+                            <div class="kd-history__body">
+                                <div class="kd-history__header">
+                                    <span class="kd-history__title">台南巷弄美食旅宿</span>
+                                    <button class="kd-history__btn">驗收通過</button>
+                                </div>
+                                <p class="kd-history__meta">業主：台南旅宿 ｜ 金額：NT$10,000 ｜ 日期：2026-03-18</p>
+                                <div class="kd-history__tags">
+                                    <span class="kd-htag kd-htag--outline">導購成效</span>
+                                    <span class="kd-htag kd-htag--done">成果驗收</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kd-history-item">
+                            <div class="kd-history__dot kd-history__dot--dispute"></div>
+                            <div class="kd-history__body">
+                                <div class="kd-history__header">
+                                    <span class="kd-history__title">花蓮海景旅宿合作</span>
+                                    <button class="kd-history__btn kd-history__btn--danger">驗收不通過</button>
+                                </div>
+                                <p class="kd-history__meta">
+                                    業主：海岸旅宿 ｜ 金額：NT$0 ｜ 日期：2026-02-10
+                                    <a href="#" class="kd-history__dispute-link">【爭議已結案】</a>
+                                </p>
+                                <div class="kd-history__tags">
+                                    <span class="kd-htag kd-htag--done">成果驗收</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <!-- BOTTOM STICKY ACTION BAR -->
+    <div class="kd-action-bar">
+        <span class="kd-action-bar__label">KOL 報名詳情審閱</span>
+        <div class="kd-action-bar__btns">
+            <button class="kd-action-btn kd-action-btn--ghost">關閉</button>
+            <button class="kd-action-btn kd-action-btn--danger">拒絕報名</button>
+            <button class="kd-action-btn kd-action-btn--dark">接受報名</button>
+        </div>
+    </div>
+
+<!-- 業者評分詳情 Lightbox -->
+    <div id="id1" class="w3-modal">
+        <div class="bg_close" onclick="document.getElementById('id1').style.display='none'"></div>
+        <div class="w3-modal-content w3-animate-top w3-card-4 alert-modal">
+            <!-- 關閉按鈕 -->
+            <span class="alert-close" onclick="document.getElementById('id1').style.display='none'">&times;</span>
+            <div class="modal-header">業者評分詳情</div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+
+                <!-- 綜合評分 Summary Box -->
+                <div class="rating-summary-box">
+                    <p class="rating-summary-box__label">綜合評分</p>
+                    <div class="rating-summary-box__content">
+                        <span class="rating-summary-box__score">4.8</span>
+                        <div class="rating-summary-box__stars">
+                            <div class="rating-stars">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star-half-stroke"></i>
+                            </div>
+                            <span class="rating-summary-box__count">(128) 則評論</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分項評分清單 -->
+                <ul class="rating-item-list">
+                    <li class="rating-item">
+                        <span class="rating-item__label">KOL 配合度</span>
+                        <span class="rating-item__score">
+                            <i class="fa-solid fa-star rating-item__star"></i> 4.9
+                        </span>
+                    </li>
+                    <li class="rating-item">
+                        <span class="rating-item__label">任務執行度</span>
+                        <span class="rating-item__score">
+                            <i class="fa-solid fa-star rating-item__star"></i> 4.7
+                        </span>
+                    </li>
+                    <li class="rating-item">
+                        <span class="rating-item__label">內容品質</span>
+                        <span class="rating-item__score">
+                            <i class="fa-solid fa-star rating-item__star"></i> 4.8
+                        </span>
+                    </li>
+                    <li class="rating-item">
+                        <span class="rating-item__label">溝通回應狀況</span>
+                        <span class="rating-item__score">
+                            <i class="fa-solid fa-star rating-item__star"></i> 4.6
+                        </span>
+                    </li>
+                    <li class="rating-item">
+                        <span class="rating-item__label">合作推薦度</span>
+                        <span class="rating-item__score">
+                            <i class="fa-solid fa-star rating-item__star"></i> 4.9
+                        </span>
+                    </li>
+                </ul>
+
+                <div class="alert-btns">
+                    <button class="btn-alert-cancel"
+                        onclick="document.getElementById('id1').style.display='none'">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            // 接受 / 拒絕
+            $('.kd-action-btn--dark').on('click', function () {
+                alert('已接受報名！');
+            });
+            $('.kd-action-btn--danger').on('click', function () {
+                alert('已拒絕報名！');
+            });
+        });
+    </script>
+</body>
+</html>

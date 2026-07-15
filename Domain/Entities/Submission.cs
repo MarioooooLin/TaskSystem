@@ -15,6 +15,7 @@ public class Submission
     public SubmissionStatus Status { get; set; } = SubmissionStatus.Submitted;
     public bool IsAutoApproved { get; set; }
     public string? Note { get; set; }
+    public string? RejectReason { get; set; }
 
     public DateTime ReviewDeadlineAt { get; set; }  // SubmittedAt + 14 天
     public DateTime SubmittedAt { get; set; }

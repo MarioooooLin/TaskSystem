@@ -808,6 +808,8 @@ CREATE TABLE Submissions (
     -- 1=Submitted  2=RevisionRequested  3=Approved  4=Rejected  5=Overdue  6=Disputed
     IsAutoApproved BIT NOT NULL DEFAULT 0,
     Note NVARCHAR(MAX) NULL,
+    RejectReason NVARCHAR(500) NULL,
+    -- 業者驗收不通過時填寫的拒收原因
     ReviewDeadlineAt DATETIME2 NOT NULL,
     -- SubmittedAt + 14 天，KOL 重提後重算
     SubmittedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),

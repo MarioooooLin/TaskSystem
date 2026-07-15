@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <title>任務系統-企業資料維護</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <li
+    nk rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/company-info.css" />
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content ci-main">
+            <div class="content-card">
+
+                <!-- ===== 頂部標題列 ===== -->
+                <div class="ci-top-bar">
+                    <div class="ci-top-bar__left">
+                        <h1 class="ci-page-title">企業資料維護</h1>
+                        <p class="ci-page-desc">維護公司基本資料、識別資料與聯絡窗口...</p>
+                    </div>
+                    <div class="ci-top-bar__right">
+                        <button class="ci-link-btn" id="ciAuditLogBtn">查看異動紀錄</button>
+                        <button class="ci-btn ci-btn--outline" id="ciCancelBtn">取消</button>
+                        <button class="ci-btn ci-btn--primary" id="ciSaveTopBtn">
+                            <i class="fa-solid fa-floppy-disk"></i> 儲存變更
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ===== 公司基本資訊 ===== -->
+                <div class="ci-panel">
+                    <div class="ci-panel__header">
+                        <div class="ci-panel__title">
+                            <i class="fa-solid fa-building"></i>
+                            公司基本資訊
+                        </div>
+                    </div>
+                    <div class="ci-panel__body">
+                        <div class="ci-form-grid">
+                            <div class="ci-form-group">
+                                <label class="ci-form-label">完整/創辦叫稱</label>
+                                <input type="text" class="ci-form-input" value="盛世旅遊事業股份有限公司">
+                            </div>
+                            <div class="ci-form-group">
+                                <label class="ci-form-label">英文/簡稱叫稱</label>
+                                <input type="text" class="ci-form-input" value="SS Travel Co., Ltd.">
+                            </div>
+                            <div class="ci-form-group">
+                                <label class="ci-form-label">統一編號</label>
+                                <input type="text" class="ci-form-input" value="88223344">
+                            </div>
+                            <div class="ci-form-group">
+                                <label class="ci-form-label">公司電話</label>
+                                <input type="tel" class="ci-form-input" value="02-2345-6789">
+                            </div>
+                            <div class="ci-form-group">
+                                <label class="ci-form-label">傳真</label>
+                                <input type="tel" class="ci-form-input" value="02-2345-6790">
+                            </div>
+                            <div class="ci-form-group">
+                                <label class="ci-form-label">公司信箱</label>
+                                <input type="email" class="ci-form-input" value="service@sstravel.com.tw">
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.ci-panel -->
+
+                <!-- ===== 聯絡窗口清單 ===== -->
+                <div class="ci-panel" id="ciContactPanel">
+                    <div class="ci-panel__header">
+                        <div class="ci-panel__title">
+                            <i class="fa-solid fa-user-group"></i>
+                            聯絡窗口清單
+                        </div>
+                        <button class="ci-add-btn" id="ciAddContactBtn">
+                            <i class="fa-solid fa-plus"></i> 新增聯絡人
+                        </button>
+                    </div>
+
+                    <!-- 聯絡人卡片列表 -->
+                    <div class="ci-contact-list" id="ciContactList">
+
+                        <!-- 聯絡人卡片 範本（重複） -->
+                        <div class="ci-contact-card">
+                            <div class="ci-contact-card__header">
+                                <span class="ci-contact-card__name">王小羨</span>
+                                <button class="ci-contact-card__remove"><i class="fa-solid fa-trash-can"></i> 移除</button>
+                            </div>
+                            <div class="ci-form-grid">
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">電話</label>
+                                    <input type="tel" class="ci-form-input" value="02-23456789">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">分機</label>
+                                    <input type="text" class="ci-form-input" value="101">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">手機</label>
+                                    <input type="tel" class="ci-form-input" value="0912345678">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">電子信箱</label>
+                                    <input type="email" class="ci-form-input" value="wang@example.com">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">傳真</label>
+                                    <input type="tel" class="ci-form-input" value="02-23456790">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">備註</label>
+                                    <input type="text" class="ci-form-input" value="週一至週五 09:00-18:00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ci-contact-card">
+                            <div class="ci-contact-card__header">
+                                <span class="ci-contact-card__name">王小羨</span>
+                                <button class="ci-contact-card__remove"><i class="fa-solid fa-trash-can"></i> 移除</button>
+                            </div>
+                            <div class="ci-form-grid">
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">電話</label>
+                                    <input type="tel" class="ci-form-input" value="02-23456789">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">分機</label>
+                                    <input type="text" class="ci-form-input" value="101">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">手機</label>
+                                    <input type="tel" class="ci-form-input" value="0912345678">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">電子信箱</label>
+                                    <input type="email" class="ci-form-input" value="wang@example.com">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">傳真</label>
+                                    <input type="tel" class="ci-form-input" value="02-23456790">
+                                </div>
+                                <div class="ci-form-group">
+                                    <label class="ci-form-label">備註</label>
+                                    <input type="text" class="ci-form-input" value="週一至週五 09:00-18:00">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /#ciContactList -->
+                </div><!-- /.ci-panel -->
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <!-- ===== 底部 Sticky Action Bar ===== -->
+    <div class="ci-action-bar" id="ciActionBar">
+        <div class="ci-action-bar__hint">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>上次更新於：2023-11-20 14:30:00 (Admin)</span>
+        </div>
+        <div class="ci-action-bar__right">
+            <button class="ci-btn ci-btn--outline" id="ciCancelBottomBtn">取消</button>
+            <button class="ci-btn ci-btn--primary" id="ciSaveBottomBtn">
+                <i class="fa-solid fa-floppy-disk"></i> 儲存變更
+            </button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

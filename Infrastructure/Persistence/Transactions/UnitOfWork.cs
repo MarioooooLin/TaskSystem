@@ -49,7 +49,15 @@ public sealed class UnitOfWork : IUnitOfWork
 
     public Task RollbackAsync(CancellationToken cancellationToken = default)
     {
-        _session?.Transaction?.Rollback();
+        try
+        {
+            _session?.Transaction?.Rollback();
+        }
+        catch (InvalidOperationException)
+        {
+            // Transaction 可能已經完成或處於 zombie 狀態，忽略即可
+        }
+
         return Task.CompletedTask;
     }
 

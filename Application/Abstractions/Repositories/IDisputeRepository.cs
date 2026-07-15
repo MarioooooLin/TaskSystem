@@ -18,4 +18,17 @@ public interface IDisputeRepository
     Task<DisputeSummaryDto> GetSummaryAsync(
         IDbSession session,
         CancellationToken ct = default);
+
+    Task<DisputeDetailDto?> GetDetailAsync(
+        long disputeId,
+        IDbSession session,
+        CancellationToken ct = default);
+
+    Task<bool> ResolveAsync(
+        long disputeId,
+        DisputeStatus status,
+        long resolvedByAdminId,
+        string resolutionNote,
+        IDbSession session,
+        CancellationToken ct = default);
 }

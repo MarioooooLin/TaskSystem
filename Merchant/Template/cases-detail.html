@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統-案件詳情</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/cases-detail.css" />
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="content-card cd-card">
+
+                <!-- ===== 案件標題列 ===== -->
+                <div class="cd-title-row">
+                    <div class="cd-title-row__left">
+                        <h1 class="cd-title">北投冬季住宿體驗</h1>
+                        <span class="case-status recruit">招募</span>
+                    </div>
+                    <div class="cd-title-row__actions">
+                        <a href="cases.html" class="cd-action-btn cd-action-btn--ghost">
+                            <i class="fa-solid fa-arrow-left"></i> 返回案件管理
+                        </a>
+                        <button class="cd-action-btn cd-action-btn--ghost">結束案件</button>
+                        <button class="cd-action-btn cd-action-btn--dark">查看導覽成件</button>
+                        <button class="cd-action-btn cd-action-btn--ghost">審稿案</button>
+                        <button class="cd-action-btn cd-action-btn--ghost">進行驗收</button>
+                        <button class="cd-action-btn cd-action-btn--danger">取消案件</button>
+                    </div>
+                </div>
+                <p class="cd-meta">案件編號 CASE-202605-001 ｜ 山海旅宿股份有限公司</p>
+
+                <!-- ===== 統計數字列 ===== -->
+                <div class="cd-stats">
+                    <div class="cd-stat">
+                        <span class="cd-stat__label">報名人數</span>
+                        <span class="cd-stat__value">12</span>
+                    </div>
+                    <div class="cd-stat cd-stat--progress">
+                        <span class="cd-stat__label">已接受KOL</span>
+                        <div class="cd-stat__progress-wrap">
+                            <span class="cd-stat__value">3 <span class="cd-stat__sub">/ 5</span></span>
+                            <div class="cd-stat__bar">
+                                <div class="cd-stat__bar-fill" style="width:60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cd-stat">
+                        <span class="cd-stat__label">待驗收</span>
+                        <span class="cd-stat__value">1</span>
+                    </div>
+                    <div class="cd-stat">
+                        <span class="cd-stat__label">審核處理中</span>
+                        <span class="cd-stat__value cd-stat__value--red">1</span>
+                    </div>
+                    <div class="cd-stat">
+                        <span class="cd-stat__label">已完成</span>
+                        <span class="cd-stat__value">1</span>
+                    </div>
+                    <div class="cd-stat cd-stat--budget">
+                        <span class="cd-stat__label">案件預算餘額</span>
+                        <span class="cd-stat__value cd-stat__value--budget">NT$80,000</span>
+                    </div>
+                </div>
+
+                <!-- ===== 主要佈局：左側資訊 + 右側KOL清單 ===== -->
+                <div class="cd-layout">
+
+                    <!-- ===== 左側：KOL 清單 ===== -->
+                    <div class="cd-main">
+
+                        <!-- KOL 清單標題列 -->
+                        <div class="cd-kol-header">
+                            <div class="cd-kol-header__left">
+                                <h2 class="cd-kol-title">KOL 清單與任務狀態</h2>
+                            </div>
+                            <span class="cd-kol-header__total">共 9 筆報名名單資料</span>
+                        </div>
+
+                        <!-- 篩選列 -->
+                        <div class="cd-filter-row">
+                            <div class="cd-filter-group">
+                                <span class="cd-filter-label">篩選：</span>
+                                <div class="cd-filter-select-wrap">
+                                    <select class="cd-filter-select">
+                                        <option>所有狀態</option>
+                                        <option>已完成</option>
+                                        <option>執行中</option>
+                                        <option>已報名</option>
+                                        <option>已付款</option>
+                                        <option>爭議處理中</option>
+                                        <option>未入選</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down cd-filter-arrow"></i>
+                                </div>
+                                <div class="cd-filter-select-wrap">
+                                    <select class="cd-filter-select">
+                                        <option>所有平台</option>
+                                        <option>Instagram</option>
+                                        <option>YouTube</option>
+                                        <option>Facebook</option>
+                                        <option>TikTok</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down cd-filter-arrow"></i>
+                                </div>
+                            </div>
+                            <div class="cd-filter-group">
+                                <span class="cd-filter-label">排序：</span>
+                                <div class="cd-filter-select-wrap">
+                                    <select class="cd-filter-select">
+                                        <option>更新時間（新到舊）</option>
+                                        <option>更新時間（舊到新）</option>
+                                        <option>粉絲數（高到低）</option>
+                                        <option>粉絲數（低到高）</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down cd-filter-arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KOL 表格 -->
+                        <div class="cd-table-wrap">
+                            <table class="cd-table">
+                                <thead>
+                                    <tr>
+                                        <th>KOL 名稱</th>
+                                        <th>主要平台</th>
+                                        <th>粉絲數</th>
+                                        <th>狀態</th>
+                                        <th>最近更新</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="cd-kol-name">Nene</td>
+                                        <td>Instagram</td>
+                                        <td>125K</td>
+                                        <td><span class="cd-kol-status cd-kol-status--done">已完成</span></td>
+                                        <td class="cd-date">2026-01-02</td>
+                                        <td class="cd-actions">
+                                            <button class="cd-act-btn">查看KOL資料</button>
+                                            <button class="cd-act-btn">查看報收</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cd-kol-name">小島旅行日記</td>
+                                        <td>YouTube</td>
+                                        <td>45K</td>
+                                        <td><span class="cd-kol-status cd-kol-status--progress">執行中</span></td>
+                                        <td class="cd-date">2025-12-28</td>
+                                        <td class="cd-actions">
+                                            <button class="cd-act-btn">查有KOL資料</button>
+                                            <button class="cd-act-btn cd-act-btn--primary">查看報收</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cd-kol-name">美食探險家</td>
+                                        <td>Facebook</td>
+                                        <td>88K</td>
+                                        <td><span class="cd-kol-status cd-kol-status--applied">已報名</span></td>
+                                        <td class="cd-date">2026-01-03</td>
+                                        <td class="cd-actions">
+                                            <button class="cd-act-btn cd-act-btn--dark">接受</button>
+                                            <button class="cd-act-btn">拒絕</button>
+                                            <button class="cd-act-btn">查看資料</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cd-kol-name">阿強的生活</td>
+                                        <td>TikTok</td>
+                                        <td>210K</td>
+                                        <td><span class="cd-kol-status cd-kol-status--paid">已付款</span></td>
+                                        <td class="cd-date">2026-01-04</td>
+                                        <td class="cd-actions">
+                                            <button class="cd-act-btn">查看KOL資料</button>
+                                            <button class="cd-act-btn">查看報收</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cd-kol-name">微光風景</td>
+                                        <td>Instagram</td>
+                                        <td>12K</td>
+                                        <td><span class="cd-kol-status cd-kol-status--dispute">爭議處理中</span></td>
+                                        <td class="cd-date">2026-01-01</td>
+                                        <td class="cd-actions">
+                                            <button class="cd-act-btn">查看KOL資料</button>
+                                            <button class="cd-act-btn">查看報收</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cd-kol-name">台北吃貨組</td>
+                                        <td>Facebook</td>
+                                        <td>35K</td>
+                                        <td><span class="cd-kol-status cd-kol-status--rejected">截收不堪紀</span></td>
+                                        <td class="cd-date">2026-01-02</td>
+                                        <td class="cd-actions">
+                                            <button class="cd-act-btn">查看KOL資料</button>
+                                            <button class="cd-act-btn">查看報收</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cd-kol-name">野外生存王</td>
+                                        <td>YouTube</td>
+                                        <td>1.2M</td>
+                                        <td><span class="cd-kol-status cd-kol-status--unselected">未入選</span></td>
+                                        <td class="cd-date">2025-12-20</td>
+                                        <td class="cd-actions">
+                                            <button class="cd-act-btn">查看KOL資料</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div><!-- /.cd-main -->
+
+                    <!-- ===== 右側：案件資訊 ===== -->
+                    <div class="cd-sidebar">
+
+                        <!-- 案件資訊 -->
+                        <section class="cd-section">
+                            <div class="cd-section__title">
+                                <i class="fa-solid fa-circle-info"></i> 案件資訊
+                            </div>
+                            <div class="cd-info-list">
+                                <div class="cd-info-item">
+                                    <span class="cd-info-label">案件名稱</span>
+                                    <span class="cd-info-value">北投冬季住宿體驗：頂樓著葉溫泉雙人房</span>
+                                </div>
+                                <div class="cd-info-item">
+                                    <span class="cd-info-label">地點</span>
+                                    <span class="cd-info-value">台北市北投區中山路 123 號</span>
+                                </div>
+                                <div class="cd-info-item">
+                                    <span class="cd-info-label">截止日期</span>
+                                    <div class="cd-info-dates">
+                                        <span>報名截止：2026-01-15</span>
+                                        <span>結案日期：2026-03-31</span>
+                                    </div>
+                                </div>
+                                <div class="cd-info-item">
+                                    <span class="cd-info-label">案件簡述</span>
+                                    <p class="cd-info-desc">我們誠摯邀請旅遊類 KOL 前來體驗冬季北投的溫泉魅力。本次合作重點在於展現頂級的泡湯餐飲與極致療癒的露天風呂。</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 合作條件 -->
+                        <section class="cd-section">
+                            <div class="cd-section__title">
+                                <i class="fa-regular fa-handshake"></i> 合作條件
+                            </div>
+                            <div class="cd-kv-list">
+                                <div class="cd-kv-row">
+                                    <span class="cd-kv-label">現金酬勞</span>
+                                    <span class="cd-kv-value">NT$ 15,000 / 人</span>
+                                </div>
+                                <div class="cd-kv-row">
+                                    <span class="cd-kv-label">贈驗項目</span>
+                                    <span class="cd-kv-value">一泊二食（價值 $12,000）</span>
+                                </div>
+                                <div class="cd-kv-row">
+                                    <span class="cd-kv-label">導購分潤</span>
+                                    <span class="cd-kv-value">導購 5%</span>
+                                </div>
+                            </div>
+                            <div class="cd-info-item" style="margin-top:1.2rem;">
+                                <span class="cd-info-label">KOL 條件</span>
+                                <div class="cd-tags">
+                                    <span class="cd-tag">旅宿</span>
+                                    <span class="cd-tag">生活</span>
+                                    <span class="cd-tag">粉絲數 10k+</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 交付要求 -->
+                        <section class="cd-section">
+                            <div class="cd-section__title">
+                                <i class="fa-regular fa-square-check"></i> 交付要求
+                            </div>
+                            <ul class="cd-checklist">
+                                <li class="cd-checklist__item">
+                                    <i class="fa-regular fa-square cd-checklist__icon"></i>
+                                    1x IG Reels（60s 以上）
+                                </li>
+                                <li class="cd-checklist__item">
+                                    <i class="fa-regular fa-square cd-checklist__icon"></i>
+                                    1x FB 貼文（含 5 張照片）
+                                </li>
+                                <li class="cd-checklist__item">
+                                    <i class="fa-regular fa-square cd-checklist__icon"></i>
+                                    1x TikTok 影片（原生創意）
+                                </li>
+                            </ul>
+                        </section>
+
+                        <!-- 附件 -->
+                        <section class="cd-section">
+                            <div class="cd-section__title">
+                                <i class="fa-solid fa-paperclip"></i> 附件
+                            </div>
+                            <div class="cd-file-list">
+                                <div class="cd-file-item">
+                                    <i class="fa-regular fa-file-pdf cd-file-icon"></i>
+                                    <span class="cd-file-name">飯店視覺規範.pdf</span>
+                                    <a href="#" class="cd-file-dl"><i class="fa-solid fa-download"></i></a>
+                                </div>
+                                <div class="cd-file-item">
+                                    <i class="fa-regular fa-file-word cd-file-icon"></i>
+                                    <span class="cd-file-name">合約模板_v2.docx</span>
+                                    <a href="#" class="cd-file-dl"><i class="fa-solid fa-download"></i></a>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div><!-- /.cd-sidebar -->
+
+                </div><!-- /.cd-layout -->
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            // 篩選器變更（可日後串接 API）
+            $('.cd-filter-select').on('change', function () {
+                // TODO: 篩選 KOL 清單
+            });
+        });
+    </script>
+
+</body>
+</html>

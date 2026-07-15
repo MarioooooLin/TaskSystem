@@ -1,0 +1,191 @@
+@model Admin.ViewModels.Dispute.DisputeDetailViewModel
+@using Domain.Enums
+@{
+    var d = Model.Detail;
+    var isResolved = d.Status is DisputeStatus.ResolvedForMerchant
+        or DisputeStatus.ResolvedForKol
+        or DisputeStatus.ResolvedCompromise
+        or DisputeStatus.Cancelled;
+
+    string StatusText(DisputeStatus s) => s switch
+    {
+        DisputeStatus.Open => "待處理",
+        DisputeStatus.UnderReview => "處理中",
+        DisputeStatus.ResolvedForMerchant => "維持業者",
+        DisputeStatus.ResolvedForKol => "改判 KOL",
+        DisputeStatus.ResolvedCompromise => "協議結案",
+        DisputeStatus.Cancelled => "已取消",
+        _ => "—"
+    };
+
+    string StatusCss(DisputeStatus s) => s switch
+    {
+        DisputeStatus.Open => "ob-status ob-status--pending",
+        DisputeStatus.UnderReview => "ob-status ob-status--processing",
+        DisputeStatus.ResolvedForMerchant or DisputeStatus.ResolvedForKol or DisputeStatus.ResolvedCompromise or
+DisputeStatus.Cancelled => "ob-status ob-status--closed",
+        _ => "ob-status"
+    };
+}
+
+<div class="ob-di-meta">
+    <div class="ob-di-meta__item">
+        <span class="ob-di-meta__label">異議編號</span>
+        <strong class="ob-di-meta__value">@d.DisputeNo</strong>
+    </div>
+    <div class="ob-di-meta__item">
+        <span class="ob-di-meta__label">異議類型</span>
+        <span class="ob-di-meta__value">@d.DisputeType</span>
+    </div>
+    <div class="ob-di-meta__item">
+        <span class="ob-di-meta__label">異議狀態</span>
+        <span class="ob-di-meta__value"><span class="@StatusCss(d.Status)">@StatusText(d.Status)</span></span>
+    </div>
+</div>
+
+<section class="ob-di-section">
+    <h3 class="ob-di-section__title"><i class="fa-regular fa-address-book"></i> 雙方聯絡方式</h3>
+    <div class="ob-di-contact-grid">
+        <div class="ob-di-contact-card">
+            <p class="ob-di-contact-card__heading"><i class="fa-solid fa-building"></i> 業者：@d.MerchantName</p>
+            <ul class="ob-di-contact-list">
+                <li><span class="ob-di-contact-label">主要聯絡人</span>@(string.IsNullOrEmpty(d.MerchantContact.Name) ? "—" :
+                                                                                d.MerchantContact.Name)</li>
+                    <li><span class="ob-di-contact-label">市話</span>@(string.IsNullOrEmpty(d.MerchantContact.Phone) ? "—" :
+                                                                                            d.MerchantContact.Phone)</li>
+                        <li><span class="ob-di-contact-label">手機</span>@(string.IsNullOrEmpty(d.MerchantContact.Mobile) ? "—" :
+                                                                                                        d.MerchantContact.Mobile)</li>
+                            <li><span class="ob-di-contact-label">Email</span>@(string.IsNullOrEmpty(d.MerchantContact.Email) ? "—"                    : d.MerchantContact.Email)</li>
+                        </ul>
+                    </div>
+                    <div class="ob-di-contact-card">
+                        <p class="ob-di-contact-card__heading"><i class="fa-solid fa-user"></i> KOL：@(d.KolName ?? "—")</p>
+                        <ul class="ob-di-contact-list">
+                            <li><span class="ob-di-contact-label">手機</span>@(string.IsNullOrEmpty(d.KolContact.Mobile) ? "—" :
+                                                                                                                    d.KolContact.Mobile)</li>
+                                <li><span class="ob-di-contact-label">Email</span>@(string.IsNullOrEmpty(d.KolContact.Email) ? "—" :
+                                                                                                                                d.KolContact.Email)</li>
+                                    <li><span class="ob-di-contact-label">LINE</span><span
+                                        class="ob-di-line-badge">@(string.IsNullOrEmpty(d.KolContact.LineStatus) ? "未綁定" : "已綁定")</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="ob-di-section">
+                        <h3 class="ob-di-section__title"><i class="fa-regular fa-file-lines"></i> 內容詳情</h3>
+                        <div class="ob-di-summary-row">
+                            <span class="ob-di-field-label">案件與任務摘要</span>
+                            <p class="ob-di-summary-text">@d.CaseSummary</p>
+                        </div>
+                        <div class="ob-di-detail-grid">
+                            <div class="ob-di-field">
+                                <span class="ob-di-field-label">業者交付要求</span>
+                                <p class="ob-di-field-value">@(string.IsNullOrWhiteSpace(d.MerchantRequirement) ? "—" :
+                                                                                                                            d.MerchantRequirement)</p>
+                                </div>
+                                <div class="ob-di-field">
+                                    <span class="ob-di-field-label">KOL 交付內容</span>
+                                    <p class="ob-di-field-value">
+                                        @if (string.IsNullOrWhiteSpace(d.KolSubmission) && !d.KolSubmissionItems.Any())
+                                        {
+                                            <text>—</text>
+                                        }
+                                        else
+                                        {
+                                            @if (!string.IsNullOrWhiteSpace(d.KolSubmission))
+                                            {
+                                                <span>@d.KolSubmission</span>
+                                            }
+                                            @if (d.KolSubmissionItems.Any())
+                                            {
+                                                <span class="ob-di-link-badges">
+                                                    @foreach (var item in d.KolSubmissionItems.Where(i => !string.IsNullOrEmpty(i.Url)))
+                                                    {
+                                                        <a href="@item.Url" target="_blank" rel="noopener" class="ob-di-link-badge">
+                                                            <i class="fa-solid fa-arrow-up-right-from-square"></i> 開啟連結
+                                                        </a>
+                                                    }
+                                                </span>
+                                            }
+                                        }
+                                    </p>
+                                </div>
+                                <div class="ob-di-field">
+                                    <span class="ob-di-field-label">業者拒收原因</span>
+                                    <p class="ob-di-field-value">@(string.IsNullOrWhiteSpace(d.MerchantRejectionReason) ? "—" :
+                                                                                                                                        d.MerchantRejectionReason)</p>
+                                    </div>
+                                    <div class="ob-di-field">
+                                        <span class="ob-di-field-label">KOL 異議內容</span>
+                                        <p class="ob-di-field-value">@(string.IsNullOrWhiteSpace(d.KolDisputeReason) ? "—" : d.KolDisputeReason)</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="ob-di-section">
+                                <h3 class="ob-di-section__title"><i class="fa-regular fa-clock"></i> 處理紀錄</h3>
+                                @if (d.Timeline.Any())
+                                {
+                                    <ul class="ob-di-timeline">
+                                        @for (var i = 0; i < d.Timeline.Count; i++)
+                                        {
+                                            var item = d.Timeline[i];
+                                            <li class="ob-di-timeline__item">
+                                                <span class="ob-di-timeline__dot @(item.IsCurrent ? "ob-di-timeline__dot--current" : "")"></span>
+                                                <div class="ob-di-timeline__content">
+                                                    <time class="ob-di-timeline__time">@item.CreatedAt.ToString("yyyy-MM-dd HH:mm")</time>
+                                                    <p class="ob-di-timeline__text">@item.Text</p>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p class="ob-di-empty">尚無處理紀錄。</p>
+                                }
+                            </section>
+
+                            <section class="ob-di-section">
+                                <h3 class="ob-di-section__title"><i class="fa-solid fa-sliders"></i> 平台處理操作</h3>
+                                <form id="resolve-dispute-form" method="post" asp-action="Resolve" asp-controller="Dispute"
+                                      hx-post="@Url.Action("Resolve", "Dispute")" hx-target="#obDrawer" hx-swap="innerHTML">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="DisputeId" value="@d.DisputeId" />
+                                    <div class="ob-di-form">
+                                        <div class="ob-di-form__field">
+                                            <label class="ob-di-form__label" asp-for="Resolve.Resolution">處理結果 <span
+                                                class="ob-di-required">*</span></label>
+                                                <div class="filter-select-wrap">
+                                                    <select class="filter-select" asp-for="Resolve.Resolution" disabled="@isResolved">
+                                                        <option value="">請選擇處理結果</option>
+                                                        <option value="@((int)DisputeStatus.ResolvedForKol)">判定 KOL 交付成果無明顯問題並結案</option>
+                                                        <option value="@((int)DisputeStatus.ResolvedForMerchant)">判定業者拒收理由成立，KOL 需重新交付</option>
+                                                        <option value="@((int)DisputeStatus.ResolvedCompromise)">雙方各退一步，協商補充修正後結案</option>
+                                                        <option value="@((int)DisputeStatus.UnderReview)">移轉人工審核</option>
+                                                    </select>
+                                                    <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                                                </div>
+                                                <span asp-validation-for="Resolve.Resolution" class="text-danger"></span>
+                                            </div>
+                                            <div class="ob-di-form__field">
+                                                <label class="ob-di-form__label" asp-for="Resolve.ResolutionNote">平台處理意見 <span
+                                                    class="ob-di-required">*</span></label>
+                                                    <textarea class="ob-di-form__textarea" rows="4" asp-for="Resolve.ResolutionNote"
+                                                              placeholder="請輸入判定理由與處理意見..." disabled="@isResolved"></textarea>
+                                                    <span asp-validation-for="Resolve.ResolutionNote" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            @if (!isResolved)
+                                            {
+                                                <div class="ob-di-form__actions" style="margin-top:1.2rem; display:flex; gap:1rem; justify-content:flex-end;">
+                                                    <button class="ob-drawer__btn-save" type="button" disabled><i class="fa-regular fa-floppy-disk"></i>
+                                                        儲存處理紀錄</button>
+                                                        <button class="ob-drawer__btn-confirm btn-primary" type="submit"><i class="fa-solid fa-check"></i>
+                                                            確認處理結果</button>
+                                                        </div>
+                                                    }
+                                                </form>
+                                            </section>

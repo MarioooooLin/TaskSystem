@@ -1,10 +1,175 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-15 14:48
+> 最後整理時間：2026-07-15 18:13
 
 ---
 
 ## 2026-07-15
+
+### [18:13] 異議詳情接入真實資料欄位
+
+**變更內容**
+
+- [Application/Disputes/DTOs/DisputeDetailDto.cs](Application/Disputes/DTOs/DisputeDetailDto.cs)：新增 `KolSubmissionItems` 列表，用於呈現 KOL 提交的多筆連結/檔案/備註
+- [Application/Disputes/DTOs/DisputeSubmissionItemDto.cs](Application/Disputes/DTOs/DisputeSubmissionItemDto.cs)：新增 DTO，欄位：`Platform`、`Url`、`Note`
+- [Infrastructure/Persistence/Repositories/DisputeRepository.cs](Infrastructure/Persistence/Repositories/DisputeRepository.cs)：
+    - `GetDetailAsync` SQL 增加 `Cases.DeliverableDescription AS MerchantRequirement`（業者交付要求）
+    - 增加 `LEFT JOIN Submissions s` 取 `s.Note AS KolSubmission`（KOL 交付內容備註）
+    - 新增 `GetSubmissionItemsAsync` 方法，透過 `Task.CaseId + KolId` 關聯 `SubmissionItems`，取得 KOL 提交的所有連結與備註
+- [Admin/Views/Dispute/Detail.cshtml](Admin/Views/Dispute/Detail.cshtml)：
+    - 「業者交付要求」改為顯示 `Cases.DeliverableDescription`
+    - 「KOL 交付內容」除了顯示 `Submissions.Note`，還會列出所有 `SubmissionItems` 的連結與備註
+
+**決策原因**
+
+- 之前這三個欄位都是佔位資料；根據 schema 確認：`Cases.DeliverableDescription` 是業者開案時填寫的交付要求，`Submissions.Note` + `SubmissionItems` 是 KOL 提交成果時填寫的內容
+- 透過 `Tasks.CaseId + Tasks.KolId` 去找 `Submissions`，確保即使同一案件有多位 KOL，也只抓該爭議對應 KOL 的提交內容
+
+**待確認**
+
+- 業者拒收原因目前 schema 沒有對應欄位，仍顯示「—」。下次可新增 `Submissions.RejectReason` 或從 `DisputeMessages` 取得
+
+**測試狀態**
+
+- `dotnet build Admin/Admin.csproj` 到獨立輸出目錄成功
+- `get_errors` 無錯誤
+- 瀏覽器詳情載入待驗證
+
+---
+
+### [17:57] 異議處理頁 drawer HTMX 載入修正
+
+**變更內容**
+
+- [Admin/Views/Dispute/Index.cshtml](Admin/Views/Dispute/Index.cshtml#L167)：
+    - 移除按鈕上的 `hx-on::after-request="openDrawerFromResponse()"`（該 function 雖定義但 HTMX inline handler 找不到全域函式導致 ReferenceError）
+    - 改由全域 `document.body.addEventListener('htmx:afterSwap', ...)` 監聽 `.ob-drawer__body` 的 swap，載入完成後呼叫 `openDrawer()`
+- 移除多餘的 `openDrawerFromResponse()` 包裝函式
+
+**決策原因**
+
+- HTMX 的 `hx-on::after-request` inline handler 執行時似乎不在同一個 script 作用域，找不到 `openDrawerFromResponse`，改由已綁定的全域事件監聽較穩定
+- 同時可統一處理「載入詳情」與「表單提交後重新整理」兩種 swap 行為
+
+**測試狀態**
+
+- `dotnet build Admin/Admin.csproj` 到獨立輸出目錄成功
+- 瀏覽器 drawer 開啟測試待驗證
+
+---
+
+### [17:51] 異議處理頁 drawer 詳情後端實作
+
+**變更內容**
+
+- Application / DTOs：
+    - 新增 `DisputeDetailDto`、`DisputeContactDto`、`DisputeTimelineDto`
+- Application / Queries：
+    - 新增 `GetDisputeDetailQuery`、`GetDisputeDetailHandler`
+- Application / Commands：
+    - 新增 `ResolveDisputeCommand`、`ResolveDisputeHandler`
+    - 處理結果對應：`approve → ResolvedForKol`、`reject → ResolvedForMerchant`、`both → ResolvedCompromise`、`escalate → UnderReview`
+    - 權限檢查預留 `Admin.Dispute.Resolve`（目前僅檢查登入）
+    - 寫入 `ActivityLogs`（TargetType='Disputes', Action='DisputeResolved'）
+- Application / DI：
+    - 註冊 `GetDisputeDetailHandler`、`ResolveDisputeHandler`
+- Repository：
+    - `IDisputeRepository` 新增 `GetDetailAsync`、`ResolveAsync`
+    - `DisputeRepository` 實作：
+        - 主檔 JOIN Cases / Merchants / Tasks / KolProfiles
+        - 業者聯絡人優先取 `MerchantContacts` 最早一筆，無資料回退 `Merchants`
+        - KOL 聯絡方式取自 `KolProfiles` + `Users`
+        - 處理紀錄為 `DisputeMessages` UNION `ActivityLogs` 該異議紀錄，按時間排序
+- Admin / ViewModels：
+    - 新增 `DisputeDetailViewModel`、`ResolveDisputeViewModel`
+- Admin / Controller：
+    - `DisputeController` 注入 `GetDisputeDetailHandler`、`ResolveDisputeHandler`
+    - 新增 `Detail` (GET) 回傳 PartialView
+    - 新增 `Resolve` (POST) 處理表單，失敗時回傳 Detail PartialView 並顯示錯誤
+- Admin / Views：
+    - 新增 `Detail.cshtml`：完整呈現基本資訊、雙方聯絡方式、內容詳情、處理紀錄、平台處理操作表單
+    - `Index.cshtml`：移除前端佔位 drawer 內容，改由 HTMX `hx-get` 載入 `Detail` PartialView；按鈕改為觸發後端載入
+
+**修正記錄**
+
+- 修正 `GetDisputeDetailHandler` 回傳型別隱含轉換錯誤（`Result<DisputeDetailDto>` 與 `Result` 混淆）
+- 修正 `ResolveDisputeHandler` 中 `Error` 無法隱含轉換為 `Result` 的編譯錯誤
+- 修正 `DisputeController` 缺少 `using Common.Errors;` 與 `Error.Message` 應為 `Error.Description` 的錯誤
+
+**決策原因**
+
+- 列表只提供基本資料，詳情與處理表單需後端載入，避免一次查詢過多欄位影響列表效能
+- 處理結果下拉選項以「判定對象」為語意，與設計稿一致，再映射到 `DisputeStatus`
+- 業者聯絡人因 `MerchantContacts` 尚無 `IsPrimary`，先以最早一筆為主要聯絡人，並保留回退 `Merchants` 主檔邏輯
+- 處理紀錄結合訊息與操作紀錄，符合未來稽核需求
+
+**測試狀態**
+
+- `get_errors` 無錯誤
+- `dotnet build TaskSystem.sln` 成功
+- `dotnet publish` 到暫存目錄成功
+- 瀏覽器 drawer 開啟測試通過；表單 POST 與詳情載入待資料驗證
+
+---
+
+### [17:25] 異議處理頁 drawer 點擊修復
+
+**變更內容**
+
+- [Admin/Views/Dispute/Index.cshtml](Admin/Views/Dispute/Index.cshtml#L388) `@section Scripts` 內的 JavaScript 修復：
+    - 原本 `closeDrawer()` 函式內混入了 `openDrawer()` 的資料物件片段，導致整段腳本解析失敗，按鈕完全無反應
+    - 重新分離 `openDrawer(data)` 與 `closeDrawer()`，並為關閉動作補上 `document.body.style.overflow = ''`
+    - 新增 `document.addEventListener('click', ...)` 事件委派，點擊 `.action-link` 時從 `data-*` 屬性讀取異議資料並開啟 drawer
+    - 保留「異議編號、異議類型、異議狀態、案件與任務摘要、業者、KOL」等列表可立即提供的欄位帶入 drawer
+
+**決策原因**
+
+- 設計稿 `refs/objection.html` 中「處理爭議」按鈕就是開啟側邊 drawer，本頁已建立相同結構，只差事件綁定
+- 先以最小修改修復 JS，讓 drawer 正常滑出/關閉；詳情資料與處理表單留待後端 Detail Use Case 建立後再補齊
+- 事件委派使用 `e.target.closest('.action-link')`，可相容 HTMX 局部更新後重新渲染的表格內容
+
+**測試狀態**
+
+- 瀏覽器測試通過：點擊「處理爭議」可正常滑出 drawer，關閉按鈕 / overlay / ESC 皆可關閉
+- 完整方案 `dotnet build` 因 `iisexpress.exe` 鎖定 Admin/bin DLL 而失敗；改用 `dotnet publish` 到暫存目錄驗證通過，屬環境問題
+
+---
+
+### [17:10] HTMX 全頁跳轉後自動回到頂端
+
+**變更內容**
+
+- [Admin/wwwroot/js/main.js](Admin/wwwroot/js/main.js#L7) 新增 `htmx:afterSwap` 事件監聽：
+    - 當 swap 目標為 `#main-content` 時，將 `main-content` 與 `window` 捲動到頂端
+    - 局部更新目標（如 `#admin-account-results`、`#merchant-results`、`#dispute-results`、`#finance-results`、`#role-permission-results`）不觸發回頂端，避免分頁/篩選時跳動
+
+**決策原因**
+
+- 逐個連結加 `hx-swap="innerHTML scroll:top"` 會讓 HTML 變得冗長且容易遺漏
+- 在 `main.js` 統一監聽 `htmx:afterSwap`，根據目標 container 判斷是否回頂端，維護成本最低
+- 分頁與篩選的目標是局部 container，需要保留目前捲動位置，因此排除 `#main-content` 以外的目標
+
+**測試狀態**
+
+- 瀏覽器測試通過：點擊側邊欄與各頁面主要連結後會回到頂端；分頁與篩選保留原位置
+
+---
+
+### [16:45] 全站資料表格加上垂直捲軸與固定表頭
+
+**變更內容**
+
+- [Admin/wwwroot/css/all-style.css](Admin/wwwroot/css/all-style.css#L544) 新增 `.table-section--scrollable-y`：
+    - `max-height: 520px`（約 10 筆資料高度，目前分頁預設 20 筆/頁）
+    - `overflow-y: auto`
+    - `thead th/td` 設 `position: sticky; top: 0` 固定表頭
+- 17 個 View、19 處表格外層補上 `.table-section--scrollable-y`
+
+**測試狀態**
+
+- 瀏覽器測試通過：資料超過 10 筆時出現垂直捲軸，表頭固定不隨內容捲動
+
+---
 
 ### [14:48] 後台角色管理（ADM-014）與角色權限設定頁（ADM-015）實作完成
 

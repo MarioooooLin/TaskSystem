@@ -106,7 +106,10 @@ CREATE TABLE KolReviewEvents (
     CONSTRAINT FK_KolReviewEvents_Kol FOREIGN KEY (KolId) REFERENCES KolProfiles(Id),
     CONSTRAINT FK_KolReviewEvents_Actor FOREIGN KEY (ActorUserId) REFERENCES Users(Id),
     CONSTRAINT CK_KolReviewEvents_Action CHECK (ActionType IN (1, 2, 3, 4)),
-    CONSTRAINT CK_KolReviewEvents_FromStatus CHECK (FromStatus IS NULL OR FromStatus IN (1, 2, 3, 4)),
+    CONSTRAINT CK_KolReviewEvents_FromStatus CHECK (
+        FromStatus IS NULL
+        OR FromStatus IN (1, 2, 3, 4)
+    ),
     CONSTRAINT CK_KolReviewEvents_ToStatus CHECK (ToStatus IN (1, 2, 3, 4))
 );
 CREATE TABLE KolCategories (
@@ -222,7 +225,10 @@ CREATE TABLE KolTaxProfiles (
     CONSTRAINT FK_KolTaxProfiles_Admin FOREIGN KEY (VerifiedByAdminId) REFERENCES Users(Id),
     CONSTRAINT UQ_KolTaxProfiles_Kol UNIQUE (KolId),
     CONSTRAINT CK_KolTaxProfiles_IdentityType CHECK (IdentityType IN (1, 2)),
-    CONSTRAINT CK_KolTaxProfiles_ResidencyType CHECK (ResidencyType IS NULL OR ResidencyType IN (1, 2, 3)),
+    CONSTRAINT CK_KolTaxProfiles_ResidencyType CHECK (
+        ResidencyType IS NULL
+        OR ResidencyType IN (1, 2, 3)
+    ),
     CONSTRAINT CK_KolTaxProfiles_Status CHECK (Status IN (1, 2, 3))
 );
 -- ================================================================
@@ -758,6 +764,8 @@ CREATE TABLE Submissions (
     -- 1=Submitted  2=RevisionRequested  3=Approved  4=Rejected  5=Overdue  6=Disputed
     IsAutoApproved BIT NOT NULL DEFAULT 0,
     Note NVARCHAR(MAX) NULL,
+    RejectReason NVARCHAR(500) NULL,
+    -- 業者驗收不通過時填寫的拒收原因
     ReviewDeadlineAt DATETIME2 NOT NULL,
     -- SubmittedAt + 14 天，KOL 重提後重算
     SubmittedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -941,11 +949,20 @@ CREATE TABLE NotificationPreferences (
     CONSTRAINT CK_NotificationPreferences_OwnerType CHECK (OwnerType IN (1, 2)),
     CONSTRAINT CK_NotificationPreferences_Channel CHECK (Channel IN (1, 2, 3)),
     CONSTRAINT CK_NotificationPreferences_Owner CHECK (
-        (OwnerType = 1 AND OwnerUserId IS NOT NULL AND MerchantId IS NULL)
-        OR (OwnerType = 2 AND MerchantId IS NOT NULL AND OwnerUserId IS NULL)
+        (
+            OwnerType = 1
+            AND OwnerUserId IS NOT NULL
+            AND MerchantId IS NULL
+        )
+        OR (
+            OwnerType = 2
+            AND MerchantId IS NOT NULL
+            AND OwnerUserId IS NULL
+        )
     ),
     CONSTRAINT CK_NotificationPreferences_Mandatory CHECK (
-        IsMandatory = 0 OR IsEnabled = 1
+        IsMandatory = 0
+        OR IsEnabled = 1
     )
 );
 -- ================================================================
@@ -988,9 +1005,11 @@ CREATE INDEX IX_Notifications_UserId ON Notifications (UserId);
 CREATE INDEX IX_Notifications_Unread ON Notifications (UserId, ReadAt)
 WHERE ReadAt IS NULL;
 CREATE UNIQUE INDEX UX_NotificationPreferences_User ON NotificationPreferences (OwnerUserId, EventType, Channel)
-WHERE OwnerType = 1 AND OwnerUserId IS NOT NULL;
+WHERE OwnerType = 1
+    AND OwnerUserId IS NOT NULL;
 CREATE UNIQUE INDEX UX_NotificationPreferences_Merchant ON NotificationPreferences (MerchantId, EventType, Channel)
-WHERE OwnerType = 2 AND MerchantId IS NOT NULL;
+WHERE OwnerType = 2
+    AND MerchantId IS NOT NULL;
 CREATE INDEX IX_NotificationPreferences_OwnerType ON NotificationPreferences (OwnerType, EventType);
 CREATE INDEX IX_MerchantWalletTx_Merchant ON MerchantWalletTransactions (MerchantId);
 CREATE INDEX IX_MerchantCreditWallets_Merchant ON MerchantCreditWallets (MerchantId);
@@ -998,18 +1017,53 @@ CREATE INDEX IX_MerchantCreditTx_Merchant ON MerchantCreditTransactions (Merchan
 CREATE INDEX IX_MerchantCreditTx_Case ON MerchantCreditTransactions (RelatedCaseId)
 WHERE RelatedCaseId IS NOT NULL;
 CREATE INDEX IX_MerchantCreditTx_Expired ON MerchantCreditTransactions (ExpiredAt)
-WHERE ExpiredAt IS NOT NULL AND Status = 2;
+WHERE ExpiredAt IS NOT NULL
+    AND Status = 2;
 CREATE INDEX IX_Disputes_CaseId ON Disputes (CaseId);
 CREATE INDEX IX_MerchantContacts_MerchantId ON MerchantContacts (MerchantId);
-
 -- ================================================================
 -- 15. 預設系統參數
 -- ================================================================
 INSERT INTO SystemSettings ([Key], Value, ValueType, [Group], Description)
-VALUES
-('case_opening_fee_amount', '1000', 'number', 'case_fee', N'案件固定開案費；案件發布預估凍結金額使用'),
-('kol_service_fee_rate', '0', 'percent', 'case_fee', N'KOL 服務費率；案件發布預估凍結金額使用'),
-('affiliate_platform_commission_rate', '0', 'percent', 'commission', N'導購平台抽成比例；平台固定保留此比例'),
-('affiliate_kol_min_commission_rate', '0', 'percent', 'commission', N'KOL 最低分潤比例；與平台抽成比例合計為業者佣金最低比例'),
-('case_auto_execution_threshold_rate', '50', 'percent', 'case', N'案件自動執行門檻；招募截止時錄取人數需達預計招募人數比例'),
-('kol_payout_min_amount', '1000', 'number', 'payout', N'KOL 最低提領門檻；金額需 >= 此值才可提領');
+VALUES (
+        'case_opening_fee_amount',
+        '1000',
+        'number',
+        'case_fee',
+        N'案件固定開案費；案件發布預估凍結金額使用'
+    ),
+    (
+        'kol_service_fee_rate',
+        '0',
+        'percent',
+        'case_fee',
+        N'KOL 服務費率；案件發布預估凍結金額使用'
+    ),
+    (
+        'affiliate_platform_commission_rate',
+        '0',
+        'percent',
+        'commission',
+        N'導購平台抽成比例；平台固定保留此比例'
+    ),
+    (
+        'affiliate_kol_min_commission_rate',
+        '0',
+        'percent',
+        'commission',
+        N'KOL 最低分潤比例；與平台抽成比例合計為業者佣金最低比例'
+    ),
+    (
+        'case_auto_execution_threshold_rate',
+        '50',
+        'percent',
+        'case',
+        N'案件自動執行門檻；招募截止時錄取人數需達預計招募人數比例'
+    ),
+    (
+        'kol_payout_min_amount',
+        '1000',
+        'number',
+        'payout',
+        N'KOL 最低提領門檻；金額需 >= 此值才可提領'
+    );

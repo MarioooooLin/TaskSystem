@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <title>任務系統-新增成員</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/add-user.css" />
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content au-main">
+            <div class="content-card">
+
+                <!-- ===== 麵包屑 ===== -->
+                <nav class="au-breadcrumb">
+                    <a href="settings.html">設置</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <a href="permission.html">成員管理</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span class="au-breadcrumb__current">新增成員</span>
+                </nav>
+
+                <!-- ===== 頂部標題列 ===== -->
+                <div class="au-top-bar">
+                    <h1 class="au-page-title">新增成員</h1>
+                    <a href="permission.html" class="au-back-btn">
+                        <i class="fa-solid fa-arrow-left"></i> 返回列表
+                    </a>
+                </div>
+
+                <!-- ===== 主內容雙欄佈局 ===== -->
+                <div class="au-layout">
+
+                    <!-- ===== 左欄：邀請表單 ===== -->
+                    <div class="au-form-panel">
+
+                        <!-- Tab 標籤 -->
+                        <div class="au-tabs">
+                            <button class="au-tab active" id="auTabSingle">單一邀請</button>
+                        </div>
+
+                        <!-- 表單內容 -->
+                        <div class="au-form-body">
+
+                            <!-- 姓名 + 電子郵件（2欄） -->
+                            <div class="au-form-row">
+                                <div class="au-form-group" style="margin-bottom:0;">
+                                    <label class="au-label" for="auName">姓名</label>
+                                    <input type="text" class="au-input" id="auName" placeholder="例如：王小明">
+                                </div>
+                                <div class="au-form-group" style="margin-bottom:0;">
+                                    <label class="au-label" for="auEmail">電子郵件</label>
+                                    <input type="email" class="au-input" id="auEmail" placeholder="example@merchantcorp.com">
+                                </div>
+                            </div>
+
+                            <!-- 角色設定 -->
+                            <div class="au-form-group">
+                                <label class="au-label" for="auRole">預設角色設定</label>
+                                <div class="au-select-wrap">
+                                    <select class="au-select" id="auRole">
+                                        <option value="member">一般成員（Member）</option>
+                                        <option value="admin">管理員（Admin）</option>
+                                        <option value="owner">擁有者（Owner）</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                                <p class="au-role-desc" id="auRoleDesc">一般成員僅能瀏覽案件，無法修改系統設定或管理其他成員。</p>
+                            </div>
+
+                            <!-- 送出按鈕 -->
+                            <div class="au-form-footer">
+                                <button class="au-submit-btn" id="auSubmitBtn">
+                                    <i class="fa-solid fa-paper-plane"></i> 發送邀請
+                                </button>
+                            </div>
+
+                        </div><!-- /.au-form-body -->
+                    </div><!-- /.au-form-panel -->
+
+                    <!-- ===== 右欄：說明 + 狀態 ===== -->
+                    <div class="au-side-panels">
+
+                        <!-- 邀請說明 -->
+                        <div class="au-info-panel">
+                            <div class="au-info-panel__header">
+                                <h2 class="au-info-panel__title">邀請說明</h2>
+                                <div class="au-info-panel__icon">
+                                    <i class="fa-regular fa-envelope"></i>
+                                </div>
+                            </div>
+                            <ol class="au-steps">
+                                <li class="au-step">
+                                    <span class="au-step__num">01</span>
+                                    <p class="au-step__desc">受邀成員將透過您輸入的電子郵件，收到系統自動發出的<strong>帳號開通邀請函</strong>。</p>
+                                </li>
+                                <li class="au-step">
+                                    <span class="au-step__num">02</span>
+                                    <p class="au-step__desc">成員須在 <strong>48 小時內</strong>點擊信中連結，完成<strong>個人密碼設定</strong>。</p>
+                                </li>
+                                <li class="au-step">
+                                    <span class="au-step__num">03</span>
+                                    <p class="au-step__desc">設定完成後，成員即可正式登入並依照預設角色開始協作。</p>
+                                </li>
+                            </ol>
+                            <div class="au-tip">
+                                <p>提示：若成員未收到信件，請確認信箱地址是否正確，或於成員管理列表點擊「<strong>重新發送邀請</strong>」。</p>
+                            </div>
+                        </div>
+
+                        <!-- 系統狀態預覽 -->
+                        <div class="au-status-panel">
+                            <h3 class="au-status-panel__title">系統狀態預覽</h3>
+                            <ul class="au-status-list">
+                                <li class="au-status-item">
+                                    <div class="au-status-item__left">
+                                        <span class="au-status-item__dot"></span>
+                                        <div class="au-status-item__info">
+                                            <span class="au-status-item__name">郵件伺服器</span>
+                                            <span class="au-status-item__sub">已穩定運送郵件</span>
+                                        </div>
+                                    </div>
+                                    <i class="fa-regular fa-circle-check au-status-item__ok"></i>
+                                </li>
+                                <li class="au-status-item">
+                                    <div class="au-status-item__left">
+                                        <span class="au-status-item__dot"></span>
+                                        <div class="au-status-item__info">
+                                            <span class="au-status-item__name">可用席位</span>
+                                            <span class="au-status-item__sub">尚餘 12 個名額</span>
+                                        </div>
+                                    </div>
+                                    <span class="au-status-item__count">12/20</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div><!-- /.au-side-panels -->
+                </div><!-- /.au-layout -->
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

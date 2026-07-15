@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <title>任務報名表</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/all-style.css">
+</head>
+<body>
+    <header class="top-bar"></header>
+    <script>
+        $('header').load('header.html');
+    </script>
+
+    <main class="page-shell signup-shell">
+        <section class="su-card su-mission-card">
+            <div class="su-mission-head">
+                <span class="su-deadline-chip"><i class="fa-solid fa-hourglass-half"></i>截止日期：2026-06-10</span>
+                <h2 class="su-title">北投冬季住宿體驗</h2>
+            </div>
+
+            <div class="su-sub-block">
+                <p class="su-sub-title"><i class="fa-regular fa-rectangle-list" aria-hidden="true"></i> 交付成品</p>
+                <ul class="su-bullets">
+                    <li>IG Reels 1 支</li>
+                    <li>FB 圖文 1 則</li>
+                    <li>TikTok 短影音 1 支</li>
+                </ul>
+            </div>
+
+            <div class="su-sub-block su-reward-block">
+                <p class="su-sub-title"><i class="fa-solid fa-hand-holding-dollar" aria-hidden="true"></i> 任務獎勵</p>
+                <p class="su-reward-main">免費雙人溫泉住宿 1 晚</p>
+                <p class="su-reward-line">合作費 NT$10,000</p>
+                <p class="su-reward-line">導購分潤 12%</p>
+            </div>
+        </section>
+
+        <section class="su-card su-intro-card">
+            <h2 class="su-intro-title">KOL自我推薦 <span>(必填)</span></h2>
+            <label for="kolIntro" class="sr-only">KOL 自我推薦內容</label>
+            <textarea id="kolIntro" class="su-textarea" placeholder="請簡述你的內容風格、過往旅宿或觀光合作經驗，以及你會如何完成這次任務。"></textarea>
+            <p class="su-length-hint">建議長度：200 - 500 字</p>
+        </section>
+    </main>
+
+    <section class="su-action-bar" aria-label="頁面操作">
+        <a class="su-btn su-btn--ghost" href="mission-detail.html">回任務明細</a>
+        <button class="su-btn su-btn--disabled" type="button" disabled>送出報名<i class="fa-solid fa-arrow-right"></i></button>
+    </section>
+
+    <nav class="bottom-nav" aria-label="主要功能選單"></nav>
+    <script>
+        $('nav.bottom-nav').load('nav.html', function () {
+            var $items = $(this).find('.bottom-item');
+            $items.removeClass('is-active').removeAttr('aria-current');
+            $items.eq(1).addClass('is-active').attr('aria-current', 'page');
+        });
+    </script>
+</body>
+</html>

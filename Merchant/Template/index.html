@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統-首頁</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>
+        $('header').load('header.html');
+    </script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>
+        $('aside.sidebar').load('sidebar.html');
+    </script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>
+            $('.sub-header').load('sub-header.html');
+        </script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="content-card">
+
+                <!-- FINANCIAL SUMMARY -->
+                <section class="finance-summary">
+                    <div class="finance-item border-green">
+                        <span class="finance-label">可用餘額</span>
+                        <strong class="finance-amount accent-orange">NT $50,000</strong>
+                    </div>
+                    <div class="finance-item border-red">
+                        <span class="finance-label">已鎖定金額</span>
+                        <strong class="finance-amount">NT $12,000</strong>
+                    </div>
+                    <div class="finance-item border-yellow">
+                        <span class="finance-label">總金額</span>
+                        <strong class="finance-amount">NT $62,000</strong>
+                    </div>
+                </section>
+
+                <!-- STATUS CARDS -->
+                <section class="status-cards">
+                    <a href="#" class="status-card">
+                        <img src="images/icon-draft.svg" alt="草稿">
+                        <span class="status-label">草稿</span>
+                        <span class="status-count">2</span>
+                    </a>
+                    <a href="#" class="status-card">
+                        <img src="images/icon-review.svg" alt="待審核">
+                        <span class="status-label">待審核</span>
+                        <span class="status-count">1</span>
+                    </a>
+                    <a href="#" class="status-card">
+                        <img src="images/icon-recruit.svg" alt="招募中">
+                        <span class="status-label">招募中</span>
+                        <span class="status-count">3</span>
+                    </a>
+                    <a href="#" class="status-card">
+                        <img src="images/icon-progress.svg" alt="執行中">
+                        <span class="status-label">執行中</span>
+                        <span class="status-count">2</span>
+                    </a>
+                    <a href="#" class="status-card">
+                        <img src="images/icon-accepting.svg" alt="待驗收">
+                        <span class="status-label">待驗收</span>
+                        <span class="status-count">4</span>
+                    </a>
+                    <a href="#" class="status-card">
+                        <img src="images/icon-closed.svg" alt="已結案">
+                        <span class="status-label">已結案</span>
+                        <span class="status-count">8</span>
+                    </a>
+                </section>
+
+                <!-- 待辦事項 TABLE -->
+                <section class="table-section">
+                    <h2 class="section-title">待辦事項</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>待辦類型</th>
+                                <th>案件名稱</th>
+                                <th>狀態</th>
+                                <th>建立時間</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>成果待驗收</td>
+                                <td>北投冬季住宿體驗</td>
+                                <td class="td-status accepting">待驗收</td>
+                                <td>2026/06/16 11:35</td>
+                                <td><a href="#" class="action-link">查看</a></td>
+                            </tr>
+                            <tr>
+                                <td>餘額可能不足</td>
+                                <td>台南巷弄旅宿短影音</td>
+                                <td class="td-status deposit">需儲值</td>
+                                <td>2026/06/16 14:25</td>
+                                <td><a href="#" class="action-link">前往儲值</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- 最新案件 TABLE -->
+                <section class="table-section">
+                    <h2 class="section-title">最新案件</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>待辦類型</th>
+                                <th>案件名稱</th>
+                                <th>狀態</th>
+                                <th>建立時間</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>成果待驗收</td>
+                                <td>北投冬季住宿體驗</td>
+                                <td class="td-status accepting">待驗收</td>
+                                <td>2026/06/16 11:35</td>
+                                <td><a href="#" class="action-link">查看</a></td>
+                            </tr>
+                            <tr>
+                                <td>餘額可能不足</td>
+                                <td>台南巷弄旅宿短影音</td>
+                                <td class="td-status deposit">需儲值</td>
+                                <td>2026/06/16 14:25</td>
+                                <td><a href="#" class="action-link">前往儲值</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>
+            $('footer.footer').load('footer.html');
+        </script>
+
+    </div><!-- /.content-wrapper -->
+
+    <!-- ==================== TOAST NOTIFICATION ==================== -->
+    <div class="toast-notif" id="toastNotif">
+        <i class="fa-solid fa-circle-info toast-icon"></i>
+        <span class="toast-msg">您有4筆案件待驗收，請儘速處理。</span>
+        <button class="toast-close" id="toastClose">&times;</button>
+    </div>
+    <!-- 主要的javascript -->
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

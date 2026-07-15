@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <title>首頁</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/all-style.css">
+</head>
+<body>
+    <header class="top-bar"></header>
+    <script>
+        $('header').load('header.html');
+    </script>
+    <main class="page-shell">
+
+        <!-- 個人資料卡 -->
+        <section class="profile-card">
+            <div class="avatar-wrap" aria-hidden="true">
+                <div class="avatar-photo"></div>
+            </div>
+            <div class="profile-main">
+                <div class="profile-head">
+                    <h2 class="profile-name">Nene</h2>
+                    <span class="profile-status">未建檔</span>
+                </div>
+                <div class="profile-progress-head">
+                    <span>資料完成度</span>
+                    <span>0%</span>
+                </div>
+                <div class="progress-track" role="progressbar" aria-label="資料完成度" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 進行中任務卡 -->
+        <section class="task-card">
+            <div class="task-meta">
+                <span class="task-badge">進行中任務</span>
+                <span class="task-deadline">截止日: 2024/12/31</span>
+            </div>
+            <h2 class="task-title">北投冬季住宿體驗</h2>
+            <p class="task-desc">請於體驗結束後 3 天內上傳社群貼文連結與成效截圖。</p>
+            <a class="task-submit-btn" href="#">
+                提交成果報告
+                <i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i>
+            </a>
+        </section>
+
+        <!-- 快速連結 -->
+        <section class="quick-links">
+            <h2 class="section-title">快速連結</h2>
+            <div class="quick-grid">
+                <a class="link-card" href="#">
+                    <i class="link-icon fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <span class="link-id">EXPLORE</span>
+                    <strong>探索新任務</strong>
+                </a>
+                <a class="link-card" href="#">
+                    <i class="link-icon fa-regular fa-id-card" aria-hidden="true"></i>
+                    <span class="link-id">PROFILE</span>
+                    <strong>編輯個人資料</strong>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer"></footer>
+        <script>
+            $('footer').load('footer.html');
+        </script>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主要功能選單"></nav>
+    <script>
+        $('nav.bottom-nav').load('nav.html');
+    </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統-發佈案件確認</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/publish.css" />
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content pub-main">
+            <div class="content-card pub-card">
+
+                <!-- BREADCRUMB -->
+                <nav class="pub-breadcrumb">
+                    <a href="cases.html">案件管理</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <a href="add-cases.html">新增案件</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span>送審確認</span>
+                </nav>
+
+                <!-- PAGE TITLE -->
+                <h1 class="pub-page-title">發佈案件確認</h1>
+
+                <!-- WARNING ALERT -->
+                <div class="pub-alert">
+                    <div class="pub-alert__icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="pub-alert__body">
+                        <p class="pub-alert__title">重要確認事項</p>
+                        <p class="pub-alert__desc">發佈案件之後，系統將會依據您設定的預算金額進行資金融定。若需費勤勵請回草稿後重試。</p>
+                    </div>
+                </div>
+
+                <!-- MAIN LAYOUT: 左側摘要 + 右側預算 -->
+                <div class="pub-layout">
+
+                    <!-- ===== LEFT: 摘要區 ===== -->
+                    <div class="pub-body">
+
+                        <!-- 案件摘要 -->
+                        <section class="pub-section">
+                            <div class="pub-section__header">
+                                <div class="pub-section__title">
+                                    <i class="fa-regular fa-file-lines"></i> 案件摘要
+                                </div>
+                                <span class="pub-section__badge">不可編輯</span>
+                            </div>
+                            <div class="pub-info-grid">
+                                <div class="pub-info-item">
+                                    <span class="pub-info-label">案件名稱</span>
+                                    <span class="pub-info-value">2024 夏季山魂之旅行銷案</span>
+                                </div>
+                                <div class="pub-info-item">
+                                    <span class="pub-info-label">地區</span>
+                                    <span class="pub-info-value">花蓮縣 秀林鄉</span>
+                                </div>
+                                <div class="pub-info-item">
+                                    <span class="pub-info-label">招募人數</span>
+                                    <span class="pub-info-value">5 位</span>
+                                </div>
+                                <div class="pub-info-item">
+                                    <span class="pub-info-label">執行區間</span>
+                                    <span class="pub-info-value">2024-06-01 ～ 2024-08-31</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 合作條件摘要 + 平台與交付摘要 -->
+                        <div class="pub-two-col">
+
+                            <!-- 合作條件摘要 -->
+                            <section class="pub-section">
+                                <div class="pub-section__header">
+                                    <div class="pub-section__title">
+                                        <i class="fa-regular fa-handshake"></i> 合作條件摘要
+                                    </div>
+                                </div>
+                                <table class="pub-kv-table">
+                                    <tr>
+                                        <td class="pub-kv-label">現金酬勞</td>
+                                        <td class="pub-kv-value">NT$ 6,000 / 人</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pub-kv-label">贈驗項目</td>
+                                        <td class="pub-kv-value">山景雙人房住宿一晚, 含早午餐</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pub-kv-label">導購分潤</td>
+                                        <td class="pub-kv-value">轉換訂單 5% 抽成</td>
+                                    </tr>
+                                </table>
+                            </section>
+
+                            <!-- 平台與交付摘要 -->
+                            <section class="pub-section">
+                                <div class="pub-section__header">
+                                    <div class="pub-section__title">
+                                        <i class="fa-regular fa-paper-plane"></i> 平台與交付摘要
+                                    </div>
+                                </div>
+                                <div class="pub-platform-tags">
+                                    <span class="pub-platform-tag">IG</span>
+                                    <span class="pub-platform-tag">Youtube</span>
+                                    <span class="pub-platform-tag">Facebook</span>
+                                </div>
+                                <p class="pub-kv-label" style="margin-top:1.2rem; margin-bottom:.4rem;">交付需求：</p>
+                                <p class="pub-delivery-text">交付需求內文・交付需求內文・交付需求內文・交付需求內文・交付需求內文・交付需求內文・交付需求內文・交付需求內文・</p>
+                            </section>
+
+                        </div><!-- /.pub-two-col -->
+
+                        <!-- 附件摘要 -->
+                        <section class="pub-section">
+                            <div class="pub-section__header">
+                                <div class="pub-section__title">
+                                    <i class="fa-solid fa-paperclip"></i> 附件摘要
+                                </div>
+                            </div>
+                            <div class="pub-file-list">
+                                <div class="pub-file-item">
+                                    <i class="fa-regular fa-file-zipper pub-file-icon"></i>
+                                    <span class="pub-file-name">主視覺素材包.zip</span>
+                                    <span class="pub-file-size">15.5 MB</span>
+                                </div>
+                                <div class="pub-file-item">
+                                    <i class="fa-regular fa-file-word pub-file-icon"></i>
+                                    <span class="pub-file-name">法規合約範本_v2.docx</span>
+                                    <span class="pub-file-size">450 KB</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 最後確認 -->
+                        <section class="pub-section pub-section--confirm">
+                            <div class="pub-section__header">
+                                <div class="pub-section__title">最後確認</div>
+                            </div>
+                            <div class="pub-check-list">
+                                <label class="pub-check-item">
+                                    <input type="checkbox" id="confirmContent">
+                                    <span class="pub-checkmark"></span>
+                                    我確認案件內容正確且無誤
+                                </label>
+                                <label class="pub-check-item">
+                                    <input type="checkbox" id="confirmBudget">
+                                    <span class="pub-checkmark"></span>
+                                    我了解預算 NT$ 81,300 將從餘額中鎖定
+                                </label>
+                            </div>
+                        </section>
+
+                    </div><!-- /.pub-body -->
+
+                    <!-- ===== RIGHT: 預算鎖定摘要 ===== -->
+                    <aside class="pub-budget">
+                        <h3 class="pub-budget__title">預算鎖定摘要</h3>
+                        <div class="pub-budget__rows">
+                            <div class="pub-budget__row">
+                                <span>案件總預算</span>
+                                <span>NT$ 15,000</span>
+                            </div>
+                            <div class="pub-budget__row">
+                                <span>平台服務費 (10%)</span>
+                                <span>NT$ 1,500</span>
+                            </div>
+                            <div class="pub-budget__row">
+                                <span>開案費</span>
+                                <span>NT$ 1,00</span>
+                            </div>
+                            <div class="pub-budget__row pub-budget__row--red">
+                                <span>折扣金</span>
+                                <span>-NT$ 1,00</span>
+                            </div>
+                        </div>
+                        <div class="pub-budget__divider"></div>
+                        <div class="pub-budget__total">
+                            <span>預計鎖定總額</span>
+                            <span class="pub-budget__total-amount">NT$ 16,500</span>
+                        </div>
+                    </aside>
+
+                </div><!-- /.pub-layout -->
+
+            </div><!-- /.content-card -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <!-- BOTTOM STICKY ACTION BAR -->
+    <div class="pub-action-bar" id="pubActionBar">
+        <button class="pub-action-bar__back" id="pubBackBtn">
+            <i class="fa-solid fa-arrow-left"></i> 返回編輯
+        </button>
+        <div class="pub-action-bar__right">
+            <div class="pub-action-bar__amount">
+                <span class="pub-action-bar__amount-label">鎖定總額</span>
+                <span class="pub-action-bar__amount-value">NT$ 81,300</span>
+            </div>
+            <button class="pub-action-bar__submit" id="pubSubmitBtn" disabled>
+                確認發佈
+            </button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

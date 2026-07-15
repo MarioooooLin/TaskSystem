@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="icon" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 600 700">
+  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #45af89;
+      }
+    </style>
+  </defs>
+  <polygon class="st0" points="400 629.5 335.2 564.8 300 600 400 700 600 500 564.8 464.8 400 629.5"/>
+  <path class="st0" d="M225,650H50V50h200v150c0,27.6,22.4,49.9,50,50h150v150h50v-200c.2-6.6-2.6-13-7.5-17.5L317.5,7.5c-4.5-4.9-10.8-7.7-17.5-7.5H50C22.4,0,0,22.4,0,50v600c0,27.6,22.4,49.9,50,50h175v-50ZM300,60l140,140h-140V60Z"/>
+</svg>

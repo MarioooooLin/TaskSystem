@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <title>我的任務</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="css/all-style.css">
+</head>
+<body>
+    <header class="top-bar"></header>
+    <script>
+        $('header').load('header.html');
+    </script>
+    <div class="top-bar mm-topbar">
+        <button class="icon-btn mm-topbar-btn" type="button" aria-label="返回上一頁">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        </button>
+        <h1 class="top-title mm-topbar-title">我的任務</h1>
+        <button class="icon-btn mm-topbar-btn" type="button" aria-label="通知中心">
+            <i class="fa-regular fa-bell" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <main class="page-shell mm-shell">
+        <nav class="mm-tabs" aria-label="任務狀態篩選">
+            <button class="mm-tab is-active" type="button">全部</button>
+            <button class="mm-tab" type="button">執行中</button>
+            <button class="mm-tab" type="button">審核中</button>
+            <button class="mm-tab" type="button">退回修改</button>
+            <button class="mm-tab" type="button">驗收不通過</button>
+        </nav>
+
+        <section class="mm-list" aria-label="任務列表">
+            <article class="mm-card">
+                <div class="mm-card-head">
+                    <p class="mm-biz"><i class="fa-solid fa-hotel" aria-hidden="true"></i> 山海旅宿</p>
+                    <span class="mm-status mm-status--running">執行中</span>
+                </div>
+                <h2 class="mm-title">北投冬季住宿體驗</h2>
+                <p class="mm-meta"><i class="fa-regular fa-calendar"></i> 截止日期：2026-06-10</p>
+                <div class="mm-platform-row">
+                    <i class="fa-regular fa-rectangle-list" aria-hidden="true"></i>
+                    <span class="mm-chip">IG Reels</span>
+                    <span class="mm-chip">FB 圖文</span>
+                    <span class="mm-chip">TikTok 短影音</span>
+                </div>
+                <div class="mm-reward-box mm-reward-box--light">
+                    <i class="fa-solid fa-wallet"></i>
+                    免費住宿 1 晚 + NT$10,000 + 導購分潤 12%
+                </div>
+                <div class="mm-actions">
+                    <button class="mm-btn mm-btn--primary" type="button">提交成果</button>
+                    <button class="mm-btn mm-btn--neutral" type="button">查看任務</button>
+                    <button class="mm-btn mm-btn--danger-text" type="button">放棄任務</button>
+                </div>
+            </article>
+
+            <article class="mm-card">
+                <div class="mm-card-head">
+                    <p class="mm-biz"><i class="fa-solid fa-hotel" aria-hidden="true"></i> 慢活民宿</p>
+                    <span class="mm-status mm-status--review">審核中</span>
+                </div>
+                <h2 class="mm-title">宜蘭寵物友善民宿開箱</h2>
+                <p class="mm-meta"><i class="fa-regular fa-calendar"></i> 截止日期：2026-06-15</p>
+                <div class="mm-platform-row">
+                    <i class="fa-regular fa-rectangle-list" aria-hidden="true"></i>
+                    <span class="mm-chip">IG 圖文或 Reels</span>
+                    <span class="mm-chip">TikTok 短影音</span>
+                </div>
+                <div class="mm-reward-box">
+                    <i class="fa-solid fa-wallet"></i>
+                    免費入住 1 晚，含寵物清潔費
+                </div>
+                <div class="mm-actions mm-actions--two">
+                    <button class="mm-btn mm-btn--neutral" type="button">查看任務</button>
+                    <button class="mm-btn mm-btn--danger-text" type="button" onclick="document.getElementById('id1').style.display='block'">為業者評分</button>
+                </div>
+            </article>
+
+            <article class="mm-card mm-card--revise">
+                <div class="mm-card-head">
+                    <p class="mm-biz"><i class="fa-solid fa-hotel" aria-hidden="true"></i> 港口旅店</p>
+                    <span class="mm-status mm-status--revise">退回修改</span>
+                </div>
+                <h2 class="mm-title">台南巷弄美食旅宿短影音</h2>
+                <p class="mm-meta"><i class="fa-regular fa-calendar"></i> 截止日期：2026-06-20</p>
+                <div class="mm-platform-row">
+                    <i class="fa-regular fa-rectangle-list" aria-hidden="true"></i>
+                    <span class="mm-chip">FB 圖文</span>
+                    <span class="mm-chip">Blog 文章</span>
+                </div>
+                <div class="mm-reward-box">
+                    <i class="fa-solid fa-wallet"></i>
+                    合作費 NT$8,000
+                </div>
+                <div class="mm-comment-box">
+                    <p class="mm-comment-title"><i class="fa-solid fa-circle-info"></i> 業者審核意見</p>
+                    <p class="mm-comment-text">修改建議：圖片亮度需調整，且標題需包含指定關鍵字「台南必住」。</p>
+                </div>
+                <div class="mm-actions">
+                    <button class="mm-btn mm-btn--primary" type="button">重新提交</button>
+                    <button class="mm-btn mm-btn--neutral" type="button">查看任務</button>
+                    <button class="mm-btn mm-btn--danger-text" type="button">放棄任務</button>
+                </div>
+            </article>
+
+            <article class="mm-card mm-card--rejected">
+                <div class="mm-card-head">
+                    <p class="mm-biz"><i class="fa-solid fa-hotel" aria-hidden="true"></i> 海岸光旅宿</p>
+                    <span class="mm-status mm-status--rejected">驗收不通過</span>
+                </div>
+                <h2 class="mm-title">花蓮海景旅宿合作</h2>
+                <p class="mm-meta"><i class="fa-regular fa-calendar"></i> 截止日期：2026-06-25</p>
+                <div class="mm-platform-row">
+                    <i class="fa-regular fa-rectangle-list" aria-hidden="true"></i>
+                    <span class="mm-chip">IG Reels</span>
+                    <span class="mm-chip">YT Shorts</span>
+                </div>
+                <div class="mm-reward-box">
+                    <i class="fa-solid fa-wallet"></i>
+                    免費海景房住宿 1 晚 + 合作費 NT$6,000
+                </div>
+                <div class="mm-comment-box">
+                    <p class="mm-comment-title"><i class="fa-solid fa-circle-info"></i> 業者審核意見</p>
+                    <p class="mm-comment-text">影片氛圍與我們預期的調性差距過大，不考慮修改。</p>
+                </div>
+                <div class="mm-actions mm-actions--two-equal">
+                    <button class="mm-btn mm-btn--appeal" type="button">進行申訴</button>
+                    <button class="mm-btn mm-btn--neutral" type="button">查看任務</button>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <!-- 為業者評分 Lightbox -->
+    <div id="id1" class="w3-modal">
+        <div class="bg_close" onclick="document.getElementById('id1').style.display='none'"></div>
+        <div class="w3-modal-content w3-animate-top w3-card-4 alert-modal mm-rate-modal">
+            <button class="mm-rate-close" type="button" aria-label="關閉" onclick="document.getElementById('id1').style.display='none'">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+
+            <div class="mm-rate-inner">
+                <h2 class="mm-rate-title">為業者評分</h2>
+
+                <section class="mm-rate-section">
+                    <h3 class="mm-rate-subtitle">綜合評分</h3>
+                    <div class="mm-rate-stars mm-rate-stars--large" aria-label="綜合評分 4 顆星">
+                        <i class="fa-regular fa-star is-on"></i>
+                        <i class="fa-regular fa-star is-on"></i>
+                        <i class="fa-regular fa-star is-on"></i>
+                        <i class="fa-regular fa-star is-on"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                </section>
+
+                <hr class="mm-rate-divider">
+
+                <ul class="mm-rate-list" aria-label="分項評分">
+                    <li>
+                        <span>合作溝通清晰度</span>
+                        <div class="mm-rate-stars" aria-hidden="true">
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <span>現場接待與支援</span>
+                        <div class="mm-rate-stars" aria-hidden="true">
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <span>內容素材豐富度</span>
+                        <div class="mm-rate-stars" aria-hidden="true">
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <span>實際體驗滿意度</span>
+                        <div class="mm-rate-stars" aria-hidden="true">
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <span>任務條件合理性</span>
+                        <div class="mm-rate-stars" aria-hidden="true">
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star is-on"></i>
+                            <i class="fa-regular fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+                    </li>
+                </ul>
+
+                <h3 class="mm-rate-message-title">評分留言</h3>
+                <textarea class="mm-rate-textarea" placeholder="請分享您的合作經驗..."></textarea>
+
+                <hr class="mm-rate-divider mm-rate-divider--bottom">
+
+                <div class="mm-rate-actions">
+                    <button class="mm-rate-btn mm-rate-btn--cancel" type="button" onclick="document.getElementById('id1').style.display='none'">取消</button>
+                    <button class="mm-rate-btn mm-rate-btn--submit" type="button">送出評分</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="主要功能選單"></nav>
+    <script>
+        $('nav.bottom-nav').load('nav.html', function () {
+            var $items = $(this).find('.bottom-item');
+            $items.removeClass('is-active').removeAttr('aria-current');
+            $items.eq(1).addClass('is-active').attr('aria-current', 'page');
+        });
+
+        document.querySelectorAll('.mm-rate-stars').forEach(function (starGroup) {
+            var stars = Array.from(starGroup.querySelectorAll('i'));
+
+            function setRating(rating) {
+                stars.forEach(function (star, index) {
+                    var isOn = index < rating;
+                    star.classList.toggle('is-on', isOn);
+                    star.classList.toggle('fa-solid', isOn);
+                    star.classList.toggle('fa-regular', !isOn);
+                });
+                starGroup.setAttribute('data-rating', String(rating));
+            }
+
+            var initialRating = stars.filter(function (star) {
+                return star.classList.contains('is-on');
+            }).length;
+            setRating(initialRating);
+
+            stars.forEach(function (star, index) {
+                var ratingValue = index + 1;
+                star.setAttribute('role', 'button');
+                star.setAttribute('tabindex', '0');
+                star.setAttribute('aria-label', '評分 ' + ratingValue + ' 顆星');
+
+                star.addEventListener('click', function () {
+                    setRating(ratingValue);
+                });
+
+                star.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        setRating(ratingValue);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

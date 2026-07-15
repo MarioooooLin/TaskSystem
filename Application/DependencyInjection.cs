@@ -1,6 +1,7 @@
 using Application.Account;
 using Application.AdminAccounts.Commands;
 using Application.AdminAccounts.Queries;
+using Application.Disputes.Commands;
 using Application.Cases.Queries;
 using Application.Dashboard.Queries;
 using Application.Disputes.Queries;
@@ -63,6 +64,8 @@ public static class DependencyInjection
         // ── Dispute ───────────────────────────────────────
         services.AddScoped<GetDisputeListHandler>();
         services.AddScoped<GetDisputeSummaryHandler>();
+        services.AddScoped<GetDisputeDetailHandler>();
+        services.AddScoped<ResolveDisputeHandler>();
 
         // ── Finance ───────────────────────────────────────
         services.AddScoped<GetFinanceListHandler>();

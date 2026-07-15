@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <title>入口 / 任務導流頁</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/all-style.css">
+</head>
+<body>
+    <header class="top-bar"></header>
+    <script>
+        $('header').load('header.html');
+    </script>
+    <main class="page-shell">
+
+        <section class="profile-card">
+            <div class="avatar-wrap" aria-hidden="true">
+                <div class="avatar-photo"></div>
+            </div>
+            <div class="profile-main">
+                <div class="profile-head">
+                    <h2 class="profile-name">Nene</h2>
+                    <span class="profile-status">未建檔</span>
+                </div>
+                <div class="profile-progress-head">
+                    <span>資料完成度</span>
+                    <span>20%</span>
+                </div>
+                <div class="progress-track" role="progressbar" aria-label="資料完成度" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-fill" style="width: 20%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="explore-panel">
+            <h2>探索新商機</h2>
+            <p>歡迎加入 KOL 管理系統，您可以立即查看並報名適合您的品牌任務。</p>
+            <a class="cta-main" href="#">查看可報名任務 <i class="fa-solid fa-arrow-right"></i></a>
+            <a class="cta-second" href="#">註冊填資料</a>
+        </section>
+
+        <section class="notice-card">
+            <div class="notice-icon" aria-hidden="true">
+                <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <div class="notice-content">
+                <h2>快速入駐說明</h2>
+                <p>即使您的帳號尚未完成建檔驗證，您依然可以自由瀏覽目前線上所有的品牌任務，並提交初步報名意願。我們將在您報名後，引導您完成必要的身分資料填寫。</p>
+            </div>
+        </section>
+
+        <section class="quick-links">
+            <h2 class="section-title">快速連結</h2>
+            <div class="quick-grid">
+                <a class="link-card" href="#">
+                    <i class="link-icon fa-regular fa-clipboard" aria-hidden="true"></i>
+                    <span class="link-id">KOL-006</span>
+                    <strong>任務列表</strong>
+                </a>
+                <a class="link-card" href="#">
+                    <i class="link-icon fa-regular fa-id-card" aria-hidden="true"></i>
+                    <span class="link-id">KOL-002</span>
+                    <strong>個人資料</strong>
+                </a>
+            </div>
+
+            <a class="history-card" href="#">
+                <div class="history-left">
+                    <i class="link-icon fa-regular fa-clock" aria-hidden="true"></i>
+                    <div>
+                        <span class="link-id">KOL-009</span>
+                        <strong>我的任務歷程</strong>
+                    </div>
+                </div>
+                <i class="history-arrow fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </a>
+        </section>
+
+        <footer class="page-footer"></footer>
+        <script>
+            $('footer').load('footer.html');</script>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主要功能選單"></nav>
+    <script>
+        $('nav.bottom-nav').load('nav.html');
+    </script>
+</body>
+</html>
