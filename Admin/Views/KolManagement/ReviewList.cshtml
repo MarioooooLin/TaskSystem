@@ -193,7 +193,7 @@
 <!-- ===== DATA TABLE ===== -->
 <div id="kn-results">
     <div class="content-card">
-        <div class="table-section table-section--scrollable">
+        <div class="table-section table-section--scrollable table-section--scrollable-y">
             <table class="data-table kn-table">
                 <thead>
                     <tr>
@@ -322,7 +322,7 @@
                             <span class="page-ellipsis">...</span>
                         }
                         <button type="button" class="page-btn @(p == curPage ? "active" : "")" onclick="knGoToPage(@p)" @(p ==
-                                                                                                                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
+                                                                                                                                                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
                         prev = p;
                     }
 

@@ -103,15 +103,12 @@
                 <h2 class="section-title">
                     <i class="fa-solid fa-user-check"></i> KOL 審核待辦
                 </h2>
-                <a asp-action="ReviewList" asp-controller="KolManagement"
-                   class="adm-section-link"
-                   hx-get="@Url.Action("ReviewList", "KolManagement")"
-                   hx-target="#main-content"
-                   hx-push-url="true">
+                <a asp-action="ReviewList" asp-controller="KolManagement" class="adm-section-link"
+                   hx-get="@Url.Action("ReviewList", "KolManagement")" hx-target="#main-content" hx-push-url="true">
                     查看全部KOL待審 <i class="fa-solid fa-chevron-right"></i>
                 </a>
             </div>
-            <div class="table-section">
+            <div class="table-section table-section--scrollable-y">
                 <table class="data-table adm-kol-table">
                     <thead>
                         <tr>
@@ -153,8 +150,7 @@
                                 <td><a asp-action="ReviewDetail" asp-controller="KolManagement" asp-route-id="@kol.KolId"
                                            class="action-link"
                                            hx-get="@Url.Action("ReviewDetail", "KolManagement", new { id = kol.KolId })"
-                                           hx-target="#main-content"
-                                           hx-push-url="true">檢視明細</a></td>
+                                           hx-target="#main-content" hx-push-url="true">檢視明細</a></td>
                                 </tr>
                             }
                             @if (!pendingKols.Any())
@@ -174,8 +170,8 @@
                     <h2 class="section-title">
                         <i class="fa-solid fa-triangle-exclamation"></i> 異常與異議處理
                     </h2>
-                    <a asp-controller="Dispute" asp-action="Index" class="adm-section-link"
-                       hx-get="/Dispute/Index" hx-target="#main-content" hx-push-url="true">查看全部異常 <i class="fa-solid fa-chevron-right"></i></a>
+                    <a asp-controller="Dispute" asp-action="Index" class="adm-section-link" hx-get="/Dispute/Index"
+                       hx-target="#main-content" hx-push-url="true">查看全部異常 <i class="fa-solid fa-chevron-right"></i></a>
                 </div>
                 <div class="table-section">
                     <table class="data-table adm-dispute-table">
@@ -206,59 +202,59 @@
                                     <td>@dispute.DisputeType</td>
                                     <td><span class="adm-badge @pillCss">@pillText</span></td>
                                     <td><a asp-controller="Dispute" asp-action="Index" class="action-link"
-                                           hx-get="/Dispute/Index" hx-target="#main-content" hx-push-url="true">介入處理</a></td>
-                                </tr>
-                            }
-                            @if (!disputes.Any())
-                            {
-                                <tr>
-                                    <td colspan="6" class="bd-empty-hint">目前無處理中異議。</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div><!-- /.adm-col-main -->
-
-        <!-- RIGHT: 側欄 -->
-        <aside class="adm-col-side">
-            <div class="content-card">
-                <h2 class="section-title">時效異常監控</h2>
-                <div class="adm-alert-list">
-                    <div class="adm-alert-item adm-alert-item--danger">
-                        <i class="fa-solid fa-triangle-exclamation adm-alert-icon"></i>
-                        <div class="adm-alert-body">
-                            <span class="adm-alert-name">已逾期案件</span>
-                            <strong class="adm-alert-count">@alerts.OverdueCaseCount.ToString("N0")件</strong>
-                        </div>
-                    </div>
-                    <div class="adm-alert-item">
-                        <i class="fa-regular fa-clock adm-alert-icon"></i>
-                        <div class="adm-alert-body">
-                            <span class="adm-alert-name">驗收逾期</span>
-                            <strong class="adm-alert-count">@alerts.ReviewOverdueCount.ToString("N0")件</strong>
-                        </div>
-                    </div>
-                    <div class="adm-alert-item">
-                        <i class="fa-solid fa-rotate adm-alert-icon"></i>
-                        <div class="adm-alert-body">
-                            <span class="adm-alert-name">導購同步異常</span>
-                            <strong class="adm-alert-count">@alerts.AffiliateSyncErrorCount.ToString("N0")件</strong>
-                        </div>
+                                               hx-get="/Dispute/Index" hx-target="#main-content" hx-push-url="true">介入處理</a></td>
+                                    </tr>
+                                }
+                                @if (!disputes.Any())
+                                {
+                                    <tr>
+                                        <td colspan="6" class="bd-empty-hint">目前無處理中異議。</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-        </aside>
 
-    </div><!-- /.adm-layout -->
+            </div><!-- /.adm-col-main -->
 
-    @section Scripts {
-        <script>
-            const d = new Date();
-            const pad = n => String(n).padStart(2, '0');
-            document.getElementById('todayDate').textContent =
-                d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-        </script>
-    }
+            <!-- RIGHT: 側欄 -->
+            <aside class="adm-col-side">
+                <div class="content-card">
+                    <h2 class="section-title">時效異常監控</h2>
+                    <div class="adm-alert-list">
+                        <div class="adm-alert-item adm-alert-item--danger">
+                            <i class="fa-solid fa-triangle-exclamation adm-alert-icon"></i>
+                            <div class="adm-alert-body">
+                                <span class="adm-alert-name">已逾期案件</span>
+                                <strong class="adm-alert-count">@alerts.OverdueCaseCount.ToString("N0")件</strong>
+                            </div>
+                        </div>
+                        <div class="adm-alert-item">
+                            <i class="fa-regular fa-clock adm-alert-icon"></i>
+                            <div class="adm-alert-body">
+                                <span class="adm-alert-name">驗收逾期</span>
+                                <strong class="adm-alert-count">@alerts.ReviewOverdueCount.ToString("N0")件</strong>
+                            </div>
+                        </div>
+                        <div class="adm-alert-item">
+                            <i class="fa-solid fa-rotate adm-alert-icon"></i>
+                            <div class="adm-alert-body">
+                                <span class="adm-alert-name">導購同步異常</span>
+                                <strong class="adm-alert-count">@alerts.AffiliateSyncErrorCount.ToString("N0")件</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </div><!-- /.adm-layout -->
+
+        @section Scripts {
+            <script>
+                const d = new Date();
+                const pad = n => String(n).padStart(2, '0');
+                document.getElementById('todayDate').textContent =
+                    d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+            </script>
+        }

@@ -279,7 +279,7 @@
     </div>
 
     <h3 class="bd-sub-title">最近案件</h3>
-    <div class="table-section">
+    <div class="table-section table-section--scrollable-y">
         <table class="data-table">
             <thead>
                 <tr>
@@ -334,7 +334,7 @@
         <div class="bd-wallet-card bd-wallet-card--dark">
             <span class="bd-wallet-label">當前錢包總額</span>
             <strong class="bd-wallet-value">NT$@((Model.Wallet.AvailableAmount +
-                                                Model.Wallet.FrozenAmount).ToString("N0"))</strong>
+                                                                Model.Wallet.FrozenAmount).ToString("N0"))</strong>
                 <i class="fa-regular fa-credit-card bd-wallet-bg-icon"></i>
             </div>
             <div class="bd-wallet-card">
@@ -416,7 +416,7 @@
                     <h3 class="bd-sub-title" style="margin-bottom:0">折扣金異動紀錄</h3>
                     <span class="bd-log-hint">最近 5 筆</span>
                 </div>
-                <div class="table-section">
+                <div class="table-section table-section--scrollable-y">
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -435,7 +435,7 @@
                                     <td>@g.CreatedAt.ToString("MM-dd HH:mm")</td>
                                     <td><span class="bd-log-type @gCss">@gLabel</span></td>
                                     <td class="@(g.Amount >= 0 ? "bd-amount-pos" : "bd-amount-neg")">@(g.Amount >= 0 ? "+" :
-                                                                                         "")@g.Amount.ToString("N0")</td>
+                                                                                                                                 "")@g.Amount.ToString("N0")</td>
                                         <td>@(g.CreatedByName ?? "—")</td>
                                     </tr>
                                 }
@@ -454,7 +454,7 @@
                         <h3 class="bd-sub-title" style="margin-bottom:0">折扣金使用紀錄</h3>
                         <span class="bd-log-hint">最近 5 筆</span>
                     </div>
-                    <div class="table-section">
+                    <div class="table-section table-section--scrollable-y">
                         <table class="data-table">
                             <thead>
                                 <tr>

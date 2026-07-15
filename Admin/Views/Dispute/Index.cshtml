@@ -100,7 +100,7 @@
 
 <!-- ===== TABLE ===== -->
 <div id="dispute-results" class="content-card">
-    <div class="table-section">
+    <div class="table-section table-section--scrollable-y">
         <table class="data-table ob-table">
             <thead>
                 <tr>
@@ -403,33 +403,33 @@
                             document.getElementById('diMerchant').textContent = data.merchant || '—';
                             document.getElementById('diKol').textContent = data.kol || '—';
 
-            var drawer = document.getElementById('obDrawer');
-            var overlay = document.getElementById('obDrawerOverlay');
-            drawer.style.display = 'flex';
-            overlay.style.display = 'block';
-            // 強制 reflow 讓 transition 生效
-            void drawer.offsetWidth;
-            drawer.classList.add('ob-drawer--open');
-            overlay.classList.add('ob-drawer-overlay--active');
-            document.body.style.overflow = 'hidden';
-        }
+                            var drawer = document.getElementById('obDrawer');
+                            var overlay = document.getElementById('obDrawerOverlay');
+                            drawer.style.display = 'flex';
+                            overlay.style.display = 'block';
+                            // 強制 reflow 讓 transition 生效
+                            void drawer.offsetWidth;
+                            drawer.classList.add('ob-drawer--open');
+                            overlay.classList.add('ob-drawer-overlay--active');
+                            document.body.style.overflow = 'hidden';
+                        }
 
-        function closeDrawer() {
-            var drawer = document.getElementById('obDrawer');
-            var overlay = document.getElementById('obDrawerOverlay');
-            drawer.classList.remove('ob-drawer--open');
-            overlay.classList.remove('ob-drawer-overlay--active');
-            setTimeout(function () {
-                drawer.style.display = 'none';
-                overlay.style.display = 'none';
-            }, 320);
-                                type: btn.dataset.disputeType,
+                        function closeDrawer() {
+                            var drawer = document.getElementById('obDrawer');
+                            var overlay = document.getElementById('obDrawerOverlay');
+                            drawer.classList.remove('ob-drawer--open');
+                            overlay.classList.remove('ob-drawer-overlay--active');
+                            setTimeout(function () {
+                                drawer.style.display = 'none';
+                                overlay.style.display = 'none';
+                            }, 320);
+                            type: btn.dataset.disputeType,
                                 statusHtml: '<span class="' + btn.dataset.disputeStatusCss + '">' + btn.dataset.disputeStatus + '</span>',
-                                caseTitle: btn.dataset.caseTitle,
-                                merchant: btn.dataset.merchant,
-                                kol: btn.dataset.kol
-                            });
+                                    caseTitle: btn.dataset.caseTitle,
+                                        merchant: btn.dataset.merchant,
+                                            kol: btn.dataset.kol
                         });
+                                            });
 
                         document.getElementById('obDrawerClose').addEventListener('click', closeDrawer);
                         document.getElementById('obDrawerCloseBtn').addEventListener('click', closeDrawer);

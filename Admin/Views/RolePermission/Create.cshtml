@@ -75,99 +75,104 @@
                 </div>
             }
 
-            <table class="data-table perm-setting-table">
-                <thead>
-                    <tr>
-                        <th>項目</th>
-                        <th>說明</th>
-                        <th>檢視</th>
-                        <th>編輯</th>
-                        <th>審核管理</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var group in Model.PermissionGroups)
-                    {
-                        var viewItems = group.Items.Where(i => i.ActionName == "View").ToList();
-                        var editItems = group.Items.Where(i => i.ActionName is "Edit" or "Update").ToList();
-                        var manageItems = group.Items.Where(i => i.ActionName is not "View" and not "Edit" and not "Update").ToList();
-
+            <div class="table-section table-section--scrollable-y">
+                <table class="data-table perm-setting-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <strong>@group.GroupDisplayName</strong>
-                                @if (group.Items.Any(i => i.RiskLevel == 2))
-                                {
-                                    <i class="fa-solid fa-triangle-exclamation" style="color:#fcc419;margin-left:.4rem;"
-                                       title="包含高風險權限"></i>
-                                }
-                            </td>
-                            <td class="perm-setting-td-desc">@group.GroupDescription</td>
-                            <td>
-                                @if (viewItems.Any())
-                                {
-                                    @foreach (var item in viewItems)
-                                    {
-                                        <label class="perm-setting-checkbox-cell" title="@item.Code">
-                                            <input type="checkbox" name="PermissionIds" value="@item.Id"
-                                                   class="perm-setting-checkbox"
-                                                   @(Model.PermissionIds.Contains(item.Id) ? "checked" : "") />
-                                            <span class="perm-setting-action-label">@item.ActionDisplayName</span>
-                                        </label>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="text-muted">--</span>
-                                }
-                            </td>
-                            <td>
-                                @if (editItems.Any())
-                                {
-                                    @foreach (var item in editItems)
-                                    {
-                                        <label class="perm-setting-checkbox-cell" title="@item.Code">
-                                            <input type="checkbox" name="PermissionIds" value="@item.Id"
-                                                   class="perm-setting-checkbox"
-                                                   @(Model.PermissionIds.Contains(item.Id) ? "checked" : "") />
-                                            <span class="perm-setting-action-label">@item.ActionDisplayName</span>
-                                            @if (item.RiskLevel == 2)
-                                            {
-                                                <i class="fa-solid fa-triangle-exclamation" style="color:#fcc419;margin-left:.2rem;"></i>
-                                            }
-                                        </label>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="text-muted">--</span>
-                                }
-                            </td>
-                            <td>
-                                @if (manageItems.Any())
-                                {
-                                    @foreach (var item in manageItems)
-                                    {
-                                        <label class="perm-setting-checkbox-cell" title="@item.Code">
-                                            <input type="checkbox" name="PermissionIds" value="@item.Id"
-                                                   class="perm-setting-checkbox"
-                                                   @(Model.PermissionIds.Contains(item.Id) ? "checked" : "") />
-                                            <span class="perm-setting-action-label">@item.ActionDisplayName</span>
-                                            @if (item.RiskLevel == 2)
-                                            {
-                                                <i class="fa-solid fa-triangle-exclamation" style="color:#fcc419;margin-left:.2rem;"></i>
-                                            }
-                                        </label>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="text-muted">--</span>
-                                }
-                            </td>
+                            <th>項目</th>
+                            <th>說明</th>
+                            <th>檢視</th>
+                            <th>編輯</th>
+                            <th>審核管理</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var group in Model.PermissionGroups)
+                        {
+                            var viewItems = group.Items.Where(i => i.ActionName == "View").ToList();
+                            var editItems = group.Items.Where(i => i.ActionName is "Edit" or "Update").ToList();
+                            var manageItems = group.Items.Where(i => i.ActionName is not "View" and not "Edit" and not
+                   "Update").ToList();
+
+                            <tr>
+                                <td>
+                                    <strong>@group.GroupDisplayName</strong>
+                                    @if (group.Items.Any(i => i.RiskLevel == 2))
+                                    {
+                                        <i class="fa-solid fa-triangle-exclamation" style="color:#fcc419;margin-left:.4rem;"
+                                           title="包含高風險權限"></i>
+                                    }
+                                </td>
+                                <td class="perm-setting-td-desc">@group.GroupDescription</td>
+                                <td>
+                                    @if (viewItems.Any())
+                                    {
+                                        @foreach (var item in viewItems)
+                                        {
+                                            <label class="perm-setting-checkbox-cell" title="@item.Code">
+                                                <input type="checkbox" name="PermissionIds" value="@item.Id"
+                                                       class="perm-setting-checkbox" @(Model.PermissionIds.Contains(item.Id) ?
+                                                                         "checked" : "") />
+                                                <span class="perm-setting-action-label">@item.ActionDisplayName</span>
+                                            </label>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">--</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (editItems.Any())
+                                    {
+                                        @foreach (var item in editItems)
+                                        {
+                                            <label class="perm-setting-checkbox-cell" title="@item.Code">
+                                                <input type="checkbox" name="PermissionIds" value="@item.Id"
+                                                       class="perm-setting-checkbox" @(Model.PermissionIds.Contains(item.Id) ?
+                                                                                            "checked" : "") />
+                                                <span class="perm-setting-action-label">@item.ActionDisplayName</span>
+                                                @if (item.RiskLevel == 2)
+                                                {
+                                                    <i class="fa-solid fa-triangle-exclamation"
+                                                       style="color:#fcc419;margin-left:.2rem;"></i>
+                                                }
+                                            </label>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">--</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (manageItems.Any())
+                                    {
+                                        @foreach (var item in manageItems)
+                                        {
+                                            <label class="perm-setting-checkbox-cell" title="@item.Code">
+                                                <input type="checkbox" name="PermissionIds" value="@item.Id"
+                                                       class="perm-setting-checkbox" @(Model.PermissionIds.Contains(item.Id) ?
+                                                                                            "checked" : "") />
+                                                <span class="perm-setting-action-label">@item.ActionDisplayName</span>
+                                                @if (item.RiskLevel == 2)
+                                                {
+                                                    <i class="fa-solid fa-triangle-exclamation"
+                                                       style="color:#fcc419;margin-left:.2rem;"></i>
+                                                }
+                                            </label>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">--</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
             @if (!Model.PermissionGroups.Any())
             {
                 <p class="empty-state">尚未設定任何權限項目。</p>
