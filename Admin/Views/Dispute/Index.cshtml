@@ -167,13 +167,24 @@
                         <td><span class="ob-task-status @taskStatusClass">@taskStatusText</span></td>
                         <td class="ob-date">@d.OpenedAt.ToString("yyyy-MM-dd HH:mm")</td>
                         <td class="ob-actions">
-                            <button type="button" class="action-link"
-                                    hx-get="@Url.Action("Detail", new { id = d.DisputeId })"
-                                    hx-target="#obDrawer .ob-drawer__body"
-                                    hx-swap="innerHTML settle:20ms"
-                                    hx-indicator="#obDrawer">
-                                處理爭議
-                            </button>
+                            @if (d.Status is DisputeStatus.Open or DisputeStatus.UnderReview)
+                            {
+                                <button type="button" class="action-link"
+                                        hx-get="@Url.Action("Detail", new { id = d.DisputeId })"
+                                        hx-target="#obDrawer .ob-drawer__body" hx-swap="innerHTML settle:20ms"
+                                        hx-indicator="#obDrawer">
+                                    處理爭議
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="action-link action-link--muted"
+                                        hx-get="@Url.Action("Detail", new { id = d.DisputeId })"
+                                        hx-target="#obDrawer .ob-drawer__body" hx-swap="innerHTML settle:20ms"
+                                        hx-indicator="#obDrawer">
+                                    查看紀錄
+                                </button>
+                            }
                         </td>
                     </tr>
                 }
@@ -278,53 +289,63 @@
     </div>
 </aside>
 
-                @section Scripts {
-                    <script>
-                        document.addEventListener('change', function (e) {
-                            if (e.target && e.target.id === 'dispute-status-select') {
-                                document.getElementById('dispute-status-input').value = e.target.value;
-                                var form = document.getElementById('dispute-filter-form');
-                                htmx.trigger(form, 'submit');
-                            }
-                        });
+<script>
+    (function () {
+        window.openDrawer = function () {
+            var drawer = document.getElementById('obDrawer');
+            var overlay = document.getElementById('obDrawerOverlay');
+            if (!drawer || !overlay) return;
+            drawer.style.display = 'flex';
+            overlay.style.display = 'block';
+            void drawer.offsetWidth;
+            drawer.classList.add('ob-drawer--open');
+            overlay.classList.add('ob-drawer-overlay--active');
+            document.body.style.overflow = 'hidden';
+        };
 
-                        function openDrawer() {
-                            var drawer = document.getElementById('obDrawer');
-                            var overlay = document.getElementById('obDrawerOverlay');
-                            drawer.style.display = 'flex';
-                            overlay.style.display = 'block';
-                            void drawer.offsetWidth;
-                            drawer.classList.add('ob-drawer--open');
-                            overlay.classList.add('ob-drawer-overlay--active');
-                            document.body.style.overflow = 'hidden';
-                        }
+        window.closeDrawer = function () {
+            var drawer = document.getElementById('obDrawer');
+            var overlay = document.getElementById('obDrawerOverlay');
+            if (!drawer || !overlay) return;
+            drawer.classList.remove('ob-drawer--open');
+            overlay.classList.remove('ob-drawer-overlay--active');
+            setTimeout(function () {
+                drawer.style.display = 'none';
+                overlay.style.display = 'none';
+            }, 320);
+            document.body.style.overflow = '';
+        };
 
-                        function closeDrawer() {
-                            var drawer = document.getElementById('obDrawer');
-                            var overlay = document.getElementById('obDrawerOverlay');
-                            drawer.classList.remove('ob-drawer--open');
-                            overlay.classList.remove('ob-drawer-overlay--active');
-                            setTimeout(function () {
-                                drawer.style.display = 'none';
-                                overlay.style.display = 'none';
-                            }, 320);
-                            document.body.style.overflow = '';
-                        }
-
-                        document.getElementById('obDrawerClose').addEventListener('click', closeDrawer);
-                        document.getElementById('obDrawerCloseBtn').addEventListener('click', closeDrawer);
-                        document.getElementById('obDrawerOverlay').addEventListener('click', closeDrawer);
-
-                        document.addEventListener('keydown', function (e) {
-                            if (e.key === 'Escape') closeDrawer();
-                        });
-
-                        // HTMX 載入詳情或表單提交後開啟 drawer
-                        document.body.addEventListener('htmx:afterSwap', function (evt) {
-                            var target = evt.detail.target;
-                            if (target && target.closest && target.closest('.ob-drawer__body')) {
-                                openDrawer();
-                            }
-                        });
-                    </script>
+        function initDisputeIndex() {
+            document.addEventListener('change', function (e) {
+                if (e.target && e.target.id === 'dispute-status-select') {
+                    var input = document.getElementById('dispute-status-input');
+                    var form = document.getElementById('dispute-filter-form');
+                    if (input) input.value = e.target.value;
+                    if (form && window.htmx) htmx.trigger(form, 'submit');
                 }
+            });
+
+            var params = new URLSearchParams(window.location.search);
+            var openId = params.get('openDisputeId');
+            if (openId && window.htmx) {
+                htmx.ajax('GET', '/Dispute/Detail/' + encodeURIComponent(openId), {
+                    target: '#obDrawer .ob-drawer__body',
+                    swap: 'innerHTML settle:20ms',
+                    indicator: '#obDrawer'
+                });
+                if (window.history && window.history.replaceState) {
+                    var url = new URL(window.location.href);
+                    url.searchParams.delete('openDisputeId');
+                    window.history.replaceState({}, '', url.toString());
+                }
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDisputeIndex);
+        } else {
+            initDisputeIndex();
+        }
+    })();
+</script>

@@ -1,10 +1,46 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-16 16:12
+> 最後整理時間：2026-07-16 16:49
 
 ---
 
 ## 2026-07-16
+
+### [17:05] 異議處理頁已結案不再顯示「處理爭議」按鈕
+
+**變更內容**
+
+- [Admin/Views/Dispute/Index.cshtml](Admin/Views/Dispute/Index.cshtml)：操作欄改依 `DisputeStatus` 判斷
+    - `Open` / `UnderReview` 顯示「處理爭議」
+    - 其餘結案狀態（`ResolvedForMerchant`、`ResolvedForKol`、`ResolvedCompromise`、`Cancelled`）顯示「查看紀錄」
+
+**決策原因**
+
+- 已處理完成的異議不應再讓管理員「處理爭議」，避免誤操作或對已結案資料再次修改
+- 保留「查看紀錄」按鈕，讓管理員仍可開啟 drawer 查看處理歷程與詳情
+
+**測試狀態**
+
+- 瀏覽器測試通過：待處理 / 處理中顯示「處理爭議」，已結案顯示「查看紀錄」
+
+### [16:49] 管理者首頁「介入處理」直接開啟該案件異議 drawer
+
+**變更內容**
+
+- [Admin/Views/Dashboard/Index.cshtml](Admin/Views/Dashboard/Index.cshtml)：「介入處理」連結改帶 `openDisputeId` 參數，跳轉到 `/Dispute/Index?openDisputeId={id}`
+- [Admin/Views/Dispute/Index.cshtml](Admin/Views/Dispute/Index.cshtml)：頁面載入後若網址有 `openDisputeId`，自動透過 `htmx.ajax` 載入對應 `Dispute/Detail` 到 drawer body 並開啟 drawer；載入後從網址移除該參數
+- [Admin/wwwroot/js/main.js](Admin/wwwroot/js/main.js)：將 `openDrawer` / `closeDrawer` 提升為全域函式；`htmx:afterSwap` 偵測 drawer body 載入完成後自動開啟；以委派事件綁定關閉按鈕與 ESC，避免 HTMX 局部載入後事件遺失
+
+**決策原因**
+
+- 從營運總覽的異議卡片點「介入處理」，使用者的預期是直接對該筆異議進行操作，而不是先到列表再手動點一次「處理爭議」
+- 透過 query string 傳遞 `openDisputeId`，不需要改變現有 `DisputeController` 路由或新增 Action
+- drawer 開關邏輯原本只寫在 `Dispute/Index` 的 `@section Scripts`，在 HTMX 全頁切換後會重新初始化；改為全域函式與委派事件後更穩定
+
+**測試狀態**
+
+- `get_errors` 全 Solution 無錯誤
+- 瀏覽器測試通過：管理者首頁點「介入處理」可跳轉到異議處理頁並直接滑出該案件 drawer
 
 ### [16:12] 實作設定密碼頁 /Account/SetPassword 與個人帳號頁 /Account/Profile
 

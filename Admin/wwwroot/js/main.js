@@ -3,14 +3,33 @@ $(document).ready(function () {
        HTMX scroll-to-top on full page swap
     =========================================== */
     document.body.addEventListener("htmx:afterSwap", function (evt) {
+        var target = evt.detail.target;
         // 只有目標是 #main-content（全頁切換）時才捲到頂端；
         // 局部更新（分頁/篩選）目標是 xxx-results，不處理
-        if (evt.detail.target && evt.detail.target.id === "main-content") {
+        if (target && target.id === "main-content") {
             var main = document.getElementById("main-content");
             if (main) {
                 main.scrollTop = 0;
             }
             window.scrollTo({ top: 0, behavior: "auto" });
+        }
+        // drawer 內容載入完成後自動開啟
+        else if (target && target.closest && target.closest(".ob-drawer__body")) {
+            if (typeof window.openDrawer === "function") {
+                window.openDrawer();
+            }
+        }
+    });
+
+    // 異議處理 drawer 關閉事件（委派，支援 HTMX 局部載入）
+    $(document).on("click", "#obDrawerClose, #obDrawerCloseBtn, #obDrawerOverlay", function () {
+        if (typeof window.closeDrawer === "function") {
+            window.closeDrawer();
+        }
+    });
+    $(document).on("keydown", function (e) {
+        if (e.key === "Escape" && typeof window.closeDrawer === "function") {
+            window.closeDrawer();
         }
     });
 

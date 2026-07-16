@@ -202,7 +202,9 @@
                                     <td>@dispute.DisputeType</td>
                                     <td><span class="adm-badge @pillCss">@pillText</span></td>
                                     <td><a asp-controller="Dispute" asp-action="Index" class="action-link"
-                                               hx-get="/Dispute/Index" hx-target="#main-content" hx-push-url="true">介入處理</a></td>
+                                               asp-route-openDisputeId="@dispute.DisputeId"
+                                               hx-get="@Url.Action("Index", "Dispute", new { openDisputeId = dispute.DisputeId })"
+                                               hx-target="#main-content" hx-push-url="true">介入處理</a></td>
                                     </tr>
                                 }
                                 @if (!disputes.Any())
