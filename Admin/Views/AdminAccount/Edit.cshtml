@@ -1,9 +1,11 @@
 @model Admin.ViewModels.AdminAccount.EditAdminAccountViewModel
+@using Domain.Enums
 @{
     ViewData["Title"] = "編輯後台帳號";
 }
 
 <link rel="stylesheet" href="~/css/add-user.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/manager.css" asp-append-version="true" />
 
 <main class="main-content au-main">
     <div class="content-card">
@@ -24,7 +26,7 @@
 
         <div asp-validation-summary="ModelOnly" class="au-validation-summary"></div>
 
-        <div class="au-layout">
+        <div class="au-layout" style="grid-template-columns: 1fr;">
             <div class="au-form-panel">
                 <form method="post" asp-action="Edit" asp-route-id="@Model.UserId"
                       hx-post="@Url.Action("Edit", new { id = Model.UserId })" hx-target="#main-content"
@@ -33,99 +35,122 @@
                     <input type="hidden" asp-for="UserId" />
 
                     <div class="au-form-body">
-                        <div class="au-form-row">
-                            <div class="au-form-group">
-                                <label class="au-label" asp-for="Name">姓名</label>
-                                <input type="text" asp-for="Name" class="au-input" placeholder="例如：王小明">
-                                <span asp-validation-for="Name" class="au-validation-message"></span>
-                            </div>
-                            <div class="au-form-group">
-                                <label class="au-label" asp-for="Email">電子郵件</label>
-                                <input type="email" asp-for="Email" class="au-input" placeholder="admin@example.com">
-                                <span asp-validation-for="Email" class="au-validation-message"></span>
-                            </div>
-                        </div>
+                        <div class="mgr-mf-section">基本資料</div>
+                        <div class="mgr-mf-grid">
+                            <div class="mgr-mf-field">
+                                <label class="mgr-mf-label" asp-for="Name">姓名 <span
+                                    class="mgr-mf-required">*</span></label>
+                                    <input type="text" asp-for="Name" class="mgr-mf-input" placeholder="請輸入姓名">
+                                    <span asp-validation-for="Name" class="au-validation-message"></span>
+                                </div>
+                                <div class="mgr-mf-field">
+                                    <label class="mgr-mf-label" asp-for="Email">Email (帳號) <span
+                                        class="mgr-mf-required">*</span></label>
+                                        <input type="email" asp-for="Email" class="mgr-mf-input" placeholder="請輸入 Email">
+                                        <span asp-validation-for="Email" class="au-validation-message"></span>
+                                    </div>
+                                    <div class="mgr-mf-field">
+                                        <label class="mgr-mf-label" asp-for="Department">所屬部門</label>
+                                        <input type="text" asp-for="Department" class="mgr-mf-input" placeholder="請輸入部門">
+                                        <span asp-validation-for="Department" class="au-validation-message"></span>
+                                    </div>
+                                    <div class="mgr-mf-field">
+                                        <label class="mgr-mf-label" asp-for="JobTitle">職稱</label>
+                                        <input type="text" asp-for="JobTitle" class="mgr-mf-input" placeholder="請輸入職稱">
+                                        <span asp-validation-for="JobTitle" class="au-validation-message"></span>
+                                    </div>
+                                    <div class="mgr-mf-field mgr-mf-field--full">
+                                        <label class="mgr-mf-label" asp-for="Phone">聯絡電話</label>
+                                        <input type="text" asp-for="Phone" class="mgr-mf-input" placeholder="請輸入聯絡電話">
+                                        <span asp-validation-for="Phone" class="au-validation-message"></span>
+                                    </div>
+                                </div>
 
-                        <div class="au-form-row">
-                            <div class="au-form-group">
-                                <label class="au-label" asp-for="Department">部門</label>
-                                <input type="text" asp-for="Department" class="au-input" placeholder="例如：營運部">
-                                <span asp-validation-for="Department" class="au-validation-message"></span>
-                            </div>
-                            <div class="au-form-group">
-                                <label class="au-label" asp-for="JobTitle">職稱</label>
-                                <input type="text" asp-for="JobTitle" class="au-input" placeholder="例如：後台管理員">
-                                <span asp-validation-for="JobTitle" class="au-validation-message"></span>
-                            </div>
-                        </div>
+                                <div class="mgr-mf-section">角色設定 <span class="mgr-mf-required">*</span></div>
+                                <div class="mgr-mf-roles">
+                                    @foreach (var role in Model.AvailableRoles)
+                                    {
+                                        var isChecked = Model.RoleIds.Contains(long.Parse(role.Value!));
+                                        <label class="mgr-mf-role-item @(isChecked ? "mgr-mf-role-item--checked" : "")">
+                                            <input type="checkbox" name="RoleIds" value="@role.Value" class="mgr-mf-checkbox"
+                                                   checked="@isChecked" />
+                                            <span>@role.Text</span>
+                                        </label>
+                                    }
+                                </div>
+                                <span asp-validation-for="RoleIds" class="au-validation-message"></span>
 
-                        <div class="au-form-row">
-                            <div class="au-form-group">
-                                <label class="au-label" asp-for="Phone">聯絡電話</label>
-                                <input type="text" asp-for="Phone" class="au-input" placeholder="例如：02-1234-5678">
-                                <span asp-validation-for="Phone" class="au-validation-message"></span>
-                            </div>
-                        </div>
-
-                        <div class="au-form-group">
-                            <label class="au-label" asp-for="RoleIds">角色設定</label>
-                            <div class="au-checkbox-list">
-                                @foreach (var role in Model.AvailableRoles)
-                                {
-                                    var isChecked = Model.RoleIds.Contains(long.Parse(role.Value!));
-                                    <label class="au-checkbox-item">
-                                        <input type="checkbox" name="RoleIds" value="@role.Value" checked="@isChecked" />
-                                        <span>@role.Text</span>
+                                <div class="mgr-mf-section">帳號狀態</div>
+                                <div class="mgr-mf-radios">
+                                    <label class="mgr-mf-radio-item">
+                                        <input type="radio" name="Status" value="@((short)UserStatus.Active)" @(Model.Status ==
+                                                                                   UserStatus.Active ? "checked" : "") /> 啟用
                                     </label>
-                                }
+                                    <label class="mgr-mf-radio-item">
+                                        <input type="radio" name="Status" value="@((short)UserStatus.Suspended)" @(Model.Status
+                                                                                   == UserStatus.Suspended ? "checked" : "") /> 停用
+                                    </label>
+                                    <label class="mgr-mf-radio-item" style="opacity: .6; cursor: not-allowed;">
+                                        <input type="radio" disabled /> 待開通（僅限新邀請）
+                                    </label>
+                                </div>
+
+                                <div class="mgr-mf-section">備註</div>
+                                <div class="mgr-mf-field mgr-mf-field--full">
+                                    <textarea asp-for="Note" class="mgr-mf-textarea" rows="3"
+                                              placeholder="請輸入關於此帳號的相關紀錄或備註..."></textarea>
+                                    <span asp-validation-for="Note" class="au-validation-message"></span>
+                                </div>
+
+                                <div class="au-form-footer">
+                                    <button type="submit" class="au-submit-btn">
+                                        <i class="fa-solid fa-floppy-disk"></i> 儲存變更
+                                    </button>
+                                </div>
                             </div>
-                            <span asp-validation-for="RoleIds" class="au-validation-message"></span>
-                        </div>
-
-                        <div class="au-form-group">
-                            <label class="au-label" asp-for="Note">備註</label>
-                            <textarea asp-for="Note" class="au-input au-textarea" rows="3"
-                                      placeholder="選填，輸入帳號相關備註..."></textarea>
-                            <span asp-validation-for="Note" class="au-validation-message"></span>
-                        </div>
-
-                        <div class="au-form-footer">
-                            <button type="submit" class="au-submit-btn">
-                                <i class="fa-solid fa-floppy-disk"></i> 儲存變更
-                            </button>
-                        </div>
+                        </form>
                     </div>
-                </form>
-            </div>
 
-            <div class="au-side-panels">
-                <div class="au-info-panel">
-                    <div class="au-info-panel__header">
-                        <h2 class="au-info-panel__title">編輯提醒</h2>
-                        <div class="au-info-panel__icon">
-                            <i class="fa-regular fa-pen-to-square"></i>
+                    <div class="au-info-panel" style="margin-top: 1.6rem;">
+                        <div class="au-info-panel__header">
+                            <h2 class="au-info-panel__title">編輯提醒</h2>
+                            <div class="au-info-panel__icon">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </div>
                         </div>
+                        <ol class="au-steps">
+                            <li class="au-step">
+                                <span class="au-step__num">01</span>
+                                <p class="au-step__desc">變更電子郵件後，系統將驗證是否與其他帳號重複。</p>
+                            </li>
+                            <li class="au-step">
+                                <span class="au-step__num">02</span>
+                                <p class="au-step__desc">角色異動會立即生效，既有 Session 將於下次請求時重新載入權限。</p>
+                            </li>
+                            <li class="au-step">
+                                <span class="au-step__num">03</span>
+                                <p class="au-step__desc">所有編輯操作均會寫入異動紀錄。</p>
+                            </li>
+                        </ol>
                     </div>
-                    <ol class="au-steps">
-                        <li class="au-step">
-                            <span class="au-step__num">01</span>
-                            <p class="au-step__desc">變更電子郵件後，系統將驗證是否與其他帳號重複。</p>
-                        </li>
-                        <li class="au-step">
-                            <span class="au-step__num">02</span>
-                            <p class="au-step__desc">角色異動會立即生效，既有 Session 將於下次請求時重新載入權限。</p>
-                        </li>
-                        <li class="au-step">
-                            <span class="au-step__num">03</span>
-                            <p class="au-step__desc">所有編輯操作均會寫入異動紀錄。</p>
-                        </li>
-                    </ol>
                 </div>
             </div>
-        </div>
-    </div>
-</main>
+        </main>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+        @section Scripts {
+            <partial name="_ValidationScriptsPartial" />
+            <script>
+                (function () {
+                    function refreshRoleStyles() {
+                        document.querySelectorAll('.mgr-mf-roles .mgr-mf-checkbox').forEach(function (cb) {
+                            cb.closest('.mgr-mf-role-item').classList.toggle('mgr-mf-role-item--checked', cb.checked);
+                        });
+                    }
+                    var container = document.querySelector('.mgr-mf-roles');
+                    if (container) {
+                        container.addEventListener('change', refreshRoleStyles);
+                        refreshRoleStyles();
+                    }
+                })();
+            </script>
+        }

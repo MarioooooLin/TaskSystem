@@ -221,4 +221,22 @@ public static class Errors
         public static readonly Error InvitationAlreadyAccepted =
             Error.Conflict("AdminAccount.InvitationAlreadyAccepted", "邀請已被接受。");
     }
+
+    public static class Email
+    {
+        public static readonly Error SendFailed =
+            Error.Problem("Email.SendFailed", "郵件發送失敗，請確認郵件設定或稍後再試。");
+    }
+
+    public static class Invitation
+    {
+        public static readonly Error NotFound =
+            Error.NotFound("Invitation.NotFound", "邀請連結無效或已失效。");
+
+        public static readonly Error Expired =
+            Error.Problem("Invitation.Expired", "邀請連結已過期，請聯繫管理員重新發送邀請。");
+
+        public static readonly Error AlreadyAccepted =
+            Error.Conflict("Invitation.AlreadyAccepted", "此邀請已被使用，請直接登入。");
+    }
 }

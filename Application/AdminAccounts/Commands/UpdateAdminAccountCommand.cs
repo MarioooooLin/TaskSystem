@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Application.AdminAccounts.Commands;
 
 /// <summary>更新後台帳號資料。</summary>
@@ -6,6 +8,7 @@ public sealed record UpdateAdminAccountCommand(
     string Name,
     string Email,
     long[] RoleIds,
+    UserStatus Status,
     string? Department,
     string? JobTitle,
     string? Phone,

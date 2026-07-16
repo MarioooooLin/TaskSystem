@@ -35,9 +35,9 @@
                 <img src="~/images/bell.svg" alt="通知" />
                 <span class="notif-dot"></span>
             </button>
-            <button class="nav-icon-btn user" aria-label="使用者">
+            <a asp-controller="Account" asp-action="Profile" class="nav-icon-btn user" aria-label="使用者">
                 <img src="~/images/user.svg" alt="使用者" />
-            </button>
+            </a>
             <span class="nav-divider"></span>
             <form method="post" asp-controller="Account" asp-action="Logout" style="display:inline">
                 <button type="submit" class="logout-btn">登出<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
@@ -154,13 +154,13 @@
 
         <!-- SUB HEADER -->
         <div class="sub-header">
-            <div class="sub-header__left">
+            @* <div class="sub-header__left">
                 <div class="sh-search-wrap">
                     <input type="text" class="sh-search-input" id="globalSearch" placeholder="案件、業者、KOL" />
                     <i class="fa-solid fa-magnifying-glass sh-search-icon"></i>
                 </div>
                 <button class="sh-search-btn" type="button">搜尋</button>
-            </div>
+            </div> *@
         </div>
 
         <!-- MAIN CONTENT -->

@@ -1,0 +1,5 @@
+-- Admin login seed is generated locally because it contains a password-derived hash.
+-- Generate it from the project root with:
+--   powershell -ExecutionPolicy Bypass -File scripts/create-admin-seed.ps1 -Email "admin@ttm.com.tw" -Name "系統管理員" -Password "Admin@12345"
+--
+-- The generated file is written to scripts/seed-admin.sql.

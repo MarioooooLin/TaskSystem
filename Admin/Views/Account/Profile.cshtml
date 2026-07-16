@@ -1,0 +1,95 @@
+@model Admin.ViewModels.Account.ProfileViewModel
+@{
+    ViewData["Title"] = "個人帳號";
+}
+
+<link rel="stylesheet" href="~/css/add-user.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/manager.css" asp-append-version="true" />
+
+<main class="main-content au-main">
+    <div class="content-card">
+        <nav class="au-breadcrumb">
+            <a asp-controller="Dashboard" asp-action="Index">管理者後台</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span class="au-breadcrumb__current">個人帳號</span>
+        </nav>
+
+        <div class="au-top-bar">
+            <h1 class="au-page-title">個人帳號</h1>
+        </div>
+
+        @if (ViewData["SuccessMessage"] is string successMessage)
+        {
+            <div class="au-validation-summary"
+                 style="color: #2b8a85; background: #e8f7f6; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                <i class="fa-solid fa-circle-check"></i> @successMessage
+            </div>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="au-validation-summary"></div>
+
+        <div class="au-layout" style="grid-template-columns: 1fr;">
+            <div class="au-form-panel">
+                <form method="post" asp-action="Profile">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Name" />
+                    <input type="hidden" asp-for="Email" />
+                    <input type="hidden" asp-for="RolesDisplay" />
+
+                    <div class="au-form-body">
+                        <div class="mgr-mf-section">基本資料</div>
+                        <div class="mgr-mf-grid">
+                            <div class="mgr-mf-field">
+                                <label class="mgr-mf-label" asp-for="Name">姓名</label>
+                                <input type="text" asp-for="Name" class="mgr-mf-input" disabled />
+                            </div>
+                            <div class="mgr-mf-field">
+                                <label class="mgr-mf-label" asp-for="Email">Email (帳號)</label>
+                                <input type="email" asp-for="Email" class="mgr-mf-input" disabled />
+                            </div>
+                            <div class="mgr-mf-field mgr-mf-field--full">
+                                <label class="mgr-mf-label" asp-for="RolesDisplay">角色</label>
+                                <input type="text" asp-for="RolesDisplay" class="mgr-mf-input" disabled />
+                            </div>
+                        </div>
+
+                        <div class="mgr-mf-section">變更密碼</div>
+                        <div class="mgr-mf-grid">
+                            <div class="mgr-mf-field mgr-mf-field--full">
+                                <label class="mgr-mf-label" asp-for="CurrentPassword">目前密碼 <span
+                                    class="mgr-mf-required">*</span></label>
+                                    <input type="password" asp-for="CurrentPassword" class="mgr-mf-input"
+                                           placeholder="請輸入目前密碼" autocomplete="current-password" />
+                                    <span asp-validation-for="CurrentPassword" class="au-validation-message"></span>
+                                </div>
+                                <div class="mgr-mf-field">
+                                    <label class="mgr-mf-label" asp-for="NewPassword">新密碼 <span
+                                        class="mgr-mf-required">*</span></label>
+                                        <input type="password" asp-for="NewPassword" class="mgr-mf-input"
+                                               placeholder="請輸入 8 位以上新密碼" autocomplete="new-password" />
+                                        <span asp-validation-for="NewPassword" class="au-validation-message"></span>
+                                    </div>
+                                    <div class="mgr-mf-field">
+                                        <label class="mgr-mf-label" asp-for="ConfirmPassword">確認新密碼 <span
+                                            class="mgr-mf-required">*</span></label>
+                                            <input type="password" asp-for="ConfirmPassword" class="mgr-mf-input"
+                                                   placeholder="請再次輸入新密碼" autocomplete="new-password" />
+                                            <span asp-validation-for="ConfirmPassword" class="au-validation-message"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="au-form-footer">
+                                        <button type="submit" class="au-submit-btn">
+                                            <i class="fa-solid fa-floppy-disk"></i> 儲存變更
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            @section Scripts {
+                <partial name="_ValidationScriptsPartial" />
+            }

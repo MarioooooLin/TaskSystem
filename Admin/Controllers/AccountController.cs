@@ -11,7 +11,12 @@ using System.Security.Claims;
 
 namespace Admin.Controllers;
 
-public sealed class AccountController(LoginHandler loginHandler) : Controller
+public sealed class AccountController(
+    LoginHandler loginHandler,
+    ValidateInvitationTokenHandler validateTokenHandler,
+    SetPasswordHandler setPasswordHandler,
+    ProfileHandler profileHandler,
+    ChangePasswordHandler changePasswordHandler) : Controller
 {
     // ── GET /Account/Login ────────────────────────────────
     [HttpGet]
@@ -109,5 +114,103 @@ public sealed class AccountController(LoginHandler loginHandler) : Controller
             return PartialView();
 
         return View();
+    }
+
+    // ── GET /Account/SetPassword ──────────────────────────
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> SetPassword(string token, string email)
+    {
+        var result = await validateTokenHandler.HandleAsync(
+            new ValidateInvitationTokenQuery(token, email));
+
+        if (result.IsFailure)
+        {
+            ModelState.AddModelError(string.Empty, result.Error.Description);
+            return View(new SetPasswordViewModel
+            {
+                Token = token,
+                Email = email
+            });
+        }
+
+        return View(new SetPasswordViewModel
+        {
+            Token = token,
+            Email = result.Value.Email,
+            Name = result.Value.Name
+        });
+    }
+
+    // ── POST /Account/SetPassword ─────────────────────────
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> SetPassword(SetPasswordViewModel vm)
+    {
+        if (!ModelState.IsValid)
+            return View(vm);
+
+        var result = await setPasswordHandler.HandleAsync(
+            new SetPasswordCommand(vm.Token, vm.Email, vm.Password));
+
+        if (result.IsFailure)
+        {
+            ModelState.AddModelError(string.Empty, result.Error.Description);
+            return View(vm);
+        }
+
+        return RedirectToAction(nameof(Login));
+    }
+
+    // ── GET /Account/Profile ──────────────────────────────
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Profile()
+    {
+        var userId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var result = await profileHandler.HandleAsync(new ProfileQuery(userId));
+        if (result.IsFailure)
+            return StatusCode(StatusCodes.Status500InternalServerError);
+
+        var vm = new ProfileViewModel
+        {
+            Name = result.Value.Name,
+            Email = result.Value.Email,
+            RolesDisplay = result.Value.RolesDisplay
+        };
+
+        if (TempData["SuccessMessage"] is string message)
+            ViewData["SuccessMessage"] = message;
+
+        return View(vm);
+    }
+
+    // ── POST /Account/Profile ─────────────────────────────
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Profile(ProfileViewModel vm)
+    {
+        if (!ModelState.IsValid)
+            return View(vm);
+
+        var userId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await changePasswordHandler.HandleAsync(
+            new ChangePasswordCommand(userId, vm.CurrentPassword, vm.NewPassword));
+
+        if (result.IsFailure)
+        {
+            var message = result.Error.Code switch
+            {
+                var c when c == Errors.User.InvalidCredentials.Code => "目前密碼不正確",
+                _ => result.Error.Description
+            };
+
+            ModelState.AddModelError(string.Empty, message);
+            return View(vm);
+        }
+
+        TempData["SuccessMessage"] = "密碼已更新，請使用新密碼重新登入。";
+        return RedirectToAction(nameof(Profile));
     }
 }

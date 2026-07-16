@@ -2,6 +2,7 @@ using Application.Abstractions.Persistence;
 using Application.Abstractions.Repositories;
 using Dapper;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Infrastructure.Persistence.Repositories;
 
@@ -115,5 +116,86 @@ public sealed class UserRepository : IUserRepository
 
         await session.Connection.ExecuteAsync(
             sql, new { MerchantId = merchantId }, session.Transaction);
+    }
+
+    public async Task<UserInvitation?> GetPendingInvitationByTokenAsync(
+        string token, string email, IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            SELECT Id, UserId, Email, InvitedByUserId, RoleId, TokenHash,
+                   AccountType, Status, ExpiresAt, AcceptedAt, CreatedAt, UpdatedAt
+            FROM UserInvitations
+            WHERE TokenHash = @Token
+              AND Email = @Email
+              AND AccountType = @AccountType
+              AND Status = @Pending
+            """;
+
+        return await session.Connection.QueryFirstOrDefaultAsync<UserInvitation>(sql, new
+        {
+            Token = token,
+            Email = email,
+            AccountType = (short)AccountType.Admin,
+            Pending = (short)InvitationStatus.Pending
+        }, session.Transaction);
+    }
+
+    public async Task AcceptInvitationAsync(
+        long invitationId, IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            UPDATE UserInvitations
+            SET Status = @Accepted,
+                AcceptedAt = @AcceptedAt,
+                UpdatedAt = @UpdatedAt
+            WHERE Id = @Id
+            """;
+
+        await session.Connection.ExecuteAsync(sql, new
+        {
+            Id = invitationId,
+            Accepted = (short)InvitationStatus.Accepted,
+            AcceptedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        }, session.Transaction);
+    }
+
+    public async Task UpdatePasswordAsync(
+        long userId, string passwordHash, IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            UPDATE Users
+            SET PasswordHash = @PasswordHash,
+                UpdatedAt = @UpdatedAt
+            WHERE Id = @UserId
+            """;
+
+        await session.Connection.ExecuteAsync(sql, new
+        {
+            UserId = userId,
+            PasswordHash = passwordHash,
+            UpdatedAt = DateTime.UtcNow
+        }, session.Transaction);
+    }
+
+    public async Task<IReadOnlyList<string>> GetRoleNamesByUserIdAsync(
+        long userId, IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            SELECT r.Name
+            FROM UserRoles ur
+            INNER JOIN Roles r ON r.Id = ur.RoleId
+            WHERE ur.UserId = @UserId
+              AND r.Scope = @Scope
+            ORDER BY r.Name
+            """;
+
+        var names = await session.Connection.QueryAsync<string>(sql, new
+        {
+            UserId = userId,
+            Scope = (short)RoleScope.System
+        }, session.Transaction);
+
+        return names.AsList();
     }
 }

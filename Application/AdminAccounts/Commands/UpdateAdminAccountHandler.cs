@@ -47,6 +47,17 @@ public sealed class UpdateAdminAccountHandler(
 
         user.Name = cmd.Name.Trim();
         user.Email = cmd.Email.Trim().ToLowerInvariant();
+
+        if (cmd.Status == UserStatus.Suspended && user.Status != UserStatus.Suspended)
+        {
+            var lastAdminId = await adminAccountRepo.GetLastActiveSystemAdminUserIdAsync(uow.Session, ct);
+            if (lastAdminId == user.Id)
+                return Result.Failure(Errors.User.LastSystemAdmin);
+
+            await adminAccountRepo.CancelInvitationsByUserAsync(user.Id, uow.Session, ct);
+        }
+
+        user.Status = cmd.Status;
         await adminAccountRepo.UpdateUserAsync(user, uow.Session, ct);
 
         await adminAccountRepo.UpsertProfileAsync(

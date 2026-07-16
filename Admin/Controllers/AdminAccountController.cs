@@ -5,6 +5,7 @@ using Application.AdminAccounts.DTOs;
 using Application.AdminAccounts.Queries;
 using Common.Pagination;
 using Common.Results;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -129,7 +130,7 @@ public sealed class AdminAccountController(
         var cmd = new CreateAdminAccountInvitationCommand(
             vm.Name,
             vm.Email,
-            vm.RoleId,
+            vm.RoleIds,
             vm.Department,
             vm.JobTitle,
             vm.Phone,
@@ -199,6 +200,7 @@ public sealed class AdminAccountController(
             JobTitle = dto.JobTitle,
             Phone = dto.Phone,
             Note = dto.Note,
+            Status = dto.Status,
             AvailableRoles = MapRoleOptions(rolesResult.Value)
         };
 
@@ -234,6 +236,7 @@ public sealed class AdminAccountController(
             vm.Name,
             vm.Email,
             vm.RoleIds,
+            vm.Status,
             vm.Department,
             vm.JobTitle,
             vm.Phone,

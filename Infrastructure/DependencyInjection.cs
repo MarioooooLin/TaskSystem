@@ -1,8 +1,11 @@
+using Application.Abstractions.Notifications;
 using Application.Abstractions.Persistence;
 using Application.Abstractions.Repositories;
 using Application.Abstractions.Security;
+using Application.AdminAccounts.Options;
 using Dapper;
 using Infrastructure.Authentication;
+using Infrastructure.Notifications;
 using Infrastructure.Persistence.Dapper;
 using Infrastructure.Persistence.Dapper.TypeHandlers;
 using Infrastructure.Persistence.Repositories;
@@ -20,6 +23,25 @@ public static class DependencyInjection
     {
         // ── Dapper TypeHandlers（全域，只需註冊一次）─────────
         SqlMapper.AddTypeHandler(DateOnlyTypeHandler.Instance);
+
+        // ── 郵件通知 ──────────────────────────────────────
+        var emailSection = configuration.GetSection("EmailSettings");
+        services.AddSingleton(new EmailSettings
+        {
+            Host = emailSection["Host"] ?? "smtp.gmail.com",
+            Port = int.TryParse(emailSection["Port"], out var port) ? port : 587,
+            FromEmail = emailSection["FromEmail"] ?? string.Empty,
+            FromName = emailSection["FromName"] ?? string.Empty,
+            Password = emailSection["Password"] ?? string.Empty,
+            EnableSsl = !bool.TryParse(emailSection["EnableSsl"], out var enableSsl) || enableSsl,
+            BaseUrl = emailSection["BaseUrl"] ?? string.Empty
+        });
+        services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+        services.AddSingleton(new InvitationEmailOptions
+        {
+            BaseUrl = emailSection["BaseUrl"] ?? string.Empty
+        });
 
         // ── 安全性 ────────────────────────────────────────
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();

@@ -1,10 +1,14 @@
+using Application.Abstractions.Notifications;
 using Application.Abstractions.Persistence;
 using Application.Abstractions.Repositories;
 using Application.Abstractions.Security;
+using Application.AdminAccounts.Options;
+using Common.Errors;
 using Common.Results;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Exceptions;
+using System.Net;
 
 namespace Application.AdminAccounts.Commands;
 
@@ -12,7 +16,9 @@ public sealed class ResendAdminAccountInvitationHandler(
     IUnitOfWork unitOfWork,
     IAdminAccountRepository adminAccountRepo,
     IActivityLogRepository activityLogRepo,
-    ICurrentUser currentUser)
+    ICurrentUser currentUser,
+    InvitationEmailOptions invitationOptions,
+    IEmailSender emailSender)
 {
     public async Task<Result> HandleAsync(
         ResendAdminAccountInvitationCommand cmd,
@@ -54,6 +60,10 @@ public sealed class ResendAdminAccountInvitationHandler(
 
         await adminAccountRepo.InsertInvitationAsync(invitation, uow.Session, ct);
 
+        var sendResult = await SendInvitationEmailAsync(user.Name, user.Email, token, ct);
+        if (sendResult.IsFailure)
+            return sendResult;
+
         await activityLogRepo.WriteAsync(
             targetType: "AdminAccounts",
             targetId: user.Id,
@@ -65,5 +75,30 @@ public sealed class ResendAdminAccountInvitationHandler(
 
         await uow.CommitAsync(ct);
         return Result.Success();
+    }
+
+    private async Task<Result> SendInvitationEmailAsync(
+        string name,
+        string email,
+        string token,
+        CancellationToken ct)
+    {
+        try
+        {
+            var baseUrl = (invitationOptions.BaseUrl ?? string.Empty).TrimEnd('/');
+            var link = $"{baseUrl}/Account/SetPassword?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(email)}";
+            var subject = "任務系統管理者後台 - 帳號開通邀請（重發）";
+            var body = $@"<p>Hi {WebUtility.HtmlEncode(name)},</p>
+<p>請點擊下方連結設定您的後台帳號密碼：</p>
+<p><a href=""{link}"">設定密碼</a></p>
+<p>此連結將於 48 小時後失效。</p>";
+
+            await emailSender.SendAsync(new EmailMessage(email, subject, body), ct);
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure(Error.Problem("Email.SendFailed", $"郵件發送失敗：{ex.Message}"));
+        }
     }
 }

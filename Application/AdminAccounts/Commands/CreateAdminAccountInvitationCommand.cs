@@ -4,7 +4,7 @@ namespace Application.AdminAccounts.Commands;
 public sealed record CreateAdminAccountInvitationCommand(
     string Name,
     string Email,
-    long RoleId,
+    long[] RoleIds,
     string? Department,
     string? JobTitle,
     string? Phone,

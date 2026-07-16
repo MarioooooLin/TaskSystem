@@ -1,6 +1,48 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-15 18:13
+> 最後整理時間：2026-07-16 16:12
+
+---
+
+## 2026-07-16
+
+### [16:12] 實作設定密碼頁 /Account/SetPassword 與個人帳號頁 /Account/Profile
+
+**變更內容**
+
+- Repository：
+    - [IUserRepository.cs](Application/Abstractions/Repositories/IUserRepository.cs) 新增 `GetPendingInvitationByTokenAsync`、`AcceptInvitationAsync`、`UpdatePasswordAsync`、`GetRoleNamesByUserIdAsync`
+    - [UserRepository.cs](Infrastructure/Persistence/Repositories/UserRepository.cs) 實作對應 Dapper SQL
+- Application / Account：
+    - [ValidateInvitationTokenQuery.cs](Application/Account/ValidateInvitationTokenQuery.cs)：驗證邀請連結有效性，回傳姓名/Email
+    - [SetPasswordCommand.cs](Application/Account/SetPasswordCommand.cs)：驗證邀請、雜湊密碼、更新 `Users.PasswordHash`、標記 `UserInvitations.Status = Accepted`
+    - [ProfileQuery.cs](Application/Account/ProfileQuery.cs)：查詢個人帳號與系統角色名稱
+    - [ChangePasswordCommand.cs](Application/Account/ChangePasswordCommand.cs)：驗證目前密碼後更新
+    - [Application/DependencyInjection.cs](Application/DependencyInjection.cs) 註冊四個 Handler
+- Admin ViewModel / View：
+    - 新增 [SetPasswordViewModel.cs](Admin/ViewModels/Account/SetPasswordViewModel.cs) 與 [SetPassword.cshtml](Admin/Views/Account/SetPassword.cshtml)
+    - 新增 [ProfileViewModel.cs](Admin/ViewModels/Account/ProfileViewModel.cs) 與 [Profile.cshtml](Admin/Views/Account/Profile.cshtml)
+- Controller：
+    - [Admin/Controllers/AccountController.cs](Admin/Controllers/AccountController.cs) 加入 `[AllowAnonymous] SetPassword` GET/POST 與 `[Authorize] Profile` GET/POST
+- 頂部導覽：
+    - [Admin/Views/Shared/\_Layout.cshtml](Admin/Views/Shared/_Layout.cshtml) 人頭圖示改為連結到 `/Account/Profile`
+- 錯誤碼：
+    - [Domain/Exceptions/Errors.cs](Domain/Exceptions/Errors.cs) 新增 `Invitation.NotFound`、`Invitation.Expired`、`Invitation.AlreadyAccepted`
+- 順修：
+    - 補上 [CreateAdminAccountInvitationHandler.cs](Application/AdminAccounts/Commands/CreateAdminAccountInvitationHandler.cs) 與 [ResendAdminAccountInvitationHandler.cs](Application/AdminAccounts/Commands/ResendAdminAccountInvitationHandler.cs) 缺少的 `using Common.Errors;`
+
+**決策原因**
+
+- 邀請信中的設定密碼入口原本未實作，這次補齊以完成後台帳號開通流程
+- `SetPassword` 採 `[AllowAnonymous]`，僅靠 token + email 驗證，避免未登入者無法接受邀請
+- `Profile` 頁面只開放變更密碼，角色與基本資料僅供檢視且 disabled，符合使用者確認的設計
+- 頂部人頭連結改為 `/Account/Profile`，讓登入者可直接進入個人帳號設定
+
+**測試狀態**
+
+- `get_errors` 全 Solution 無錯誤
+- `dotnet build Admin/Admin.csproj -p:OutputPath=bin\DebugCheck\net9.0\` 成功
+- 畫面經使用者確認沒問題
 
 ---
 

@@ -17,10 +17,10 @@ public sealed class CreateAdminAccountViewModel
     [Display(Name = "電子郵件")]
     public string Email { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "請選擇角色")]
-    [Range(1, long.MaxValue, ErrorMessage = "請選擇角色")]
+    [Required(ErrorMessage = "請至少選擇一個角色")]
+    [MinLength(1, ErrorMessage = "請至少選擇一個角色")]
     [Display(Name = "角色")]
-    public long RoleId { get; set; }
+    public long[] RoleIds { get; set; } = [];
 
     [StringLength(100, ErrorMessage = "部門不可超過 100 個字元")]
     [Display(Name = "部門")]
