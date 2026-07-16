@@ -2,7 +2,7 @@ namespace Domain.Enums;
 
 /// <summary>
 /// KOL 社群帳號平台，對應 KolSocialAccounts.Platform。
-/// 1=X 2=IG 3=FB 4=YT 5=Blog 6=小紅書 7=TikTok 8=中國抖音 9=Threads 10=Snapchat 11=WeChat
+/// 1=X 2=IG 3=FB 4=YT 5=Blog 6=小紅書 7=TikTok 8=抖音 9=Threads 10=Snapchat 11=WeChat
 /// </summary>
 public enum SocialPlatform : short
 {

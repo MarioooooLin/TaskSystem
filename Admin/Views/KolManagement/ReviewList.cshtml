@@ -22,13 +22,13 @@
         [8] = "抖音",
         [9] = "Threads",
         [10] = "Snapchat",
-        [11] = "WeChat",
+        [11] = "WeChat"
     };
 
     var categoryNames = new Dictionary<short, string>
     {
         [1] = "旅遊",
-        [2] = "旅行",
+        [2] = "美食",
         [3] = "時尚",
         [4] = "美妝",
         [5] = "居家生活",
@@ -46,13 +46,13 @@
         [17] = "健康",
         [18] = "健身",
         [19] = "運動",
-        [20] = "飲食",
-        [21] = "養生",
+        [20] = "養生",
+        [21] = "營養",
         [22] = "公益",
         [23] = "環保",
         [24] = "政治",
         [25] = "文化",
-        [26] = "跨界",
+        [26] = "跨界"
     };
 
     var mainCategories = new (short Id, string Name)[]
@@ -322,7 +322,7 @@
                             <span class="page-ellipsis">...</span>
                         }
                         <button type="button" class="page-btn @(p == curPage ? "active" : "")" onclick="knGoToPage(@p)" @(p ==
-                                                                                                                                                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
+                                                                                                                                                                                                                                                                                    curPage ? "aria-current=\"page\"" : "")>@p</button>
                         prev = p;
                     }
 

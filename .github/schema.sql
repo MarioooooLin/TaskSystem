@@ -117,10 +117,10 @@ CREATE TABLE KolCategories (
     Id BIGINT IDENTITY(1, 1) NOT NULL,
     KolId BIGINT NOT NULL,
     Category SMALLINT NOT NULL,
-    -- 1=旅遊 2=旅行 3=時尚 4=美妝 5=居家生活 6=親子 7=寵物
+    -- 1=旅遊 2=美食 3=時尚 4=美妝 5=居家生活 6=親子 7=寵物
     -- 8=遊戲 9=音樂 10=影視 11=藝術 12=書籍 13=科技 14=財經
-    -- 15=教育 16=職場 17=健康 18=健身 19=運動 20=飲食
-    -- 21=養生 22=公益 23=環保 24=政治 25=文化 26=跨界
+    -- 15=教育 16=職場 17=健康 18=健身 19=運動 20=養生
+    -- 21=營養 22=公益 23=環保 24=政治 25=文化 26=跨界
     CONSTRAINT PK_KolCategories PRIMARY KEY (Id),
     CONSTRAINT FK_KolCategories_Kol FOREIGN KEY (KolId) REFERENCES KolProfiles(Id),
     CONSTRAINT UQ_KolCategories_Kol_Cat UNIQUE (KolId, Category)
@@ -155,7 +155,7 @@ CREATE TABLE KolSocialAccounts (
     KolId BIGINT NOT NULL,
     Platform SMALLINT NOT NULL,
     -- 1=X 2=IG 3=FB 4=YT 5=Blog 6=小紅書 7=TikTok
-    -- 8=中國抖音 9=Threads 10=Snapchat 11=WeChat
+    -- 8=抖音 9=Threads 10=Snapchat 11=WeChat
     AccountName NVARCHAR(200) NOT NULL,
     ProfileUrl NVARCHAR(500) NULL,
     -- KOL 輸入的社群網址，平台與帳號可由後端解析
@@ -189,7 +189,7 @@ CREATE TABLE KolBankAccounts (
     AccountNumberEncrypted NVARCHAR(500) NOT NULL,
     -- 銀行帳號加密儲存，顯示時遮蔽中間碼
     Status SMALLINT NOT NULL DEFAULT 1,
-    -- 1=Pending 2=Verified 3=Rejected
+    -- 1=Pending  2=Verified  3=Rejected
     CreatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     UpdatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT PK_KolBankAccounts PRIMARY KEY (Id),

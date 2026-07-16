@@ -1,10 +1,46 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-16 16:49
+> 最後整理時間：2026-07-16 17:30
 
 ---
 
 ## 2026-07-16
+
+### [17:30] 統一 KOL 類型與平台名稱對照
+
+**變更內容**
+
+- [Domain/Entities/KolCategory.cs](Domain/Entities/KolCategory.cs)：更新 XML 註解，KOL 類型 ID 2 改為「美食」、ID 20 改為「養生」、ID 21 改為「營養」
+- [Domain/Entities/KolSocialAccount.cs](Domain/Entities/KolSocialAccount.cs)、[Domain/Enums/SocialPlatform.cs](Domain/Enums/SocialPlatform.cs)、[Application/Kols/DTOs/KolSocialAccountDto.cs](Application/Kols/DTOs/KolSocialAccountDto.cs)：平台註解「中國抖音」改為「抖音」
+- [.github/schema.sql](.github/schema.sql)：同步更新 `KolCategories` 與 `KolSocialAccounts` 表格註解
+- Admin Views：統一 `categoryNames` / `platformNames` 字典
+    - [Admin/Views/Dashboard/Index.cshtml](Admin/Views/Dashboard/Index.cshtml)
+    - [Admin/Views/KolManagement/Index.cshtml](Admin/Views/KolManagement/Index.cshtml)
+    - [Admin/Views/KolManagement/ReviewList.cshtml](Admin/Views/KolManagement/ReviewList.cshtml)
+- [Admin/Views/KolManagement/Index.cshtml](Admin/Views/KolManagement/Index.cshtml)：`categoryCss` ID 2 從 `km-tag--travel` 改為 `km-tag--food`
+
+**決策原因**
+
+- PM 提供最新 KOL 類型清單，與既有 schema 對照後發現僅需調整名稱、不需新增 ID
+- 平台顯示名稱統一使用簡稱（IG / FB / YT / 抖音 等），節省 UI 空間並保持一致
+- 各頁面原本各自 hard code 字典，這次統一內容，減少未來維護時不同步的問題
+
+**資料庫更新**
+
+```sql
+MERGE KolCategories AS target
+USING (SELECT DISTINCT KolId FROM KolCategories WHERE Category = 2) AS source
+ON target.KolId = source.KolId AND target.Category = 1
+WHEN NOT MATCHED THEN
+    INSERT (KolId, Category) VALUES (source.KolId, 1);
+
+DELETE FROM KolCategories WHERE Category = 2;
+```
+
+**測試狀態**
+
+- `get_errors` 全 Solution 無錯誤
+- 資料庫 SQL 待執行
 
 ### [17:05] 異議處理頁已結案不再顯示「處理爭議」按鈕
 

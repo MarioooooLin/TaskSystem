@@ -7,7 +7,7 @@ public class KolSocialAccount
     public long Id { get; set; }
     public long KolId { get; set; }
 
-    /// <summary>1=X 2=IG 3=FB 4=YT 5=Blog 6=小紅書 7=TikTok 8=中國抖音 9=Threads 10=Snapchat 11=WeChat</summary>
+    /// <summary>1=X 2=IG 3=FB 4=YT 5=Blog 6=小紅書 7=TikTok 8=抖音 9=Threads 10=Snapchat 11=WeChat</summary>
     public short Platform { get; set; }
 
     public string AccountName { get; set; } = string.Empty;
