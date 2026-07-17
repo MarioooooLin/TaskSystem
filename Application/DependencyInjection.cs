@@ -64,6 +64,10 @@ public static class DependencyInjection
         services.AddScoped<GetCaseSummaryHandler>();
         services.AddScoped<GetCaseDetailHandler>();
 
+        // ── Merchant Case Management ──────────────────────
+        services.AddScoped<GetMerchantCaseListHandler>();
+        services.AddScoped<GetMerchantCaseSummaryHandler>();
+
         // ── Dashboard ─────────────────────────────────────
         services.AddScoped<GetDashboardHandler>();
 

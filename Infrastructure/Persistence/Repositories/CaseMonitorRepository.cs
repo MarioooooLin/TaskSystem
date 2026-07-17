@@ -306,6 +306,128 @@ public sealed class CaseMonitorRepository : ICaseMonitorRepository
         };
     }
 
+    // ── GetMerchantListAsync ──────────────────────────────────────
+    public async Task<(IReadOnlyList<MerchantCaseListItemDto> Items, int TotalCount)> GetMerchantListAsync(
+        long merchantId,
+        string? keyword,
+        CaseStatus? status,
+        bool? closedOnly,
+        int? rewardTypeFilter,
+        SocialPlatform? platform,
+        DateTime? dateFrom,
+        DateTime? dateTo,
+        PageQuery pageQuery,
+        IDbSession session,
+        CancellationToken ct = default)
+    {
+        var where = BuildMerchantListWhere(keyword, status, closedOnly, rewardTypeFilter, platform, dateFrom, dateTo);
+
+        var countSql = $"""
+            SELECT COUNT(*)
+            FROM Cases c
+            {where}
+            """;
+
+        var listSql = $"""
+            SELECT
+                c.Id                                                                        AS CaseId,
+                c.Title,
+                c.Status,
+                CASE WHEN c.CashRewardAmount > 0 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END  AS HasCash,
+                CASE WHEN EXISTS(SELECT 1 FROM CaseBarterItems bi WHERE bi.CaseId = c.Id)
+                     THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END                            AS HasBarter,
+                c.IsCommissionEnabled                                                       AS HasCommission,
+                c.WantedKolCount,
+                c.ApplicationCount,
+                c.ApprovedAssignmentCount,
+                COUNT(CASE WHEN t.Status = 4 THEN 1 END)                                    AS TaskUnderReviewCount,
+                COUNT(CASE WHEN t.Status = 3 THEN 1 END)                                    AS TaskInProgressCount,
+                COUNT(CASE WHEN t.Status = 6 THEN 1 END)                                    AS TaskCompletedCount,
+                COUNT(CASE WHEN t.Status = 7 THEN 1 END)                                    AS TaskIncompleteCount,
+                COUNT(CASE WHEN t.Status = 8 THEN 1 END)                                    AS TaskCancelledCount,
+                c.CashRewardAmount,
+                c.ApplicationDeadline,
+                c.SubmissionDeadline,
+                c.PublishedAt,
+                c.CreatedAt
+            FROM Cases c
+            LEFT JOIN Tasks t ON t.CaseId = c.Id
+            {where}
+            GROUP BY
+                c.Id, c.Title, c.Status, c.CashRewardAmount,
+                c.IsCommissionEnabled, c.WantedKolCount, c.ApplicationCount,
+                c.ApprovedAssignmentCount, c.ApplicationDeadline,
+                c.SubmissionDeadline, c.PublishedAt, c.CreatedAt
+            ORDER BY c.CreatedAt DESC
+            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
+            """;
+
+        var param = new
+        {
+            MerchantId = merchantId,
+            Keyword = string.IsNullOrWhiteSpace(keyword) ? null : $"%{keyword.Trim()}%",
+            Status = (short?)status,
+            ClosedOnly = closedOnly,
+            RewardTypeFilter = rewardTypeFilter,
+            Platform = (short?)platform,
+            DateFrom = dateFrom,
+            DateTo = dateTo,
+            pageQuery.Offset,
+            pageQuery.PageSize
+        };
+
+        var totalCount = await session.Connection.ExecuteScalarAsync<int>(
+            countSql, param, session.Transaction);
+
+        var items = (await session.Connection.QueryAsync<MerchantCaseListItemDto>(
+            listSql, param, session.Transaction)).AsList();
+
+        if (items.Count > 0)
+        {
+            var caseIds = items.Select(i => i.CaseId).ToList();
+            var platformRows = await session.Connection.QueryAsync<(long CaseId, short Platform)>(
+                "SELECT CaseId, Platform FROM CasePlatforms WHERE CaseId IN @CaseIds ORDER BY CaseId, Platform",
+                new { CaseIds = caseIds }, session.Transaction);
+
+            var platformLookup = platformRows
+                .GroupBy(r => r.CaseId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => (IReadOnlyList<SocialPlatform>)g.Select(r => (SocialPlatform)r.Platform).ToList());
+
+            foreach (var item in items)
+            {
+                if (platformLookup.TryGetValue(item.CaseId, out var platforms))
+                    item.Platforms = platforms;
+            }
+        }
+
+        return (items, totalCount);
+    }
+
+    // ── GetMerchantSummaryAsync ─────────────────────────────────────
+    public async Task<MerchantCaseSummaryDto> GetMerchantSummaryAsync(
+        long merchantId,
+        IDbSession session,
+        CancellationToken ct = default)
+    {
+        const string sql = """
+            SELECT
+                COUNT(*)                                      AS TotalCount,
+                COUNT(CASE WHEN Status = 1 THEN 1 END)        AS DraftCount,
+                COUNT(CASE WHEN Status = 3 THEN 1 END)        AS PendingReviewCount,
+                COUNT(CASE WHEN Status = 2 THEN 1 END)        AS RecruitingCount,
+                COUNT(CASE WHEN Status = 4 THEN 1 END)        AS InProgressCount,
+                COUNT(CASE WHEN Status = 5 THEN 1 END)        AS PendingAcceptanceCount,
+                COUNT(CASE WHEN Status IN (6, 7) THEN 1 END)  AS ClosedCount
+            FROM Cases
+            WHERE MerchantId = @MerchantId
+            """;
+
+        return await session.Connection.QueryFirstOrDefaultAsync<MerchantCaseSummaryDto>(
+            sql, new { MerchantId = merchantId }, session.Transaction) ?? new MerchantCaseSummaryDto();
+    }
+
     // ── private ───────────────────────────────────────────────────
     private static string BuildListWhere(
         string? keyword,
@@ -338,6 +460,50 @@ public sealed class CaseMonitorRepository : ICaseMonitorRepository
             clauses.Add("c.CreatedAt < DATEADD(DAY, 1, @DateTo)");
 
         return clauses.Count == 0 ? "" : "WHERE " + string.Join(" AND ", clauses);
+    }
+
+    private static string BuildMerchantListWhere(
+        string? keyword,
+        CaseStatus? status,
+        bool? closedOnly,
+        int? rewardTypeFilter,
+        SocialPlatform? platform,
+        DateTime? dateFrom,
+        DateTime? dateTo)
+    {
+        var clauses = new List<string> { "c.MerchantId = @MerchantId" };
+
+        if (!string.IsNullOrWhiteSpace(keyword))
+            clauses.Add("c.Title LIKE @Keyword");
+
+        if (closedOnly == true)
+            clauses.Add("c.Status IN (6, 7)");
+        else if (status.HasValue)
+            clauses.Add("c.Status = @Status");
+
+        switch (rewardTypeFilter)
+        {
+            case 1:
+                clauses.Add("c.CashRewardAmount > 0 AND NOT EXISTS(SELECT 1 FROM CaseBarterItems bi WHERE bi.CaseId = c.Id)");
+                break;
+            case 2:
+                clauses.Add("c.CashRewardAmount = 0 AND EXISTS(SELECT 1 FROM CaseBarterItems bi WHERE bi.CaseId = c.Id)");
+                break;
+            case 3:
+                clauses.Add("c.CashRewardAmount > 0 AND EXISTS(SELECT 1 FROM CaseBarterItems bi WHERE bi.CaseId = c.Id)");
+                break;
+        }
+
+        if (platform.HasValue)
+            clauses.Add("EXISTS(SELECT 1 FROM CasePlatforms cp WHERE cp.CaseId = c.Id AND cp.Platform = @Platform)");
+
+        if (dateFrom.HasValue)
+            clauses.Add("c.CreatedAt >= @DateFrom");
+
+        if (dateTo.HasValue)
+            clauses.Add("c.CreatedAt < DATEADD(DAY, 1, @DateTo)");
+
+        return "WHERE " + string.Join(" AND ", clauses);
     }
 
     // ── Private mapping types ─────────────────────────────────────

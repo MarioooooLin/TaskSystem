@@ -31,4 +31,24 @@ public interface ICaseMonitorRepository
 
     /// <summary>取得案件詳情（含任務清單、附件、操作紀錄）。找不到時回傳 null。</summary>
     Task<CaseDetailDto?> GetDetailAsync(long caseId, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>取得業者端案件列表（依 MerchantId 過濾）。</summary>
+    Task<(IReadOnlyList<MerchantCaseListItemDto> Items, int TotalCount)> GetMerchantListAsync(
+        long merchantId,
+        string? keyword,
+        CaseStatus? status,
+        bool? closedOnly,
+        int? rewardTypeFilter,
+        SocialPlatform? platform,
+        DateTime? dateFrom,
+        DateTime? dateTo,
+        PageQuery pageQuery,
+        IDbSession session,
+        CancellationToken ct = default);
+
+    /// <summary>取得業者端案件狀態統計（依 MerchantId 過濾）。</summary>
+    Task<MerchantCaseSummaryDto> GetMerchantSummaryAsync(
+        long merchantId,
+        IDbSession session,
+        CancellationToken ct = default);
 }

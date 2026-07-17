@@ -1,0 +1,370 @@
+@using Domain.Enums
+@model Merchant.ViewModels.Cases.CaseIndexViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "案件管理";
+
+    string StatusCardActive(CaseStatus? status) =>
+        Model.Query.Status == status && Model.Query.ClosedOnly != true ? "active" : "";
+
+    string ClosedCardActive() =>
+        Model.Query.ClosedOnly == true ? "active" : "";
+
+    string PlatformTagActive(SocialPlatform? platform) =>
+        Model.Query.Platform == platform ? "active" : "";
+
+    string StatusCssClass(CaseStatus status) => status switch
+    {
+        CaseStatus.Draft => "draft",
+        CaseStatus.Recruiting => "recruit",
+        CaseStatus.RecruitmentClosed => "review",
+        CaseStatus.InProgress => "progress",
+        CaseStatus.Completed => "accepting",
+        CaseStatus.Settled => "closed",
+        CaseStatus.Cancelled => "closed",
+        _ => ""
+    };
+
+    string StatusText(CaseStatus status) => status switch
+    {
+        CaseStatus.Draft => "草稿",
+        CaseStatus.Recruiting => "招募中",
+        CaseStatus.RecruitmentClosed => "待審核",
+        CaseStatus.InProgress => "執行中",
+        CaseStatus.Completed => "待驗收",
+        CaseStatus.Settled => "已結案",
+        CaseStatus.Cancelled => "已取消",
+        _ => "未知"
+    };
+
+    string RewardTypeText(bool hasCash, bool hasBarter, bool hasCommission)
+    {
+        if (hasCash && hasBarter) return "現金報酬、贈品項目";
+        if (hasCash) return "現金報酬";
+        if (hasBarter) return "贈品項目";
+        if (hasCommission) return "銷售分潤";
+        return "—";
+    }
+
+    string PlatformIconClass(SocialPlatform platform) => platform switch
+    {
+        SocialPlatform.Instagram => "fa-brands fa-instagram",
+        SocialPlatform.Facebook => "fa-brands fa-facebook",
+        SocialPlatform.YouTube => "fa-brands fa-youtube",
+        SocialPlatform.TikTok => "fa-brands fa-tiktok",
+        SocialPlatform.XiaoHongShu => "fa-solid fa-book-open",
+        SocialPlatform.Threads => "fa-brands fa-threads",
+        _ => "fa-solid fa-share-nodes"
+    };
+
+    string FormatDate(DateTime? date) => date.HasValue ? date.Value.ToString("yyyy/MM/dd") : "未發佈";
+
+    var queryDict = new Dictionary<string, string?>();
+    if (!string.IsNullOrEmpty(Model.Query.Keyword)) queryDict["Keyword"] = Model.Query.Keyword;
+    if (Model.Query.Status.HasValue) queryDict["Status"] = ((short)Model.Query.Status.Value).ToString();
+    if (Model.Query.ClosedOnly.HasValue) queryDict["ClosedOnly"] =
+Model.Query.ClosedOnly.Value.ToString().ToLowerInvariant();
+    if (Model.Query.RewardTypeFilter.HasValue) queryDict["RewardTypeFilter"] =
+Model.Query.RewardTypeFilter.Value.ToString();
+    if (Model.Query.Platform.HasValue) queryDict["Platform"] = ((short)Model.Query.Platform.Value).ToString();
+    if (Model.Query.DateFrom.HasValue) queryDict["DateFrom"] = Model.Query.DateFrom.Value.ToString("yyyy-MM-dd");
+    if (Model.Query.DateTo.HasValue) queryDict["DateTo"] = Model.Query.DateTo.Value.ToString("yyyy-MM-dd");
+}
+
+<div class="content-card">
+
+    <!-- PAGE TITLE -->
+    <div class="page-header">
+        <div class="page-header__left">
+            <h1 class="page-title">案件管理</h1>
+            <p class="page-subtitle">管理與追蹤您的所有合作案件</p>
+        </div>
+        <div class="page-header__right">
+            <a asp-controller="Case" asp-action="Create" class="btn-primary">
+                <i class="fa-solid fa-plus"></i> 新增案件
+            </a>
+        </div>
+    </div>
+
+    <div id="case-list">
+
+        <form id="case-filter-form" asp-controller="Case" asp-action="Index" hx-get="@Url.Action("Index", "Case")"
+              hx-target="#case-list" hx-select="#case-list" hx-push-url="true" hx-swap="outerHTML" hx-trigger="submit">
+
+            <input type="hidden" name="ClosedOnly" id="filterClosedOnly"
+                   value="@(Model.Query.ClosedOnly == true ? "true" : "")" />
+
+            <!-- STATUS CARDS -->
+            <section class="status-cards">
+                <a href="#" class="status-card @StatusCardActive(CaseStatus.Draft)"
+                   data-status="@((short)CaseStatus.Draft)"
+                   onclick="setCaseFilter('@((short)CaseStatus.Draft)', false); return false;">
+                    <img src="~/images/icon-draft.svg" alt="草稿" />
+                    <span class="status-label">草稿</span>
+                    <span class="status-count">@Model.Summary.DraftCount</span>
+                </a>
+                <a href="#" class="status-card @StatusCardActive(CaseStatus.RecruitmentClosed)"
+                   data-status="@((short)CaseStatus.RecruitmentClosed)"
+                   onclick="setCaseFilter('@((short)CaseStatus.RecruitmentClosed)', false); return false;">
+                    <img src="~/images/icon-review.svg" alt="待審核" />
+                    <span class="status-label">待審核</span>
+                    <span class="status-count">@Model.Summary.PendingReviewCount</span>
+                </a>
+                <a href="#" class="status-card @StatusCardActive(CaseStatus.Recruiting)"
+                   data-status="@((short)CaseStatus.Recruiting)"
+                   onclick="setCaseFilter('@((short)CaseStatus.Recruiting)', false); return false;">
+                    <img src="~/images/icon-recruit.svg" alt="招募中" />
+                    <span class="status-label">招募中</span>
+                    <span class="status-count">@Model.Summary.RecruitingCount</span>
+                </a>
+                <a href="#" class="status-card @StatusCardActive(CaseStatus.InProgress)"
+                   data-status="@((short)CaseStatus.InProgress)"
+                   onclick="setCaseFilter('@((short)CaseStatus.InProgress)', false); return false;">
+                    <img src="~/images/icon-progress.svg" alt="執行中" />
+                    <span class="status-label">執行中</span>
+                    <span class="status-count">@Model.Summary.InProgressCount</span>
+                </a>
+                <a href="#" class="status-card @StatusCardActive(CaseStatus.Completed)"
+                   data-status="@((short)CaseStatus.Completed)"
+                   onclick="setCaseFilter('@((short)CaseStatus.Completed)', false); return false;">
+                    <img src="~/images/icon-accepting.svg" alt="待驗收" />
+                    <span class="status-label">待驗收</span>
+                    <span class="status-count">@Model.Summary.PendingAcceptanceCount</span>
+                </a>
+                <a href="#" class="status-card @ClosedCardActive()" onclick="setCaseFilter('', true); return false;">
+                    <img src="~/images/icon-closed.svg" alt="已結案" />
+                    <span class="status-label">已結案</span>
+                    <span class="status-count">@Model.Summary.ClosedCount</span>
+                </a>
+            </section>
+
+            <!-- FILTER BAR -->
+            <section class="filter-bar">
+                <div class="filter-bar__row">
+                    <div class="filter-search">
+                        <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                        <input type="text" name="Keyword" class="filter-search__input" placeholder="關鍵字搜尋"
+                               value="@Model.Query.Keyword">
+                    </div>
+                    <div class="filter-select-wrap">
+                        <select name="Status" class="filter-select" onchange="setCaseFilter(this.value, false)">
+                            <option value="">全部狀態</option>
+                            <option value="@((short)CaseStatus.Draft)"
+                                    selected="@(Model.Query.Status == CaseStatus.Draft)">草稿</option>
+                            <option value="@((short)CaseStatus.RecruitmentClosed)"
+                                    selected="@(Model.Query.Status == CaseStatus.RecruitmentClosed)">待審核</option>
+                            <option value="@((short)CaseStatus.Recruiting)"
+                                    selected="@(Model.Query.Status == CaseStatus.Recruiting)">招募中</option>
+                            <option value="@((short)CaseStatus.InProgress)"
+                                    selected="@(Model.Query.Status == CaseStatus.InProgress)">執行中</option>
+                            <option value="@((short)CaseStatus.Completed)"
+                                    selected="@(Model.Query.Status == CaseStatus.Completed)">待驗收</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                    </div>
+                    <div class="filter-select-wrap">
+                        <select name="RewardTypeFilter" class="filter-select"
+                                onchange="htmx.trigger('#case-filter-form', 'submit')">
+                            <option value="">全部合作條件</option>
+                            <option value="1" selected="@(Model.Query.RewardTypeFilter == 1)">現金報酬</option>
+                            <option value="2" selected="@(Model.Query.RewardTypeFilter == 2)">贈品項目</option>
+                            <option value="3" selected="@(Model.Query.RewardTypeFilter == 3)">現金報酬、贈品項目</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                    </div>
+                </div>
+                <div class="filter-bar__row filter-bar__row--wrap">
+                    <div class="filter-group">
+                        <span class="filter-group__label">發佈平台</span>
+                        <div class="filter-tags">
+                            <input type="hidden" name="Platform" id="filterPlatform"
+                                   value="@(Model.Query.Platform.HasValue ? ((short)Model.Query.Platform.Value).ToString() : "")" />
+                            <button type="button" class="filter-tag @PlatformTagActive(null)"
+                                    onclick="setPlatformFilter('')">全部</button>
+                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.Facebook)"
+                                    onclick="setPlatformFilter('@((short)SocialPlatform.Facebook)')">FACEBOOK</button>
+                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.YouTube)"
+                                    onclick="setPlatformFilter('@((short)SocialPlatform.YouTube)')">YOUTUBE</button>
+                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.Instagram)"
+                                    onclick="setPlatformFilter('@((short)SocialPlatform.Instagram)')">INSTAGRAM</button>
+                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.Threads)"
+                                    onclick="setPlatformFilter('@((short)SocialPlatform.Threads)')">THREADS</button>
+                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.TikTok)"
+                                    onclick="setPlatformFilter('@((short)SocialPlatform.TikTok)')">TIKTOK</button>
+                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.XiaoHongShu)"
+                                    onclick="setPlatformFilter('@((short)SocialPlatform.XiaoHongShu)')">小紅書</button>
+                            <!-- 待確認：LINE 平台目前尚未定義於 SocialPlatform -->
+                            <button type="button" class="filter-tag" title="待確認">LINE</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-bar__row">
+                    <div class="filter-group">
+                        <span class="filter-group__label">日期區間</span>
+                        <div class="filter-date-range">
+                            <div class="filter-date-input">
+                                <input type="date" name="DateFrom" class="date-input" aria-label="開始日期"
+                                       value="@(Model.Query.DateFrom.HasValue ? Model.Query.DateFrom.Value.ToString("yyyy-MM-dd") : "")"
+                                       onchange="htmx.trigger('#case-filter-form', 'submit')">
+                                <span class="filter-date-sep">～</span>
+                                <input type="date" name="DateTo" class="date-input" aria-label="結束日期"
+                                       value="@(Model.Query.DateTo.HasValue ? Model.Query.DateTo.Value.ToString("yyyy-MM-dd") : "")"
+                                       onchange="htmx.trigger('#case-filter-form', 'submit')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </form>
+
+        <!-- CASES TABLE -->
+        <section class="table-section">
+            <table class="data-table cases-table">
+                <thead>
+                    <tr>
+                        <th>案件名稱</th>
+                        <th>狀態</th>
+                        <th>合作條件</th>
+                        <th>發佈平台</th>
+                        <th>招募報名</th>
+                        <th>任務待處</th>
+                        <th>總預算</th>
+                        <th>日期截止</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.List.Items.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="9" class="td-empty">目前沒有符合條件的案件</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.List.Items)
+                        {
+                            <tr>
+                                <td class="td-case-name">
+                                    @item.Title
+                                </td>
+                                <td><span class="case-status @StatusCssClass(item.Status)">@StatusText(item.Status)</span></td>
+                                <td>@RewardTypeText(item.HasCash, item.HasBarter, item.HasCommission)</td>
+                                <td class="td-platform">
+                                    @foreach (var platform in item.Platforms)
+                                    {
+                                        <i class="@PlatformIconClass(platform)" title="@platform"></i>
+                                    }
+                                </td>
+                                <td>@item.ApplicationCount/@item.WantedKolCount</td>
+                                <td>@item.TaskUnderReviewCount/@item.ApprovedAssignmentCount</td>
+                                <td>@item.CashRewardAmount.ToString("C0", new System.Globalization.CultureInfo("zh-TW"))</td>
+                                <td class="td-date">
+                                    <span>報名 @FormatDate(item.PublishedAt.HasValue ? item.ApplicationDeadline : null)</span><br>
+                                    <span>交付 @FormatDate(item.PublishedAt.HasValue ? item.SubmissionDeadline : null)</span>
+                                </td>
+                                <td class="td-actions">
+                                    @if (item.Status == CaseStatus.Draft)
+                                    {
+                                        <a asp-controller="Case" asp-action="Edit" asp-route-id="@item.CaseId" class="icon-btn"
+                                           title="編輯"><i class="fa-regular fa-pen-to-square"></i></a>
+                                    }
+                                    <a asp-controller="Case" asp-action="Duplicate" asp-route-id="@item.CaseId" class="icon-btn"
+                                       title="複製"><i class="fa-solid fa-rotate"></i></a>
+                                    <a asp-controller="Case" asp-action="Detail" asp-route-id="@item.CaseId" class="icon-btn"
+                                       title="查看"><i class="fa-solid fa-magnifying-glass"></i></a>
+                                    @if (item.Status == CaseStatus.InProgress || item.Status == CaseStatus.Completed)
+                                    {
+                                        <a asp-controller="Case" asp-action="Performance" asp-route-id="@item.CaseId"
+                                           class="icon-btn" title="成效"><i class="fa-solid fa-chart-line"></i></a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <!-- PAGINATION -->
+            @if (Model.List.TotalPages > 1)
+            {
+                <div class="pagination">
+                    <span class="pagination__info">顯示第 @(((Model.List.Page - 1) * Model.List.PageSize) + 1) 至
+                        @(Math.Min(Model.List.Page * Model.List.PageSize, Model.List.TotalCount)) 筆，共 @Model.List.TotalCount
+                        筆案件</span>
+                        <div class="pagination__nav">
+                            @if (Model.List.HasPreviousPage)
+                            {
+                                <a class="page-btn page-btn--prev"
+                                   href="@Url.Action("Index", "Case", MergeRouteValues(queryDict, Model.List.Page - 1))"
+                                   hx-get="@Url.Action("Index", "Case", MergeRouteValues(queryDict, Model.List.Page - 1))"
+                                   hx-target="#case-list" hx-select="#case-list" hx-push-url="true" hx-swap="outerHTML">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="page-btn page-btn--prev" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                            }
+
+                            @for (var p = 1; p <= Model.List.TotalPages; p++)
+                            {
+                                var activeClass = p == Model.List.Page ? "active" : "";
+                                var routeValues = MergeRouteValues(queryDict, p);
+                                <a class="page-btn @activeClass" href="@Url.Action("Index", "Case", routeValues)"
+                                   hx-get="@Url.Action("Index", "Case", routeValues)" hx-target="#case-list" hx-select="#case-list"
+                                   hx-push-url="true" hx-swap="outerHTML">@p</a>
+                            }
+
+                            @if (Model.List.HasNextPage)
+                            {
+                                <a class="page-btn page-btn--next"
+                                   href="@Url.Action("Index", "Case", MergeRouteValues(queryDict, Model.List.Page + 1))"
+                                   hx-get="@Url.Action("Index", "Case", MergeRouteValues(queryDict, Model.List.Page + 1))"
+                                   hx-target="#case-list" hx-select="#case-list" hx-push-url="true" hx-swap="outerHTML">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="page-btn page-btn--next" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                            }
+                        </div>
+                    </div>
+                }
+            </section>
+        </div>
+    </div><!-- /#case-list -->
+
+</div><!-- /.content-card -->
+
+@section Scripts {
+    <script>
+        function setCaseFilter(status, closedOnly) {
+            const closedInput = document.getElementById('filterClosedOnly');
+            const statusSelect = document.querySelector('select[name="Status"]');
+
+            if (closedInput) closedInput.value = closedOnly ? 'true' : '';
+            if (statusSelect) statusSelect.value = status;
+
+            htmx.trigger('#case-filter-form', 'submit');
+        }
+
+        function setPlatformFilter(platform) {
+            const platformInput = document.getElementById('filterPlatform');
+            if (platformInput) platformInput.value = platform;
+            htmx.trigger('#case-filter-form', 'submit');
+        }
+    </script>
+}
+
+@functions {
+    private static IDictionary<string, object?> MergeRouteValues(Dictionary<string, string?> baseValues, int page)
+    {
+        var result = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kv in baseValues)
+            result[kv.Key] = kv.Value;
+        result["Page"] = page;
+        return result;
+    }
+}
