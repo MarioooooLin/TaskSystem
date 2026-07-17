@@ -1,0 +1,1523 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+
+/* ============================
+   RESET & BASE
+=============================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html {
+    /* 放在 html 上：由 viewport 裁切，不建立 scroll container，sticky 可正常運作 */
+    overflow-x: hidden;
+}
+
+html,
+body {
+    font-family: 'Noto Sans TC', "Helvetica Neue", Helvetica, "Microsoft YaHei", sans-serif;
+    font-size: 62.5%;
+    background-color: #f2f4f6;
+    color: #333;
+    /* ★ 移除 body 的 overflow-x: hidden，否則 body 會成為 scroll container 導致 sticky 失效 */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    display: block;
+}
+
+/* ============================
+   CSS VARIABLES
+=============================== */
+:root {
+    --primary: #3aafa9;
+    --primary-dark: #2b8a85;
+    --primary-light: #e8f7f6;
+    --sidebar-width: 200px;
+    --topnav-h: 56px;
+    --sub-header-h: 52px;
+    --accent-red: #e84040;
+    --accent-orange: #f47c30;
+    --text-main: #333333;
+    --text-muted: #888888;
+    --border: #dce6e5;
+    --white: #ffffff;
+}
+
+/* ============================
+   TOP NAVIGATION
+=============================== */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--topnav-h);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+}
+
+.top-nav__left {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+}
+
+.hamburger-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: .4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hamburger-btn span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text-main);
+    border-radius: 2px;
+    transition: background .2s;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    color: var(--text-main);
+}
+
+.logo-img {
+    width: 55px;
+    height: 55px;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: #455662;
+}
+
+.top-nav__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: .4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-icon-btn.user {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e3e6f0;
+}
+
+.nav-icon-btn.user img {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-icon-btn img {
+    width: 24px;
+    height: 24px;
+}
+
+.notif-dot {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    background: var(--accent-red);
+    border-radius: 50%;
+    border: 2px solid var(--white);
+}
+
+.nav-divider {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    margin: 0 .4rem;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    /* color: var(--text-main); */
+    color: #4b8ab7;
+    padding: .4rem .6rem;
+}
+
+.logout-btn:hover {
+    /* color: var(--primary); */
+    opacity: 0.7;
+}
+
+/* ============================
+   SIDEBAR
+=============================== */
+.sidebar {
+    position: fixed;
+    top: var(--topnav-h);
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: #4b8ab7;
+    transition: width .25s ease;
+    z-index: 900;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar--collapsed {
+    width: 0;
+}
+
+.sidebar-nav {
+    /* padding: 1.2rem 0; */
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 2rem;
+    color: rgba(255, 255, 255, .85);
+    font-size: 1.4rem;
+    white-space: nowrap;
+    transition: background .2s;
+    position: relative;
+}
+
+.sidebar-item img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    filter: brightness(0) invert(1);
+    opacity: .85;
+}
+
+.sidebar-item:hover {
+    background: rgba(0, 0, 0, .12);
+    color: var(--white);
+}
+
+.sidebar-item.active {
+    background: rgba(0, 0, 0, .18);
+    color: var(--white);
+}
+
+.sidebar-item.active img {
+    opacity: 1;
+}
+
+/* ============================
+   CONTENT WRAPPER
+=============================== */
+.content-wrapper {
+    margin-left: var(--sidebar-width);
+    margin-top: var(--topnav-h);
+    min-height: calc(100vh - var(--topnav-h));
+    display: flex;
+    flex-direction: column;
+    transition: margin-left .25s ease;
+}
+
+.content-wrapper--expanded {
+    margin-left: 0;
+}
+
+/* ============================
+   SUB HEADER
+=============================== */
+.sub-header {
+    height: var(--sub-header-h);
+    background: #5a96c2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.4rem;
+    flex-shrink: 0;
+}
+
+.sub-header__left {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.company-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.badge-plan {
+    font-size: 1.2rem;
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, .7);
+    border-radius: 4px;
+    padding: .2rem .7rem;
+    line-height: 1.5;
+}
+
+.badge-status {
+    height: 24px;
+    font-size: 1.2rem;
+    color: var(--white);
+    background: var(--accent-red);
+    border-radius: 12px;
+    padding: .2rem .9rem;
+    line-height: 1.5;
+}
+
+.balance-btn {
+    background: rgba(255, 255, 255, .15);
+    border: 1px solid rgba(255, 255, 255, .5);
+    border-radius: 6px;
+    color: var(--white);
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: .5rem 1.6rem;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.balance-btn:hover {
+    background: rgba(255, 255, 255, .25);
+}
+
+/* ============================
+   MAIN CONTENT
+=============================== */
+.main-content {
+    flex: 1;
+    padding: 2.4rem;
+    background: #f2f4f6;
+}
+
+.content-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 3rem 3rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+}
+
+/* ============================
+   FINANCIAL SUMMARY
+=============================== */
+.finance-summary {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 3rem;
+    padding-bottom: 2.8rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.finance-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding-left: 2rem;
+    border-left: 5px solid var(--primary);
+}
+
+.finance-item.border-green {
+    border-left: 5px solid #51c2ae;
+}
+
+.finance-item.border-red {
+    border-left: 5px solid #f44a52;
+}
+
+.finance-item.border-yellow {
+    border-left: 5px solid #f4b452;
+}
+
+.finance-label {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.finance-amount {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: .01em;
+}
+
+.finance-amount.accent-orange {
+    color: var(--primary);
+}
+
+/* ============================
+   STATUS CARDS
+=============================== */
+.status-cards {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 3.2rem;
+    flex-wrap: wrap;
+}
+
+.status-card {
+    flex: 1;
+    min-width: 130px;
+    border: 2px solid var(--primary);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.2rem;
+    gap: .25rem;
+    transition: box-shadow .2s, background .2s;
+    cursor: pointer;
+    background: linear-gradient(to bottom, #e6f4ef, #ffffff);
+}
+
+.status-card img {
+    width: 36px;
+    height: 36px;
+}
+
+.status-card:hover {
+    background: var(--primary-light);
+    box-shadow: 0 4px 14px rgba(58, 175, 169, .2);
+}
+
+.status-label {
+    font-size: 1.6rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: .2rem;
+}
+
+.status-count {
+    font-size: 3rem;
+    font-weight: 500;
+    color: #333;
+    line-height: 1;
+}
+
+/* ============================
+   TABLE SECTION
+=============================== */
+.table-section {
+    margin-bottom: 3.2rem;
+}
+
+.table-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.2rem;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.4rem;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.data-table thead tr {
+    background: var(--primary);
+}
+
+.data-table th {
+    padding: 1rem 1.4rem;
+    font-weight: 600;
+    color: var(--white);
+    text-align: left;
+    white-space: nowrap;
+    border: 1px solid var(--white);
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid #e5e5e5;
+    transition: background .15s;
+}
+
+.data-table tbody tr:hover {
+    background: var(--primary-light);
+}
+
+.data-table td {
+    padding: 1.1rem 1.4rem;
+    color: var(--text-main);
+    vertical-align: middle;
+}
+
+.td-status {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.td-status.accepting {
+    color: var(--accent-orange);
+}
+
+.td-status.deposit {
+    color: var(--accent-red);
+}
+
+.action-link {
+    /* color: var(--primary-dark); */
+    color: #4b8ab7;
+    font-weight: 600;
+    transition: opacity .15s;
+}
+
+.action-link:hover {
+    opacity: .7;
+    text-decoration: underline;
+}
+
+/* ============================
+   FOOTER
+=============================== */
+.footer {
+    background: #2e2e2e;
+    color: rgba(255, 255, 255, .65);
+    text-align: center;
+    padding: 1.4rem 2rem;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* ============================
+   TOAST NOTIFICATION
+=============================== */
+.toast-notif {
+    position: fixed;
+    bottom: 3rem;
+    right: 2.4rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .12);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    z-index: 2000;
+    max-width: 380px;
+}
+
+.toast-icon {
+    color: var(--primary);
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.toast-msg {
+    flex: 1;
+    line-height: 1.5;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 3rem;
+    color: var(--text-muted);
+    line-height: 1;
+    padding: 0 .2rem;
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    color: var(--text-main);
+}
+
+/* ============================
+   PAGE HEADER
+=============================== */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2.4rem;
+}
+
+.page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: .4rem;
+}
+
+.page-subtitle {
+    font-size: 1.6rem;
+    color: var(--text-muted);
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    background: #4b8ab7;
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: .9rem 1.8rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+    white-space: nowrap;
+}
+
+.btn-primary:hover {
+    background: #3a7aaa;
+}
+
+/* ============================
+   FILTER BAR
+=============================== */
+.filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    margin-bottom: 2.4rem;
+    padding: 2rem;
+    background: #f8fbfb;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.filter-bar__row {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.filter-search {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+}
+
+.filter-search__icon {
+    position: absolute;
+    left: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.3rem;
+    pointer-events: none;
+}
+
+.filter-search__input {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 1.2rem 0 3.2rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s;
+}
+
+.filter-search__input:focus {
+    border-color: var(--primary);
+}
+
+.filter-select-wrap {
+    position: relative;
+    min-width: 160px;
+}
+
+.filter-select {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 3.2rem 0 1.2rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    background: var(--white);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: border-color .2s;
+}
+
+.filter-select:focus {
+    border-color: var(--primary);
+}
+
+.filter-select__arrow {
+    position: absolute;
+    right: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.filter-group__label {
+    font-size: 1.4rem;
+    color: var(--text-main);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.filter-tags {
+    display: flex;
+    gap: .8rem;
+    flex-wrap: wrap;
+}
+
+.filter-tag {
+    height: 32px;
+    padding: 0 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--white);
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.filter-tag.active,
+.filter-tag:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.filter-date-range {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+
+.filter-date-input {
+    position: relative;
+}
+
+.date-input {
+    height: 38px;
+    width: 160px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 3.2rem 0 1.2rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s;
+}
+
+.date-input:focus {
+    border-color: var(--primary);
+}
+
+.date-input__icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.4rem;
+    pointer-events: none;
+}
+
+.filter-date-sep {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+}
+
+/* ============================
+   CASES TABLE
+=============================== */
+.cases-table .td-case-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+.cases-table .td-case-sub {
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.cases-table .td-platform {
+    font-size: 1.8rem;
+    /* display: flex;
+    gap: .6rem; */
+    align-items: center;
+    color: var(--text-muted);
+}
+
+.cases-table .td-date {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.case-status {
+    display: inline-block;
+    padding: .3rem 1rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.case-status.draft {
+    background: #f0f0f0;
+    color: #888;
+}
+
+.case-status.review {
+    background: #fff4e0;
+    color: #e6a020;
+}
+
+.case-status.recruit {
+    background: #e0f4ff;
+    color: #2a8fc0;
+}
+
+.case-status.progress {
+    background: #e8f7f6;
+    color: var(--primary-dark);
+}
+
+.case-status.accepting {
+    background: #fff0e0;
+    color: var(--accent-orange);
+}
+
+.case-status.closed {
+    background: #f0f0f0;
+    color: #555;
+}
+
+.td-actions {
+    display: flex;
+    gap: .6rem;
+    align-items: center;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4b8ab7;
+    font-size: 1.6rem;
+    padding: .3rem .4rem;
+    border-radius: 4px;
+    transition: background .15s, color .15s;
+    line-height: 1;
+}
+
+.icon-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+/* ============================
+   PAGINATION
+=============================== */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.pagination__info {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+}
+
+.pagination__nav {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.page-btn {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 .8rem;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--white);
+    font-size: 1.3rem;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(:disabled) {
+    border-color: #3a7aaa;
+    color: #3a7aaa;
+    background: #fff;
+}
+
+.page-btn.active {
+    background: #3a7aaa;
+    border-color: #3a7aaa;
+    color: var(--white);
+    font-weight: 700;
+}
+
+.page-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.page-ellipsis {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    padding: 0 .4rem;
+}
+
+.bg_close {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+}
+
+/* ======================================
+   RWD — Tablet  ≤ 1024px
+========================================= */
+@media (max-width: 1024px) {
+
+    :root {
+        --sidebar-width: 160px;
+    }
+
+    .logo-text {
+        font-size: 1.6rem;
+    }
+
+    .finance-amount {
+        font-size: 2.2rem;
+    }
+
+    .status-cards {
+        gap: 1.2rem;
+    }
+
+    .status-card {
+        min-width: 100px;
+        padding: 1.6rem 1rem;
+    }
+
+    .status-label {
+        font-size: 1.4rem;
+    }
+
+    .status-count {
+        font-size: 2.4rem;
+    }
+
+    /* cases filter */
+    .filter-bar__row {
+        flex-wrap: wrap;
+    }
+
+    .filter-search {
+        min-width: 160px;
+    }
+
+    .filter-select-wrap {
+        min-width: 140px;
+    }
+
+    .date-input {
+        width: 140px;
+    }
+
+    /* cases table */
+    .cases-table .td-date {
+        white-space: normal;
+    }
+}
+
+/* ======================================
+   RWD — Mobile Landscape  ≤ 768px
+========================================= */
+@media (max-width: 768px) {
+
+    :root {
+        --sidebar-width: 200px;
+        --topnav-h: 52px;
+        --sub-header-h: auto;
+    }
+
+    /* --- Top Nav --- */
+    .logo-img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-text {
+        font-size: 1.5rem;
+    }
+
+    .nav-divider {
+        display: none;
+    }
+
+    /* --- Sidebar：預設收起 --- */
+    .sidebar {
+        width: 0;
+    }
+
+    .sidebar--open {
+        width: var(--sidebar-width);
+        box-shadow: 4px 0 16px rgba(0, 0, 0, .18);
+    }
+
+    /* --- Content Wrapper：預設滿版 --- */
+    .content-wrapper {
+        margin-left: 0;
+    }
+
+    /* --- Sub Header --- */
+    .sub-header {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 1rem 1.6rem;
+        gap: .8rem;
+    }
+
+    .sub-header__left {
+        flex-wrap: wrap;
+        gap: .6rem;
+    }
+
+    .company-name {
+        font-size: 1.4rem;
+    }
+
+    /* --- Main Content --- */
+    .main-content {
+        padding: 1.6rem;
+    }
+
+    .content-card {
+        padding: 2rem 1.6rem;
+        border-radius: 8px;
+    }
+
+    /* --- Finance Summary --- */
+    .finance-summary {
+        flex-direction: column;
+        gap: 1.6rem;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .finance-item {
+        padding-left: 1.4rem;
+    }
+
+    .finance-amount {
+        font-size: 2.4rem;
+    }
+
+    /* --- Status Cards：每行 3 個 --- */
+    .status-cards {
+        gap: 1rem;
+    }
+
+    .status-card {
+        flex: 0 0 calc(33.333% - .7rem);
+        min-width: unset;
+        padding: 1.4rem .8rem;
+        border-radius: 16px;
+    }
+
+    .status-card img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .status-label {
+        font-size: 1.3rem;
+    }
+
+    .status-count {
+        font-size: 2.2rem;
+    }
+
+    /* --- Table：橫向捲動 --- */
+    .table-section {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .data-table {
+        min-width: 540px;
+    }
+
+    .cases-table {
+        min-width: 860px;
+    }
+
+    /* --- Page Header --- */
+    .page-header {
+        flex-direction: column;
+        gap: 1.2rem;
+        margin-bottom: 1.6rem;
+    }
+
+    /* .page-title {
+        font-size: 2.2rem;
+    } */
+
+    /* .page-subtitle {
+        font-size: 1.4rem;
+    } */
+
+    /* --- Filter Bar --- */
+    .filter-bar {
+        padding: 1.4rem;
+        gap: 1.2rem;
+    }
+
+    .filter-search {
+        min-width: 100%;
+    }
+
+    .filter-select-wrap {
+        flex: 1;
+        min-width: 130px;
+    }
+
+    .date-input {
+        width: 130px;
+    }
+
+    /* --- Pagination --- */
+    .pagination {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* --- Toast --- */
+    .toast-notif {
+        left: 1.2rem;
+        right: 1.2rem;
+        bottom: 1.6rem;
+        max-width: unset;
+    }
+}
+
+/* ======================================
+   RWD — Mobile Portrait  ≤ 480px
+========================================= */
+@media (max-width: 480px) {
+
+    /* --- Top Nav --- */
+    /* .logo-text {
+        display: none;
+    } */
+
+    /* .logout-btn {
+        font-size: 1.3rem;
+    } */
+
+    /* --- Sub Header --- */
+    .balance-btn {
+        font-size: 1.3rem;
+        padding: .4rem 1.2rem;
+    }
+
+    /* --- Content Card --- */
+    .content-card {
+        padding: 1.6rem 1.2rem;
+    }
+
+    /* --- Finance --- */
+    .finance-amount {
+        font-size: 2rem;
+    }
+
+    .finance-label {
+        font-size: 1.2rem;
+    }
+
+    /* --- Status Cards：每行 2 個 --- */
+    .status-card {
+        flex: 0 0 calc(50% - .5rem);
+    }
+
+    .status-card img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .status-label {
+        font-size: 1.2rem;
+    }
+
+    .status-count {
+        font-size: 2rem;
+    }
+
+    /* --- Section Title --- */
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    /* --- Page Header --- */
+    /* .page-title {
+        font-size: 1.8rem;
+    } */
+
+    /* .page-subtitle {
+        font-size: 1.3rem;
+    } */
+
+    .btn-primary {
+        font-size: 1.3rem;
+        padding: .7rem 1.4rem;
+    }
+
+    /* --- Filter Tags --- */
+    .filter-tag {
+        height: 28px;
+        padding: 0 1rem;
+        font-size: 1.2rem;
+    }
+
+    /* --- Pagination --- */
+    .page-btn {
+        min-width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+    }
+
+    .pagination__info {
+        font-size: 1.2rem;
+    }
+}
+
+/* ======================================
+   Sidebar overlay (mobile backdrop)
+========================================= */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .35);
+    z-index: 850;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* ============================
+   TTM DATE INPUT (Flatpickr)
+=============================== */
+#datePickerWrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    overflow: hidden;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+#datePickerWrap:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(58, 175, 169, .12);
+}
+
+.ttm_date_input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .8rem 1.4rem;
+    cursor: pointer;
+    flex: 1;
+    min-width: 150px;
+    transition: background .15s;
+    position: relative;
+}
+
+.ttm_date_input:first-of-type {
+    border-right: 0px solid var(--border);
+}
+
+.ttm_date_input:hover {
+    background: var(--primary-light);
+}
+
+.ttm_date_input>i {
+    font-size: 1.8rem;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.ttm_date_input>div {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.ttm_date_input>div p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.ttm_flatpickr-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    width: 100%;
+    padding: 0;
+    font-family: inherit;
+}
+
+.ttm_flatpickr-input::placeholder {
+    color: #bbb;
+    font-weight: 400;
+}
+
+/* Flatpickr Calendar 客製化 */
+.flatpickr-calendar {
+    border-radius: 12px !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .14) !important;
+    border: 1px solid var(--border) !important;
+    font-family: 'Noto Sans TC', sans-serif !important;
+    overflow: hidden !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.flatpickr-day.inRange {
+    background: var(--primary-light) !important;
+    border-color: var(--primary-light) !important;
+    box-shadow: -5px 0 0 var(--primary-light), 5px 0 0 var(--primary-light) !important;
+}
+
+.flatpickr-day:hover {
+    background: var(--primary-light) !important;
+    border-color: var(--primary-light) !important;
+}
+
+.flatpickr-day.today {
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+}
+
+.flatpickr-day.today.selected {
+    color: var(--white) !important;
+}
+
+.flatpickr-months .flatpickr-month {
+    background: var(--primary) !important;
+    color: var(--white) !important;
+    padding-bottom: 7px;
+    height: 41px;
+}
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    fill: var(--white) !important;
+    color: var(--white) !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: var(--primary) !important;
+    color: var(--white) !important;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.flatpickr-current-month input.cur-year {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+.flatpickr-months .flatpickr-prev-month:hover svg, .flatpickr-months .flatpickr-next-month:hover svg {
+    fill: #000000;
+}
+.flatpickr-weekdays {
+    background: var(--primary-light) !important;
+}
+
+span.flatpickr-weekday {
+    background: var(--primary-light) !important;
+    color: var(--primary-dark) !important;
+    font-weight: 700 !important;
+}
+
+/* RWD */
+@media (max-width: 768px) {
+    #datePickerWrap {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .ttm_date_input:first-of-type {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .ttm_date_input {
+        width: 100%;
+    }
+
+    /* 日曆面板：fixed 不撐開文件，JS 負責設定 top 位置 */
+    .flatpickr-calendar {
+        position: fixed !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 294px !important;
+        max-width: calc(100vw - 24px) !important;
+        font-size: 1.2rem !important;
+        border-radius: 12px !important;
+        z-index: 9999 !important;
+        /* 預設隱藏，定位完成後才顯示 */
+        opacity: 0 !important;
+        transition: none !important;
+    }
+
+    /* 定位完成後加上此 class 才顯示 */
+    .flatpickr-calendar.fp-ready {
+        opacity: 1 !important;
+        transition: opacity 0.12s ease !important;
+    }
+
+    /* 日期格子 */
+    .flatpickr-days,
+    .dayContainer {
+        width: 294px !important;
+        min-width: 294px !important;
+        max-width: 294px !important;
+    }
+
+    .flatpickr-day {
+        max-width: 38px !important;
+        height: 38px !important;
+        line-height: 38px !important;
+        font-size: 1.2rem !important;
+    }
+
+    /* 星期標題 */
+    span.flatpickr-weekday {
+        font-size: 1.1rem !important;
+    }
+
+    /* 月份年份 */
+    .flatpickr-current-month {
+        font-size: 1.4rem !important;
+    }
+
+    .flatpickr-current-month .numInputWrapper {
+        width: 6ch !important;
+    }
+
+    .flatpickr-current-month .flatpickr-monthDropdown-months {
+        font-size: 1.3rem !important;
+    }
+
+    .filter-date-sep {
+        display: none;
+    }
+}
+
+/* 日曆底部遮罩（手機版） */
+.flatpickr-mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    z-index: 9998;
+}
+
+.flatpickr-mobile-overlay.active {
+    display: block;
+}

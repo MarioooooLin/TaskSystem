@@ -1,21 +1,13 @@
-using Application.Abstractions.Security;
+﻿using Application.Abstractions.Security;
+using Microsoft.AspNetCore.Http;
 using Domain.Enums;
 using System.Security.Claims;
 
-namespace Kol.Extensions;
+namespace Infrastructure.Authentication;
 
-/// <summary>
-/// 從 HttpContext.User Claims 讀取目前登入者資訊。
-/// 使用 AddHttpContextAccessor() 注入。
-/// </summary>
-public sealed class HttpContextCurrentUser : ICurrentUser
+public sealed class HttpContextCurrentUser(IHttpContextAccessor accessor) : ICurrentUser
 {
-    private readonly IHttpContextAccessor _accessor;
-
-    public HttpContextCurrentUser(IHttpContextAccessor accessor)
-        => _accessor = accessor;
-
-    private ClaimsPrincipal? User => _accessor.HttpContext?.User;
+    private ClaimsPrincipal? User => accessor.HttpContext?.User;
 
     public bool IsAuthenticated
         => User?.Identity?.IsAuthenticated == true;
@@ -26,14 +18,15 @@ public sealed class HttpContextCurrentUser : ICurrentUser
             : throw new InvalidOperationException("未登入或 UserId Claim 不存在。");
 
     public AccountType AccountType
-        => Enum.TryParse<AccountType>(User?.FindFirstValue("account_type"), out var t)
+        => Enum.TryParse<AccountType>(User?.FindFirstValue(TaskSystemClaimTypes.AccountType), out var t)
             ? t
             : throw new InvalidOperationException("AccountType Claim 不存在。");
 
     public IReadOnlyList<string> Permissions
-        => User?.FindAll("permission").Select(c => c.Value).ToList()
+        => User?.FindAll(TaskSystemClaimTypes.Permission).Select(c => c.Value).ToList()
            ?? [];
 
     public bool HasPermission(string permissionCode)
         => Permissions.Contains(permissionCode);
 }
+

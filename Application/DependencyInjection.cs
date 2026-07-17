@@ -24,6 +24,7 @@ public static class DependencyInjection
     {
         // ── Account ───────────────────────────────────────
         services.AddScoped<LoginHandler>();
+        services.AddScoped<MerchantLoginHandler>();
         services.AddScoped<ValidateInvitationTokenHandler>();
         services.AddScoped<SetPasswordHandler>();
         services.AddScoped<ProfileHandler>();

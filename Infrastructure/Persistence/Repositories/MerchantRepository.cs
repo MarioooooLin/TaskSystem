@@ -44,6 +44,23 @@ public sealed class MerchantRepository : IMerchantRepository
             sql, new { UserId = userId }, session.Transaction);
     }
 
+    // ── GetByTaxIdAsync ───────────────────────────────────────────
+    public async Task<Merchant?> GetByTaxIdAsync(
+        string taxId, IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            SELECT Id, UserId, CompanyName, EnglishName, TaxId, IndustryType,
+                   ContactName, Phone, Fax, CompanyEmail, Website, Address,
+                   EstablishedDate, VerificationStatus, VerifiedAt,
+                   UpdatedByAdminId, CreatedAt, UpdatedAt
+            FROM Merchants
+            WHERE TaxId = @TaxId
+            """;
+
+        return await session.Connection.QueryFirstOrDefaultAsync<Merchant>(
+            sql, new { TaxId = taxId }, session.Transaction);
+    }
+
     // ── GetListAsync ──────────────────────────────────────────────
     public async Task<(IReadOnlyList<MerchantListItemDto> Items, int TotalCount)> GetListAsync(
         string? keyword,

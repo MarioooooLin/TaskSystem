@@ -1,0 +1,642 @@
+@charset "utf-8";
+/* ============================================================
+   PERMISSION-MANAGEMENT.CSS  ?�  角色權�?管�??�面專用�??
+   依設計�? MER-011-2.jpg 製�?
+   ============================================================ */
+
+/* ============================
+   MAIN
+============================== */
+.prm-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 9rem;
+}
+
+/* footer 需額外墊高，避免被固定 action bar（60px）遮住 */
+.content-wrapper .footer {
+    padding-bottom: calc(1.4rem + 60px);
+}
+
+/* ============================
+   麵�?�?
+============================== */
+.prm-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+}
+
+.prm-breadcrumb a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color .15s;
+}
+
+.prm-breadcrumb a:hover {
+    color: var(--primary);
+}
+
+.prm-breadcrumb i {
+    font-size: 1rem;
+}
+
+.prm-breadcrumb__current {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+/* ============================
+   ?�面標�?
+============================== */
+.prm-page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+    margin-bottom: .6rem;
+}
+
+.prm-page-desc {
+    font-size: 1.6rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* ============================
+   角色?��? Tab ??
+============================== */
+.prm-role-tabs {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.prm-role-tab {
+    height: 38px;
+    padding: 0 2rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--white);
+    color: var(--text-main);
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.prm-role-tab:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: rgb(209, 234, 252);
+}
+
+.prm-role-tab.active {
+    background: #4b8ab7;
+    color: var(--white);
+    border-color: #4b8ab7;
+}
+
+.prm-add-role-btn {
+    height: 38px;
+    padding: 0 1.6rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--white);
+    color: var(--text-main);
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    transition: all .15s;
+}
+
+.prm-add-role-btn:hover {
+    /* border-color: var(--primary);
+    color: var(--primary); */
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: rgb(209, 234, 252);
+}
+
+/* ============================
+   主�??��?佈�?
+============================== */
+.prm-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+/* ============================
+   左�?：�??��?訊卡
+============================== */
+.prm-role-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+    padding: 1.8rem;
+    position: sticky;
+    top: calc(var(--topnav-h) + 2.4rem);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+}
+
+.prm-role-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.prm-role-card__name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.prm-role-card__actions {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.prm-icon-btn {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 14px;
+    font-size: 1.4rem;
+    transition: background .15s;
+}
+
+.prm-icon-btn:hover {
+    background: #f0f0f0;
+}
+
+.prm-icon-btn--edit {
+    color: var(--text-muted);
+}
+
+.prm-icon-btn--delete {
+    color: var(--accent-red);
+}
+
+.prm-role-card__desc {
+    font-size: 1.3rem;
+    color: var(--text-main);
+    line-height: 1.7;
+    margin-bottom: 1.6rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.4rem;
+}
+
+.prm-role-card__core-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: .8rem;
+}
+
+.prm-core-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+
+.prm-core-item {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    font-size: 1.3rem;
+    color: var(--text-main);
+}
+
+.prm-core-item i {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+/* ============================
+   ?��?：�??�矩??
+============================== */
+.prm-perm-panels {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+.prm-perm-panel {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+    overflow: hidden;
+}
+
+/* Panel 表頭??*/
+.prm-perm-panel__header {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    padding: .9rem 1.4rem;
+    background: #f2f4f6;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+}
+
+.prm-select-all-wrap {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+}
+
+.prm-select-all-wrap input[type="checkbox"],
+.prm-perm-item__check input[type="checkbox"] {
+    display: none;
+}
+
+.prm-checkmark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.prm-checkmark::after {
+    content: '';
+    display: none;
+    width: 5px;
+    height: 9px;
+    border: 2px solid var(--white);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+}
+
+label input:checked+.prm-checkmark,
+.prm-select-all-wrap input:checked+.prm-checkmark {
+    background: #4b8ab7;
+    border-color: #4b8ab7;
+}
+
+label input:checked+.prm-checkmark::after,
+.prm-select-all-wrap input:checked+.prm-checkmark::after {
+    display: block;
+}
+
+.prm-select-all-label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    user-select: none;
+}
+
+.prm-perm-panel__category {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-align: center;
+}
+
+.prm-perm-panel__en {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* 權�??�表 */
+.prm-perm-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.prm-perm-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid #eee;
+    gap: 1.2rem;
+}
+
+.prm-perm-item:last-child {
+    border-bottom: none;
+}
+
+.prm-perm-item:hover {
+    background: var(--primary-light);
+}
+
+.prm-perm-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.prm-perm-item__name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.prm-perm-item__desc {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.prm-perm-item__check {
+    flex-shrink: 0;
+}
+
+.prm-perm-item__check label {
+    cursor: pointer;
+}
+
+/* ============================
+   底部 Sticky Action Bar
+============================== */
+.prm-action-bar {
+    position: fixed;
+    bottom: 0;
+    left: var(--sidebar-width);
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1rem 2.4rem;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, .06);
+    transition: left .25s ease;
+}
+
+.prm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 1.8rem;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .18s;
+    white-space: nowrap;
+}
+
+.prm-btn--outline {
+    background: var(--white);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.prm-btn--outline:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: #d1eafc;
+}
+
+.prm-btn--primary {
+    background: #4b8ab7;
+    color: var(--white);
+    border: 1px solid #4b8ab7;
+}
+
+.prm-btn--primary:hover {
+    background: #3a7aaa;
+    border-color: #3a7aaa;
+}
+
+/* ============================
+   RWD ????1024px
+============================== */
+@media (max-width: 1024px) {
+    .prm-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .prm-role-card {
+        position: static;
+    }
+
+    .prm-action-bar {
+        left: 0;
+    }
+}
+
+/* ============================
+   RWD ????768px
+============================== */
+@media (max-width: 768px) {
+    /* .prm-page-title {
+        font-size: 2.2rem;
+    } */
+
+    .prm-perm-panel__header {
+        grid-template-columns: auto 1fr;
+    }
+
+    .prm-perm-panel__en {
+        display: none;
+    }
+
+    .prm-action-bar {
+        left: 0;
+        padding: 1rem 1.6rem;
+    }
+
+    .prm-main {
+        padding-bottom: 7rem;
+    }
+}
+
+/* ============================
+   編輯角色 Modal
+============================== */
+.bg_close {
+    position: fixed;
+    inset: 0;
+    cursor: pointer;
+    z-index: 0;
+}
+
+.alert-modal {
+    position: relative;
+    z-index: 1;
+    border-radius: 12px !important;
+    width: 100%;
+    max-width: 480px;
+    margin: 50px auto auto;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .18);
+}
+
+.modal-header {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    padding: 2rem 2rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.alert-close {
+    position: absolute;
+    top: 1.4rem;
+    right: 1.6rem;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color .15s;
+    z-index: 2;
+}
+
+.alert-close:hover {
+    color: var(--text-main);
+}
+
+.modal-body {
+    padding: 1.6rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+/* 表單欄位 */
+.prm-modal-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.prm-modal-label {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.prm-modal-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s;
+    box-sizing: border-box;
+}
+
+.prm-modal-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(75, 138, 183, .12);
+}
+
+.prm-modal-textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: .9rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    resize: vertical;
+    transition: border-color .2s;
+    box-sizing: border-box;
+    line-height: 1.6;
+}
+
+.prm-modal-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(75, 138, 183, .12);
+}
+
+/* 底部按鈕列 */
+.prm-modal-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: .4rem;
+}
+
+.prm-modal-btn--cancel {
+    height: 40px;
+    padding: 0 1.8rem;
+    background: var(--white);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .18s;
+}
+
+.prm-modal-btn--cancel:hover {
+    border-color: #4b8ab7;
+    color: #4b8ab7;
+    background: #d1eafc;
+}
+
+.prm-modal-btn--confirm {
+    height: 40px;
+    padding: 0 1.8rem;
+    background: #4b8ab7;
+    color: var(--white);
+    border: 1px solid #4b8ab7;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .18s;
+}
+
+.prm-modal-btn--confirm:hover {
+    background: #3a7aaa;
+    border-color: #3a7aaa;
+}

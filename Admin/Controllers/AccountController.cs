@@ -1,7 +1,8 @@
-using Admin.ViewModels.Account;
+﻿using Admin.ViewModels.Account;
 using Application.Account;
 using Common.Primitives;
 using Domain.Exceptions;
+using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -13,17 +14,16 @@ namespace Admin.Controllers;
 
 public sealed class AccountController(
     LoginHandler loginHandler,
+    TaskSystemSignInService signInService,
     ValidateInvitationTokenHandler validateTokenHandler,
     SetPasswordHandler setPasswordHandler,
     ProfileHandler profileHandler,
     ChangePasswordHandler changePasswordHandler) : Controller
 {
-    // ── GET /Account/Login ────────────────────────────────
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Login(string? returnUrl = null)
     {
-        // 已登入 → 直接去 Dashboard
         if (User.Identity?.IsAuthenticated == true)
             return RedirectToAction("Index", "Dashboard");
 
@@ -31,7 +31,6 @@ public sealed class AccountController(
         return View(new LoginViewModel());
     }
 
-    // ── POST /Account/Login ───────────────────────────────
     [HttpPost]
     [AllowAnonymous]
     [EnableRateLimiting(RateLimitPolicies.Login)]
@@ -47,7 +46,6 @@ public sealed class AccountController(
 
         if (result.IsFailure)
         {
-            // 所有登入失敗統一顯示在表單頂層，不指定欄位（避免洩漏細節）
             var message = result.Error.Code switch
             {
                 var c when c == Errors.User.AccountSuspended.Code => Errors.User.AccountSuspended.Description,
@@ -60,34 +58,13 @@ public sealed class AccountController(
 
         var loginResult = result.Value;
 
-        // ── 建立 Claims ──────────────────────────────────
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.NameIdentifier, loginResult.UserId.ToString()),
-            new(ClaimTypes.Name,           loginResult.Name),
-            new("account_type",            Domain.Enums.AccountType.Admin.ToString())
-        };
-
-        // 每個權限碼一個 Claim
-        foreach (var code in loginResult.PermissionCodes)
-            claims.Add(new Claim("permission", code));
-
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
-
-        var authProps = new AuthenticationProperties
-        {
-            IsPersistent = vm.RememberMe,
-            // RememberMe 維持 8 小時；否則依 Cookie 設定的 60 分鐘 Sliding
-            ExpiresUtc = vm.RememberMe
-                ? DateTimeOffset.UtcNow.AddHours(8)
-                : null
-        };
-
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            principal,
-            authProps);
+        await signInService.SignInAsync(
+            HttpContext,
+            loginResult.UserId,
+            loginResult.Name,
+            Domain.Enums.AccountType.Admin,
+            loginResult.PermissionCodes,
+            vm.RememberMe);
 
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
@@ -95,7 +72,6 @@ public sealed class AccountController(
         return RedirectToAction("Index", "Dashboard");
     }
 
-    // ── POST /Account/Logout ──────────────────────────────
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
@@ -103,7 +79,6 @@ public sealed class AccountController(
         return RedirectToAction(nameof(Login));
     }
 
-    // ── GET /Account/AccessDenied ─────────────────
     [HttpGet]
     [AllowAnonymous]
     public IActionResult AccessDenied(string? returnUrl = null)
@@ -116,7 +91,6 @@ public sealed class AccountController(
         return View();
     }
 
-    // ── GET /Account/SetPassword ──────────────────────────
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> SetPassword(string token, string email)
@@ -142,7 +116,6 @@ public sealed class AccountController(
         });
     }
 
-    // ── POST /Account/SetPassword ─────────────────────────
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> SetPassword(SetPasswordViewModel vm)
@@ -162,7 +135,6 @@ public sealed class AccountController(
         return RedirectToAction(nameof(Login));
     }
 
-    // ── GET /Account/Profile ──────────────────────────────
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Profile()
@@ -186,7 +158,6 @@ public sealed class AccountController(
         return View(vm);
     }
 
-    // ── POST /Account/Profile ─────────────────────────────
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> Profile(ProfileViewModel vm)
