@@ -1,50 +1,108 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Merchant</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Merchant.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - 任務系統業者管理後台</title>
+    <link rel="shortcut icon" href="~/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/reset.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/w3.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/all-style.css" asp-append-version="true" />
+    @await RenderSectionAsync("PageCss", required: false)
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Merchant</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav">
+        <div class="top-nav__left">
+            <button class="hamburger-btn" aria-label="開關選單">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a asp-controller="Home" asp-action="Index" class="logo-link">
+                <img src="~/images/logo.svg" alt="旅圖" class="logo-img" />
+                <span class="logo-text">任務系統<br class="br-break" />業者管理後台</span>
+            </a>
+        </div>
+        <div class="top-nav__right">
+            <button class="nav-icon-btn" aria-label="通知">
+                <img src="~/images/bell.svg" alt="通知" />
+                <span class="notif-dot"></span>
+            </button>
+            <button class="nav-icon-btn user" aria-label="使用者">
+                <img src="~/images/user.svg" alt="使用者" />
+            </button>
+            <span class="nav-divider"></span>
+            <form method="post" asp-controller="Account" asp-action="Logout" style="display:inline">
+                <button type="submit" class="logout-btn">登出<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+            </form>
+        </div>
+    </header>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <a asp-controller="Home" asp-action="Index" class="sidebar-item active">
+                <img src="~/images/icon-home.svg" alt="" />
+                <span>首頁</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <img src="~/images/icon-cases.svg" alt="" />
+                <span>案件管理</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <img src="~/images/icon-wallet.svg" alt="" />
+                <span>錢包與儲值</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <img src="~/images/icon-chart.svg" alt="" />
+                <span>導購成效</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <img src="~/images/icon-detail.svg" alt="" />
+                <span>導購明細</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <img src="~/images/icon-gear.svg" alt="" />
+                <span>設定</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header">
+            <div class="sub-header__left">
+                <span class="company-name">@(ViewData["CompanyName"] ?? "")</span>
+                <span class="badge-plan">商務版</span>
+                <span class="badge-status">啟用中</span>
+            </div>
+            <div class="sub-header__right">
+                <button class="balance-btn">@((ViewData["AvailableAmount"] as decimal?)?.ToString("C0", new
+                                        System.Globalization.CultureInfo("zh-TW")) ?? "NT $0")</button>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Merchant - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <!-- MAIN CONTENT -->
+            <main id="main-content" class="main-content">
+                @RenderBody()
+            </main>
+
+            <footer class="footer">
+                <p>台灣旅圖資訊 &copy; 2026 Taiwantravelmap Co Ltd. All Rights Reserved.</p>
+            </footer>
+
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+        <script src="~/js/main.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+
 </html>

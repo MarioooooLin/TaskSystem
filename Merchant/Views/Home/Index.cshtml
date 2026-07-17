@@ -1,8 +1,116 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Merchant.ViewModels.Home.IndexViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "首頁";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<div class="content-card">
+
+    <!-- FINANCIAL SUMMARY -->
+    <section class="finance-summary">
+        <div class="finance-item border-green">
+            <span class="finance-label">可用餘額</span>
+            <strong class="finance-amount accent-orange">@Model.Wallet.AvailableAmount.ToString("C0", new
+                                System.Globalization.CultureInfo("zh-TW"))</strong>
+            </div>
+            <div class="finance-item border-red">
+                <span class="finance-label">已鎖定金額</span>
+                <strong class="finance-amount">@Model.Wallet.FrozenAmount.ToString("C0", new
+                                    System.Globalization.CultureInfo("zh-TW"))</strong>
+                </div>
+                <div class="finance-item border-yellow">
+                    <span class="finance-label">總金額</span>
+                    <strong class="finance-amount">@Model.Wallet.TotalAmount.ToString("C0", new
+                                        System.Globalization.CultureInfo("zh-TW"))</strong>
+                    </div>
+                </section>
+
+                <!-- STATUS CARDS -->
+                <section class="status-cards">
+                    @foreach (var status in Model.StatusCounts)
+                    {
+                        <a href="#" class="status-card" data-category="@status.Category">
+                            <img src="@status.IconUrl" alt="@status.Label" />
+                            <span class="status-label">@status.Label</span>
+                            <span class="status-count">@status.Count</span>
+                        </a>
+                    }
+                </section>
+
+                <!-- 待辦事項 TABLE -->
+                <section class="table-section">
+                    <h2 class="section-title">待辦事項</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>待辦類型</th>
+                                <th>案件名稱</th>
+                                <th>狀態</th>
+                                <th>建立時間</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var todo in Model.Todos)
+                            {
+                                <tr>
+                                    <td>@todo.TodoType</td>
+                                    <td>@todo.Title</td>
+                                    <td class="td-status @todo.StatusCssClass">@todo.Status</td>
+                                    <td>@todo.CreatedAt</td>
+                                    <td><a href="@todo.ActionUrl" class="action-link">@todo.ActionText</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- 最新案件 TABLE -->
+                <section class="table-section">
+                    <h2 class="section-title">最新案件</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>待辦類型</th>
+                                <th>案件名稱</th>
+                                <th>狀態</th>
+                                <th>建立時間</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.RecentCases)
+                            {
+                                <tr>
+                                    <td>@item.TypeLabel</td>
+                                    <td>@item.Title</td>
+                                    <td class="td-status @item.StatusCssClass">@item.Status</td>
+                                    <td>@item.CreatedAt</td>
+                                    <td><a href="@item.ActionUrl" class="action-link">@item.ActionText</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </section>
+
+            </div><!-- /.content-card -->
+
+            <!-- TOAST NOTIFICATION -->
+            @if (Model.PendingReviewCount > 0)
+            {
+                <div class="toast-notif" id="toastNotif">
+                    <i class="fa-solid fa-circle-info toast-icon"></i>
+                    <span class="toast-msg">您有 @Model.PendingReviewCount 筆案件待驗收，請儘速處理。</span>
+                    <button class="toast-close" id="toastClose">&times;</button>
+                </div>
+            }
+
+            @section Scripts {
+                <script>
+                    $(function () {
+                        $('#toastClose').on('click', function () {
+                            $('#toastNotif').fadeOut();
+                        });
+                    });
+                </script>
+            }

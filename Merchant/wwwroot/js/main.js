@@ -61,6 +61,27 @@ $(document).ready(function () {
     syncActionBar();
 
     /* ==========================================
+       Sidebar Accordion（兩層伸縮選單）
+    =========================================== */
+    $(document).on('click', '.sidebar-group__header', function () {
+        var $group = $(this).closest('.sidebar-group');
+        var isOpen = $group.hasClass('open');
+
+        // 收合其他已展開的群組
+        $('.sidebar-group').not($group).removeClass('open')
+            .find('.sidebar-group__body').slideUp(200);
+
+        // 切換目前群組
+        if (isOpen) {
+            $group.removeClass('open');
+            $group.find('.sidebar-group__body').slideUp(200);
+        } else {
+            $group.addClass('open');
+            $group.find('.sidebar-group__body').slideDown(200);
+        }
+    });
+
+    /* ==========================================
        Toast Close
     =========================================== */
     $(document).on('click', '#toastClose', function () {
@@ -112,8 +133,7 @@ $(document).ready(function () {
             $('#filterKol').val('');
             $('#filterSource').val('');
             $('#filterStatus').val('');
-            $('#filterDateFrom').val('');
-            $('#filterDateTo').val('');
+            $('#filterDateRange').val('');
             $('#orderBody tr').show();
             $('#abnormalCount').text(
                 $('#orderBody tr[data-status="abnormal"]').length
@@ -174,6 +194,18 @@ $(document).ready(function () {
        Add Cases Page（新增案件頁）
     =========================================== */
     if ($('#recruitDeadline').length) {
+
+        // 日期選擇器（需頁面已載入 flatpickr）
+        if (typeof flatpickr !== 'undefined') {
+            var zhTwCustom = Object.assign({}, flatpickr.l10ns.zh_tw, {
+                weekdays: {
+                    shorthand: ['日','一','二','三','四','五','六'],
+                    longhand:  ['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+                }
+            });
+            flatpickr('#recruitDeadline', { locale: zhTwCustom, dateFormat: 'Y/m/d', disableMobile: true });
+            flatpickr('#deliverDeadline', { locale: zhTwCustom, dateFormat: 'Y/m/d', disableMobile: true });
+        }
 
         // 收益分成 toggle
         $('#revShareToggle').on('change', function () {

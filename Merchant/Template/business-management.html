@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-業者管理</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/business-management.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header">
+                <div class="page-header__left">
+                    <nav class="adm-breadcrumb">首頁 &rsaquo; 業者管理</nav>
+                    <h1 class="page-title">業者管理</h1>
+                    <p class="page-subtitle">搜尋與查看業者資料、狀態、案件數、錢包與折扣金摘要</p>
+                </div>
+                <a href="#" class="btn-primary">
+                    <i class="fa-solid fa-plus"></i> 新增業者
+                </a>
+            </div>
+
+            <!-- ===== KPI STATS ===== -->
+            <div class="content-card bm-kpi-row">
+                <div class="bm-kpi-item">
+                    <span class="bm-kpi-label">全部業者</span>
+                    <strong class="bm-kpi-value">86</strong>
+                </div>
+                <div class="bm-kpi-item">
+                    <span class="bm-kpi-label">啟用中</span>
+                    <strong class="bm-kpi-value bm-kpi-value--green">72</strong>
+                </div>
+                <div class="bm-kpi-item bm-kpi-item--last">
+                    <span class="bm-kpi-label">停用中</span>
+                    <strong class="bm-kpi-value bm-kpi-value--red">6</strong>
+                </div>
+            </div>
+
+            <!-- ===== FILTER BAR ===== -->
+            <div class="content-card bm-filter">
+
+                <!-- Row 1 -->
+                <div class="bm-filter-row">
+                    <div class="bm-filter-item bm-filter-item--grow">
+                        <label class="bm-filter-label">關鍵字搜尋</label>
+                        <div class="filter-search">
+                            <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
+                            <input type="text" class="filter-search__input" placeholder="業者名稱、統編、聯絡人">
+                        </div>
+                    </div>
+                    <div class="bm-filter-item">
+                        <label class="bm-filter-label">業者狀態</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部狀態</option>
+                                <option>啟用中</option>
+                                <option>停用中</option>
+                                <option>待補資料</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="bm-filter-item">
+                        <label class="bm-filter-label">客戶類型</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部類型</option>
+                                <option>公司</option>
+                                <option>個人／外包</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="bm-filter-item">
+                        <label class="bm-filter-label">建立日期</label>
+                        <div class="filter-date-input">
+                            <input type="date" class="date-input bm-date-input">
+                            <i class="fa-regular fa-calendar date-input__icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="bm-filter-row">
+                    <div class="bm-filter-item">
+                        <label class="bm-filter-label">行業類型</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>全部行業</option>
+                                <option>旅宿</option>
+                                <option>民宿</option>
+                                <option>餐飲</option>
+                                <option>部落客</option>
+                                <option>其他</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="bm-filter-item">
+                        <label class="bm-filter-label">是否有折扣金</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>不限</option>
+                                <option>有折扣金</option>
+                                <option>無折扣金</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="bm-filter-actions">
+                        <button class="bm-btn-clear" id="clearFilter">清除篩選</button>
+                        <button class="btn-primary" id="doSearch">開始搜尋</button>
+                    </div>
+                </div>
+
+            </div><!-- /.bm-filter -->
+
+            <!-- ===== DATA TABLE ===== -->
+            <div class="content-card">
+                <div class="table-section">
+                    <table class="data-table bm-table">
+                        <thead>
+                            <tr>
+                                <th>業者名稱</th>
+                                <th>客戶類型</th>
+                                <th>行業類型</th>
+                                <th>統一編號</th>
+                                <th>主要聯絡人</th>
+                                <th>狀態</th>
+                                <th>案件</th>
+                                <th>錢包餘額</th>
+                                <th>折扣金</th>
+                                <th>建立日期</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Row 1 -->
+                            <tr>
+                                <td class="bm-td-name">山海旅宿股份有限公司</td>
+                                <td><span class="bm-tag bm-tag--type">公司</span></td>
+                                <td><span class="bm-tag bm-tag--travel">旅宿</span></td>
+                                <td>87654321</td>
+                                <td class="bm-td-contact">
+                                    <span>王小美</span>
+                                    <span class="bm-contact-email">service@example.com</span>
+                                </td>
+                                <td><span class="bm-status bm-status--active"><i class="fa-solid fa-circle"></i> 啟用中</span></td>
+                                <td>5</td>
+                                <td>NT$50,000</td>
+                                <td>NT$12,000</td>
+                                <td class="bm-td-date">2026-04-12</td>
+                                <td>
+                                    <div class="td-actions bm-actions">
+                                        <a href="#" class="action-link">查看詳情</a>
+                                        <a href="#" class="action-link">查看案件</a>
+                                        <a href="#" class="action-link">查看帳務</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr>
+                                <td class="bm-td-name">慢活民宿</td>
+                                <td><span class="bm-tag bm-tag--type">公司</span></td>
+                                <td><span class="bm-tag bm-tag--inn">民宿</span></td>
+                                <td>12345678</td>
+                                <td class="bm-td-contact">
+                                    <span>陳先生</span>
+                                    <span class="bm-contact-email">hello@example.com</span>
+                                </td>
+                                <td><span class="bm-status bm-status--active"><i class="fa-solid fa-circle"></i> 啟用中</span></td>
+                                <td>2</td>
+                                <td>NT$8,000</td>
+                                <td>NT$0</td>
+                                <td class="bm-td-date">2026-04-20</td>
+                                <td>
+                                    <div class="td-actions bm-actions">
+                                        <a href="#" class="action-link">查看詳情</a>
+                                        <a href="#" class="action-link">查看案件</a>
+                                        <a href="#" class="action-link">查看帳務</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr>
+                                <td class="bm-td-name">小島旅行外包工作室</td>
+                                <td><span class="bm-tag bm-tag--type bm-tag--solo">個人／外包</span></td>
+                                <td><span class="bm-tag bm-tag--blog">部落客</span></td>
+                                <td>A12*****89</td>
+                                <td class="bm-td-contact">
+                                    <span>林小姐</span>
+                                    <span class="bm-contact-email">contact@example.com</span>
+                                </td>
+                                <td><span class="bm-status bm-status--pending"><i class="fa-solid fa-circle"></i> 待補資料</span></td>
+                                <td>0</td>
+                                <td>NT$0</td>
+                                <td>NT$0</td>
+                                <td class="bm-td-date">2026-05-02</td>
+                                <td>
+                                    <div class="td-actions bm-actions">
+                                        <a href="#" class="action-link">查看詳情</a>
+                                        <a href="#" class="action-link">查看案件</a>
+                                        <a href="#" class="action-link">查看帳務</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 4 -->
+                            <tr>
+                                <td class="bm-td-name">城市餐飲股份有限公司</td>
+                                <td><span class="bm-tag bm-tag--type">公司</span></td>
+                                <td><span class="bm-tag bm-tag--food">餐飲</span></td>
+                                <td>99887766</td>
+                                <td class="bm-td-contact">
+                                    <span>張經理</span>
+                                    <span class="bm-contact-email">food@example.com</span>
+                                </td>
+                                <td><span class="bm-status bm-status--inactive"><i class="fa-solid fa-circle"></i> 停用中</span></td>
+                                <td>0</td>
+                                <td>NT$0</td>
+                                <td>NT$3,000</td>
+                                <td class="bm-td-date">2026-03-15</td>
+                                <td>
+                                    <div class="td-actions bm-actions">
+                                        <a href="#" class="action-link">查看詳情</a>
+                                        <a href="#" class="action-link">查看案件</a>
+                                        <a href="#" class="action-link">查看帳務</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ===== PAGINATION ===== -->
+                <div class="pagination">
+                    <span class="pagination__info">顯示第 1 至 4 筆業者，共計 86 筆資料</span>
+                    <div class="pagination__nav">
+                        <button class="page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span class="page-ellipsis">...</span>
+                        <button class="page-btn">22</button>
+                        <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                        <span class="bm-goto-label">跳至</span>
+                        <input type="number" class="bm-goto-input" value="1" min="1" max="22">
+                        <span class="bm-goto-label">頁</span>
+                    </div>
+                </div>
+
+            </div><!-- /.content-card -->
+
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,6 +1,42 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-16 17:30
+> 最後整理時間：2026-07-17
+
+---
+
+## 2026-07-17
+
+### [00:00] Merchant 業者端登入頁實作
+
+**變更內容**
+
+- 新增業者端登入 Use Case
+    - [Application/Account/MerchantLoginCommand.cs](Application/Account/MerchantLoginCommand.cs)
+    - [Application/Account/MerchantLoginHandler.cs](Application/Account/MerchantLoginHandler.cs)
+- 註冊 Handler：[Application/DependencyInjection.cs](Application/DependencyInjection.cs#L27)
+- 擴充 Repository：新增 `IMerchantRepository.GetByTaxIdAsync` 與實作
+    - [Application/Abstractions/Repositories/IMerchantRepository.cs](Application/Abstractions/Repositories/IMerchantRepository.cs#L15-L16)
+    - [Infrastructure/Persistence/Repositories/MerchantRepository.cs](Infrastructure/Persistence/Repositories/MerchantRepository.cs#L44-L58)
+- 新增業者端畫面與 Controller
+    - [Merchant/ViewModels/Account/LoginViewModel.cs](Merchant/ViewModels/Account/LoginViewModel.cs)
+    - [Merchant/Views/Shared/\_LayoutLogin.cshtml](Merchant/Views/Shared/_LayoutLogin.cshtml)
+    - [Merchant/Views/Account/Login.cshtml](Merchant/Views/Account/Login.cshtml)
+    - [Merchant/Controllers/AccountController.cs](Merchant/Controllers/AccountController.cs)
+- 複製 Admin 登入頁靜態資源到 Merchant：`css/reset.css`、`css/w3.css`、`css/login.css`、`js/pw-toggle.js`、`images/login_image.jpg`
+- 將 [Merchant/Program.cs](Merchant/Program.cs) 預設路由改為登入頁（`{controller=Account}/{action=Login}/{id?}`），Cookie SecurePolicy 改為開發環境 `SameAsRequest`、未勾選 RememberMe 時效改為 60 分鐘以對齊 Admin
+
+**決策原因**
+
+- refs/login.html 為業者端登入切版，需轉換為可運作的 Razor 頁面
+- 登入欄位除 Email/密碼外，業者端還需統一編號以確認所屬組織，因此獨立一組 `MerchantLoginCommand/Handler`，不共用 Admin 登入邏輯
+- 業者登入驗證需檢查：統一編號存在、業者已通過審核、帳號為 Merchant 類型、帳號狀態正常、為該業者 Active 成員、密碼正確
+- Controller 使用 `TaskSystemSignInService` 建立 Cookie Claims，與 Admin 做法一致
+
+**測試狀態**
+
+- `dotnet build Merchant/Merchant.csproj -p:OutputPath=bin\DebugCheck\net9.0\` 成功
+- 全方案 `dotnet build` 因本機 `iisexpress.exe` 佔用 `Merchant/bin` DLL 而無法覆寫，屬執行中站台鎖定，非程式錯誤
+- 使用者已確認後端功能已實作
 
 ---
 

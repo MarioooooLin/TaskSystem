@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-案件詳情與進度</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/case-detail.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header cd-page-header">
+                <div class="page-header__left">
+                    <h1 class="page-title">案件詳情與進度</h1>
+                    <p class="page-subtitle">查看單一案件資訊與該案件底下KOL任務的交付、驗收、追蹤與異常狀況</p>
+                </div>
+                <div class="cd-header-actions">
+                    <a href="cases-monitor.html" class="cd-btn cd-btn--ghost"><i class="fa-solid fa-arrow-left"></i> 返回案件監控</a>
+                    <button class="cd-btn"><i class="fa-regular fa-rectangle-list"></i> 查看異常</button>
+                    <button class="cd-btn"><i class="fa-solid fa-magnifying-glass"></i> 查看最近任務</button>
+                </div>
+            </div>
+
+            <!-- ===== CASE SUMMARY ===== -->
+            <div class="content-card cd-summary-card">
+                <div class="cd-summary-left">
+                    <h2 class="cd-case-name">比投多年住宿體驗</h2>
+                    <span class="cd-status-pill cd-status-pill--running">執行中</span>
+                    <p class="cd-case-company"><i class="fa-regular fa-building"></i> 山海旅宿股份有限公司</p>
+                    <div class="cd-condition-tags">
+                        <span>現金酬勞</span>
+                        <span>體驗項目</span>
+                        <span>導購分潤</span>
+                    </div>
+                </div>
+
+                <div class="cd-summary-right">
+                    <div class="cd-summary-metric">
+                        <span>招募進度</span>
+                        <strong>12 / 20</strong>
+                    </div>
+                    <div class="cd-summary-metric">
+                        <span>已成立任務</span>
+                        <strong>5 / 5</strong>
+                    </div>
+                    <div class="cd-summary-metric">
+                        <span>待驗收任務</span>
+                        <strong class="is-danger">0</strong>
+                    </div>
+                    <div class="cd-summary-metric">
+                        <span>已逾期任務</span>
+                        <strong class="is-danger">0</strong>
+                    </div>
+                    <div class="cd-summary-metric">
+                        <span>爭議處理中</span>
+                        <strong>0</strong>
+                    </div>
+                    <div class="cd-summary-metric">
+                        <span>導購狀態</span>
+                        <strong class="is-green">● 同步正常</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TABS ===== -->
+            <nav class="cd-tabs">
+                <button class="cd-tab is-active" type="button">案件摘要</button>
+                <button class="cd-tab" type="button">合作條件</button>
+                <button class="cd-tab" type="button">任務統計</button>
+                <button class="cd-tab" type="button">KOL任務清單</button>
+                <button class="cd-tab" type="button">交付驗收</button>
+                <button class="cd-tab" type="button">導購狀態</button>
+                <button class="cd-tab" type="button">附件合約</button>
+                <button class="cd-tab" type="button">操作紀錄</button>
+            </nav>
+
+            <!-- ===== BASIC INFO ===== -->
+            <div class="cd-grid cd-grid--2">
+                <section class="content-card cd-panel">
+                    <h2 class="cd-panel-title"><i class="fa-solid fa-circle-info"></i> 案件基本資料</h2>
+                    <div class="cd-kv-grid">
+                        <div class="cd-kv-item"><span>案件編號</span><strong>CASE-202605-001</strong></div>
+                        <div class="cd-kv-item"><span>預定招募人數</span><strong>5 位</strong></div>
+                        <div class="cd-kv-item"><span>曝光平台</span><strong>Instagram, YouTube</strong></div>
+                        <div class="cd-kv-item"><span>案件負責人</span><strong>Chen, Yi-An</strong></div>
+                    </div>
+                </section>
+
+                <section class="content-card cd-panel">
+                    <h2 class="cd-panel-title"><i class="fa-regular fa-calendar"></i> 時程資訊</h2>
+                    <div class="cd-kv-list">
+                        <div class="cd-kv-row"><span>案件執行期間</span><strong>2026-05-20 ~ 2026-06-10</strong></div>
+                        <div class="cd-kv-row"><span>KOL 招募截止</span><strong>2026-05-15</strong></div>
+                        <div class="cd-kv-row"><span>成果交付截止</span><strong>2026-06-05</strong></div>
+                    </div>
+                    <div class="cd-progress-wrap">
+                        <div class="cd-progress-bar"><span style="width: 70%"></span></div>
+                        <div class="cd-progress-meta"><span>已過 15 天</span><span>剩餘 7 天</span></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ===== CONDITION ===== -->
+            <section class="content-card cd-panel">
+                <h2 class="cd-panel-title"><i class="fa-regular fa-handshake"></i> 合作條件</h2>
+                <div class="cd-condition-grid">
+                    <article class="cd-condition-item">
+                        <span><i class="fa-solid fa-wallet"></i> 現金酬勞</span>
+                        <strong>NT$ 10,000</strong>
+                    </article>
+                    <article class="cd-condition-item">
+                        <span><i class="fa-solid fa-gift"></i> 體驗項目</span>
+                        <strong>雙人海景住宿</strong>
+                    </article>
+                    <article class="cd-condition-item">
+                        <span><i class="fa-solid fa-chart-line"></i> 導購分潤</span>
+                        <strong>KOL 12%</strong>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ===== TASK STATS ===== -->
+            <section class="content-card cd-panel">
+                <h2 class="cd-panel-title"><i class="fa-solid fa-chart-column"></i> 招募與任務統計</h2>
+                <div class="cd-task-stat-grid">
+                    <div class="cd-task-stat"><span>報名人數</span><strong>12</strong></div>
+                    <div class="cd-task-stat"><span>未入選</span><strong>7</strong></div>
+                    <div class="cd-task-stat"><span>已成立任務</span><strong>5</strong></div>
+                    <div class="cd-task-stat"><span>執行中</span><strong>3</strong></div>
+                    <div class="cd-task-stat"><span>已交付待審</span><strong>1</strong></div>
+                    <div class="cd-task-stat"><span>待處理逾期</span><strong class="is-green">1</strong></div>
+                </div>
+            </section>
+
+            <!-- ===== TASK LIST ===== -->
+            <section class="content-card cd-panel">
+                <div class="cd-section-head">
+                    <h2 class="cd-panel-title"><i class="fa-solid fa-list-check"></i> KOL 任務清單</h2>
+                    <div class="cd-section-actions">
+                        <button class="cd-link-btn" type="button"><i class="fa-regular fa-share-from-square"></i>匯出表格</button>
+                        <button class="cd-link-btn" type="button"><i class="fa-solid fa-layer-group"></i>批次操作</button>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <table class="data-table cd-task-table">
+                        <thead>
+                            <tr>
+                                <th>KOL 名稱</th>
+                                <th>KOL 類型</th>
+                                <th>主要平台</th>
+                                <th>任務狀態</th>
+                                <th>成果提交</th>
+                                <th>驗收結果</th>
+                                <th>異議狀態</th>
+                                <th>最近更新</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="cd-kol-name-cell">
+                                        <img src="images/Designer.jpg" alt="內內 Nene 頭貼" class="cd-avatar">
+                                        <strong>內內 Nene</strong>
+                                    </div>
+                                </td>
+                                <td>旅遊型部落客</td>
+                                <td>Instagram</td>
+                                <td><span class="cd-mini-badge cd-mini-badge--running">執行中</span></td>
+                                <td>-</td>
+                                <td>未開始</td>
+                                <td>-</td>
+                                <td>2026-05-24 10:30</td>
+                                <td><a href="#" class="action-link">詳情</a></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cd-kol-name-cell">
+                                        <img src="images/Designer2.png" alt="莉莉 頭貼" class="cd-avatar">
+                                        <strong>莉莉</strong>
+                                    </div>
+                                </td>
+                                <td>生活風格</td>
+                                <td>YouTube</td>
+                                <td><span class="cd-mini-badge cd-mini-badge--paid">已交付</span></td>
+                                <td><a href="#" class="cd-inline-link">影片連結</a></td>
+                                <td><span class="cd-text-warn">● 待驗收</span></td>
+                                <td>-</td>
+                                <td>2026-05-25 15:45</td>
+                                <td><a href="#" class="action-link">詳情</a></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cd-kol-name-cell">
+                                        <img src="images/Designer3.png" alt="山城悠旅 頭貼" class="cd-avatar">
+                                        <strong>山城悠旅</strong>
+                                    </div>
+                                </td>
+                                <td>深度旅遊</td>
+                                <td>Facebook</td>
+                                <td><span class="cd-mini-badge cd-mini-badge--done">任務完成</span></td>
+                                <td><a href="#" class="cd-inline-link">文章連結</a></td>
+                                <td><span class="cd-text-green">● 通過</span></td>
+                                <td>-</td>
+                                <td>2026-05-22 09:00</td>
+                                <td><a href="#" class="action-link">詳情</a></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cd-kol-name-cell">
+                                        <img src="images/Designer4.png" alt="旅行中的 Mia 頭貼" class="cd-avatar">
+                                        <strong>旅行中的 Mia</strong>
+                                    </div>
+                                </td>
+                                <td>Vlogger</td>
+                                <td>YouTube</td>
+                                <td><span class="cd-mini-badge cd-mini-badge--paid">已交付</span></td>
+                                <td><a href="#" class="cd-inline-link">Reels 連結</a></td>
+                                <td><span class="cd-text-danger">● 未通過</span></td>
+                                <td><span class="cd-text-danger"><i class="fa-solid fa-triangle-exclamation"></i> 爭議處理中</span></td>
+                                <td>2026-05-26 14:15</td>
+                                <td>
+                                    <a href="#" class="action-link">詳情</a>
+                                    <a href="#" class="action-link action-link--danger">處理爭議</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cd-kol-name-cell">
+                                        <img src="images/Designer5.png" alt="北部旅宿觀察 頭貼" class="cd-avatar">
+                                        <strong>北部旅宿觀察</strong>
+                                    </div>
+                                </td>
+                                <td>媒體</td>
+                                <td>Website</td>
+                                <td><span class="cd-mini-badge cd-mini-badge--cancel">已過期</span></td>
+                                <td>尚未提交</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>2026-05-26 23:59</td>
+                                <td><a href="#" class="action-link">詳情</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ===== GUIDE STATS ===== -->
+            <section class="content-card cd-panel">
+                <div class="cd-section-head">
+                    <h2 class="cd-panel-title"><i class="fa-solid fa-square-poll-horizontal"></i> 導購與訂單統計</h2>
+                    <span class="cd-sync-status">● 數據同步正常（更新於 5 分鐘前）</span>
+                </div>
+                <div class="cd-sales-grid">
+                    <div class="cd-sales-item">
+                        <span>交易點擊數</span>
+                        <strong>36</strong>
+                        <small>↑ 12% vs 昨年同期</small>
+                    </div>
+                    <div class="cd-sales-item">
+                        <span>訂單總金額</span>
+                        <strong>628,000</strong>
+                        <small>NTD（預估）</small>
+                    </div>
+                    <div class="cd-sales-item">
+                        <span>導購實際值</span>
+                        <strong>17,444</strong>
+                        <small>NTD</small>
+                    </div>
+                    <div class="cd-sales-item cd-sales-item--highlight">
+                        <span>預估待分潤金</span>
+                        <strong>75,360</strong>
+                        <small>基於 12% 分潤率</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== FILES & LOG ===== -->
+            <div class="cd-grid cd-grid--2">
+                <section class="content-card cd-panel">
+                    <div class="cd-section-head">
+                        <h2 class="cd-panel-title"><i class="fa-regular fa-file"></i> 附件與合約</h2>
+                        <button class="cd-link-btn" type="button"><i class="fa-solid fa-arrow-up-from-bracket"></i>上傳檔案</button>
+                    </div>
+                    <div class="cd-file-list">
+                        <article class="cd-file-item">
+                            <div class="cd-file-meta">
+                                <i class="fa-regular fa-file-pdf"></i>
+                                <div>
+                                    <strong>2026冬季北投專案合約_山海旅宿.pdf</strong>
+                                    <span>2.4 MB - 2026-05-12</span>
+                                </div>
+                            </div>
+                            <button class="cd-icon-btn" type="button" aria-label="下載"><i class="fa-solid fa-download"></i></button>
+                        </article>
+                        <article class="cd-file-item">
+                            <div class="cd-file-meta">
+                                <i class="fa-regular fa-file-word"></i>
+                                <div>
+                                    <strong>KOL 合作內容規格確認書.docx</strong>
+                                    <span>860 KB - 2026-05-18</span>
+                                </div>
+                            </div>
+                            <button class="cd-icon-btn" type="button" aria-label="下載"><i class="fa-solid fa-download"></i></button>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="content-card cd-panel">
+                    <h2 class="cd-panel-title"><i class="fa-regular fa-clock"></i> 操作紀錄</h2>
+                    <div class="cd-log-list">
+                        <article class="cd-log-item">
+                            <div class="cd-log-dot"></div>
+                            <div class="cd-log-content">
+                                <strong>變更任務狀態為「爭議處理中」</strong>
+                                <p>系統管理員（Admin）針對「旅行中的Mia」任務進行狀態變更</p>
+                            </div>
+                            <span class="cd-log-time">15 分鐘前</span>
+                        </article>
+                        <article class="cd-log-item">
+                            <div class="cd-log-dot"></div>
+                            <div class="cd-log-content">
+                                <strong>驗收審核不通過</strong>
+                                <p>審核者：Chen, Yi-An，原因：Reels 長度不足 15 秒。</p>
+                            </div>
+                            <span class="cd-log-time">1 小時前</span>
+                        </article>
+                        <article class="cd-log-item">
+                            <div class="cd-log-dot"></div>
+                            <div class="cd-log-content">
+                                <strong>提交成果：莉莉</strong>
+                                <p>系統自動紀錄成果於 YouTube 平台的連結提交。</p>
+                            </div>
+                            <span class="cd-log-time">2 小時前</span>
+                        </article>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="footer"></footer>
+        <script>$('footer.footer').load('footer.html');</script>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

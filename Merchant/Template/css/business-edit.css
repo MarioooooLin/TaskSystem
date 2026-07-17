@@ -1,0 +1,93 @@
+:root {
+    --be-note-bg: #f2f7ff;
+    --be-note-border: #dbe9ff;
+}
+
+.be-edit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.be-footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.6rem;
+    margin-top: 1.6rem;
+}
+
+.be-note-card {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    border: 1px solid var(--border);
+    background: #f9fbff;
+}
+
+.be-note-card__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(58, 175, 169, .12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3aafa9;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.be-note-card__title {
+    margin: 0 0 .4rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.be-note-card__text {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.8;
+    font-size: 1.35rem;
+}
+
+.be-status-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: .6rem;
+    min-height: 100px;
+    border: 1px solid rgba(58, 175, 169, .15);
+    background: linear-gradient(135deg, rgba(58, 175, 169, .08), rgba(255,255,255,.95));
+}
+
+.be-status-card__label {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    color: #7a8b98;
+    font-size: 1.1rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.be-status-card__text {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+@media (max-width: 1024px) {
+    .be-edit-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .be-edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .be-footer-grid {
+        grid-template-columns: 1fr;
+    }
+}

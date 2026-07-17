@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>任務系統後台-編輯業者資料</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="dannykids">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/w3.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/all-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/business-detail.css" />
+    <link rel="stylesheet" type="text/css" href="css/business-edit.css" />
+</head>
+<body>
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="top-nav"></header>
+    <script>$('header').load('header.html');</script>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar"></aside>
+    <script>$('aside.sidebar').load('sidebar.html');</script>
+
+    <!-- ==================== CONTENT WRAPPER ==================== -->
+    <div class="content-wrapper">
+
+        <!-- SUB HEADER -->
+        <div class="sub-header"></div>
+        <script>$('.sub-header').load('sub-header.html');</script>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ===== PAGE HEADER ===== -->
+            <div class="page-header bd-page-header">
+                <div class="page-header__left">
+                    <nav class="adm-breadcrumb">首頁 &rsaquo; 業者管理 &rsaquo; 編輯業者資料</nav>
+                    <h1 class="page-title">編輯業者資料</h1>
+                    <p class="page-subtitle">修改業者公司資料與聯絡資訊，儲存後立即套用。</p>
+                </div>
+                <div class="bd-header-actions">
+                    <a href="business-detail.html" class="bd-btn bd-btn--ghost">取消</a>
+                    <button class="bd-btn bd-btn--edit">儲存變更</button>
+                </div>
+            </div>
+
+            <!-- ===== 公司基本資料 ===== -->
+            <div class="content-card">
+                <h2 class="section-title bd-section-title">
+                    <i class="fa-regular fa-building"></i> 公司基本資料
+                </h2>
+                <div class="bd-form-grid be-edit-grid">
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">公司 / 個人名稱</label>
+                        <input type="text" class="bd-input" value="山海旅宿股份有限公司">
+                    </div>
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">英文 / 統稱名稱</label>
+                        <input type="text" class="bd-input" value="Mountain Sea Hotel">
+                    </div>
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">客戶類型</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>公司</option>
+                                <option>個人／外包</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">行業類型</label>
+                        <div class="filter-select-wrap">
+                            <select class="filter-select">
+                                <option>旅宿</option>
+                                <option>民宿</option>
+                                <option>餐飲</option>
+                                <option>部落客</option>
+                                <option>其他</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down filter-select__arrow"></i>
+                        </div>
+                    </div>
+                    <div class="bd-form-field bd-form-field--full">
+                        <label class="bd-form-label">業者狀態</label>
+                        <div class="bd-radio-group">
+                            <label class="bd-radio"><input type="radio" name="businessStatus" value="active" checked> 啟用中</label>
+                            <label class="bd-radio"><input type="radio" name="businessStatus" value="inactive"> 停用中</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 識別資料 ===== -->
+            <div class="content-card">
+                <h2 class="section-title bd-section-title">
+                    <i class="fa-regular fa-id-card"></i> 識別資料
+                </h2>
+                <div class="bd-form-grid be-edit-grid">
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">統一編號</label>
+                        <input type="text" class="bd-input" value="87654321">
+                    </div>
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">公司登記名稱</label>
+                        <input type="text" class="bd-input" value="北市旅宿字第000123號">
+                    </div>
+                    <div class="bd-form-field bd-form-field--full">
+                        <label class="bd-form-label">建立日期</label>
+                        <input type="date" class="bd-input" value="2026-04-12" disabled>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 公司聯絡資訊 ===== -->
+            <div class="content-card">
+                <h2 class="section-title bd-section-title">
+                    <i class="fa-regular fa-address-book"></i> 公司聯絡資訊
+                </h2>
+                <div class="bd-form-grid be-edit-grid">
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">公司電話</label>
+                        <input type="text" class="bd-input" value="0223456789">
+                    </div>
+                    <div class="bd-form-field">
+                        <label class="bd-form-label">傳真</label>
+                        <input type="text" class="bd-input" value="0223456790">
+                    </div>
+                    <div class="bd-form-field bd-form-field--full">
+                        <label class="bd-form-label">公司信箱</label>
+                        <input type="email" class="bd-input" value="service@example.com">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 更新提示 ===== -->
+            <div class="be-footer-grid">
+                <div class="content-card be-note-card">
+                    <div class="be-note-card__icon">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+                    <div>
+                        <h3 class="be-note-card__title">更新提示</h3>
+                        <p class="be-note-card__text">請確認所有資料為最新資訊，修改後系統將同步更新業者管理與案件資料中顯示的相關欄位。</p>
+                    </div>
+                </div>
+                <div class="content-card be-status-card">
+                    <span class="be-status-card__label">SYSTEM STATUS</span>
+                    <p class="be-status-card__text">伺服器連線正常</p>
+                </div>
+            </div>
+
+        </main>
+
+    </div><!-- /.content-wrapper -->
+
+    <script type="text/javascript" src="js/main.js" crossorigin="anonymous"></script>
+</body>
+</html>

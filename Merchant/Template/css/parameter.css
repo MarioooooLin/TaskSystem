@@ -1,0 +1,320 @@
+@charset "utf-8";
+/* ============================================================
+   PARAMETER.CSS  ─  參數設定頁面專用樣式
+   ============================================================ */
+
+/* ── Page Header with Actions ── */
+.param-page-header {
+    margin-bottom: 1.6rem;
+}
+
+.param-page-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-primary.btn-primary--ghost {
+    background: #fff;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    transition: all .2s;
+}
+
+.btn-primary.btn-primary--ghost:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* ── Alert Box ── */
+.param-alert {
+    background: #fff8e6;
+    border: 1px solid #fbd38d;
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 2.2rem;
+}
+
+.param-alert__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fcc419;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-top: .2rem;
+}
+
+.param-alert__content {
+    flex: 1;
+}
+
+.param-alert__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #663c00;
+    margin-bottom: .4rem;
+}
+
+.param-alert__text {
+    font-size: 1.3rem;
+    color: #8b6914;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ── Main Grid Layout ── */
+.param-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2.4rem;
+}
+
+.param-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.param-right {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Core Parameters Section ── */
+.param-section {
+    padding: 2.4rem;
+}
+
+.param-section__title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.param-section__title i {
+    color: #3aafa9;
+    font-size: 1.8rem;
+}
+
+/* ── Parameter Groups ── */
+.param-group__heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.2rem;
+    margin-top: 1.4rem;
+}
+
+.param-group__heading:first-child {
+    margin-top: 0;
+}
+
+.param-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.4rem;
+    margin-bottom: 1.8rem;
+}
+
+.param-group:last-of-type {
+    margin-bottom: 1rem;
+}
+
+.param-field {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.param-field--half {
+    /* Default: half width in 2-col grid */
+}
+
+.param-label {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+.param-input,
+.param-select {
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .5rem 1rem;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.param-input:focus,
+.param-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(222, 59, 58, .12);
+}
+
+.param-group__footer {
+    font-size: 1.2rem;
+    color: #9ca3af;
+    font-style: italic;
+    margin: 0;
+}
+
+/* ── Definition Cards (Right) ── */
+.param-def-card {
+    padding: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.param-def-card__title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0 0 .8rem 0;
+}
+
+.param-def-card__title i {
+    color: #3aafa9;
+    font-size: 1.8rem;
+}
+
+.param-def-item {
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.param-def-item:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.param-def-item__title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: .6rem;
+}
+
+.param-def-item__text {
+    font-size: 1.3rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ── Log Section ── */
+.param-log-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.6rem;
+}
+
+.param-log-link {
+    font-size: 1.3rem;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity .2s;
+}
+
+.param-log-link:hover {
+    opacity: .8;
+}
+
+.param-log-table th {
+    font-size: 1.3rem;
+}
+
+.param-log-table td {
+    font-size: 1.3rem;
+}
+
+.param-log-table .td-time {
+    white-space: nowrap;
+    color: #6b7280;
+}
+
+.param-log-table .td-operator {
+    font-weight: 500;
+}
+
+.param-log-table .td-item {
+    font-weight: 600;
+}
+
+.param-log-table .td-old {
+    color: var(--accent-red);
+}
+
+.param-log-table .td-new {
+    color: #3aafa9;
+    font-weight: 600;
+}
+
+/* ── RWD ── */
+@media (max-width: 1200px) {
+    .param-main-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+@media (max-width: 900px) {
+    .param-page-actions{
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+@media (max-width: 768px) {
+    .param-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.2rem;
+    }
+
+    .param-page-actions {
+        width: 100%;
+    }
+
+    /* .param-page-actions button {
+        width: 100%;
+    } */
+
+    .param-group {
+        grid-template-columns: 1fr;
+    }
+
+    .param-alert {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .param-section {
+        padding: 1.6rem;
+    }
+
+    .param-log-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .8rem;
+    }
+}

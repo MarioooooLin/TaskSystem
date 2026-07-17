@@ -50,6 +50,7 @@ public static class DependencyInjection
 
         // ── Merchant Management ───────────────────────────
         services.AddScoped<GetMerchantListHandler>(); services.AddScoped<GetMerchantSummaryHandler>(); services.AddScoped<GetMerchantDetailHandler>();
+        services.AddScoped<GetMerchantDashboardHandler>();
         services.AddScoped<SuspendMerchantHandler>();
         services.AddScoped<UnsuspendMerchantHandler>();
         services.AddScoped<UpdateMerchantHandler>();
