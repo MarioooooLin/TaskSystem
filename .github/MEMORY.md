@@ -6,6 +6,59 @@
 
 ## 2026-07-17
 
+### [10:55] 業者端 HTMX 整合與表格捲動優化
+
+**變更內容**
+
+- 在業者端引入 htmx
+    - [Merchant/Views/Shared/\_Layout.cshtml](Merchant/Views/Shared/_Layout.cshtml)：載入 htmx 2.0.4 CDN，`<main id="main-content">` 加上 `hx-history-elt`
+    - [Merchant/Views/Shared/\_Layout.cshtml](Merchant/Views/Shared/_Layout.cshtml)：首頁連結與 Logo 加上 `hx-get="/Home/Index"`、`hx-target="#main-content"`、`hx-select="#main-content"`、`hx-push-url="true"`、`hx-swap="outerHTML"`
+    - [Merchant/Controllers/HomeController.cs](Merchant/Controllers/HomeController.cs)：`Index` Action 偵測 `HX-Request` Header，回傳 `PartialView` 避免重複輸出 Layout
+- 全頁切換後自動捲到頂端
+    - [Merchant/wwwroot/js/main.js](Merchant/wwwroot/js/main.js)：監聽 `htmx:afterSwap`，當目標為 `#main-content` 時將 main 與 window 捲到頂端
+- 表格區塊加上垂直 scroll bar
+    - [Merchant/wwwroot/css/all-style.css](Merchant/wwwroot/css/all-style.css)：`.table-section` 新增 `max-height: 320px`、`overflow-y: auto`、`border`；標題設為 sticky 固定；表格加 `min-width: 800px` 避免內容擠壓
+
+**決策原因**
+
+- 參考 Admin 架構，業者端未來會有案件管理、錢包等內部頁面切換，使用 htmx 可達到局部刷新、保留側邊欄與 header 的體驗
+- `hx-select="#main-content"` 讓 Controller 初期無需為每個頁面額外準備 PartialView，只要首頁判斷 `HX-Request` 即可兼顧直接瀏覽與局部刷新
+- 表格資料可能超過 5 筆，限制高度並提供垂直捲動，避免頁面過長影響使用者操作
+
+**測試狀態**
+
+- `dotnet build Merchant/Merchant.csproj -p:OutputPath=bin\DebugCheck\net9.0\` 成功
+
+### [10:55] 業者端首頁樣式與版面調整
+
+**變更內容**
+
+- 調整業者端主色調為藍色商務風格
+    - [Merchant/wwwroot/css/all-style.css](Merchant/wwwroot/css/all-style.css)
+    - `--primary` 由 `#de3b3a` 改為 `#4a90a4`
+    - `--primary-dark` 改為 `#3a7585`、`--primary-light` 改為 `#eaf5f8`、`--thead-tr` 改為 `#4a90a4`
+    - `sub-header` 漸層由橘紅改為 `#6bb3c7 → #4a90a4`
+    - 補上 `.top-nav__left`、`.logo-img`、`.logo-text` 樣式
+- 對齊設計師切版 header 結構
+    - [Merchant/Views/Shared/\_Layout.cshtml](Merchant/Views/Shared/_Layout.cshtml)
+    - logo 文字改為「任務系統業者管理後台」
+    - 登出按鈕加上 FontAwesome 箭頭圖示
+    - 補回通知鈴鐺旁的使用者頭像按鈕
+- 修正狀態卡片圖示 404
+    - [Application/Merchants/Queries/GetMerchantDashboardHandler.cs](Application/Merchants/Queries/GetMerchantDashboardHandler.cs)
+    - 將 `IconUrl` 從 `~/images/xxx.svg` 改為 `/images/xxx.svg`
+
+**決策原因**
+
+- 業者端原本直接沿用 Admin 紅色主題，與設計師切版的藍色商務風格不一致，因此調整 CSS root 變數與 sub-header 漸層
+- `~/images/xxx.svg` 在 C# DTO 字串中不會被 Razor 解析，瀏覽器會請求錯誤路徑；改為絕對路徑 `/images/xxx.svg` 後正常載入
+- header 使用者頭像按鈕在先前對齊切版時被誤移除，依據 [Merchant/Template/header.html](Merchant/Template/header.html) 補回
+
+**測試狀態**
+
+- `dotnet build Merchant/Merchant.csproj -p:OutputPath=bin\DebugCheck\net9.0\` 成功
+- 使用者已確認畫面看起來 OK
+
 ### [00:00] Merchant 業者端登入頁實作
 
 **變更內容**

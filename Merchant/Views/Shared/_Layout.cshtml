@@ -23,7 +23,8 @@
                 <span></span>
                 <span></span>
             </button>
-            <a asp-controller="Home" asp-action="Index" class="logo-link">
+            <a asp-controller="Home" asp-action="Index" class="logo-link"
+               hx-get="/Home/Index" hx-target="#main-content" hx-select="#main-content" hx-push-url="true" hx-swap="outerHTML">
                 <img src="~/images/logo.svg" alt="旅圖" class="logo-img" />
                 <span class="logo-text">任務系統<br class="br-break" />業者管理後台</span>
             </a>
@@ -46,7 +47,8 @@
     <!-- ==================== SIDEBAR ==================== -->
     <aside class="sidebar">
         <nav class="sidebar-nav">
-            <a asp-controller="Home" asp-action="Index" class="sidebar-item active">
+            <a asp-controller="Home" asp-action="Index" class="sidebar-item active"
+               hx-get="/Home/Index" hx-target="#main-content" hx-select="#main-content" hx-push-url="true" hx-swap="outerHTML">
                 <img src="~/images/icon-home.svg" alt="" />
                 <span>首頁</span>
             </a>
@@ -90,7 +92,7 @@
             </div>
 
             <!-- MAIN CONTENT -->
-            <main id="main-content" class="main-content">
+            <main id="main-content" class="main-content" hx-history-elt>
                 @RenderBody()
             </main>
 
@@ -101,6 +103,9 @@
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/htmx.org@2.0.4"
+                integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+                crossorigin="anonymous"></script>
         <script src="~/js/main.js" asp-append-version="true"></script>
         @await RenderSectionAsync("Scripts", required: false)
     </body>

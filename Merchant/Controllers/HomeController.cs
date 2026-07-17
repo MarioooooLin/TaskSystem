@@ -73,6 +73,9 @@ public sealed class HomeController(
         ViewData["CompanyName"] = vm.CompanyName;
         ViewData["AvailableAmount"] = vm.Wallet.AvailableAmount;
 
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView(vm);
+
         return View(vm);
     }
 

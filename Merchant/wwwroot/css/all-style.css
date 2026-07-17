@@ -561,11 +561,29 @@ br.br-break {
 .table-section {
     margin-bottom: 3.2rem;
     overflow-x: auto;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    max-height: 320px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
 }
 
 .table-section:last-child {
     margin-bottom: 0;
+}
+
+.table-section .section-title {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--white);
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.table-section .data-table {
+    min-width: 800px;
 }
 
 .section-title {
