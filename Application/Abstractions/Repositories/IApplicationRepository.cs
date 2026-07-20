@@ -26,4 +26,7 @@ public interface IApplicationRepository
 
     /// <summary>批次更新（案件修改後所有 Accepted 改為 PendingReconfirmation）。</summary>
     Task UpdateManyAsync(IEnumerable<Domain.Entities.Application> applications, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>更新指定案件下所有 Accepted 報名為 PendingReconfirmation，並設定重新確認期限。</summary>
+    Task SetPendingReconfirmationAsync(long caseId, DateTime deadlineAt, IDbSession session, CancellationToken ct = default);
 }

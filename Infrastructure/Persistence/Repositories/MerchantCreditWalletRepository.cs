@@ -121,6 +121,23 @@ public sealed class MerchantCreditWalletRepository : IMerchantCreditWalletReposi
         await session.Connection.ExecuteAsync(sql, wallet, session.Transaction);
     }
 
+    // ── UpdateAsync ───────────────────────────────────────────────
+    public async Task UpdateAsync(
+        MerchantCreditWallet wallet, IDbSession session, CancellationToken ct = default)
+    {
+        const string sql = """
+            UPDATE MerchantCreditWallets SET
+                AvailableAmount = @AvailableAmount,
+                UsedAmount      = @UsedAmount,
+                ExpiredAmount   = @ExpiredAmount,
+                RevokedAmount   = @RevokedAmount,
+                UpdatedAt       = GETUTCDATE()
+            WHERE Id = @Id
+            """;
+
+        await session.Connection.ExecuteAsync(sql, wallet, session.Transaction);
+    }
+
     // ── InsertTransactionAsync ────────────────────────────────────
     public async Task InsertTransactionAsync(
         long merchantId, short type, decimal amount,

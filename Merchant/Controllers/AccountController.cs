@@ -92,6 +92,14 @@ public sealed class AccountController(
         return RedirectToAction(nameof(Login));
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult AccessDenied(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
+    }
+
     // ── POST /Account/RedeemImpersonation ─────────────────
     /// <summary>
     /// 跨站兌換 Admin 發出的一次性代理登入票證。此 Action 為首次跨站 POST，

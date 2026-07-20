@@ -60,4 +60,36 @@ public sealed class MerchantWalletRepository : IMerchantWalletRepository
 
         await session.Connection.ExecuteAsync(sql, wallet, session.Transaction);
     }
+
+    public async Task InsertTransactionAsync(
+        long merchantId,
+        short type,
+        decimal amount,
+        short status,
+        long? relatedCaseId,
+        string? note,
+        long? createdByUserId,
+        IDbSession session,
+        CancellationToken ct = default)
+    {
+        const string sql = """
+            INSERT INTO MerchantWalletTransactions
+                (MerchantId, Type, Amount, Status, RelatedCaseId, Note, CreatedByUserId)
+            VALUES
+                (@MerchantId, @Type, @Amount, @Status, @RelatedCaseId, @Note, @CreatedByUserId)
+            """;
+
+        await session.Connection.ExecuteAsync(sql,
+            new
+            {
+                MerchantId = merchantId,
+                Type = type,
+                Amount = amount,
+                Status = status,
+                RelatedCaseId = relatedCaseId,
+                Note = note,
+                CreatedByUserId = createdByUserId
+            },
+            session.Transaction);
+    }
 }

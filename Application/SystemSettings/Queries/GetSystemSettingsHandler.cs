@@ -32,6 +32,7 @@ public sealed class GetSystemSettingsHandler(
             KolPayoutMode = GetString(map, SystemSettingKeys.KolPayoutMode, "全額提領"),
             KolPayoutDays = GetString(map, SystemSettingKeys.KolPayoutDays, "10,25"),
             KolPayoutClosingDayOffset = GetInt(map, SystemSettingKeys.KolPayoutClosingDayOffset, -5),
+            CaseReconfirmationDeadlineDays = GetInt(map, SystemSettingKeys.CaseReconfirmationDeadlineDays, 3),
         };
 
         await uow.CommitAsync(ct);

@@ -1,5 +1,6 @@
 @using Domain.Enums
 @using Infrastructure.Authentication
+@using Merchant.Models
 @model Merchant.ViewModels.Cases.CaseIndexViewModel
 @{
     Layout = "_Layout";
@@ -50,12 +51,17 @@
 
     string PlatformIconClass(SocialPlatform platform) => platform switch
     {
+        SocialPlatform.X => "fa-brands fa-x-twitter",
         SocialPlatform.Instagram => "fa-brands fa-instagram",
         SocialPlatform.Facebook => "fa-brands fa-facebook",
         SocialPlatform.YouTube => "fa-brands fa-youtube",
-        SocialPlatform.TikTok => "fa-brands fa-tiktok",
+        SocialPlatform.Blog => "fa-solid fa-blog",
         SocialPlatform.XiaoHongShu => "fa-solid fa-book-open",
+        SocialPlatform.TikTok => "fa-brands fa-tiktok",
+        SocialPlatform.Douyin => "fa-brands fa-tiktok",
         SocialPlatform.Threads => "fa-brands fa-threads",
+        SocialPlatform.Snapchat => "fa-brands fa-snapchat",
+        SocialPlatform.WeChat => "fa-brands fa-weixin",
         _ => "fa-solid fa-share-nodes"
     };
 
@@ -84,7 +90,7 @@ Model.Query.RewardTypeFilter.Value.ToString();
         <div class="page-header__right">
             @if (!isImpersonating)
             {
-                <a asp-controller="Case" asp-action="Create" class="btn-primary">
+                <a asp-controller="Case" asp-action="Edit" class="btn-primary">
                     <i class="fa-solid fa-plus"></i> 新增案件
                 </a>
             }
@@ -186,20 +192,12 @@ Model.Query.RewardTypeFilter.Value.ToString();
                                    value="@(Model.Query.Platform.HasValue ? ((short)Model.Query.Platform.Value).ToString() : "")" />
                             <button type="button" class="filter-tag @PlatformTagActive(null)"
                                     onclick="setPlatformFilter('')">全部</button>
-                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.Facebook)"
-                                    onclick="setPlatformFilter('@((short)SocialPlatform.Facebook)')">FACEBOOK</button>
-                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.YouTube)"
-                                    onclick="setPlatformFilter('@((short)SocialPlatform.YouTube)')">YOUTUBE</button>
-                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.Instagram)"
-                                    onclick="setPlatformFilter('@((short)SocialPlatform.Instagram)')">INSTAGRAM</button>
-                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.Threads)"
-                                    onclick="setPlatformFilter('@((short)SocialPlatform.Threads)')">THREADS</button>
-                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.TikTok)"
-                                    onclick="setPlatformFilter('@((short)SocialPlatform.TikTok)')">TIKTOK</button>
-                            <button type="button" class="filter-tag @PlatformTagActive(SocialPlatform.XiaoHongShu)"
-                                    onclick="setPlatformFilter('@((short)SocialPlatform.XiaoHongShu)')">小紅書</button>
-                            <!-- 待確認：LINE 平台目前尚未定義於 SocialPlatform -->
-                            <button type="button" class="filter-tag" title="待確認">LINE</button>
+                            @foreach (var platform in CaseEditLookups.PlatformNames)
+                            {
+                                var value = (short)platform.Key;
+                                <button type="button" class="filter-tag @PlatformTagActive(platform.Key)"
+                                        onclick="setPlatformFilter('@value')">@platform.Value</button>
+                            }
                         </div>
                     </div>
                 </div>

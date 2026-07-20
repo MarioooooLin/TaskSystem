@@ -1,5 +1,17 @@
 $(document).ready(function () {
     /* ==========================================
+       HTMX antiforgery token header
+    =========================================== */
+    if (typeof htmx !== "undefined") {
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        if (token) {
+            document.body.addEventListener("htmx:configRequest", function (evt) {
+                evt.detail.headers["RequestVerificationToken"] = token;
+            });
+        }
+    }
+
+    /* ==========================================
        HTMX scroll-to-top on full page swap
     =========================================== */
     document.body.addEventListener("htmx:afterSwap", function (evt) {

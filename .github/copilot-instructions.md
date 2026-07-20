@@ -86,6 +86,9 @@ docs(scope): 文件更新
 - **Solution 路徑**：`c:\旅圖\任務系統\TaskSystem.sln`
 - **技術棧**：.NET 9 / ASP.NET Core MVC / MSSQL / Dapper
 - **三個 MVC 站台**：`Admin`（後台）、`Merchant`（業者）、`Kol`（KOL）
+- **外部設定檔**：三個站台共用方案根目錄的 `Account/TaskSystem.json`，並透過 `AddTaskSystemExternalConfiguration()` 以必要檔案載入；檔案缺少時不得略過或改成 optional
+- **設定優先順序**：各站台的 `appsettings.json` 仍由 ASP.NET Core 載入，但 `TaskSystem.json` 後載入且同名設定以它為準；連線字串、Cookie、Serilog、平台參數等共用或機密設定不得重複寫入各站台的 `appsettings.json`
+- **機密管理**：`Account/` 已由 `.gitignore` 排除；不得提交 `TaskSystem.json`，也不得將其中的密鑰、連線字串或憑證搬入版控檔案
 
 ---
 

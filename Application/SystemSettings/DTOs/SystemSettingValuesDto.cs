@@ -15,4 +15,5 @@ public sealed class SystemSettingValuesDto
     public string KolPayoutMode { get; init; } = "全額提領";
     public string KolPayoutDays { get; init; } = "10,25";
     public int KolPayoutClosingDayOffset { get; init; } = -5;
+    public int CaseReconfirmationDeadlineDays { get; init; } = 3;
 }

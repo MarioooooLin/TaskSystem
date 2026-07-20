@@ -71,6 +71,7 @@ public sealed class CaseTaskListItemDto
 /// <summary>案件附件 DTO。</summary>
 public sealed class CaseAttachmentDto
 {
+    public long Id { get; init; }
     public long FileId { get; init; }
     public string FileName { get; init; } = string.Empty;
     public long FileSize { get; init; }

@@ -16,6 +16,9 @@ public static class SystemSettingKeys
     public const string KolPayoutDays = "kol_payout_days";
     public const string KolPayoutClosingDayOffset = "kol_payout_closing_day_offset";
 
+    /// <summary>招募中案件修改後，已錄取 KOL 重新確認期限（日曆天）。</summary>
+    public const string CaseReconfirmationDeadlineDays = "case_reconfirmation_deadline_days";
+
     /// <summary>還原預設值的彙總異動紀錄 Key。</summary>
     public const string ResetAll = "reset_all";
 
@@ -34,6 +37,7 @@ public static class SystemSettingKeys
         [KolPayoutMode] = "提領方式",
         [KolPayoutDays] = "撥款日",
         [KolPayoutClosingDayOffset] = "關帳日設定",
+        [CaseReconfirmationDeadlineDays] = "重新確認期限天數",
         [ResetAll] = "還原預設",
     };
 }

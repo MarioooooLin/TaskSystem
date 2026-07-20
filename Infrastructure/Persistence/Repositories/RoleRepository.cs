@@ -44,16 +44,25 @@ public sealed class RoleRepository : IRoleRepository
     /// <summary>
     /// 取得指定使用者的所有 Permission Code。
     /// 查詢路徑：UserRoles → RolePermissions → Permissions
+    /// 以及 MerchantMembers → RolePermissions → Permissions
     /// </summary>
     public async Task<IReadOnlyList<string>> GetPermissionCodesByUserIdAsync(
         long userId, IDbSession session, CancellationToken ct = default)
     {
         const string sql = """
             SELECT DISTINCT p.Code
-            FROM UserRoles ur
-            INNER JOIN RolePermissions rp ON rp.RoleId = ur.RoleId
+            FROM (
+                SELECT ur.RoleId
+                FROM UserRoles ur
+                WHERE ur.UserId = @UserId
+                UNION
+                SELECT mm.RoleId
+                FROM MerchantMembers mm
+                WHERE mm.UserId = @UserId
+                  AND mm.Status = 1
+            ) roles
+            INNER JOIN RolePermissions rp ON rp.RoleId = roles.RoleId
             INNER JOIN Permissions p      ON p.Id = rp.PermissionId
-            WHERE ur.UserId = @UserId
             """;
 
         var result = await session.Connection.QueryAsync<string>(

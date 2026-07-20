@@ -1,8 +1,9 @@
 using Application.Account;
 using Application.AdminAccounts.Commands;
 using Application.AdminAccounts.Queries;
-using Application.Disputes.Commands;
+using Application.Cases.Commands;
 using Application.Cases.Queries;
+using Application.Disputes.Commands;
 using Application.Dashboard.Queries;
 using Application.Disputes.Queries;
 using Application.Finance.Queries;
@@ -69,6 +70,12 @@ public static class DependencyInjection
         // ── Merchant Case Management ──────────────────────
         services.AddScoped<GetMerchantCaseListHandler>();
         services.AddScoped<GetMerchantCaseSummaryHandler>();
+        services.AddScoped<GetCaseEditHandler>();
+        services.AddScoped<GetPublishPreviewHandler>();
+        services.AddScoped<SaveCaseDraftHandler>();
+        services.AddScoped<PublishCaseHandler>();
+        services.AddScoped<UploadCaseAttachmentHandler>();
+        services.AddScoped<DeleteCaseAttachmentHandler>();
 
         // ── Dashboard ─────────────────────────────────────
         services.AddScoped<GetDashboardHandler>();
@@ -95,6 +102,7 @@ public static class DependencyInjection
 
         // ── System Settings ───────────────────────────────
         services.AddScoped<GetSystemSettingsHandler>();
+        services.AddScoped<GetActiveLanguagesHandler>();
         services.AddScoped<GetRecentSystemSettingLogsHandler>();
         services.AddScoped<UpdateSystemSettingsHandler>();
         services.AddScoped<ResetSystemSettingsHandler>();

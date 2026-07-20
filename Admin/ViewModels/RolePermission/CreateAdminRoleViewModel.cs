@@ -101,6 +101,7 @@ public sealed class PermissionItemViewModel
         "Approve" => "核准",
         "ChangeStatus" => "變更狀態",
         "CreditAdjust" => "信用額度調整",
+        "Impersonate" => "代理登入",
         _ => ActionName
     };
 }

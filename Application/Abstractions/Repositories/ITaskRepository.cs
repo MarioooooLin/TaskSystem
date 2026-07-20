@@ -23,4 +23,13 @@ public interface ITaskRepository
 
     /// <summary>批次更新（例如案件取消時，所有 Task 改為 Cancelled）。</summary>
     Task UpdateManyAsync(IEnumerable<CaseTask> tasks, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>取得案件下狀態為 PendingMatch 且尚未綁定的 Task 數量。</summary>
+    Task<int> CountPendingMatchAsync(long caseId, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>依條件刪除案件下尚未綁定的 PendingMatch 任務（減少招募數時）。</summary>
+    Task DeleteUnboundPendingMatchAsync(long caseId, int count, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>取得案件下已綁定 KOL 的任務數量。</summary>
+    Task<int> CountBoundAsync(long caseId, IDbSession session, CancellationToken ct = default);
 }

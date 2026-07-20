@@ -21,6 +21,9 @@ public interface IMerchantCreditWalletRepository
     /// <summary>新增或更新折扣金錢包（UPSERT）。</summary>
     Task UpsertAsync(MerchantCreditWallet wallet, IDbSession session, CancellationToken ct = default);
 
+    /// <summary>更新折扣金錢包。</summary>
+    Task UpdateAsync(MerchantCreditWallet wallet, IDbSession session, CancellationToken ct = default);
+
     /// <summary>寫入折扣金交易流水。</summary>
     Task InsertTransactionAsync(
         long merchantId, short type, decimal amount,

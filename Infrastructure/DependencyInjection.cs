@@ -3,8 +3,10 @@ using Application.Abstractions.Persistence;
 using Application.Abstractions.Repositories;
 using Application.Abstractions.Security;
 using Application.AdminAccounts.Options;
+using Application.FileStorage;
 using Dapper;
 using Infrastructure.Authentication;
+using Infrastructure.FileStorage;
 using Infrastructure.Notifications;
 using Infrastructure.Persistence.Dapper;
 using Infrastructure.Persistence.Dapper.TypeHandlers;
@@ -70,11 +72,19 @@ public static class DependencyInjection
         services.AddScoped<IKolEarningRepository, KolEarningRepository>();
         services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
         services.AddScoped<IMerchantImpersonationTicketRepository, MerchantImpersonationTicketRepository>();
+        services.AddScoped<ICaseRepository, CaseRepository>();
+        services.AddScoped<ICaseAttachmentRepository, CaseAttachmentRepository>();
+        services.AddScoped<ICaseBudgetSnapshotRepository, CaseBudgetSnapshotRepository>();
+        services.AddScoped<IFileRepository, FileRepository>();
+        services.AddScoped<ICaseFileStorage, CaseFileStorage>();
+        services.AddScoped<ITaskRepository, TaskRepository>();
+        services.AddScoped<IApplicationRepository, ApplicationRepository>();
         services.AddScoped<ICaseMonitorRepository, CaseMonitorRepository>();
         services.AddScoped<IDashboardRepository, DashboardRepository>();
         services.AddScoped<IDisputeRepository, DisputeRepository>();
         services.AddScoped<IFinanceRepository, FinanceRepository>();
         services.AddScoped<ISystemSettingRepository, SystemSettingRepository>();
+        services.AddScoped<ILanguageRepository, LanguageRepository>();
         return services;
     }
 }

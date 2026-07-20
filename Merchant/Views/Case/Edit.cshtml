@@ -1,0 +1,391 @@
+@using Domain.Enums
+@using Merchant.Models
+@model Merchant.ViewModels.Cases.CaseEditViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.IsNew ? "新增案件" : "編輯案件";
+}
+
+@section PageCss {
+    <link rel="stylesheet" href="~/css/add-cases.css" asp-append-version="true" />
+}
+
+<div class="content-card">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div class="page-header__left">
+            <h1 class="page-title">@(Model.IsNew ? "新增案件" : Model.Title)</h1>
+            <p class="page-subtitle">請填寫完整的案件資訊，並確認預算分配。</p>
+        </div>
+    </div>
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" id="case-edit-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="CaseId" />
+        <input type="hidden" asp-for="Status" />
+        <input type="hidden" asp-for="RequirementNotes" />
+        <input type="hidden" name="SubmitMode" id="submit-mode" value="Draft" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- FORM + SIDEBAR LAYOUT -->
+        <div class="ac-layout">
+
+            <!-- ===== LEFT: FORM ===== -->
+            <div class="ac-form">
+
+                <!-- STEP TABS -->
+                <div class="ac-tabs-wrap">
+                    <button class="ac-tabs-arrow ac-tabs-arrow--left" id="tabsArrowLeft" type="button">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <div class="ac-tabs">
+                        <button type="button" class="ac-tab active" data-step="1" data-target="step1">
+                            <span class="ac-tab__num">01</span> 基本資料
+                        </button>
+                        <button type="button" class="ac-tab" data-step="2" data-target="step3">
+                            <span class="ac-tab__num">02</span> 合作條件
+                        </button>
+                        <button type="button" class="ac-tab" data-step="3" data-target="step4">
+                            <span class="ac-tab__num">03</span> KOL條件
+                        </button>
+                        <button type="button" class="ac-tab" data-step="4" data-target="step5">
+                            <span class="ac-tab__num">04</span> 平台與交付
+                        </button>
+                        <button type="button" class="ac-tab" data-step="5" data-target="step6">
+                            <span class="ac-tab__num">05</span> 上傳附件
+                        </button>
+                    </div>
+                    <button class="ac-tabs-arrow ac-tabs-arrow--right" id="tabsArrowRight" type="button">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- ===== STEP 1: 基本資料 ===== -->
+                <section class="ac-section" id="step1">
+                    <h2 class="ac-section__title">基本資料</h2>
+
+                    <div class="ac-field">
+                        <label class="ac-label" asp-for="Title">案件名稱 <span class="ac-required">*</span></label>
+                        <input class="ac-input" asp-for="Title" placeholder="" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="ac-field">
+                        <label class="ac-label" asp-for="Description">案件簡介 <span class="ac-required">*</span></label>
+                        <textarea class="ac-textarea" asp-for="Description" rows="4" placeholder=""></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="ac-row">
+                        <div class="ac-field">
+                            <label class="ac-label" asp-for="OfficialUrl">官方網站/參考連結</label>
+                            <input class="ac-input" asp-for="OfficialUrl" placeholder="http://" />
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label" asp-for="CityId">執行縣市 <span class="ac-required">*</span></label>
+                            <div class="ac-select-wrap">
+                                <select class="ac-select" asp-for="CityId">
+                                    <option value="">請選擇縣市</option>
+                                    <option value="1">台北市</option>
+                                    <option value="2">新北市</option>
+                                    <option value="3">桃園市</option>
+                                    <option value="4">台中市</option>
+                                    <option value="5">台南市</option>
+                                    <option value="6">高雄市</option>
+                                    <option value="7">基隆市</option>
+                                    <option value="8">新竹市</option>
+                                    <option value="9">新竹縣</option>
+                                    <option value="10">苗栗縣</option>
+                                    <option value="11">彰化縣</option>
+                                    <option value="12">南投縣</option>
+                                    <option value="13">雲林縣</option>
+                                    <option value="14">嘉義市</option>
+                                    <option value="15">嘉義縣</option>
+                                    <option value="16">屏東縣</option>
+                                    <option value="17">宜蘭縣</option>
+                                    <option value="18">花蓮縣</option>
+                                    <option value="19">台東縣</option>
+                                    <option value="20">澎湖縣</option>
+                                    <option value="21">金門縣</option>
+                                    <option value="22">連江縣</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down ac-select__arrow"></i>
+                            </div>
+                            <span asp-validation-for="CityId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="ac-field">
+                        <label class="ac-label" asp-for="Address">詳細地址 <span class="ac-required">*</span></label>
+                        <input class="ac-input" asp-for="Address" placeholder="" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </section>
+
+                <!-- ===== STEP 2: 時間與招募 ===== -->
+                <section class="ac-section" id="step2-recruit">
+                    <h2 class="ac-section__title">時間與招募</h2>
+
+                    <div class="ac-row ac-row--3">
+                        <div class="ac-field">
+                            <label class="ac-label" asp-for="WantedKolCount">徵求人數 <span
+                                class="ac-required">*</span></label>
+                                <input class="ac-input" asp-for="WantedKolCount" type="number" min="1" />
+                                <span asp-validation-for="WantedKolCount" class="text-danger"></span>
+                            </div>
+                            <div class="ac-field">
+                                <label class="ac-label" asp-for="ApplicationDeadline">報名截止日期 <span
+                                    class="ac-required">*</span></label>
+                                    <input class="ac-input" asp-for="ApplicationDeadline" type="date" />
+                                    <span asp-validation-for="ApplicationDeadline" class="text-danger"></span>
+                                </div>
+                                <div class="ac-field">
+                                    <label class="ac-label" asp-for="SubmissionDeadline">交付截止日期 <span
+                                        class="ac-required">*</span></label>
+                                        <input class="ac-input" asp-for="SubmissionDeadline" type="date" />
+                                        <span asp-validation-for="SubmissionDeadline" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- ===== STEP 3: 合作條件 ===== -->
+                            <section class="ac-section" id="step3">
+                                <h2 class="ac-section__title">合作條件</h2>
+
+                                <div class="ac-field">
+                                    <label class="ac-label" asp-for="CashRewardAmount">現金報酬（單人/NT$）<span
+                                        class="ac-required">*</span></label>
+                                        <input class="ac-input" asp-for="CashRewardAmount" type="number" step="0.01" min="0"
+                                               placeholder="" />
+                                        <span asp-validation-for="CashRewardAmount" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="ac-field">
+                                        <label class="ac-label">贈品項目</label>
+                                        <p class="ac-hint ac-hint--warn">請至少填寫一筆（若沒有贈品請填寫「無」）</p>
+                                        <div class="ac-tag-input-wrap">
+                                            <input type="text" class="ac-input ac-tag-input" placeholder="" id="giftInput">
+                                            <button type="button" class="ac-tag-add-btn" id="giftAddBtn">新增</button>
+                                        </div>
+                                        <div class="ac-tags" id="giftTags">
+                                            @foreach (var item in Model.BarterItems)
+                                            {
+                                                <span class="ac-tag" data-id="@item.Id" data-name="@item.Name"
+                                                      data-quantity="@item.Quantity" data-note="@item.Note">
+                                                    @item.Name
+                                                    <button type="button" class="ac-tag__del">×</button>
+                                                </span>
+                                            }
+                                        </div>
+                                        <!-- 實際提交用的隱藏欄位，由 JS 同步 -->
+                                        <div id="barter-hidden-fields" style="display:none;">
+                                            @for (var i = 0; i < Model.BarterItems.Count; i++)
+                                            {
+                                                <input type="hidden" name="BarterItems[@i].Id" value="@Model.BarterItems[i].Id" />
+                                                <input type="hidden" name="BarterItems[@i].Name" value="@Model.BarterItems[i].Name" />
+                                                <input type="hidden" name="BarterItems[@i].Quantity"
+                                                       value="@Model.BarterItems[i].Quantity" />
+                                                <input type="hidden" name="BarterItems[@i].Note" value="@Model.BarterItems[i].Note" />
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="ac-field">
+                                        <label class="ac-label ac-label--toggle">
+                                            銷售分潤設定
+                                            <label class="ac-toggle">
+                                                <input type="checkbox" asp-for="HasCommission" id="revShareToggle">
+                                                <span class="ac-toggle__slider"></span>
+                                            </label>
+                                        </label>
+                                        <div class="ac-revshare" id="revSharePanel"
+                                             style="display:@(Model.HasCommission ? "block" : "none")">
+                                            <div class="ac-row">
+                                                <div class="ac-field">
+                                                    <label class="ac-label" asp-for="CommissionRate">佣金比例(%)</label>
+                                                    <input class="ac-input" asp-for="CommissionRate" type="number" step="0.01" min="0"
+                                                           max="100" placeholder="" />
+                                                </div>
+                                                <div class="ac-field">
+                                                    <label class="ac-label" asp-for="CookieDays">追蹤實效（天）</label>
+                                                    <input class="ac-input" asp-for="CookieDays" type="number" min="1" max="365"
+                                                           placeholder="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <!-- ===== STEP 4: KOL條件 ===== -->
+                                <section class="ac-section" id="step4">
+                                    <h2 class="ac-section__title">KOL條件</h2>
+
+                                    <div class="ac-field">
+                                        <label class="ac-label" asp-for="MinFollowers">粉絲門檻</label>
+                                        <p class="ac-hint ac-hint--primary">最低訂閱人數數量</p>
+                                        <input class="ac-input" asp-for="MinFollowers" type="number" min="0" placeholder="" />
+                                    </div>
+
+                                    <div class="ac-field">
+                                        <label class="ac-label">KOL類型（複選）<span class="ac-required">*</span></label>
+                                        <div class="ac-check-tags">
+                                            @foreach (var category in CaseEditLookups.CategoryNames)
+                                            {
+                                                var value = (int)category.Key;
+                                                <label class="ac-check-tag @(Model.Categories.Contains(value) ? "active" : "")">
+                                                    <input type="checkbox" name="Categories" value="@value"
+                                                    @(Model.Categories.Contains(value) ? "checked" : "") />
+                                                    @category.Value
+                                                </label>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="ac-field">
+                                        <label class="ac-label">語言（複選）<span class="ac-required">*</span></label>
+                                        <div class="ac-check-tags">
+                                            @foreach (var lang in Model.LanguageOptions)
+                                            {
+                                                <label class="ac-check-tag @(Model.Languages.Contains(lang.Code) ? "active" : "")">
+                                                    <input type="checkbox" name="Languages" value="@lang.Code"
+                                                    @(Model.Languages.Contains(lang.Code) ? "checked" : "") />
+                                                    @lang.DisplayName
+                                                </label>
+                                            }
+                                        </div>
+                                        <p class="ac-hint ac-hint--warn">AI提醒：目前選擇特殊語言，符合人數可能低於20個，建議視情況優先尋找此類KOL</p>
+                                    </div>
+                                </section>
+
+                                <!-- ===== STEP 5: 平台與交付 ===== -->
+                                <section class="ac-section" id="step5">
+                                    <h2 class="ac-section__title">平台與交付</h2>
+
+                                    <div class="ac-field">
+                                        <label class="ac-label">發佈平台（複選）<span class="ac-required">*</span></label>
+                                        <div class="ac-check-tags">
+                                            @foreach (var platform in CaseEditLookups.PlatformNames)
+                                            {
+                                                var value = (short)platform.Key;
+                                                <label class="ac-check-tag @(Model.Platforms.Contains(value) ? "active" : "")">
+                                                    <input type="checkbox" name="Platforms" value="@value" @(Model.Platforms.Contains(value)
+                                                                                               ? "checked" : "") />
+                                                    @platform.Value
+                                                </label>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="ac-field">
+                                        <label class="ac-label" asp-for="DeliverableDescription">交付需求清單 <span
+                                            class="ac-required">*</span></label>
+                                            <textarea class="ac-textarea" asp-for="DeliverableDescription" rows="4"
+                                                      placeholder=""></textarea>
+                                            <span asp-validation-for="DeliverableDescription" class="text-danger"></span>
+                                        </div>
+                                    </section>
+
+                                    <!-- ===== STEP 6: 附件欄案 ===== -->
+                                    <section class="ac-section" id="step6">
+                                        <h2 class="ac-section__title">上傳附件</h2>
+
+                                        <div class="ac-field">
+                                            <div class="ac-upload-zone" id="uploadZone">
+                                                <i class="fa-solid fa-cloud-arrow-up ac-upload-icon"></i>
+                                                <p>點擊或拖拽上傳參考素材</p>
+                                                <p class="ac-hint">支援 JPG, PNG, PDF, MP4（最大 20MB）</p>
+                                                <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4"
+                                                       style="display:none">
+                                            </div>
+                                            <div id="attachment-list" hx-get="@Url.Action("AttachmentList", new { id = Model.CaseId })"
+                                                 hx-trigger="load, refresh" hx-swap="innerHTML">
+                                                <p class="ac-hint">載入中…</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="ac-field">
+                                            <div class="ac-upload-zone ac-upload-zone--contract">
+                                                <i class="fa-solid fa-file-arrow-up ac-upload-icon"></i>
+                                                <p>訂立合約的草本</p>
+                                                <p class="ac-hint ac-hint--warn">等候 KOL 確認合約後上傳</p>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <!-- FORM ACTIONS -->
+                                    <div class="ac-form-actions">
+                                        <div class="ac-form-actions__left">
+                                            <button type="submit" class="ac-btn ac-btn--outline"
+                                                    onclick="setSubmitMode('Draft')">儲存草稿</button>
+                                            <button type="button" class="ac-btn ac-btn--ghost">預覽案件</button>
+                                        </div>
+                                        <button type="submit" class="ac-btn ac-btn--primary" onclick="setSubmitMode('Publish')">
+                                            下一步送審 <i class="fa-solid fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+
+                                </div><!-- /.ac-form -->
+
+                                <!-- ===== RIGHT: 預算預估 SIDEBAR ===== -->
+                                <aside class="ac-budget" hx-get="@Url.Action("BudgetEstimate")"
+                                       hx-trigger="load, change from:#case-edit-form delay:300ms, keyup from:#case-edit-form delay:500ms"
+                                       hx-include="#case-edit-form" hx-swap="innerHTML">
+                                    <div class="ac-budget__title">預算預估</div>
+                                    <div class="ac-budget__rows">
+                                        <div class="ac-budget__row">
+                                            <span>單人報酬</span>
+                                            <span>—</span>
+                                        </div>
+                                        <div class="ac-budget__row">
+                                            <span>徵求人數</span>
+                                            <span>—</span>
+                                        </div>
+                                        <div class="ac-budget__divider"></div>
+                                        <div class="ac-budget__row">
+                                            <span>小計</span>
+                                            <span>—</span>
+                                        </div>
+                                        <div class="ac-budget__row">
+                                            <span>開案費</span>
+                                            <span>—</span>
+                                        </div>
+                                        <div class="ac-budget__row ac-budget__row--red">
+                                            <span>折扣</span>
+                                            <span>—</span>
+                                        </div>
+                                        <div class="ac-budget__row">
+                                            <span>平台服務費</span>
+                                            <span>—</span>
+                                        </div>
+                                    </div>
+                                    <div class="ac-budget__divider"></div>
+                                    <div class="ac-budget__total">
+                                        <span>總計</span>
+                                        <span>—</span>
+                                    </div>
+                                    <div class="ac-budget__divider"></div>
+                                    <div class="ac-budget__balance-row">
+                                        <span>當前可用餘額</span>
+                                        <span class="ac-budget__balance-amount">—</span>
+                                    </div>
+                                    <div class="ac-budget__progress-wrap">
+                                        <div class="ac-budget__progress">
+                                            <div class="ac-budget__progress-bar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <p class="ac-budget__warn">
+                                        <i class="fa-solid fa-circle-exclamation"></i>
+                                        案件發布前請確保金額符合已確定活動預算限額
+                                    </p>
+                                </aside>
+
+                            </div><!-- /.ac-layout -->
+                        </form>
+                    </div><!-- /.content-card -->
+
+                    @section Scripts {
+                        <partial name="_ValidationScriptsPartial" />
+                        <script src="~/js/case-edit.js" asp-append-version="true"></script>
+                    }

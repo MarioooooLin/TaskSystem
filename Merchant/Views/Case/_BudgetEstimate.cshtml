@@ -1,0 +1,49 @@
+@model Merchant.ViewModels.Cases.CaseBudgetEstimateViewModel
+
+<div class="ac-budget__title"><i class="fa-solid fa-calculator"></i> 預算預估</div>
+<div class="ac-budget__rows">
+    <div class="ac-budget__row">
+        <span>單人報酬</span>
+        <span>NT$@Model.RewardAmountPerKol.ToString("N0")</span>
+    </div>
+    <div class="ac-budget__row">
+        <span>徵求人數</span>
+        <span>× @Model.WantedKolCount</span>
+    </div>
+    <div class="ac-budget__divider"></div>
+    <div class="ac-budget__row">
+        <span>小計</span>
+        <span>NT$@Model.RewardSubtotal.ToString("N0")</span>
+    </div>
+    <div class="ac-budget__row">
+        <span>開案費</span>
+        <span>NT$@Model.CaseOpeningFee.ToString("N0")</span>
+    </div>
+    <div class="ac-budget__row ac-budget__row--red">
+        <span>折扣</span>
+        <span>NT$0</span>
+    </div>
+    <div class="ac-budget__row">
+        <span>平台服務費</span>
+        <span>NT$@Model.PlatformFee.ToString("N0")</span>
+    </div>
+</div>
+<div class="ac-budget__divider"></div>
+<div class="ac-budget__total">
+    <span>總計</span>
+    <span>NT$@Model.EstimatedFrozenAmount.ToString("N0")</span>
+</div>
+<div class="ac-budget__divider"></div>
+<div class="ac-budget__balance-row">
+    <span>當前可用餘額</span>
+    <span class="ac-budget__balance-amount">NT$@Model.CurrentWalletBalance.ToString("N0")</span>
+</div>
+<div class="ac-budget__progress-wrap">
+    <div class="ac-budget__progress">
+        <div class="ac-budget__progress-bar" style="width: @Model.UsageRate.ToString("F0")%"></div>
+    </div>
+</div>
+<p class="ac-budget__warn">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    案件發布前請確保金額符合已確定活動預算限額
+</p>

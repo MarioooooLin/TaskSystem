@@ -17,4 +17,16 @@ public interface IMerchantWalletRepository
         CancellationToken ct = default);
 
     Task UpdateAsync(MerchantWallet wallet, IDbSession session, CancellationToken ct = default);
+
+    /// <summary>寫入現金錢包交易流水。</summary>
+    Task InsertTransactionAsync(
+        long merchantId,
+        short type,
+        decimal amount,
+        short status,
+        long? relatedCaseId,
+        string? note,
+        long? createdByUserId,
+        IDbSession session,
+        CancellationToken ct = default);
 }

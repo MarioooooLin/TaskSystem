@@ -1,0 +1,25 @@
+@using Infrastructure.Authentication
+@model List<Merchant.ViewModels.Cases.CaseAttachmentEditViewModel>
+
+@if (Model.Count == 0)
+{
+    <p class="ac-hint">目前尚無附件</p>
+}
+else
+{
+    <div class="ac-file-list">
+        @foreach (var item in Model)
+        {
+            <div class="ac-file-tag" id="attachment-@item.Id">
+                <i class="fa-regular fa-file"></i>
+                <span>@item.FileName</span>
+                <span>(@((item.FileSize / 1024.0).ToString("F1")) KB)</span>
+                <button type="button" class="ac-tag__del"
+                        hx-post="@Url.Action("DeleteAttachment", new { id = item.CaseId, attachmentId = item.Id })"
+                        hx-target="#attachment-@item.Id" hx-swap="outerHTML swap:300ms" hx-confirm="確定要刪除這個附件嗎？">
+                    &times;
+                </button>
+            </div>
+        }
+    </div>
+}

@@ -574,20 +574,20 @@ CREATE TABLE Cases (
     Id BIGINT IDENTITY(1, 1) NOT NULL,
     MerchantId BIGINT NOT NULL,
     CreatedByUserId BIGINT NOT NULL,
-    Title NVARCHAR(200) NOT NULL,
-    Description NVARCHAR(MAX) NOT NULL,
+    Title NVARCHAR(200) NULL,
+    Description NVARCHAR(MAX) NULL,
     OfficialUrl NVARCHAR(500) NULL,
-    City NVARCHAR(100) NOT NULL,
-    Address NVARCHAR(300) NOT NULL,
-    WantedKolCount INT NOT NULL,
-    ApplicationDeadline DATETIME2 NOT NULL,
-    SubmissionDeadline DATETIME2 NOT NULL,
+    City NVARCHAR(100) NULL,
+    Address NVARCHAR(300) NULL,
+    WantedKolCount INT NOT NULL DEFAULT 0,
+    ApplicationDeadline DATETIME2 NULL,
+    SubmissionDeadline DATETIME2 NULL,
     CashRewardAmount DECIMAL(12, 2) NOT NULL DEFAULT 0,
     IsCommissionEnabled BIT NOT NULL DEFAULT 0,
     CommissionRate DECIMAL(5, 2) NULL,
     -- 業者開案輸入的導購總佣金比例；需 >= 平台抽成比例 + KOL 最低分潤比例
     CookieDays INT NULL,
-    DeliverableDescription NVARCHAR(MAX) NOT NULL,
+    DeliverableDescription NVARCHAR(MAX) NULL,
     Status SMALLINT NOT NULL DEFAULT 1,
     -- 1=Draft  2=Recruiting  3=RecruitmentClosed  4=InProgress
     -- 5=Completed  6=Settled  7=Cancelled
@@ -630,13 +630,17 @@ CREATE TABLE CaseBudgetSnapshots (
     FeeItems NVARCHAR(MAX) NOT NULL,
     -- JSON: [{code, rate, base, amount}]，包含 KOL 服務費與固定開案費計算明細
     EstimatedFrozenAmount DECIMAL(12, 2) NOT NULL,
-    -- 發布時凍結金額 = (RewardAmountPerKol * WantedKolCount * KolServiceFeeRate) + CaseOpeningFeeAmount
+    -- 發布時凍結金額
     SettingsSnapshot NVARCHAR(MAX) NOT NULL,
     -- JSON: Admin 參數快照
+    IdempotencyKey NVARCHAR(100) NULL,
+    -- 冪等性識別鍵，防止重複發布造成重複鎖款
     CreatedAt DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT PK_CaseBudgetSnapshots PRIMARY KEY (Id),
     CONSTRAINT FK_CaseBudgetSnapshots_Case FOREIGN KEY (CaseId) REFERENCES Cases(Id)
 );
+CREATE UNIQUE INDEX UX_CaseBudgetSnapshots_IdempotencyKey ON CaseBudgetSnapshots (IdempotencyKey)
+WHERE IdempotencyKey IS NOT NULL;
 -- ================================================================
 -- 7. 案件條件與附件
 -- ================================================================
@@ -644,24 +648,31 @@ CREATE TABLE CasePlatforms (
     Id BIGINT IDENTITY(1, 1) NOT NULL,
     CaseId BIGINT NOT NULL,
     Platform SMALLINT NOT NULL,
-    -- 1=Instagram  2=Facebook  3=YouTube  4=TikTok  5=Threads  6=Blog
+    -- 1=X  2=Instagram  3=Facebook  4=YouTube  5=Blog  6=XiaoHongShu
+    -- 7=TikTok  8=Douyin  9=Threads  10=Snapchat  11=WeChat
     CONSTRAINT PK_CasePlatforms PRIMARY KEY (Id),
     CONSTRAINT FK_CasePlatforms_Case FOREIGN KEY (CaseId) REFERENCES Cases(Id),
-    CONSTRAINT CK_CasePlatforms_Plat CHECK (Platform IN (1, 2, 3, 4, 5, 6))
+    CONSTRAINT CK_CasePlatforms_Plat CHECK (Platform IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
 );
 CREATE TABLE CaseCategories (
     Id BIGINT IDENTITY(1, 1) NOT NULL,
     CaseId BIGINT NOT NULL,
     Category SMALLINT NOT NULL,
-    -- 1=Beauty  2=Travel  3=Fashion  4=Parenting  5=Pet  6=Health  ...（最多 10 個）
+    -- 1=旅遊 2=美食 3=時尚 4=美妝 5=居家生活 6=親子 7=寵物
+    -- 8=遊戲 9=音樂 10=影視 11=藝術 12=書籍 13=科技 14=財經
+    -- 15=教育 16=職場 17=健康 18=健身 19=運動 20=養生
+    -- 21=營養 22=公益 23=環保 24=政治 25=文化 26=跨界
     CONSTRAINT PK_CaseCategories PRIMARY KEY (Id),
-    CONSTRAINT FK_CaseCategories_Case FOREIGN KEY (CaseId) REFERENCES Cases(Id)
+    CONSTRAINT FK_CaseCategories_Case FOREIGN KEY (CaseId) REFERENCES Cases(Id),
+    CONSTRAINT CK_CaseCategories_Category CHECK (
+        Category BETWEEN 1 AND 26
+    )
 );
 CREATE TABLE CaseLanguages (
     Id BIGINT IDENTITY(1, 1) NOT NULL,
     CaseId BIGINT NOT NULL,
-    Language SMALLINT NOT NULL,
-    -- 1=ZhTw  2=En  3=Ja  4=Ko
+    LanguageCode NVARCHAR(50) NOT NULL,
+    -- zh-TW / nan-TW / en / ja / ko
     CONSTRAINT PK_CaseLanguages PRIMARY KEY (Id),
     CONSTRAINT FK_CaseLanguages_Case FOREIGN KEY (CaseId) REFERENCES Cases(Id)
 );
@@ -825,14 +836,15 @@ CREATE TABLE SubmissionItems (
     Id BIGINT IDENTITY(1, 1) NOT NULL,
     SubmissionId BIGINT NOT NULL,
     Platform SMALLINT NULL,
-    -- 1=Instagram  2=Facebook  3=YouTube  4=TikTok  5=Threads  6=Blog
+    -- 1=X  2=Instagram  3=Facebook  4=YouTube  5=Blog  6=XiaoHongShu
+    -- 7=TikTok  8=Douyin  9=Threads  10=Snapchat  11=WeChat
     Url NVARCHAR(500) NULL,
     FileId BIGINT NULL,
     Note NVARCHAR(500) NULL,
     CONSTRAINT PK_SubmissionItems PRIMARY KEY (Id),
     CONSTRAINT FK_SubmissionItems_Sub FOREIGN KEY (SubmissionId) REFERENCES Submissions(Id),
     CONSTRAINT FK_SubmissionItems_File FOREIGN KEY (FileId) REFERENCES Files(Id),
-    CONSTRAINT CK_SubmissionItems_Platform CHECK (Platform IN (1, 2, 3, 4, 5, 6))
+    CONSTRAINT CK_SubmissionItems_Platform CHECK (Platform IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
 );
 -- ================================================================
 -- 11. 評分
@@ -1103,6 +1115,13 @@ VALUES (
         'percent',
         'case',
         N'案件自動執行門檻；招募截止時錄取人數需達預計招募人數比例'
+    ),
+    (
+        'case_reconfirmation_deadline_days',
+        '3',
+        'number',
+        'case',
+        N'招募中案件修改後，已錄取 KOL 重新確認期限（日曆天）'
     ),
     (
         'kol_payout_min_amount',

@@ -1,0 +1,32 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "存取被拒";
+}
+
+<div class="content-card">
+    <div class="page-header">
+        <div class="page-header__left">
+            <h1 class="page-title">存取被拒</h1>
+            <p class="page-subtitle">您沒有權限執行此操作。</p>
+        </div>
+    </div>
+
+    <div class="ac-field">
+        @if (TempData["Error"] is not null)
+        {
+            <div class="pub-alert" role="alert" style="margin-bottom:1.2rem;">
+                <i class="fa-solid fa-triangle-exclamation pub-alert__icon"></i>
+                <div>
+                    <div class="pub-alert__title">權限不足</div>
+                    <p style="color:#8a4b00;">@TempData["Error"]</p>
+                </div>
+            </div>
+        }
+        <p>請確認您的帳號擁有正確的角色權限，或聯繫系統管理員。</p>
+    </div>
+
+    <div class="ac-form-actions">
+        <a asp-controller="Home" asp-action="Index" class="ac-btn ac-btn--primary">返回首頁</a>
+        <a asp-controller="Account" asp-action="Login" class="ac-btn ac-btn--outline">重新登入</a>
+    </div>
+</div>
