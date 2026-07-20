@@ -1,8 +1,10 @@
 @using Domain.Enums
+@using Infrastructure.Authentication
 @model Merchant.ViewModels.Cases.CaseIndexViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "案件管理";
+    var isImpersonating = User.IsImpersonating();
 
     string StatusCardActive(CaseStatus? status) =>
         Model.Query.Status == status && Model.Query.ClosedOnly != true ? "active" : "";
@@ -80,9 +82,12 @@ Model.Query.RewardTypeFilter.Value.ToString();
             <p class="page-subtitle">管理與追蹤您的所有合作案件</p>
         </div>
         <div class="page-header__right">
-            <a asp-controller="Case" asp-action="Create" class="btn-primary">
-                <i class="fa-solid fa-plus"></i> 新增案件
-            </a>
+            @if (!isImpersonating)
+            {
+                <a asp-controller="Case" asp-action="Create" class="btn-primary">
+                    <i class="fa-solid fa-plus"></i> 新增案件
+                </a>
+            }
         </div>
     </div>
 
@@ -264,13 +269,16 @@ Model.Query.RewardTypeFilter.Value.ToString();
                                     <span>交付 @FormatDate(item.PublishedAt.HasValue ? item.SubmissionDeadline : null)</span>
                                 </td>
                                 <td class="td-actions">
-                                    @if (item.Status == CaseStatus.Draft)
+                                    @if (!isImpersonating)
                                     {
-                                        <a asp-controller="Case" asp-action="Edit" asp-route-id="@item.CaseId" class="icon-btn"
-                                           title="編輯"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        @if (item.Status == CaseStatus.Draft)
+                                        {
+                                            <a asp-controller="Case" asp-action="Edit" asp-route-id="@item.CaseId" class="icon-btn"
+                                               title="編輯"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        }
+                                        <a asp-controller="Case" asp-action="Duplicate" asp-route-id="@item.CaseId" class="icon-btn"
+                                           title="複製"><i class="fa-solid fa-rotate"></i></a>
                                     }
-                                    <a asp-controller="Case" asp-action="Duplicate" asp-route-id="@item.CaseId" class="icon-btn"
-                                       title="複製"><i class="fa-solid fa-rotate"></i></a>
                                     <a asp-controller="Case" asp-action="Detail" asp-route-id="@item.CaseId" class="icon-btn"
                                        title="查看"><i class="fa-solid fa-magnifying-glass"></i></a>
                                     @if (item.Status == CaseStatus.InProgress || item.Status == CaseStatus.Completed)

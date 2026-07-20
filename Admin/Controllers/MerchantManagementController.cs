@@ -1,14 +1,20 @@
 using Admin.ViewModels.Merchant;
+using Application.Abstractions.Security;
 using Application.Merchants.Commands;
+using Application.Merchants.Options;
 using Application.Merchants.Queries;
 using Common.Errors;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Admin.Controllers;
 
 [Authorize]
 public sealed class MerchantManagementController(
+    ICurrentUser currentUser,
+    IOptions<MerchantImpersonationOptions> impersonationOptions,
     GetMerchantListHandler listHandler,
     GetMerchantSummaryHandler summaryHandler,
     GetMerchantDetailHandler detailHandler,
@@ -18,12 +24,18 @@ public sealed class MerchantManagementController(
     AddMerchantContactHandler addContactHandler,
     UpdateMerchantContactHandler updateContactHandler,
     RemoveMerchantContactHandler removeContactHandler,
-    AdjustMerchantCreditHandler adjustCreditHandler) : Controller
+    AdjustMerchantCreditHandler adjustCreditHandler,
+    CreateMerchantImpersonationTicketHandler createTicketHandler) : Controller
 {
     // ── GET /MerchantManagement ───────────────────────────
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] MerchantListQueryViewModel vm)
+    public async Task<IActionResult> Index([FromQuery] MerchantListQueryViewModel vm, bool impersonationExpired = false)
     {
+        if (impersonationExpired)
+        {
+            TempData["Error"] = "代理登入已逾時，若需繼續查看請重新點擊「代理登入」。";
+        }
+
         var query = new GetMerchantListQuery(
             vm.Keyword,
             vm.VerificationStatus,
@@ -58,10 +70,49 @@ public sealed class MerchantManagementController(
         if (result.IsFailure)
             return NotFound();
 
+        ViewData["CanImpersonate"] = currentUser.HasPermission("Admin.Merchant.Impersonate");
+
         if (Request.Headers.ContainsKey("HX-Request"))
             return PartialView(result.Value);
 
         return View(result.Value);
+    }
+
+    // ── POST /MerchantManagement/Impersonate/{id} ─────────
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Impersonate(long id)
+    {
+        if (!currentUser.HasPermission("Admin.Merchant.Impersonate"))
+            return Forbid();
+
+        var result = await createTicketHandler.HandleAsync(new CreateMerchantImpersonationTicketCommand(
+            id,
+            HttpContext.Connection.RemoteIpAddress?.ToString(),
+            Request.Headers.UserAgent.ToString()));
+
+        if (result.IsFailure)
+        {
+            return result.Error.Type switch
+            {
+                ErrorType.NotFound => NotFound(),
+                ErrorType.Forbidden => Forbid(),
+                _ => RedirectToAction(nameof(Detail), new { id })
+            };
+        }
+
+        var ticket = result.Value;
+        var merchantBaseUrl = impersonationOptions.Value.MerchantBaseUrl.TrimEnd('/');
+        var redeemUrl = $"{merchantBaseUrl}/Account/RedeemImpersonation";
+
+        var vm = new MerchantImpersonateViewModel
+        {
+            PlainToken = ticket.PlainToken,
+            MerchantName = ticket.MerchantName,
+            RedeemUrl = redeemUrl,
+        };
+
+        return View(vm);
     }
 
     // ── POST /MerchantManagement/Suspend/{id} ─────────────

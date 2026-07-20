@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.Abstractions.Security;
+using Application.Merchants.Options;
 using Common.Primitives;
 using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -57,6 +58,8 @@ public static class TaskSystemWebExtensions
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
         services.AddScoped<TaskSystemSignInService>();
+        services.Configure<MerchantImpersonationOptions>(
+            configuration.GetSection(MerchantImpersonationOptions.SectionName));
 
         services
             .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

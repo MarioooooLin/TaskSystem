@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Infrastructure.Authentication
+@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
@@ -11,10 +13,95 @@
     <link rel="stylesheet" href="~/css/reset.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/w3.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/all-style.css" asp-append-version="true" />
+    <style>
+        .impersonation-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: #fff3cd;
+            border-bottom: 2px solid #ffc107;
+            color: #664d03;
+        }
+        .impersonation-banner__content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .impersonation-banner__badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: #dc3545;
+            color: #fff;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .impersonation-banner__text {
+            font-weight: 500;
+        }
+        .impersonation-banner__countdown {
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+        .impersonation-banner__btn {
+            padding: 0.375rem 0.75rem;
+            background: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .impersonation-banner__btn:hover {
+            background: #5a6268;
+        }
+        body:has(.impersonation-banner) {
+            padding-top: 3.5rem;
+        }
+        body:has(.impersonation-banner) .top-nav {
+            top: 3.5rem;
+        }
+    </style>
     @await RenderSectionAsync("PageCss", required: false)
 </head>
 
 <body>
+    @if (User.Identity?.IsAuthenticated == true && User.IsImpersonating())
+    {
+        var merchantName = User.FindFirstValue(TaskSystemClaimTypes.MerchantName) ?? "未知業者";
+        var expiresAt = User.GetImpersonationExpiresAtUtc();
+        var remaining = expiresAt.HasValue ? expiresAt.Value - DateTime.UtcNow : TimeSpan.Zero;
+        var remainingText = remaining > TimeSpan.Zero
+            ? $"剩餘 {remaining.TotalMinutes:0} 分 {remaining.Seconds:0} 秒"
+            : "即將到期";
+
+        <div class="impersonation-banner">
+            <div class="impersonation-banner__content">
+                <span class="impersonation-banner__badge">唯讀模式</span>
+                <span class="impersonation-banner__text">
+                    目前正以管理者身分檢視【@merchantName】，此模式僅供瀏覽，無法進行任何異動。
+                </span>
+                <span class="impersonation-banner__countdown" data-expires-at="@(expiresAt.HasValue ? ((DateTimeOffset)expiresAt.Value).ToUnixTimeSeconds() : 0)">
+                    @remainingText
+                </span>
+            </div>
+            <form method="post" asp-controller="Account" asp-action="EndImpersonation" style="display:inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="impersonation-banner__btn">
+                    <i class="fa-solid fa-right-from-bracket"></i> 結束代理登入
+                </button>
+            </form>
+        </div>
+    }
+
     <!-- ==================== TOP NAVIGATION BAR ==================== -->
     <header class="top-nav">
         <div class="top-nav__left">
@@ -38,9 +125,19 @@
                 <img src="~/images/user.svg" alt="使用者" />
             </button>
             <span class="nav-divider"></span>
-            <form method="post" asp-controller="Account" asp-action="Logout" style="display:inline">
-                <button type="submit" class="logout-btn">登出<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
-            </form>
+            @if (User.Identity?.IsAuthenticated == true && User.IsImpersonating())
+            {
+                <form method="post" asp-controller="Account" asp-action="EndImpersonation" style="display:inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="logout-btn">結束代理登入<i class="fa-solid fa-right-from-bracket"></i></button>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-controller="Account" asp-action="Logout" style="display:inline">
+                    <button type="submit" class="logout-btn">登出<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+                </form>
+            }
         </div>
     </header>
 
@@ -108,6 +205,37 @@
                 integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
                 crossorigin="anonymous"></script>
         <script src="~/js/main.js" asp-append-version="true"></script>
+        @if (User.Identity?.IsAuthenticated == true && User.IsImpersonating())
+        {
+            <script>
+                (function () {
+                    var countdownEl = document.querySelector('.impersonation-banner__countdown');
+                    if (!countdownEl) return;
+
+                    var expiresAtSeconds = parseInt(countdownEl.getAttribute('data-expires-at'), 10);
+                    if (!expiresAtSeconds) return;
+
+                    var expiresAtMs = expiresAtSeconds * 1000;
+
+                    function updateCountdown() {
+                        var remainingMs = expiresAtMs - Date.now();
+                        if (remainingMs <= 0) {
+                            countdownEl.textContent = '已逾時';
+                            window.location.reload();
+                            return;
+                        }
+
+                        var totalSeconds = Math.floor(remainingMs / 1000);
+                        var minutes = Math.floor(totalSeconds / 60);
+                        var seconds = totalSeconds % 60;
+                        countdownEl.textContent = '剩餘 ' + minutes + ' 分 ' + seconds + ' 秒';
+                    }
+
+                    updateCountdown();
+                    setInterval(updateCountdown, 1000);
+                })();
+            </script>
+        }
         @await RenderSectionAsync("Scripts", required: false)
     </body>
 

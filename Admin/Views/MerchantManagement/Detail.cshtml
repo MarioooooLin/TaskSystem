@@ -33,9 +33,22 @@
            hx-get="@Url.Action("Update", new { id = Model.MerchantId })" hx-target="#main-content" hx-push-url="true">
             <i class="fa-solid fa-pen"></i> 編輯業者資料
         </a>
-        <button class="bd-btn bd-btn--outline" disabled title="代理登入功能開發中">
-            <i class="fa-solid fa-right-to-bracket"></i> 代理登入
-        </button>
+        @if (ViewData["CanImpersonate"] is true)
+        {
+            <form method="post" asp-action="Impersonate" asp-route-id="@Model.MerchantId" class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="bd-btn bd-btn--outline"
+                        onclick="return confirm('確定要以唯讀模式進入此業者後台嗎？')">
+                    <i class="fa-solid fa-right-to-bracket"></i> 代理登入
+                </button>
+            </form>
+        }
+        else
+        {
+            <button class="bd-btn bd-btn--outline" disabled title="您沒有代理登入權限">
+                <i class="fa-solid fa-right-to-bracket"></i> 代理登入
+            </button>
+        }
         @if (isSuspended)
         {
             <form method="post" asp-action="Unsuspend" asp-route-id="@Model.MerchantId" class="d-inline">

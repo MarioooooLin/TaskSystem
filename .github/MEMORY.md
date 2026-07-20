@@ -1,10 +1,96 @@
 # MEMORY.md — TaskSystem 開發記錄
 
-> 最後整理時間：2026-07-17
+> 最後整理時間：2026-07-20
+
+---
+
+## 2026-07-20
+
+### [11:52] 管理者代理登入業者端功能實作
+
+**變更內容**
+
+- 新增一次性跨站代理登入票證機制
+    - [Domain/Entities/MerchantImpersonationTicket.cs](Domain/Entities/MerchantImpersonationTicket.cs)
+    - [Application/Abstractions/Repositories/IMerchantImpersonationTicketRepository.cs](Application/Abstractions/Repositories/IMerchantImpersonationTicketRepository.cs)
+    - [Infrastructure/Persistence/Repositories/MerchantImpersonationTicketRepository.cs](Infrastructure/Persistence/Repositories/MerchantImpersonationTicketRepository.cs)
+    - [Application/Merchants/Commands/CreateMerchantImpersonationTicketHandler.cs](Application/Merchants/Commands/CreateMerchantImpersonationTicketHandler.cs)
+    - [Application/Merchants/Commands/RedeemMerchantImpersonationTicketHandler.cs](Application/Merchants/Commands/RedeemMerchantImpersonationTicketHandler.cs)
+    - [Common/Security/ImpersonationTokenHelper.cs](Common/Security/ImpersonationTokenHelper.cs)
+- Admin 發起代理登入：權限驗證、產生短效一次性 token、自動跨站 POST 到 Merchant
+    - [Admin/Controllers/MerchantManagementController.cs](Admin/Controllers/MerchantManagementController.cs)
+    - [Admin/Views/MerchantManagement/Detail.cshtml](Admin/Views/MerchantManagement/Detail.cshtml)
+    - [Admin/Views/MerchantManagement/Impersonate.cshtml](Admin/Views/MerchantManagement/Impersonate.cshtml)
+- Merchant 兌換票證並建立唯讀代理 Cookie，絕對 30 分鐘到期
+    - [Merchant/Controllers/AccountController.cs](Merchant/Controllers/AccountController.cs)
+    - [Infrastructure/Authentication/TaskSystemSignInService.cs](Infrastructure/Authentication/TaskSystemSignInService.cs)
+    - [Infrastructure/Authentication/TaskSystemClaimTypes.cs](Infrastructure/Authentication/TaskSystemClaimTypes.cs)
+    - [Infrastructure/Authentication/ClaimsPrincipalExtensions.cs](Infrastructure/Authentication/ClaimsPrincipalExtensions.cs)
+- Merchant 後端強制唯讀：攔截 POST/PUT/PATCH/DELETE（結束代理登入除外），記錄 ActivityLog
+    - [Infrastructure/Web/ImpersonationReadOnlyMiddleware.cs](Infrastructure/Web/ImpersonationReadOnlyMiddleware.cs)
+    - [Merchant/Program.cs](Merchant/Program.cs)
+- Merchant UI 顯示唯讀提示橫幅、倒數計時、結束代理登入按鈕；代理模式隱藏新增/編輯按鈕
+    - [Merchant/Views/Shared/\_Layout.cshtml](Merchant/Views/Shared/_Layout.cshtml)
+    - [Merchant/Views/Case/Index.cshtml](Merchant/Views/Case/Index.cshtml)
+- 新增資料庫 Script 與設定檔
+    - [scripts/add-merchant-impersonation.sql](scripts/add-merchant-impersonation.sql)
+    - [Account/TaskSystem.json](Account/TaskSystem.json) 新增 `Impersonation` 區段
+
+**決策原因**
+
+- Admin 與 Merchant 為不同站台、不同 Cookie，無法直接共用登入狀態，因此採用一次性短效 token 跨站兌換
+- Token 以 SHA-256 hash 儲存，明文僅存在於單次 POST body，不寫入 Log、DB、Cookie
+- 代理 Cookie 標記 `is_impersonating` 與 `impersonation_read_only`，與真實業者會員區隔，避免誤授權寫入操作
+- 唯讀限制放在 Middleware（Authentication 之後、Endpoint 之前），確保任何手動繞過 UI 的寫入請求都會被 403 阻擋
+- Base URL 統一放在外部 `Account/TaskSystem.json`，避免各專案 appsettings 重複設定或 localhost port 不一致
+
+**測試狀態**
+
+- `dotnet build TaskSystem.sln -p:OutputPath=bin\DebugCheck\net9.0\` 成功
+- 使用者手動測試：代理登入成功、Merchant 顯示唯讀橫幅、倒數計時正常運作、搜尋/篩選/分頁正常
 
 ---
 
 ## 2026-07-17
+
+### [19:07] 業者端案件管理首頁前後端實作
+
+**變更內容**
+
+- 新增業者端案件管理 Use Case
+    - [Application/Cases/DTOs/MerchantCaseListItemDto.cs](Application/Cases/DTOs/MerchantCaseListItemDto.cs)
+    - [Application/Cases/DTOs/MerchantCaseSummaryDto.cs](Application/Cases/DTOs/MerchantCaseSummaryDto.cs)
+    - [Application/Cases/Queries/GetMerchantCaseListQuery.cs](Application/Cases/Queries/GetMerchantCaseListQuery.cs)
+    - [Application/Cases/Queries/GetMerchantCaseListHandler.cs](Application/Cases/Queries/GetMerchantCaseListHandler.cs)
+    - [Application/Cases/Queries/GetMerchantCaseSummaryQuery.cs](Application/Cases/Queries/GetMerchantCaseSummaryQuery.cs)
+    - [Application/Cases/Queries/GetMerchantCaseSummaryHandler.cs](Application/Cases/Queries/GetMerchantCaseSummaryHandler.cs)
+- 擴充 Repository：新增 [ICaseMonitorRepository](Application/Abstractions/Repositories/ICaseMonitorRepository.cs) / [CaseMonitorRepository](Infrastructure/Persistence/Repositories/CaseMonitorRepository.cs) 按 `MerchantId` 過濾的列表與統計 SQL
+- 註冊 Handler：[Application/DependencyInjection.cs](Application/DependencyInjection.cs)
+- 新增 Merchant Controller / ViewModel / View
+    - [Merchant/Controllers/CaseController.cs](Merchant/Controllers/CaseController.cs)
+    - [Merchant/ViewModels/Cases/CaseListQueryViewModel.cs](Merchant/ViewModels/Cases/CaseListQueryViewModel.cs)
+    - [Merchant/ViewModels/Cases/CaseIndexViewModel.cs](Merchant/ViewModels/Cases/CaseIndexViewModel.cs)
+    - [Merchant/Views/Case/Index.cshtml](Merchant/Views/Case/Index.cshtml)
+- [Merchant/Views/Shared/\_Layout.cshtml](Merchant/Views/Shared/_Layout.cshtml)：側邊欄「案件管理」加上 htmx 連結
+
+**決策原因**
+
+- 參考 `refs/cases.html` 切版，將狀態卡片、篩選列、案件表格轉換為 Razor + htmx
+- 狀態卡片點擊直接套用對應篩選條件並刷新下方列表
+- 業者端僅能看到所屬 `MerchantId` 的案件，Repository 層直接過濾
+- 已結案 / 已取消合併為一張卡片，對應 `Status IN (6, 7)`
+
+**測試狀態**
+
+- `dotnet build TaskSystem.sln -p:OutputPath=bin\DebugCheck\net9.0\` 成功
+- 使用者已確認畫面看起來沒問題
+
+**待確認 / 待後續**
+
+- 發佈平台中的 **LINE** 目前 `SocialPlatform` enum 尚未定義，暫無過濾功能
+- 操作列的「新增 / 編輯 / 複製 / 成效」等 Action 為預留連結，尚未實作對應頁面
+
+---
 
 ### [10:55] 業者端 HTMX 整合與表格捲動優化
 

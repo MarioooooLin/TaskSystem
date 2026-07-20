@@ -239,4 +239,25 @@ public static class Errors
         public static readonly Error AlreadyAccepted =
             Error.Conflict("Invitation.AlreadyAccepted", "此邀請已被使用，請直接登入。");
     }
+
+    public static class Impersonation
+    {
+        public static readonly Error PermissionDenied =
+            Error.Forbidden("Impersonation.PermissionDenied", "您沒有代理登入業者端的權限。");
+
+        public static readonly Error MerchantNotFound =
+            Error.NotFound("Impersonation.MerchantNotFound", "業者不存在。");
+
+        public static readonly Error MerchantNotApproved =
+            Error.Forbidden("Impersonation.MerchantNotApproved", "業者尚未通過審核，無法代理登入。");
+
+        public static readonly Error InvalidToken =
+            Error.Validation("Impersonation.InvalidToken", "代理登入連結無效、已過期或已被使用。");
+
+        public static readonly Error NotImpersonating =
+            Error.Validation("Impersonation.NotImpersonating", "目前並非代理登入狀態。");
+
+        public static readonly Error ReadOnlyForbidden =
+            Error.Forbidden("Impersonation.ReadOnlyForbidden", "代理登入期間僅供瀏覽，無法執行寫入操作。");
+    }
 }

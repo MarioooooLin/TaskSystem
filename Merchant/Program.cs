@@ -16,6 +16,22 @@ builder.Services.AddTaskSystemWeb(
 
 var app = builder.Build();
 
-app.UseTaskSystemWebPipeline("{controller=Account}/{action=Login}/{id?}");
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseRateLimiter();
+app.UseAuthentication();
+app.UseAuthorization();
+
+// 管理者代理登入業者端的唯讀強制 Middleware（必須在 Authentication 之後、Controller 之前）
+app.UseMiddleware<ImpersonationReadOnlyMiddleware>();
+
+app.MapStaticAssets();
+app.MapControllerRoute("default", "{controller=Account}/{action=Login}/{id?}").WithStaticAssets();
 
 app.Run();

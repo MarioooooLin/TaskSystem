@@ -1,0 +1,26 @@
+@model Admin.ViewModels.Merchant.MerchantImpersonateViewModel
+@{
+    ViewData["Title"] = "代理登入業者端";
+    Layout = "_Layout";
+}
+
+<div class="content-card" style="max-width: 600px; margin: 3rem auto; text-align: center;">
+    <h1 class="page-title">正在進入業者後台</h1>
+    <p class="page-subtitle">您即將以唯讀模式檢視【@Model.MerchantName】的業者端。</p>
+    <p class="page-subtitle">若頁面沒有自動跳轉，請點擊下方按鈕。</p>
+
+    <form id="impersonation-form" method="post" action="@Model.RedeemUrl">
+        <input type="hidden" name="token" value="@Model.PlainToken" />
+        <button type="submit" class="btn-primary">
+            <i class="fa-solid fa-right-to-bracket"></i> 進入業者後台
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('impersonation-form').submit();
+        });
+    </script>
+}

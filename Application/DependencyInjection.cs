@@ -58,6 +58,8 @@ public static class DependencyInjection
         services.AddScoped<UpdateMerchantContactHandler>();
         services.AddScoped<RemoveMerchantContactHandler>();
         services.AddScoped<AdjustMerchantCreditHandler>();
+        services.AddScoped<CreateMerchantImpersonationTicketHandler>();
+        services.AddScoped<RedeemMerchantImpersonationTicketHandler>();
 
         // ── Case Monitor ──────────────────────────────────
         services.AddScoped<GetCaseListHandler>();
