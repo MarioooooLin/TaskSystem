@@ -147,7 +147,8 @@ Model.Query.RewardTypeFilter.Value.ToString();
                     <div class="filter-search">
                         <i class="fa-solid fa-magnifying-glass filter-search__icon"></i>
                         <input type="text" name="Keyword" class="filter-search__input" placeholder="關鍵字搜尋"
-                               value="@Model.Query.Keyword">
+                               value="@Model.Query.Keyword"
+                               oninput="clearTimeout(window.caseSearchTimeout); window.caseSearchTimeout = setTimeout(() => htmx.trigger('#case-filter-form', 'submit'), 500)">
                     </div>
                     <div class="filter-select-wrap">
                         <select name="Status" class="filter-select" onchange="setCaseFilter(this.value, false)">
@@ -333,9 +334,6 @@ Model.Query.RewardTypeFilter.Value.ToString();
         </div>
     </div><!-- /#case-list -->
 
-</div><!-- /.content-card -->
-
-@section Scripts {
     <script>
         function setCaseFilter(status, closedOnly) {
             const closedInput = document.getElementById('filterClosedOnly');
@@ -353,7 +351,8 @@ Model.Query.RewardTypeFilter.Value.ToString();
             htmx.trigger('#case-filter-form', 'submit');
         }
     </script>
-}
+
+</div><!-- /.content-card -->
 
 @functions {
     private static IDictionary<string, object?> MergeRouteValues(Dictionary<string, string?> baseValues, int page)
