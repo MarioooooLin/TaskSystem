@@ -11,17 +11,17 @@
         <div class="finance-item border-green">
             <span class="finance-label">可用餘額</span>
             <strong class="finance-amount accent-orange">@Model.Wallet.AvailableAmount.ToString("C0", new
-                                System.Globalization.CultureInfo("zh-TW"))</strong>
+                                                System.Globalization.CultureInfo("zh-TW"))</strong>
             </div>
             <div class="finance-item border-red">
                 <span class="finance-label">已鎖定金額</span>
                 <strong class="finance-amount">@Model.Wallet.FrozenAmount.ToString("C0", new
-                                    System.Globalization.CultureInfo("zh-TW"))</strong>
+                                                        System.Globalization.CultureInfo("zh-TW"))</strong>
                 </div>
                 <div class="finance-item border-yellow">
                     <span class="finance-label">總金額</span>
                     <strong class="finance-amount">@Model.Wallet.TotalAmount.ToString("C0", new
-                                        System.Globalization.CultureInfo("zh-TW"))</strong>
+                                                                System.Globalization.CultureInfo("zh-TW"))</strong>
                     </div>
                 </section>
 
@@ -96,11 +96,11 @@
             </div><!-- /.content-card -->
 
             <!-- TOAST NOTIFICATION -->
-            @if (Model.PendingReviewCount > 0)
+            @if (Model.PendingAcceptanceCount > 0)
             {
                 <div class="toast-notif" id="toastNotif">
                     <i class="fa-solid fa-circle-info toast-icon"></i>
-                    <span class="toast-msg">您有 @Model.PendingReviewCount 筆案件待驗收，請儘速處理。</span>
+                    <span class="toast-msg">您有 @Model.PendingAcceptanceCount 筆案件待驗收，請儘速處理。</span>
                     <button class="toast-close" id="toastClose">&times;</button>
                 </div>
             }

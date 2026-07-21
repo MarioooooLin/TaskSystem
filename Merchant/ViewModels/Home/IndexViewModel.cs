@@ -11,7 +11,7 @@ public sealed class IndexViewModel
     public IReadOnlyList<TodoViewModel> Todos { get; set; } = [];
     public IReadOnlyList<RecentCaseViewModel> RecentCases { get; set; } = [];
 
-    public int PendingReviewCount { get; set; }
+    public int PendingAcceptanceCount { get; set; }
 
     public sealed class WalletViewModel
     {

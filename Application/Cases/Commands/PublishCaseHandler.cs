@@ -62,7 +62,7 @@ public sealed class PublishCaseHandler(
             }
         }
 
-        var settingsResult = await settingsHandler.HandleAsync(new GetSystemSettingsQuery(), ct);
+        var settingsResult = await settingsHandler.HandleAsync(new GetSystemSettingsQuery(uow.Session), ct);
         if (settingsResult.IsFailure)
         {
             return Result.Failure(settingsResult.Error);

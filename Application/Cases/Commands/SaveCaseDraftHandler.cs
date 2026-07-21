@@ -99,7 +99,7 @@ public sealed class SaveCaseDraftHandler(
         {
             if (caseEntity.HasSignificantChangesComparedTo(originalCase))
             {
-                var settings = await settingsHandler.HandleAsync(new GetSystemSettingsQuery(), ct);
+                var settings = await settingsHandler.HandleAsync(new GetSystemSettingsQuery(uow.Session), ct);
                 if (settings.IsFailure)
                 {
                     return Result.Failure<long>(settings.Error);

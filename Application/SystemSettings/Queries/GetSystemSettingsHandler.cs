@@ -10,12 +10,15 @@ public sealed class GetSystemSettingsHandler(
     ISystemSettingRepository systemSettingRepo)
 {
     public async Task<Result<SystemSettingValuesDto>> HandleAsync(
-        GetSystemSettingsQuery _,
+        GetSystemSettingsQuery query,
         CancellationToken ct = default)
     {
-        await using var uow = await unitOfWork.BeginAsync(ct);
+        var useExternalSession = query.Session is not null;
+        var uow = useExternalSession ? null : await unitOfWork.BeginAsync(ct);
 
-        var settings = await systemSettingRepo.GetAllAsync(uow.Session, ct);
+        var session = query.Session ?? uow!.Session;
+
+        var settings = await systemSettingRepo.GetAllAsync(session, ct);
         var map = settings.ToDictionary(x => x.Key, StringComparer.OrdinalIgnoreCase);
 
         var dto = new SystemSettingValuesDto
@@ -35,7 +38,11 @@ public sealed class GetSystemSettingsHandler(
             CaseReconfirmationDeadlineDays = GetInt(map, SystemSettingKeys.CaseReconfirmationDeadlineDays, 3),
         };
 
-        await uow.CommitAsync(ct);
+        if (uow is not null)
+        {
+            await uow.CommitAsync(ct);
+        }
+
         return Result<SystemSettingValuesDto>.Success(dto);
     }
 

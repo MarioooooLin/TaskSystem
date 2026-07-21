@@ -3,7 +3,7 @@
 @model Merchant.ViewModels.Cases.PublishPreviewViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "送審確認";
+    ViewData["Title"] = "發布確認";
 
     string FormatBytes(long bytes)
     {
@@ -35,7 +35,7 @@
         <i class="fa-solid fa-chevron-right"></i>
         <a asp-action="Edit" asp-route-id="@Model.CaseId">新增案件</a>
         <i class="fa-solid fa-chevron-right"></i>
-        <span>送審確認</span>
+        <span>發布確認</span>
     </nav>
 
     <!-- PAGE TITLE -->
@@ -145,7 +145,7 @@
                             </div>
                             <p class="pub-kv-label" style="margin-top:1.2rem; margin-bottom:.4rem;">交付需求：</p>
                             <p class="pub-delivery-text">@(string.IsNullOrWhiteSpace(Model.DeliverableDescription) ? "—" :
-                                                                                            Model.DeliverableDescription)</p>
+                                                                                                                            Model.DeliverableDescription)</p>
                             </section>
 
                         </div><!-- /.pub-two-col -->

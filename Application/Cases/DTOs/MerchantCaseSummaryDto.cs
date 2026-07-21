@@ -5,7 +5,6 @@ public sealed class MerchantCaseSummaryDto
 {
     public int TotalCount { get; init; }
     public int DraftCount { get; init; }
-    public int PendingReviewCount { get; init; }
     public int RecruitingCount { get; init; }
     public int InProgressCount { get; init; }
     public int PendingAcceptanceCount { get; init; }

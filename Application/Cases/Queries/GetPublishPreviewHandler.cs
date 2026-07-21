@@ -3,6 +3,7 @@ using Application.Abstractions.Persistence;
 using Application.Abstractions.Repositories;
 using Application.Cases.Budget;
 using Application.Cases.DTOs;
+using Application.Helpers;
 using Application.SystemSettings.DTOs;
 using Application.SystemSettings.Queries;
 using Common.Results;
@@ -21,16 +22,13 @@ public sealed class GetPublishPreviewHandler(
         GetPublishPreviewQuery query,
         CancellationToken ct = default)
     {
-        // 先取得系統設定：GetSystemSettingsHandler 會自行開啟 UnitOfWork，
-        // 若與本 Handler 共用同一個 Scoped IUnitOfWork 會導致 nested dispose，
-        // 使外層 connection 提前關閉。
-        var settingsResult = await settingsHandler.HandleAsync(new GetSystemSettingsQuery(), ct);
+        await using var uow = await unitOfWork.BeginAsync(ct);
+
+        var settingsResult = await settingsHandler.HandleAsync(new GetSystemSettingsQuery(uow.Session), ct);
         if (settingsResult.IsFailure)
         {
             return Common.Results.Result.Failure<PublishPreviewDto>(settingsResult.Error);
         }
-
-        await using var uow = await unitOfWork.BeginAsync(ct);
 
         var editData = await caseRepo.GetEditDataAsync(
             query.CaseId,
@@ -79,7 +77,7 @@ public sealed class GetPublishPreviewHandler(
         {
             CaseId = c.Id,
             Title = c.Title,
-            City = c.City,
+            City = TaiwanCity.GetName(c.City),
             Address = c.Address,
             WantedKolCount = breakdown.WantedKolCount,
             RewardAmountPerKol = breakdown.RewardAmountPerKol,

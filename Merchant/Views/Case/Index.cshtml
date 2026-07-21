@@ -20,7 +20,6 @@
     {
         CaseStatus.Draft => "draft",
         CaseStatus.Recruiting => "recruit",
-        CaseStatus.RecruitmentClosed => "review",
         CaseStatus.InProgress => "progress",
         CaseStatus.Completed => "accepting",
         CaseStatus.Settled => "closed",
@@ -32,7 +31,6 @@
     {
         CaseStatus.Draft => "草稿",
         CaseStatus.Recruiting => "招募中",
-        CaseStatus.RecruitmentClosed => "待審核",
         CaseStatus.InProgress => "執行中",
         CaseStatus.Completed => "待驗收",
         CaseStatus.Settled => "已結案",
@@ -114,13 +112,7 @@ Model.Query.RewardTypeFilter.Value.ToString();
                     <span class="status-label">草稿</span>
                     <span class="status-count">@Model.Summary.DraftCount</span>
                 </a>
-                <a href="#" class="status-card @StatusCardActive(CaseStatus.RecruitmentClosed)"
-                   data-status="@((short)CaseStatus.RecruitmentClosed)"
-                   onclick="setCaseFilter('@((short)CaseStatus.RecruitmentClosed)', false); return false;">
-                    <img src="~/images/icon-review.svg" alt="待審核" />
-                    <span class="status-label">待審核</span>
-                    <span class="status-count">@Model.Summary.PendingReviewCount</span>
-                </a>
+
                 <a href="#" class="status-card @StatusCardActive(CaseStatus.Recruiting)"
                    data-status="@((short)CaseStatus.Recruiting)"
                    onclick="setCaseFilter('@((short)CaseStatus.Recruiting)', false); return false;">
@@ -162,8 +154,7 @@ Model.Query.RewardTypeFilter.Value.ToString();
                             <option value="">全部狀態</option>
                             <option value="@((short)CaseStatus.Draft)"
                                     selected="@(Model.Query.Status == CaseStatus.Draft)">草稿</option>
-                            <option value="@((short)CaseStatus.RecruitmentClosed)"
-                                    selected="@(Model.Query.Status == CaseStatus.RecruitmentClosed)">待審核</option>
+
                             <option value="@((short)CaseStatus.Recruiting)"
                                     selected="@(Model.Query.Status == CaseStatus.Recruiting)">招募中</option>
                             <option value="@((short)CaseStatus.InProgress)"

@@ -415,7 +415,6 @@ public sealed class CaseMonitorRepository : ICaseMonitorRepository
             SELECT
                 COUNT(*)                                      AS TotalCount,
                 COUNT(CASE WHEN Status = 1 THEN 1 END)        AS DraftCount,
-                COUNT(CASE WHEN Status = 3 THEN 1 END)        AS PendingReviewCount,
                 COUNT(CASE WHEN Status = 2 THEN 1 END)        AS RecruitingCount,
                 COUNT(CASE WHEN Status = 4 THEN 1 END)        AS InProgressCount,
                 COUNT(CASE WHEN Status = 5 THEN 1 END)        AS PendingAcceptanceCount,

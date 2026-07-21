@@ -22,7 +22,7 @@ public sealed class MerchantDashboardDto
     public IReadOnlyList<MerchantDashboardRecentCaseDto> RecentCases { get; init; } = [];
 
     /// <summary>待驗收通知數量（給右下角 toast 用）。</summary>
-    public int PendingReviewCount { get; init; }
+    public int PendingAcceptanceCount { get; init; }
 }
 
 public sealed class MerchantDashboardWalletDto
@@ -43,11 +43,10 @@ public sealed class MerchantDashboardStatusCountDto
 public enum CaseStatusCategory
 {
     Draft = 1,
-    PendingReview = 2,
-    Recruiting = 3,
-    InProgress = 4,
-    PendingAcceptance = 5,
-    Closed = 6
+    Recruiting = 2,
+    InProgress = 3,
+    PendingAcceptance = 4,
+    Closed = 5
 }
 
 public sealed class MerchantDashboardTodoDto

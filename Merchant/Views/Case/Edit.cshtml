@@ -271,7 +271,7 @@
                                                 var value = (short)platform.Key;
                                                 <label class="ac-check-tag @(Model.Platforms.Contains(value) ? "active" : "")">
                                                     <input type="checkbox" name="Platforms" value="@value" @(Model.Platforms.Contains(value)
-                                                                                               ? "checked" : "") />
+                                                                                                                                                          ? "checked" : "") />
                                                     @platform.Value
                                                 </label>
                                             }
@@ -322,7 +322,7 @@
                                             <button type="button" class="ac-btn ac-btn--ghost">預覽案件</button>
                                         </div>
                                         <button type="submit" class="ac-btn ac-btn--primary" onclick="setSubmitMode('Publish')">
-                                            下一步送審 <i class="fa-solid fa-arrow-right"></i>
+                                            發布案件 <i class="fa-solid fa-arrow-right"></i>
                                         </button>
                                     </div>
 

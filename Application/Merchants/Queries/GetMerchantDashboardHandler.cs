@@ -58,7 +58,7 @@ public sealed class GetMerchantDashboardHandler(
             StatusCounts = statusCounts,
             Todos = todos,
             RecentCases = recentCases,
-            PendingReviewCount = cases.Count(c => c.Status == CaseStatus.Completed)
+            PendingAcceptanceCount = cases.Count(c => c.Status == CaseStatus.Completed)
         };
 
         return Result<MerchantDashboardDto>.Success(dto);
@@ -75,13 +75,6 @@ public sealed class GetMerchantDashboardHandler(
                 Label = "草稿",
                 IconUrl = "/images/icon-draft.svg",
                 Count = cases.Count(c => c.Status == CaseStatus.Draft)
-            },
-            new MerchantDashboardStatusCountDto
-            {
-                Category = CaseStatusCategory.PendingReview,
-                Label = "待審核",
-                IconUrl = "/images/icon-review.svg",
-                Count = cases.Count(c => c.Status == CaseStatus.RecruitmentClosed)
             },
             new MerchantDashboardStatusCountDto
             {
@@ -182,7 +175,6 @@ public sealed class GetMerchantDashboardHandler(
     {
         CaseStatus.Draft => "草稿",
         CaseStatus.Recruiting => "招募中",
-        CaseStatus.RecruitmentClosed => "招募截止",
         CaseStatus.InProgress => "執行中",
         CaseStatus.Completed => "待驗收",
         CaseStatus.Settled => "已結案",
@@ -194,7 +186,6 @@ public sealed class GetMerchantDashboardHandler(
     {
         CaseStatus.Draft => "draft",
         CaseStatus.Recruiting => "recruit",
-        CaseStatus.RecruitmentClosed => "review",
         CaseStatus.InProgress => "progress",
         CaseStatus.Completed => "accepting",
         CaseStatus.Settled => "closed",

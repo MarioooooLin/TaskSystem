@@ -67,7 +67,7 @@ public sealed class HomeController(
                 ActionText = c.ActionText,
                 ActionUrl = c.ActionUrl
             }).ToList(),
-            PendingReviewCount = data.PendingReviewCount
+            PendingAcceptanceCount = data.PendingAcceptanceCount
         };
 
         ViewData["CompanyName"] = vm.CompanyName;
