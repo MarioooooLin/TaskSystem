@@ -93,10 +93,10 @@
                             <span asp-validation-for="CaseOpeningFeeAmount" class="text-danger"></span>
                         </div>
                         <div class="param-field param-field--half">
-                            <label class="param-label" asp-for="KolServiceFeeRate">KOL 服務費率 (%)</label>
-                            <input asp-for="KolServiceFeeRate" type="number" step="0.01" class="param-input"
+                            <label class="param-label" asp-for="PlatformServiceFeeRate">平台服務費率 (%)</label>
+                            <input asp-for="PlatformServiceFeeRate" type="number" step="0.01" class="param-input"
                                    disabled="@(canManage ? null : "disabled")" />
-                            <span asp-validation-for="KolServiceFeeRate" class="text-danger"></span>
+                            <span asp-validation-for="PlatformServiceFeeRate" class="text-danger"></span>
                         </div>
                     </div>
 

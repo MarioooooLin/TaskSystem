@@ -54,13 +54,19 @@ public sealed class SystemSettingRepository : ISystemSettingRepository
 
         foreach (var (key, newValue) in updates)
         {
-            if (!currentMap.TryGetValue(key, out var setting))
-                continue;
+            if (currentMap.TryGetValue(key, out var setting))
+            {
+                if (string.Equals(setting.Value, newValue, StringComparison.Ordinal))
+                    continue;
 
-            if (string.Equals(setting.Value, newValue, StringComparison.Ordinal))
-                continue;
+                await UpdateSingleAsync(setting, newValue, updatedByUserId, note, session, ct);
+            }
+            else
+            {
+                await InsertMissingAsync(key, newValue, updatedByUserId, session, ct);
+                await InsertLogAsync(key, oldValue: null, newValue, note, updatedByUserId, session, ct);
+            }
 
-            await UpdateSingleAsync(setting, newValue, updatedByUserId, note, session, ct);
             changedKeys.Add(key);
         }
 
@@ -151,6 +157,37 @@ public sealed class SystemSettingRepository : ISystemSettingRepository
             updatedByUserId,
             session,
             ct);
+    }
+
+    private static async Task InsertMissingAsync(
+        string key,
+        string value,
+        long? updatedByUserId,
+        IDbSession session,
+        CancellationToken ct)
+    {
+        const string insertSql = """
+            INSERT INTO SystemSettings ([Key], Value, DefaultValue, ValueType, [Group], Description, UpdatedByUserId, UpdatedAt)
+            VALUES (@Key, @Value, @DefaultValue, @ValueType, @Group, @Description, @UpdatedByUserId, GETUTCDATE())
+            """;
+
+        var definition = SystemSettingKeys.Definitions.TryGetValue(key, out var def)
+            ? def
+            : new SystemSettingKeys.Definition("string", "general", null, value);
+
+        await session.Connection.ExecuteAsync(
+            insertSql,
+            new
+            {
+                Key = key,
+                Value = value,
+                DefaultValue = definition.DefaultValue,
+                ValueType = definition.ValueType,
+                Group = definition.Group,
+                Description = definition.Description,
+                UpdatedByUserId = updatedByUserId,
+            },
+            session.Transaction);
     }
 
     private static async Task UpdateValueAsync(

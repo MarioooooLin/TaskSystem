@@ -179,7 +179,7 @@
         <!-- SUB HEADER -->
         <div class="sub-header">
             <div class="sub-header__left">
-                <span class="company-name">@(ViewData["CompanyName"] ?? "")</span>
+                <span class="company-name">@User.FindFirstValue(TaskSystemClaimTypes.MerchantName)</span>
                 <span class="badge-plan">商務版</span>
                 <span class="badge-status">啟用中</span>
             </div>

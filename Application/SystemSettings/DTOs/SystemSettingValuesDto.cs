@@ -4,7 +4,7 @@ namespace Application.SystemSettings.DTOs;
 public sealed class SystemSettingValuesDto
 {
     public decimal CaseOpeningFeeAmount { get; init; }
-    public decimal KolServiceFeeRate { get; init; }
+    public decimal PlatformServiceFeeRate { get; init; }
     public decimal AffiliatePlatformCommissionRate { get; init; }
     public decimal AffiliateKolMinCommissionRate { get; init; }
     public decimal CaseAutoExecutionThresholdRate { get; init; }

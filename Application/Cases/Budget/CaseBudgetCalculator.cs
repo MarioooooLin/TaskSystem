@@ -19,41 +19,36 @@ public sealed class CaseBudgetCalculator
     }
 
     /// <summary>
-    /// 根據單人報酬與招募組數計算預算明細。
+    /// 根據單人報酬、招募組數與可用折扣金計算預算明細。
+    /// 平台服務費 = (報酬小計 + 開案費 - 折扣) × 平台服務費率。
     /// </summary>
     public CaseBudgetBreakdown Calculate(
         decimal rewardAmountPerKol,
         int wantedKolCount,
-        decimal? otherFees = null)
+        decimal? availableCredit = null)
     {
         var rewardSubtotal = rewardAmountPerKol * wantedKolCount;
         var openingFee = _settings.CaseOpeningFeeAmount;
 
-        // 各項費用以報酬小計為計算基礎
-        var kolServiceFee = Round(rewardSubtotal * _settings.KolServiceFeeRate / 100m);
-        var platformFee = Round(rewardSubtotal * _settings.AffiliatePlatformCommissionRate / 100m);
-        var taxAmount = Round(rewardSubtotal * _settings.KolTaxRate / 100m);
-        var other = otherFees ?? 0m;
+        // 折扣金僅可折抵開案費
+        var credit = availableCredit ?? 0m;
+        var discountAmount = credit >= openingFee ? openingFee : credit;
+
+        // 平台服務費計算基礎 = 報酬小計 + 開案費 - 折扣
+        var platformServiceFeeBase = rewardSubtotal + openingFee - discountAmount;
+        var platformServiceFee = Round(platformServiceFeeBase * _settings.PlatformServiceFeeRate / 100m);
 
         var feeItems = new List<CaseFeeItem>
         {
             new() { Name = "案件開案費", Amount = openingFee },
-            new() { Name = "KOL 服務費", Amount = kolServiceFee, Note = $"費率 {_settings.KolServiceFeeRate}%" },
-            new() { Name = "平台手續費", Amount = platformFee, Note = $"費率 {_settings.AffiliatePlatformCommissionRate}%" },
-            new() { Name = "稅金", Amount = taxAmount, Note = $"稅率 {_settings.KolTaxRate}%" }
+            new() { Name = "折扣", Amount = -discountAmount },
+            new() { Name = "平台服務費", Amount = platformServiceFee, Note = $"費率 {_settings.PlatformServiceFeeRate}%" }
         };
-
-        if (other > 0)
-        {
-            feeItems.Add(new CaseFeeItem { Name = "其他費用", Amount = other });
-        }
 
         var estimatedFrozenAmount = rewardSubtotal
             + openingFee
-            + kolServiceFee
-            + platformFee
-            + taxAmount
-            + other;
+            - discountAmount
+            + platformServiceFee;
 
         return new CaseBudgetBreakdown
         {
@@ -61,10 +56,8 @@ public sealed class CaseBudgetCalculator
             WantedKolCount = wantedKolCount,
             RewardSubtotal = rewardSubtotal,
             CaseOpeningFee = openingFee,
-            KolServiceFee = kolServiceFee,
-            PlatformFee = platformFee,
-            TaxAmount = taxAmount,
-            OtherFeesTotal = other,
+            DiscountAmount = discountAmount,
+            PlatformServiceFee = platformServiceFee,
             EstimatedFrozenAmount = estimatedFrozenAmount,
             FeeItemsJson = JsonSerializer.Serialize(feeItems, JsonOptions)
         };

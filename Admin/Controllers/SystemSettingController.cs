@@ -63,7 +63,7 @@ public sealed class SystemSettingController(
 
         var cmd = new UpdateSystemSettingsCommand(
             vm.CaseOpeningFeeAmount,
-            vm.KolServiceFeeRate,
+            vm.PlatformServiceFeeRate,
             vm.AffiliatePlatformCommissionRate,
             vm.AffiliateKolMinCommissionRate,
             vm.CaseAutoExecutionThresholdRate,
@@ -151,7 +151,7 @@ public sealed class SystemSettingController(
         return new SystemSettingParametersViewModel
         {
             CaseOpeningFeeAmount = values.CaseOpeningFeeAmount,
-            KolServiceFeeRate = values.KolServiceFeeRate,
+            PlatformServiceFeeRate = values.PlatformServiceFeeRate,
             AffiliatePlatformCommissionRate = values.AffiliatePlatformCommissionRate,
             AffiliateKolMinCommissionRate = values.AffiliateKolMinCommissionRate,
             CaseAutoExecutionThresholdRate = values.CaseAutoExecutionThresholdRate,

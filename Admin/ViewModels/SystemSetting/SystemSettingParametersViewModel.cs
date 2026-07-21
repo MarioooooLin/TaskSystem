@@ -10,10 +10,10 @@ public sealed class SystemSettingParametersViewModel : IValidatableObject
     [Range(0, 999999999, ErrorMessage = "{0}必須介於 0 到 999,999,999 之間")]
     public decimal CaseOpeningFeeAmount { get; set; }
 
-    [Display(Name = "KOL 服務費率")]
+    [Display(Name = "平台服務費率")]
     [Required(ErrorMessage = "請輸入{0}")]
     [Range(0, 100, ErrorMessage = "{0}必須介於 0 到 100 之間")]
-    public decimal KolServiceFeeRate { get; set; }
+    public decimal PlatformServiceFeeRate { get; set; }
 
     [Display(Name = "平台抽成比例")]
     [Required(ErrorMessage = "請輸入{0}")]

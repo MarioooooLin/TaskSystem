@@ -15,6 +15,7 @@ public sealed class PublishCaseHandler(
     ICaseRepository caseRepo,
     ICaseBudgetSnapshotRepository snapshotRepo,
     IMerchantWalletRepository walletRepo,
+    IMerchantCreditWalletRepository creditWalletRepo,
     GetSystemSettingsHandler settingsHandler)
 {
     public async Task<Result> HandleAsync(
@@ -68,10 +69,15 @@ public sealed class PublishCaseHandler(
         }
 
         var settings = settingsResult.Value;
-        var calculator = new CaseBudgetCalculator(settings);
-        var breakdown = calculator.Calculate(c.CashRewardAmount, c.WantedKolCount);
 
-        // 鎖定錢包餘額
+        // 讀取折扣金錢包並計算可折抵金額
+        var creditWallet = await creditWalletRepo.GetByMerchantIdAsync(cmd.MerchantId, uow.Session, ct);
+        var availableCredit = creditWallet?.AvailableAmount ?? 0m;
+
+        var calculator = new CaseBudgetCalculator(settings);
+        var breakdown = calculator.Calculate(c.CashRewardAmount, c.WantedKolCount, availableCredit);
+
+        // 鎖定現金錢包餘額（已扣除折扣金）
         var wallet = await walletRepo.GetByMerchantIdAsync(cmd.MerchantId, uow.Session, ct);
         if (wallet is null)
         {
@@ -97,6 +103,26 @@ public sealed class PublishCaseHandler(
             cmd.CurrentUserId,
             uow.Session,
             ct);
+
+        // 實際扣抵折扣金
+        if (breakdown.DiscountAmount > 0 && creditWallet is not null)
+        {
+            creditWallet.AvailableAmount -= breakdown.DiscountAmount;
+            creditWallet.UsedAmount += breakdown.DiscountAmount;
+            creditWallet.UpdatedAt = DateTime.UtcNow;
+            await creditWalletRepo.UpdateAsync(creditWallet, uow.Session, ct);
+
+            await creditWalletRepo.InsertTransactionAsync(
+                cmd.MerchantId,
+                (short)MerchantCreditTransactionType.Use,
+                breakdown.DiscountAmount,
+                c.Id,
+                $"案件 {c.Title} 發布折抵開案費",
+                null,
+                cmd.CurrentUserId,
+                uow.Session,
+                ct);
+        }
 
         // 寫入預算快照
         var snapshot = new CaseBudgetSnapshot

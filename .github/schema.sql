@@ -1080,23 +1080,33 @@ CREATE INDEX IX_MerchantContacts_MerchantId ON MerchantContacts (MerchantId);
 -- ================================================================
 -- 15. 預設系統參數
 -- ================================================================
-INSERT INTO SystemSettings ([Key], Value, ValueType, [Group], Description)
+INSERT INTO SystemSettings (
+        [Key],
+        Value,
+        DefaultValue,
+        ValueType,
+        [Group],
+        Description
+    )
 VALUES (
         'case_opening_fee_amount',
+        '1000',
         '1000',
         'number',
         'case_fee',
         N'案件固定開案費；案件發布預估凍結金額使用'
     ),
     (
-        'kol_service_fee_rate',
+        'platform_service_fee_rate',
+        '0',
         '0',
         'percent',
         'case_fee',
-        N'KOL 服務費率；案件發布預估凍結金額使用'
+        N'平台服務費率；案件發布預估凍結金額使用'
     ),
     (
         'affiliate_platform_commission_rate',
+        '0',
         '0',
         'percent',
         'commission',
@@ -1105,12 +1115,14 @@ VALUES (
     (
         'affiliate_kol_min_commission_rate',
         '0',
+        '0',
         'percent',
         'commission',
         N'KOL 最低分潤比例；與平台抽成比例合計為業者佣金最低比例'
     ),
     (
         'case_auto_execution_threshold_rate',
+        '50',
         '50',
         'percent',
         'case',
@@ -1119,14 +1131,64 @@ VALUES (
     (
         'case_reconfirmation_deadline_days',
         '3',
+        '3',
         'number',
         'case',
         N'招募中案件修改後，已錄取 KOL 重新確認期限（日曆天）'
     ),
     (
-        'kol_payout_min_amount',
+        'kol_min_payout_amount',
+        '1000',
         '1000',
         'number',
         'payout',
         N'KOL 最低提領門檻；金額需 >= 此值才可提領'
+    ),
+    (
+        'kol_tax_rate',
+        '0',
+        '0',
+        'percent',
+        'payout',
+        N'KOL 稅金扣除率'
+    ),
+    (
+        'kol_payout_fee_rate',
+        '0',
+        '0',
+        'percent',
+        'payout',
+        N'KOL 提領手續費率'
+    ),
+    (
+        'kol_payout_fixed_fee_amount',
+        '0',
+        '0',
+        'number',
+        'payout',
+        N'KOL 提領固定手續費'
+    ),
+    (
+        'kol_payout_mode',
+        '全額提領',
+        '全額提領',
+        'string',
+        'payout',
+        N'提領方式'
+    ),
+    (
+        'kol_payout_days',
+        '10,25',
+        '10,25',
+        'string',
+        'payout',
+        N'撥款日'
+    ),
+    (
+        'kol_payout_closing_day_offset',
+        '-5',
+        '-5',
+        'number',
+        'payout',
+        N'關帳日設定'
     );

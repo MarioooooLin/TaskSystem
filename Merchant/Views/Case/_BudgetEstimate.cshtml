@@ -21,11 +21,11 @@
     </div>
     <div class="ac-budget__row ac-budget__row--red">
         <span>折扣</span>
-        <span>NT$0</span>
+        <span>NT$@Model.DiscountAmount.ToString("N0")</span>
     </div>
     <div class="ac-budget__row">
         <span>平台服務費</span>
-        <span>NT$@Model.PlatformFee.ToString("N0")</span>
+        <span>NT$@Model.PlatformServiceFee.ToString("N0")</span>
     </div>
 </div>
 <div class="ac-budget__divider"></div>

@@ -21,7 +21,7 @@ public sealed class GetSystemSettingsHandler(
         var dto = new SystemSettingValuesDto
         {
             CaseOpeningFeeAmount = GetDecimal(map, SystemSettingKeys.CaseOpeningFeeAmount),
-            KolServiceFeeRate = GetDecimal(map, SystemSettingKeys.KolServiceFeeRate),
+            PlatformServiceFeeRate = GetDecimal(map, SystemSettingKeys.PlatformServiceFeeRate),
             AffiliatePlatformCommissionRate = GetDecimal(map, SystemSettingKeys.AffiliatePlatformCommissionRate),
             AffiliateKolMinCommissionRate = GetDecimal(map, SystemSettingKeys.AffiliateKolMinCommissionRate),
             CaseAutoExecutionThresholdRate = GetDecimal(map, SystemSettingKeys.CaseAutoExecutionThresholdRate, 50m),

@@ -25,6 +25,9 @@ public sealed class PublishPreviewViewModel
     public List<PublishPreviewAttachmentViewModel> Attachments { get; set; } = [];
 
     public List<PublishPreviewFeeItemViewModel> FeeItems { get; set; } = [];
+    public decimal CaseOpeningFee { get; set; }
+    public decimal DiscountAmount { get; set; }
+    public decimal PlatformServiceFee { get; set; }
     public decimal EstimatedFrozenAmount { get; set; }
 
     public decimal CurrentWalletBalance { get; set; }

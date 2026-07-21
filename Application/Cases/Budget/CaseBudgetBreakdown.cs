@@ -15,17 +15,11 @@ public sealed class CaseBudgetBreakdown
     /// <summary>案件開案費。</summary>
     public decimal CaseOpeningFee { get; init; }
 
-    /// <summary>KOL 服務費（以報酬小計為基礎）。</summary>
-    public decimal KolServiceFee { get; init; }
+    /// <summary>折扣金折抵金額。</summary>
+    public decimal DiscountAmount { get; init; }
 
-    /// <summary>平台手續費（以報酬小計為基礎）。</summary>
-    public decimal PlatformFee { get; init; }
-
-    /// <summary>稅金（以報酬小計為基礎，暫由平台代扣計算）。</summary>
-    public decimal TaxAmount { get; init; }
-
-    /// <summary>其他費用總計。</summary>
-    public decimal OtherFeesTotal { get; init; }
+    /// <summary>平台服務費（以「報酬小計 + 開案費 - 折扣」為基礎）。</summary>
+    public decimal PlatformServiceFee { get; init; }
 
     /// <summary>預計凍結總金額。</summary>
     public decimal EstimatedFrozenAmount { get; init; }

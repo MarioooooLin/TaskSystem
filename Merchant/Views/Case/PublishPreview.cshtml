@@ -145,7 +145,7 @@
                             </div>
                             <p class="pub-kv-label" style="margin-top:1.2rem; margin-bottom:.4rem;">交付需求：</p>
                             <p class="pub-delivery-text">@(string.IsNullOrWhiteSpace(Model.DeliverableDescription) ? "—" :
-                                                            Model.DeliverableDescription)</p>
+                                                                                            Model.DeliverableDescription)</p>
                             </section>
 
                         </div><!-- /.pub-two-col -->
@@ -200,19 +200,33 @@
 
                     <!-- ===== RIGHT: 預算鎖定摘要 ===== -->
                     <aside class="pub-budget">
-                        <h3 class="pub-budget__title">預算鎖定摘要</h3>
+                        <h3 class="pub-budget__title">預算預估</h3>
                         <div class="pub-budget__rows">
                             <div class="pub-budget__row">
-                                <span>案件總預算</span>
+                                <span>單人報酬</span>
+                                <span>NT$ @Model.RewardAmountPerKol.ToString("N0")</span>
+                            </div>
+                            <div class="pub-budget__row">
+                                <span>徵求人數</span>
+                                <span>× @Model.WantedKolCount</span>
+                            </div>
+                            <div class="pub-budget__divider"></div>
+                            <div class="pub-budget__row">
+                                <span>小計</span>
                                 <span>NT$ @Model.RewardSubtotal.ToString("N0")</span>
                             </div>
-                            @foreach (var fee in Model.FeeItems)
-                            {
-                                <div class="pub-budget__row @(fee.Amount < 0 ? "pub-budget__row--red" : "")">
-                                    <span>@fee.Name</span>
-                                    <span>NT$ @fee.Amount.ToString("N0")</span>
-                                </div>
-                            }
+                            <div class="pub-budget__row">
+                                <span>開案費</span>
+                                <span>NT$ @Model.CaseOpeningFee.ToString("N0")</span>
+                            </div>
+                            <div class="pub-budget__row pub-budget__row--red">
+                                <span>折扣</span>
+                                <span>NT$ @Model.DiscountAmount.ToString("N0")</span>
+                            </div>
+                            <div class="pub-budget__row">
+                                <span>平台服務費</span>
+                                <span>NT$ @Model.PlatformServiceFee.ToString("N0")</span>
+                            </div>
                         </div>
                         <div class="pub-budget__divider"></div>
                         <div class="pub-budget__total">

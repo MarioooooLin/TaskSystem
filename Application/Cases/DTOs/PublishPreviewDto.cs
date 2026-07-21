@@ -29,6 +29,9 @@ public sealed class PublishPreviewDto
 
     // ── 費用明細 ──────────────────────────────────────
     public IReadOnlyList<PublishPreviewFeeItemDto> FeeItems { get; init; } = [];
+    public decimal CaseOpeningFee { get; init; }
+    public decimal DiscountAmount { get; init; }
+    public decimal PlatformServiceFee { get; init; }
     public decimal EstimatedFrozenAmount { get; init; }
 
     // ── 目前錢包餘額 ──────────────────────────────────

@@ -11,7 +11,9 @@ public sealed class CaseBudgetEstimateViewModel
 
     public decimal CaseOpeningFee { get; set; }
 
-    public decimal PlatformFee { get; set; }
+    public decimal DiscountAmount { get; set; }
+
+    public decimal PlatformServiceFee { get; set; }
 
     public decimal EstimatedFrozenAmount { get; set; }
 

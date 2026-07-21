@@ -30,7 +30,7 @@ public sealed class UpdateSystemSettingsHandler(
         var updates = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             [SystemSettingKeys.CaseOpeningFeeAmount] = cmd.CaseOpeningFeeAmount.ToString("G", CultureInfo.InvariantCulture),
-            [SystemSettingKeys.KolServiceFeeRate] = cmd.KolServiceFeeRate.ToString("G", CultureInfo.InvariantCulture),
+            [SystemSettingKeys.PlatformServiceFeeRate] = cmd.PlatformServiceFeeRate.ToString("G", CultureInfo.InvariantCulture),
             [SystemSettingKeys.AffiliatePlatformCommissionRate] = cmd.AffiliatePlatformCommissionRate.ToString("G", CultureInfo.InvariantCulture),
             [SystemSettingKeys.AffiliateKolMinCommissionRate] = cmd.AffiliateKolMinCommissionRate.ToString("G", CultureInfo.InvariantCulture),
             [SystemSettingKeys.CaseAutoExecutionThresholdRate] = cmd.CaseAutoExecutionThresholdRate.ToString("G", CultureInfo.InvariantCulture),
@@ -44,13 +44,6 @@ public sealed class UpdateSystemSettingsHandler(
         };
 
         await using var uow = await unitOfWork.BeginAsync(ct);
-
-        var currentSettings = await systemSettingRepo.GetAllAsync(uow.Session, ct);
-        var missingKeys = updates.Keys.Except(currentSettings.Select(x => x.Key), StringComparer.OrdinalIgnoreCase).ToList();
-        if (missingKeys.Count > 0)
-        {
-            return Result.Failure<IReadOnlyList<string>>(Errors.SystemSetting.NotFound);
-        }
 
         var changedKeys = await systemSettingRepo.UpdateValuesAsync(
             updates,
@@ -84,7 +77,7 @@ public sealed class UpdateSystemSettingsHandler(
             return Result.Failure(Errors.SystemSetting.InvalidValue);
         }
 
-        if (cmd.KolServiceFeeRate is < 0 or > 100 ||
+        if (cmd.PlatformServiceFeeRate is < 0 or > 100 ||
             cmd.AffiliatePlatformCommissionRate is < 0 or > 100 ||
             cmd.AffiliateKolMinCommissionRate is < 0 or > 100 ||
             cmd.CaseAutoExecutionThresholdRate is < 0 or > 100 ||

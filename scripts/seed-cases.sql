@@ -321,9 +321,9 @@ SELECT c.Id,
     s.CashRewardAmount,
     s.WantedKolCount,
     s.CashRewardAmount * s.WantedKolCount,
-    N'[{"code":"kol_service_fee","rate":0,"amount":0},{"code":"case_opening_fee","amount":1000}]',
+    N'[{"code":"platform_service_fee","rate":0,"amount":0},{"code":"case_opening_fee","amount":1000}]',
     1000.00,
-    N'{"kol_service_fee_rate":0,"case_opening_fee_amount":1000,"case_auto_execution_threshold_rate":50}'
+    N'{"platform_service_fee_rate":0,"case_opening_fee_amount":1000,"case_auto_execution_threshold_rate":50}'
 FROM Cases AS c
     INNER JOIN @CaseSeeds AS s ON s.Title = c.Title
 WHERE c.MerchantId = @MerchantId

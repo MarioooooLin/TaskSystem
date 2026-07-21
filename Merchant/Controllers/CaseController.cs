@@ -34,7 +34,8 @@ public sealed class CaseController(
     ICaseFileStorage caseFileStorage,
     ICaseAttachmentRepository caseAttachmentRepo,
     IUnitOfWork unitOfWork,
-    IMerchantWalletRepository walletRepo) : Controller
+    IMerchantWalletRepository walletRepo,
+    IMerchantCreditWalletRepository creditWalletRepo) : Controller
 {
     private const string MerchantCaseManagePermission = "Merchant.Case.Manage";
     private const string MerchantCasePublishPermission = "Merchant.Case.Publish";
@@ -237,10 +238,13 @@ public sealed class CaseController(
         var reward = vm.CashRewardAmount.HasValue ? vm.CashRewardAmount.Value : 0m;
         var count = Math.Max(vm.WantedKolCount, 1);
 
-        var calculator = new CaseBudgetCalculator(settingsResult.Value);
-        var breakdown = calculator.Calculate(reward, count);
-
         await using var uow = await unitOfWork.BeginAsync(ct);
+        var creditWallet = await creditWalletRepo.GetByMerchantIdAsync(merchantId, uow.Session, ct);
+        var availableCredit = creditWallet?.AvailableAmount ?? 0m;
+
+        var calculator = new CaseBudgetCalculator(settingsResult.Value);
+        var breakdown = calculator.Calculate(reward, count, availableCredit);
+
         var wallet = await walletRepo.GetByMerchantIdAsync(merchantId, uow.Session, ct);
         var balance = wallet?.AvailableAmount ?? 0m;
         await uow.CommitAsync(ct);
@@ -251,7 +255,8 @@ public sealed class CaseController(
             WantedKolCount = breakdown.WantedKolCount,
             RewardSubtotal = breakdown.RewardSubtotal,
             CaseOpeningFee = breakdown.CaseOpeningFee,
-            PlatformFee = breakdown.PlatformFee,
+            DiscountAmount = breakdown.DiscountAmount,
+            PlatformServiceFee = breakdown.PlatformServiceFee,
             EstimatedFrozenAmount = breakdown.EstimatedFrozenAmount,
             CurrentWalletBalance = balance
         };
@@ -464,6 +469,9 @@ public sealed class CaseController(
                 Amount = f.Amount,
                 Note = f.Note
             }).ToList(),
+            CaseOpeningFee = dto.CaseOpeningFee,
+            DiscountAmount = dto.DiscountAmount,
+            PlatformServiceFee = dto.PlatformServiceFee,
             EstimatedFrozenAmount = dto.EstimatedFrozenAmount,
             CurrentWalletBalance = dto.CurrentWalletBalance,
             HasEnoughBalance = dto.HasEnoughBalance,

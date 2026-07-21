@@ -14,6 +14,7 @@ public sealed class GetPublishPreviewHandler(
     IUnitOfWork unitOfWork,
     ICaseRepository caseRepo,
     IMerchantWalletRepository walletRepo,
+    IMerchantCreditWalletRepository creditWalletRepo,
     GetSystemSettingsHandler settingsHandler)
 {
     public async Task<Result<PublishPreviewDto>> HandleAsync(
@@ -59,8 +60,12 @@ public sealed class GetPublishPreviewHandler(
         }
 
         var settings = settingsResult.Value;
+
+        var creditWallet = await creditWalletRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
+        var availableCredit = creditWallet?.AvailableAmount ?? 0m;
+
         var calculator = new CaseBudgetCalculator(settings);
-        var breakdown = calculator.Calculate(c.CashRewardAmount, c.WantedKolCount);
+        var breakdown = calculator.Calculate(c.CashRewardAmount, c.WantedKolCount, availableCredit);
 
         var wallet = await walletRepo.GetByMerchantIdAsync(query.MerchantId, uow.Session, ct);
         var balance = wallet?.AvailableAmount ?? 0m;
@@ -99,6 +104,9 @@ public sealed class GetPublishPreviewHandler(
                     MimeType = a.File?.MimeType ?? string.Empty
                 }).ToList().AsReadOnly(),
             FeeItems = feeItems.AsReadOnly(),
+            CaseOpeningFee = breakdown.CaseOpeningFee,
+            DiscountAmount = breakdown.DiscountAmount,
+            PlatformServiceFee = breakdown.PlatformServiceFee,
             EstimatedFrozenAmount = breakdown.EstimatedFrozenAmount,
             CurrentWalletBalance = balance,
             HasEnoughBalance = balance >= breakdown.EstimatedFrozenAmount,
